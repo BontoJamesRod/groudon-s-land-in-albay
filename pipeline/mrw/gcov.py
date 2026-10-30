@@ -101,7 +101,9 @@ def check_same_grid(before, after):
     """Both passes must sit on the same pixel grid, or the subtraction means nothing."""
     same = (before["x"].shape == after["x"].shape and before["y"].shape == after["y"].shape
             and int(before["epsg"]) == int(after["epsg"])
-            and np.allclose(before["x"], after["x"]) and np.allclose(before["y"], after["y"]))
+            # rtol=0 is needed: the default relative tolerance would let UTM values drift by metres.
+            and np.allclose(before["x"], after["x"], rtol=0, atol=1e-3)
+            and np.allclose(before["y"], after["y"], rtol=0, atol=1e-3))
     if not same:
         raise ValueError("The two passes are not on the same pixel grid")
 

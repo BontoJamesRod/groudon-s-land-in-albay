@@ -96,6 +96,12 @@ def test_ranged_file_reads_across_blocks_and_refetches_nothing():
     assert len(fetched) == 2
 
 
+def test_empty_answer_from_the_server_stops_instead_of_hanging():
+    remote = RangedFile(lambda start, end: b"", 100)
+    with pytest.raises(OSError):
+        remote.read(10)
+
+
 def test_site_outside_the_product_stops():
     with pytest.raises(ValueError):
         crop_window(np.arange(10.0), np.arange(10.0), BOUNDS, EPSG)

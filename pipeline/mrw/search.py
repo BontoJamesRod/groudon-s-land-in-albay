@@ -129,15 +129,25 @@ def _keep_newest_versions(products, key_names):
     return list(best.values())
 
 
+def maturity_of(props):
+    """Read the maturity from the product's collection or link, e.g. ..._PROVISIONAL_V1.
+
+    A wrong label would mislead visitors (FR-039), so an unknown one stops the search.
+    """
+    text = f"{props.get('collectionName')} {props.get('url')}"
+    for maturity in ("BETA", "PROVISIONAL"):
+        if maturity in text:
+            return maturity
+    raise ValueError(f"Can't tell the maturity of {props.get('sceneName')}")
+
+
 def search_gcov(config, start, searcher=_asf_search, cutoff=BLIND_CUTOFF):
     """List GCOV passes over a site, oldest first, all from before the cutoff."""
     results = searcher(processingLevel="GCOV", intersectsWith=site_polygon(config), start=start,
                        end=cutoff - timedelta(seconds=1))
     passes = []
     for name, props in _safe_results(results, cutoff):
-        # The collection name tells the maturity, e.g. NISAR_L2_GCOV_PROVISIONAL_V1.
-        maturity = "BETA" if "BETA" in str(props.get("collectionName")) else "PROVISIONAL"
-        parsed = parse_gcov(name, maturity, props.get("url"))
+        parsed = parse_gcov(name, maturity_of(props), props.get("url"))
         if parsed:
             passes.append(parsed)
     passes = _keep_newest_versions(passes, ("track", "frame", "orbit_direction", "acquired_start"))

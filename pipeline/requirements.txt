@@ -13,6 +13,7 @@ scipy
 rasterio
 pyproj
 shapely
+tzdata
 
 # Making the web images
 Pillow

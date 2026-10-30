@@ -87,10 +87,10 @@ export function createReadout(elements, site, towns) {
 
   function placeLines(lat, lon, name) {
     const lines = [line(name || findTown(towns, lat, lon) || STRINGS.outsideTowns, "readout-place")];
-    if (site.summit_lat === null || site.summit_lon === null) return lines;
+    if (site.summit_lat == null || site.summit_lon == null) return lines;
     const km = distanceKm(lat, lon, site.summit_lat, site.summit_lon);
     lines.push(line(STRINGS.distanceToSummit(km)));
-    if (site.danger_zone_radius_km !== null) {
+    if (site.danger_zone_radius_km != null) {
       const inside = km <= site.danger_zone_radius_km;
       lines.push(line(inside ? STRINGS.insideDangerZone : STRINGS.outsideDangerZone, inside ? "readout-danger" : ""));
     }

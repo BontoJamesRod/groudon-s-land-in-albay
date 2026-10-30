@@ -27,11 +27,12 @@ from mrw.contract_check import check_data_dir
 from mrw.context import DATA_FOLDER, write_json
 from mrw.download import read_crop
 from mrw.gcov import GCOV_DATASETS, GCOV_GROUP, HAS_VALUE, MASKED_BY_PRODUCT, OUTSIDE_COVERAGE, SEA, process_gcov
-from mrw.pairs import check_same_track, find_gunw, pair_id, pass_id, require_product
+from mrw.pairs import check_consecutive, check_same_track, find_gunw, pair_id, pass_id, require_product
 from mrw.search import search_gcov, search_gunw, vertex_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUT_FOLDER = REPO_ROOT / "pipeline" / "out"
+LOG_FOLDER = REPO_ROOT / "pipeline" / "logs"
 SEARCH_START = "2026-06-01"
 # About 20 m at this latitude: sharp enough for the map, and small enough to load fast.
 WEB_CELL_DEG = 0.000185
@@ -253,6 +254,7 @@ def run_pair(site_id, before_granule, after_granule, out_folder=OUT_FOLDER,
     require_product(after_granule, by_name)
     before, after = by_name[before_granule], by_name[after_granule]
     check_same_track(before, after)
+    check_consecutive(before, after, passes)
     products = search_products(config, SEARCH_START)
     gunw = find_gunw(before, after, products)
     previous = _previous_pass(passes, before)
@@ -282,6 +284,15 @@ def print_summary(pair, config):
               f"coherence loss {pair['coherence_loss_threshold']}")
 
 
+def write_run_log(pair, errors, folder=LOG_FOLDER):
+    """Keep one small log file per run (docs/04 section 9). This folder isn't committed."""
+    folder.mkdir(parents=True, exist_ok=True)
+    stamp = utc_now_text().replace(":", "").replace("-", "")
+    record = {"pair_id": pair["id"], "status": pair["status"], "pipeline_version": pair["pipeline_version"],
+              "areas_km2": pair["new_material_area_km2"], "contract_errors": errors}
+    (folder / f"{stamp}_{pair['id']}.json").write_text(json.dumps(record, indent=1) + "\n", encoding="utf-8")
+
+
 def main(argv):
     """Command-line entry point. Prints the stop message and returns 1 on failure."""
     site_id, before_granule, after_granule = argv
@@ -295,6 +306,7 @@ def main(argv):
     print(f"Contract check on {OUT_FOLDER}: {len(errors)} error(s)")
     for error in errors:
         print(error)
+    write_run_log(pair, errors)
     return 1 if errors else 0
 
 

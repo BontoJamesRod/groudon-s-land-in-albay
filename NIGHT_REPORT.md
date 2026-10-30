@@ -1,3 +1,7 @@
+# Night reports
+
+Night 2 is at the end of this file.
+
 # Night report 1 (2026-10-31)
 
 Branch `night-1`. Nothing pushed, nothing merged into `main`.
@@ -90,3 +94,8 @@ Not checked: real phones, 360 px, TC-013 and TC-015 (only one pair is published)
 - T-018: `new_material` lists 4 granules when coherence is used, including the previous pair's GUNW, because the layer really used it. TC-024 expects 3.
 - T-022: request timeout 15 s (06 Open Question 2 is open).
 - T-022 to T-025: text stays in the modules for now; `strings.js` is T-030.
+
+# Night 2
+
+In progress.
+

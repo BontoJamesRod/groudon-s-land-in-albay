@@ -18,8 +18,9 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
-      # fetch-depth 0 gets the whole history, so old commits are scanned too.
-      - uses: actions/checkout@v4
+      # fetch-depth 0 lets the scan below read the commits in this push or pull request.
+      # It only scans those commits: secret-scan-history.yml scans the whole history.
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       # Task T-007: stop if a password or key is in the code. No license is
@@ -28,7 +29,7 @@ jobs:
         uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Install the pipeline libraries

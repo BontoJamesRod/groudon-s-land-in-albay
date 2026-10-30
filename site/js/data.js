@@ -27,8 +27,14 @@ async function request(path) {
 
 async function readJson(path) {
   const response = await request(path);
+  let text;
   try {
-    return await response.json();
+    text = await response.text();
+  } catch (problem) {
+    throw new DataError("NETWORK_ERROR", path, `stopped downloading (${problem.name})`);
+  }
+  try {
+    return JSON.parse(text);
   } catch {
     throw new DataError("INVALID_DATA", path, "can't be parsed as JSON");
   }
@@ -63,6 +69,14 @@ function requireFields(row, fields, path) {
     if (row === null || typeof row !== "object" || row[field] === undefined) {
       throw new DataError("INVALID_DATA", path, `misses required field ${field}`);
     }
+  }
+}
+
+// API-007: the total must equal high + low.
+function checkAreas(pair, path) {
+  const sum = pair.high_confidence_area_km2 + pair.low_confidence_area_km2;
+  if (Math.abs(sum - pair.new_material_area_km2) > 1e-6) {
+    throw new DataError("INVALID_DATA", path, `has a total area that isn't high + low for ${pair.id}`);
   }
 }
 
@@ -111,6 +125,7 @@ export async function loadSiteData(siteId) {
     if (pair.status !== "published") {
       throw new DataError("INVALID_DATA", `${folder}/pairs.json`, `lists unpublished pair ${pair.id}`);
     }
+    checkAreas(pair, `${folder}/pairs.json`);
   }
   return { towns, land, pairs, events };
 }

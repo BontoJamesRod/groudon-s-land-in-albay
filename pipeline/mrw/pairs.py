@@ -19,6 +19,14 @@ def check_same_track(before, after):
         raise PairError(MIXED_PASSES_MESSAGE)
 
 
+def check_consecutive(before, after, passes):
+    """The after pass must be the very next pass on the track, so a skipped pass can't go unseen."""
+    between = [p for p in passes if all(p[n] == before[n] for n in SAME_TRACK_FIELDS)
+               and before["acquired_start"] < p["acquired_start"] < after["acquired_start"]]
+    if after["acquired_start"] <= before["acquired_start"] or between:
+        raise PairError("Passes are not consecutive on this track")
+
+
 def require_product(granule_id, available_ids):
     """Stop with the FR-028 message if a needed product isn't on ASF."""
     if granule_id not in available_ids:

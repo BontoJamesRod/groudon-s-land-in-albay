@@ -53,9 +53,10 @@ def test_reversed_bounds_give_the_exact_message(tmp_path, changes):
     {"default_zoom": 5},
     {"status": "live"},
     {"id": "Not Valid"},
-    {"thresholds": {"brightness_threshold_db": -1, "coherence_loss_threshold": 0.3}},
-    {"thresholds": {"brightness_threshold_db": 3, "coherence_loss_threshold": 2}},
+    {"thresholds": {"status": "PROVISIONAL", "brightness_threshold_db": -1, "coherence_loss_threshold": 0.3}},
+    {"thresholds": {"status": "PROVISIONAL", "brightness_threshold_db": 3, "coherence_loss_threshold": 2}},
     {"thresholds": None},
+    {"thresholds": {"brightness_threshold_db": 3, "coherence_loss_threshold": 0.3}},
     {"unexpected": 1},
 ])
 def test_other_bad_values_stop(tmp_path, changes):

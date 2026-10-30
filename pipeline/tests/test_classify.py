@@ -56,6 +56,11 @@ def test_nan_change_never_passes():
     assert run([np.nan], [0.1]) == [NONE]
 
 
+def test_a_few_cells_never_round_to_nothing():
+    grid = np.array([[LOW, NONE]], dtype="uint8")
+    assert areas_km2(grid, 10, 10)["low_confidence_area_km2"] == 0.01
+
+
 def test_areas_add_up():
     grid = np.array([[HIGH] * 300 + [LOW] * 700 + [NONE, SEA]], dtype="uint8")
     areas = areas_km2(grid, 10, 10)

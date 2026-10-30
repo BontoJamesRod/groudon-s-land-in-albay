@@ -1,5 +1,6 @@
 """Tests for the gcov module on small test arrays (T-014, TC-027)."""
 import numpy as np
+import pytest
 from pyproj import Transformer
 from shapely.geometry import box
 
@@ -59,6 +60,15 @@ def test_land_mask_finds_the_land_half():
     mask = land_mask(box(west, south, middle, north), x_values, y_values, EPSG)
     assert mask[:, :18].all()
     assert not mask[:, 23:].any()
+
+
+def test_a_one_pixel_shift_between_passes_stops():
+    x_values, y_values = utm_axes()
+    shape = (len(y_values), len(x_values))
+    before = {"HHHH": np.ones(shape), "mask": np.ones(shape, dtype="uint8"), "x": x_values, "y": y_values, "epsg": np.array(EPSG)}
+    after = {**before, "y": y_values + 10.0}
+    with pytest.raises(ValueError):
+        process_gcov(before, after, box(123, 13, 124, 14))
 
 
 def test_process_gcov_runs_end_to_end_and_keeps_the_math():

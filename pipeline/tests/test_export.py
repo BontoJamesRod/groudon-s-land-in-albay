@@ -143,5 +143,15 @@ def test_tc026_missing_product_stops_and_writes_no_files(tmp_path):
     assert nothing_written(tmp_path)
 
 
+THIRD = AFTER.replace("20261019", "20261031").replace("_033_111", "_034_111").replace("2026103", "2026102")
+
+
+@pytest.mark.parametrize("first,second,names", [(AFTER, BEFORE, [BEFORE, AFTER]), (BEFORE, THIRD, [BEFORE, AFTER, THIRD])])
+def test_swapped_or_skipping_passes_stop_and_write_no_files(tmp_path, first, second, names):
+    with pytest.raises(PairError):
+        run_pair("mayon", first, second, out_folder=tmp_path, search_passes=fake_passes(names), search_products=lambda c, s: [])
+    assert nothing_written(tmp_path)
+
+
 def test_default_output_folder_is_the_ignored_one():
     assert OUT_FOLDER.parts[-2:] == ("pipeline", "out")

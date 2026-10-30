@@ -111,6 +111,8 @@ class RangedFile(io.RawIOBase):
         while done < wanted:
             number, offset = divmod(self.position, BLOCK_SIZE)
             piece = self._block(number)[offset:offset + wanted - done]
+            if not piece:
+                raise OSError("The server returned no data for this range")
             view[done:done + len(piece)] = piece
             done += len(piece)
             self.position += len(piece)
@@ -123,6 +125,7 @@ def open_remote(url, raw_folder=RAW_FOLDER):
     Imported here so that tests and CI never need the network or a login.
     """
     import earthaccess
+    require_before_cutoff(url)
     if not earthaccess.login(strategy="netrc").authenticated:
         raise RuntimeError("Earthdata login failed")
     system = earthaccess.get_fsspec_https_session()

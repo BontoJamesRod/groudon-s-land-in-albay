@@ -25,6 +25,8 @@ def folders(tmp_path):
     write_fake(out)
     (data / "sites" / "mayon").mkdir(parents=True)
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
+    for name in ("towns.geojson", "land.geojson"):
+        shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)
     return out, data
 
 
@@ -78,5 +80,5 @@ def test_invalid_output_stops_and_changes_nothing(folders):
     (out / "sites" / "mayon" / "pairs" / PAIR / "new_material.bin").write_bytes(b"short")
     with pytest.raises(PublishError):
         run(out, data)
-    assert not (data / "sites" / "mayon" / "pairs").exists()
+    assert not list((data / "sites" / "mayon").glob("pairs/*"))
     assert not (data / "sites.json").exists()

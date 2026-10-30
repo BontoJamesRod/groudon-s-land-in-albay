@@ -70,9 +70,12 @@ def _check_ready(out_pair_folder):
 
 def _restore(target, backup, lists):
     """Put back site/data/ as it was before a failed publish."""
-    shutil.rmtree(target, ignore_errors=True)
+    # No ignore_errors: if a file is locked, stop here rather than nest the backup inside it.
+    if target.exists():
+        shutil.rmtree(target)
     if backup.is_dir():
         shutil.move(str(backup), str(target))
+    shutil.rmtree(backup.parent, ignore_errors=True)
     for path, content in lists.items():
         if content is None:
             path.unlink(missing_ok=True)

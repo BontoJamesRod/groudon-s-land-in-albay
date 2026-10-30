@@ -13,6 +13,7 @@ import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from PIL import Image
 from shapely.geometry import shape
@@ -291,10 +292,15 @@ def check_row(row, table, where, errors):
             errors.append(f"{where}: field '{name}' is above {rule['high']}")
 
 
+def _refuse_constant(name):
+    """Python accepts NaN and Infinity in JSON, but browsers don't, so they are errors."""
+    raise ValueError(f"{name} is not valid JSON")
+
+
 def _load_json(path, errors):
     """Read a JSON file. Return None and record an error if it can't be parsed."""
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"), parse_constant=_refuse_constant)
     except (ValueError, OSError) as problem:
         errors.append(f"{path}: can't be read as JSON ({problem})")
         return None
@@ -369,6 +375,16 @@ def _check_bounds(row, where, errors):
             errors.append(f"{where}: bounds are reversed")
 
 
+def _check_time_zone(name, where, errors):
+    """The browser stops on an unknown time zone, so it must be a real IANA name."""
+    if not isinstance(name, str):
+        return
+    try:
+        ZoneInfo(name)
+    except (KeyError, ValueError, OSError):
+        errors.append(f"{where}: unknown time zone {name!r}")
+
+
 def check_sites(path, errors):
     """Check sites.json and return its rows."""
     rows = _check_data_array(load_json_file(path, errors), path, errors)
@@ -379,6 +395,7 @@ def check_sites(path, errors):
         if not isinstance(row, dict):
             continue
         _check_bounds(row, where, errors)
+        _check_time_zone(row.get("time_zone"), where, errors)
         if row.get("status") != "published":
             errors.append(f"{where}: only published sites may appear in sites.json")
         zooms = [row.get(k) for k in ("min_zoom", "default_zoom", "max_zoom")]
@@ -465,6 +482,8 @@ def check_towns(path, site_id, source_ids, errors):
 def check_land(path, site_id, source_ids, errors):
     """Check land.geojson."""
     features = load_geojson_file(path, errors) or []
+    if len(features) != 1:
+        errors.append(f"{path}: must hold exactly 1 land feature")
     allowed = {"Polygon", "MultiPolygon"}
     for where, props, _geom in _feature_rows(features, LAND, allowed, path, site_id, errors):
         if props.get("source_id") not in source_ids:
@@ -512,10 +531,13 @@ def _check_pass(row, pair, where, errors):
     start, end = row.get("acquired_start"), row.get("acquired_end")
     if isinstance(start, str) and isinstance(end, str) and end < start:
         errors.append(f"{where}: acquired_end is before acquired_start")
+    track, frame = row.get("track"), row.get("frame")
+    if not isinstance(track, int) or not isinstance(frame, int):
+        return  # already reported, and the id can't be worked out without them
     if isinstance(start, str) and isinstance(row.get("id"), str):
         stamp = start.replace("-", "").replace(":", "").rstrip("Z")
         letter = "A" if row.get("orbit_direction") == "ascending" else "D"
-        expected = f"{letter}{row.get('track', 0):03d}F{row.get('frame', 0):03d}_{stamp}"
+        expected = f"{letter}{track:03d}F{frame:03d}_{stamp}"
         if row["id"] != expected:
             errors.append(f"{where}: id should be {expected!r}")
 
@@ -540,13 +562,15 @@ def check_pair_row(row, where, errors, published=True):
         errors.append(f"{where}: coherence_loss_threshold must be null without coherence")
     if used is True and loss is None:
         errors.append(f"{where}: coherence_loss_threshold is needed when coherence is used")
+    if used is True and (row.get("gunw_granule_id") is None or row.get("previous_pair_id") is None):
+        errors.append(f"{where}: coherence needs gunw_granule_id and previous_pair_id")
     if used is False and row.get("high_confidence_area_km2") not in (0, 0.0):
         errors.append(f"{where}: no coherence means no high-confidence area (FR-030)")
     areas = [row.get(k) for k in ("high_confidence_area_km2", "low_confidence_area_km2",
                                   "new_material_area_km2")]
     if all(isinstance(a, (int, float)) for a in areas):
-        # Areas are stored rounded, so allow for rounding of the three numbers.
-        if abs(areas[0] + areas[1] - areas[2]) > 0.011:
+        # The tolerance only covers how computers store decimals.
+        if abs(areas[0] + areas[1] - areas[2]) > 1e-6:
             errors.append(f"{where}: new_material_area_km2 must equal high + low")
     before, after = row.get("before_acquired_start"), row.get("after_acquired_start")
     if isinstance(before, str) and isinstance(after, str) and after <= before:
@@ -575,6 +599,8 @@ def _check_legend(layer, where, errors):
     if layer.get("kind") == "new_material" and not legend:
         errors.append(f"{where}: new_material legend can't be empty")
     for item in legend:
+        if layer.get("kind") == "new_material" and isinstance(item, dict) and item.get("confidence") is None:
+            errors.append(f"{where}: new_material legend items need a confidence (NFR-008)")
         if not isinstance(item, dict) or set(item) != {"value", "label", "color", "confidence"}:
             errors.append(f"{where}: legend items need value, label, color and confidence")
             continue
@@ -609,7 +635,7 @@ def _check_image(layer, folder, where, errors):
                       f"record says {layer.get('image_format')}")
 
 
-def _check_grid(layer, folder, where, errors):
+def _check_grid(layer, folder, where, errors, coherence_used=True):
     """The grid file must have exactly width x height x cell-size bytes (API-010)."""
     grid_path = layer.get("grid_path")
     if grid_path is None:
@@ -633,9 +659,12 @@ def _check_grid(layer, folder, where, errors):
         errors.append(f"{where}: grid has {len(content)} bytes, expected "
                       f"{width * height * cell_bytes}")
     elif layer.get("kind") == "new_material" and cell_bytes == 1:
-        unknown = set(content) - NEW_MATERIAL_VALUES
+        values = set(content)
+        unknown = values - NEW_MATERIAL_VALUES
         if unknown:
             errors.append(f"{where}: grid holds invalid cell values {sorted(unknown)[:5]}")
+        if not coherence_used and 2 in values:
+            errors.append(f"{where}: grid has high-confidence cells without coherence (FR-030)")
 
 
 def check_layer(layer, pair, folder, where, errors):
@@ -656,11 +685,14 @@ def check_layer(layer, pair, folder, where, errors):
     codes = layer.get("no_data_codes")
     if isinstance(codes, dict) and any(NO_DATA_REASON.get(k) != v for k, v in codes.items()):
         errors.append(f"{where}: no_data_codes has an invalid code or reason")
-    if layer.get("kind") == "new_material" and layer.get("grid_path") is None:
-        errors.append(f"{where}: the new_material layer needs a value grid")
+    if layer.get("kind") == "new_material":
+        if layer.get("grid_path") is None:
+            errors.append(f"{where}: the new_material layer needs a value grid")
+        if not isinstance(codes, dict) or set(codes) != set(NO_DATA_REASON):
+            errors.append(f"{where}: the new_material layer needs all 3 no_data_codes (FR-011)")
     _check_legend(layer, where, errors)
     _check_image(layer, folder, where, errors)
-    _check_grid(layer, folder, where, errors)
+    _check_grid(layer, folder, where, errors, pair.get("coherence_used") is not False)
 
 
 def check_pair_folder(folder, site_id, errors, published=True):
@@ -692,6 +724,9 @@ def _check_pair_passes(pair, path, errors):
     for number, row in enumerate(passes):
         _check_pass(row, pair, f"{path} pass {number}", errors)
     by_id = {row.get("id"): row for row in passes if isinstance(row, dict)}
+    granules = [row.get("granule_id") for row in passes if isinstance(row, dict)]
+    if len(set(granules)) != len(granules):
+        errors.append(f"{path}: the 2 passes must have different granule_id values")
     links = (("before_pass_id", "before_acquired_start"), ("after_pass_id", "after_acquired_start"))
     for id_name, start_name in links:
         row = by_id.get(pair.get(id_name))
@@ -736,6 +771,17 @@ def check_validation(path, pair_id, errors):
             errors.append(f"{where}: validation_id differs from the validation")
 
 
+def _check_row_matches_pair(row, pair_path, where, errors):
+    """A pairs.json row must say the same as the pair's own file, or the screens disagree."""
+    full = load_json_file(pair_path, [])
+    if not isinstance(full, dict):
+        return  # reported when the pair folder itself is checked
+    columns = set(row) | (set(full) - {"passes", "layers"})
+    for name in sorted(columns):
+        if row.get(name) != full.get(name):
+            errors.append(f"{where}: {name} differs from {pair_path.name}")
+
+
 def check_pairs_list(path, site_id, site_folder, errors):
     """Check pairs.json, oldest first, and that each row matches its pair.json."""
     rows = _check_data_array(load_json_file(path, errors), path, errors)
@@ -750,15 +796,18 @@ def check_pairs_list(path, site_id, site_folder, errors):
         if row.get("site_id") != site_id:
             errors.append(f"{where}: site_id should be {site_id!r}")
         starts.append(str(row.get("after_acquired_start")))
-        if not (site_folder / "pairs" / str(row.get("id")) / "pair.json").is_file():
+        pair_path = site_folder / "pairs" / str(row.get("id")) / "pair.json"
+        if not pair_path.is_file():
             errors.append(f"{where}: this pair has no pair.json folder")
+            continue
+        _check_row_matches_pair(row, pair_path, where, errors)
     if starts != sorted(starts):
         errors.append(f"{path}: pairs must be sorted oldest first by after_acquired_start")
     return {row.get("id") for row in rows if isinstance(row, dict)}
 
 
 def check_site_folder(folder, source_ids, errors, published=True):
-    """Check the files of one site. Only files that exist are read, except the required ones."""
+    """Check the files of one site. Which ones must exist is decided in check_data_dir."""
     site_id = folder.name
     town_ids = set()
     if (folder / "towns.geojson").is_file():
@@ -792,11 +841,27 @@ def _known_files(folder):
     return known
 
 
+def _check_required_top_files(root, errors):
+    """Without these, no visitor can use the site at all."""
+    for name in ("sites.json", "sources.json"):
+        if not (root / name).is_file():
+            errors.append(f"{root / name}: this required file is missing")
+
+
+def _check_required_site_files(folder, errors):
+    """A listed site needs these to open. Channels and events are optional for the screen (03 section 5)."""
+    for name in ("towns.geojson", "land.geojson", "pairs.json"):
+        if not (folder / name).is_file():
+            errors.append(f"{folder / name}: this required file is missing")
+
+
 def check_data_dir(root, published=True):
     """Check everything under a data folder and return a list of problems (empty = good)."""
     root = Path(root)
     errors = []
     known = {root / "sites.json", root / "sources.json"}
+    if published:
+        _check_required_top_files(root, errors)
     source_ids = set()
     if (root / "sources.json").is_file():
         source_ids = check_sources(root / "sources.json", errors)
@@ -807,6 +872,8 @@ def check_data_dir(root, published=True):
         site_id = row.get("id") if isinstance(row, dict) else None
         if site_id and not (root / "sites" / str(site_id)).is_dir():
             errors.append(f"{root / 'sites.json'}: site {site_id!r} has no data folder")
+        elif site_id and published:
+            _check_required_site_files(root / "sites" / str(site_id), errors)
     for folder in sorted((root / "sites").glob("*")):
         if folder.is_dir():
             known |= check_site_folder(folder, source_ids, errors, published)

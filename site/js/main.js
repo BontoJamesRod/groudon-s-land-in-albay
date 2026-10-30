@@ -99,6 +99,7 @@ async function showSite(site, siteData) {
   byId("search-panel").hidden = true;
   if (app.compare) app.compare.close();
   if (app.map) app.map.remove();
+  app.map = null;
   app.pair = null;
   app.site = site;
   byId("site-name").textContent = site.name;
@@ -129,7 +130,13 @@ async function openSite(site) {
     showError(STRINGS.siteLoadError(site.name), () => openSite(site));
     return;
   }
-  await showSite(site, siteData);
+  try {
+    await showSite(site, siteData);
+  } catch (problem) {
+    // Bad data can break the map itself, and the visitor still needs a way to try again.
+    console.error(problem);
+    showError(STRINGS.siteLoadError(site.name), () => openSite(site));
+  }
 }
 
 function setUpPanels() {

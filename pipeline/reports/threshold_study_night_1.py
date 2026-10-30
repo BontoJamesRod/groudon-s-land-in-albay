@@ -48,7 +48,6 @@ LOSS_CANDIDATES = (0.2, 0.3, 0.4, 0.5)
 PERCENTILES = (50, 90, 95, 99, 99.9)
 MAP_PAIRS = ("mayon_A039F008_20260710_20260722", "mayon_A111F008_20260703_20260715",
              "mayon_A039F008_20260920_20261002", "mayon_A111F008_20261007_20261019")
-MAP_BRIGHTNESS, MAP_LOSS = 3.0, 0.3  # the PROVISIONAL values, shown for comparison only
 NEUTRAL = "#8C8C8C"
 ACCENT = "#D55E00"
 INK = "#1F2328"
@@ -114,7 +113,10 @@ def study_pair(pair, kind, bounds, land, config):
         values = values[np.isfinite(values)]
         record["loss_percentiles"] = {str(p): round(float(np.percentile(values, p)), 3) for p in PERCENTILES}
         record["loss_hist"] = histogram(values, np.arange(-1, 1.01, 0.05))
-    classes = classify(result["change_db"], loss, result["reasons"], MAP_BRIGHTNESS, MAP_LOSS)
+    # The maps show the PROVISIONAL values from the site config, for comparison only.
+    thresholds = config["thresholds"]
+    classes = classify(result["change_db"], loss, result["reasons"],
+                       thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
     return record, classes[::4, ::4]
 
 

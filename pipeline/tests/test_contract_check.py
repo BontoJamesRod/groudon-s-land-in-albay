@@ -155,8 +155,67 @@ def test_correct_files_pass(data_dir):
     assert check_data_dir(data_dir) == []
 
 
-def test_empty_folder_passes(tmp_path):
-    assert check_data_dir(tmp_path) == []
+def test_empty_folder_fails_when_published(tmp_path):
+    assert any("required file is missing" in e for e in check_data_dir(tmp_path))
+
+
+def test_empty_folder_is_fine_for_unpublished_output(tmp_path):
+    assert check_data_dir(tmp_path, published=False) == []
+
+
+@pytest.mark.parametrize("name", ["sources.json", "sites.json", "sites/mayon/towns.geojson", "sites/mayon/land.geojson", "sites/mayon/pairs.json"])
+def test_missing_required_file_fails(data_dir, name):
+    (data_dir / name).unlink()
+    assert any("is missing" in e or "not listed" in e for e in check_data_dir(data_dir))
+
+
+def test_row_must_match_its_pair_file(data_dir):
+    def change(content):
+        content["data"][0].update(high_confidence_area_km2=1.0, low_confidence_area_km2=1.0, new_material_area_km2=2.0)
+    edit_json(data_dir / "sites" / "mayon" / "pairs.json", change)
+    assert any("differs from pair.json" in e for e in check_data_dir(data_dir))
+
+
+def test_nan_in_json_fails(data_dir):
+    path = data_dir / "sources.json"
+    path.write_text(path.read_text(encoding="utf-8").replace("[{", "[{\"x\": NaN, "), encoding="utf-8")
+    assert any("can't be read as JSON" in e for e in check_data_dir(data_dir))
+
+
+def test_unknown_time_zone_fails(data_dir):
+    edit_json(data_dir / "sites.json", lambda c: c["data"][0].update(time_zone="Foo/Bar"))
+    assert any("unknown time zone" in e for e in check_data_dir(data_dir))
+
+
+def test_area_off_by_one_hundredth_fails(data_dir):
+    edit_json(pair_path(data_dir), lambda c: c["data"].update(new_material_area_km2=0.27))
+    assert any("high + low" in e for e in check_data_dir(data_dir))
+
+
+def test_coherence_needs_its_products(data_dir):
+    edit_json(pair_path(data_dir), lambda c: c["data"].update(gunw_granule_id=None))
+    assert any("coherence needs" in e for e in check_data_dir(data_dir))
+
+
+def test_same_granule_twice_fails(data_dir):
+    def change(content):
+        content["data"]["passes"][1]["granule_id"] = content["data"]["passes"][0]["granule_id"]
+    edit_json(pair_path(data_dir), change)
+    assert any("different granule_id" in e for e in check_data_dir(data_dir))
+
+
+def test_new_material_needs_no_data_codes(data_dir):
+    def change(content):
+        next(l for l in content["data"]["layers"] if l["kind"] == "new_material")["no_data_codes"] = None
+    edit_json(pair_path(data_dir), change)
+    assert any("no_data_codes" in e for e in check_data_dir(data_dir))
+
+
+def test_high_cells_without_coherence_fail(data_dir):
+    def change(content):
+        content["data"].update(coherence_used=False, coherence_loss_threshold=None, high_confidence_area_km2=0, new_material_area_km2=0.21)
+    edit_json(pair_path(data_dir), change)
+    assert any("without coherence" in e for e in check_data_dir(data_dir))
 
 
 def test_broken_json_fails(data_dir):

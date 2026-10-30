@@ -5,6 +5,7 @@
 import { STRINGS } from "./strings.js";
 
 const TILE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const TILE_FAILURES_FOR_NOTICE = 4;
 const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false };
 const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
 const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
@@ -14,14 +15,15 @@ export const RADAR_PANE = "radar";
 
 function addBackground(map, notice) {
   const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
-  let anyTileLoaded = false;
+  let failuresInARow = 0;
   tiles.on("tileload", () => {
-    anyTileLoaded = true;
+    failuresInARow = 0;
     notice.hidden = true;
   });
-  // One failed tile among good ones isn't an outage, so the message waits for none having loaded.
+  // One failed tile among good ones isn't an outage, so the message waits for a run of failures.
   tiles.on("tileerror", () => {
-    if (!anyTileLoaded) notice.hidden = false;
+    failuresInARow += 1;
+    if (failuresInARow >= TILE_FAILURES_FOR_NOTICE) notice.hidden = false;
   });
   tiles.addTo(map);
 }
@@ -45,7 +47,7 @@ function escapeText(text) {
 }
 
 function addDangerZone(map, site) {
-  if (site.danger_zone_radius_km === null || site.summit_lat === null) return;
+  if (site.danger_zone_radius_km == null || site.summit_lat == null) return;
   const center = [site.summit_lat, site.summit_lon];
   const ring = L.circle(center, { ...RING_STYLE, radius: site.danger_zone_radius_km * 1000, interactive: false }).addTo(map);
   // The label sits on the ring's northern edge, where it doesn't cover the summit.

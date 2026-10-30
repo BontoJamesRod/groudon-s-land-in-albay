@@ -18,6 +18,7 @@ NONE = 0
 LOW = 1
 HIGH = 2
 SQUARE_METRES_PER_KM2 = 1_000_000
+SMALLEST_AREA_KM2 = 0.01
 
 
 def classify(change_db, loss, reasons, brightness_threshold_db, coherence_loss_threshold):
@@ -45,10 +46,15 @@ def areas_km2(classes, spacing_x_m, spacing_y_m):
     """Add up the area of each class, in km2 rounded to 2 decimals.
 
     The total is the sum of the two rounded numbers, so that it always matches what
-    the legend shows (new_material_area_km2 = high + low).
+    the legend shows (new_material_area_km2 = high + low). Any detection counts as at
+    least 0.01, so a few cells on the map can't be reported as "nothing detected".
     """
     cell_km2 = spacing_x_m * spacing_y_m / SQUARE_METRES_PER_KM2
-    high = round(float(np.count_nonzero(classes == HIGH)) * cell_km2, 2)
-    low = round(float(np.count_nonzero(classes == LOW)) * cell_km2, 2)
+
+    def rounded(cells):
+        return max(round(cells * cell_km2, 2), SMALLEST_AREA_KM2) if cells else 0.0
+
+    high = rounded(int(np.count_nonzero(classes == HIGH)))
+    low = rounded(int(np.count_nonzero(classes == LOW)))
     return {"high_confidence_area_km2": high, "low_confidence_area_km2": low,
             "new_material_area_km2": round(high + low, 2)}

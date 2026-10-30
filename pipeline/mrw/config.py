@@ -59,6 +59,8 @@ def _check_thresholds(config, path):
     values = config.get("thresholds")
     if not isinstance(values, dict):
         raise SiteConfigError(f"Missing thresholds in site config: {path}")
+    if values.get("status") not in ("PROVISIONAL", "FINAL"):
+        raise SiteConfigError(f"thresholds.status must be PROVISIONAL or FINAL in site config: {path}")
     brightness = values.get("brightness_threshold_db")
     loss = values.get("coherence_loss_threshold")
     if not isinstance(brightness, (int, float)) or brightness <= 0:

@@ -20,7 +20,7 @@ GUNW_ERUPTION = ("NISAR_L2_PR_GUNW_033_111_A_008_034_4000_SH_20261019T211319_202
 
 class FakeResult:
     def __init__(self, name):
-        self.properties = {"sceneName": name, "url": f"https://example.org/{name}.h5"}
+        self.properties = {"sceneName": name, "url": f"https://example.org/PROVISIONAL/{name}.h5"}
 
 
 def fake_searcher(*names):
