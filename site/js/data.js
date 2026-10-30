@@ -146,6 +146,18 @@ export async function loadGrid(folder, layer) {
   return new Uint8Array(bytes);
 }
 
+// A missing validation.json is normal and means "not yet checked" (docs/06 section 6).
+export async function loadValidation(folder) {
+  try {
+    const record = await loadJson(`${folder}/validation.json`);
+    requireFields(record, ["source_name", "source_url", "source_date", "method", "items"], `${folder}/validation.json`);
+    return record;
+  } catch (problem) {
+    if (problem.code === "NOT_FOUND") return null;
+    throw problem;
+  }
+}
+
 // Load one pair with its passes and layers. Image paths are relative to the pair's folder.
 export async function loadPair(siteId, pairId) {
   const folder = `data/sites/${siteId}/pairs/${pairId}`;

@@ -6,7 +6,7 @@ import { createCompare } from "./compare.js";
 import { loadPair, loadSiteData, loadSites } from "./data.js";
 import { createNewMaterialLayer } from "./layers.js";
 import { createMap, RADAR_PANE } from "./map.js";
-import { createPanel, fillHelp, fillPicker, fillSources } from "./panels.js";
+import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
 import { createReadout } from "./readout.js";
 import { createSearch } from "./search.js";
 import { applyPageStrings, STRINGS } from "./strings.js";
@@ -146,7 +146,9 @@ function setUpPanels() {
     byId("picker-panel").close();
     if (site.id !== app.site.id) openSite(site);
   }));
+  const check = createPanel(byId("check-panel"), (body) => fillCheck(body, () => app.pair));
   byId("help-button").onclick = help;
+  byId("check-button").onclick = () => app.site && check();
   byId("sources-button").onclick = () => app.site && sources();
   byId("site-name").onclick = () => app.site && picker();
 }

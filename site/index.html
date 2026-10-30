@@ -82,7 +82,7 @@
 
   <footer class="footer">
     <p class="disclaimer" data-text="disclaimer"></p>
-    <span class="footer-links"><button id="sources-button" class="link-button" type="button" data-text="sourcesButton"></button></span>
+    <span class="footer-links"><button id="sources-button" class="link-button" type="button" data-text="sourcesButton"></button><button id="check-button" class="link-button" type="button" data-text="checkButton"></button></span>
   </footer>
 
   <dialog id="help-panel" class="panel-dialog">
@@ -91,6 +91,10 @@
   </dialog>
   <dialog id="sources-panel" class="panel-dialog">
     <header><h2 data-text="sourcesTitle"></h2><button type="button" data-close data-text="close"></button></header>
+    <div data-body></div>
+  </dialog>
+  <dialog id="check-panel" class="panel-dialog">
+    <header><h2 data-text="checkTitle"></h2><button type="button" data-close data-text="close"></button></header>
     <div data-body></div>
   </dialog>
   <dialog id="picker-panel" class="panel-dialog">

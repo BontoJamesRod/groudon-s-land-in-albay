@@ -1,0 +1,44 @@
+{
+  "draft": true,
+  "review_note": "DRAFT, owner must review. Not published: validation.py refuses this sheet until draft is false. Flanks come from search summaries of the reports, and the wedges are coarse because channel lines are not chosen. Detection numbers use the PROVISIONAL thresholds, so they will change with the final values.",
+  "source_name": "GMA News, quoting PHIVOLCS",
+  "source_url": "https://www.gmanetwork.com/news/topstories/regions/994642/mayon-volcano-sheds-pyroclastic-density-current-or-uson-anew/story/",
+  "source_date": "2026-07-13",
+  "method": "DRAFT, owner must review. Each gully named in the source was checked as a 60-degree wedge of its flank from the summit, out to its reported lava flow length, using PROVISIONAL thresholds. It counts as detected only if flagged area is above every quiet track 111 pair in the same wedge.",
+  "other_sources": [
+    {
+      "name": "The Watchers, citing DSWD DROMIC report 92 and the PHIVOLCS bulletin of 2026-07-15",
+      "url": "https://watchers.news/2026/07/15/explosive-strombolian-eruptions-at-mayon-volcano-philippines/",
+      "note": "Gives slightly different lengths as of 07-13: Basud 4 km, Bonga 3 km, Mi-isi 1.6 km. PDC and rockfall run-outs within 3 km of the crater."
+    },
+    {
+      "name": "Philippine Daily Inquirer via Asia News Network, citing PHIVOLCS",
+      "url": "https://asianews.network/?p=287449",
+      "note": "PDC from 6:31 to 6:46 a.m. after part of a lava flow collapsed, followed by light ashfall."
+    }
+  ],
+  "evidence_file": "pipeline/reports/july-gully-check.json",
+  "items": [
+    {
+      "place_name": "Basud Gully",
+      "channel_id": null,
+      "reported_in_source": true,
+      "detected": "no",
+      "note": "Lava flow reported at 3.8 km. Flagged 0.011 km² in this wedge; quiet track 111 pairs flag 0.006 to 0.181."
+    },
+    {
+      "place_name": "Bonga Gully",
+      "channel_id": null,
+      "reported_in_source": true,
+      "detected": "no",
+      "note": "Lava flow reported at 3.2 km. Flagged 0.040 km²; quiet track 111 pairs flag 0.004 to 0.108. Track 39's July pair (0.118) is above its 2 quiet pairs (0.055 to 0.068)."
+    },
+    {
+      "place_name": "Mi-isi Gully",
+      "channel_id": null,
+      "reported_in_source": true,
+      "detected": "no",
+      "note": "Lava flow reported at 2.1 km. Flagged 0.061 km²; quiet track 111 pairs flag 0 to 0.068, so just under the rule. July pairs on track 39 (0.111) and track 104 (0.068) are above their quiet pairs (up to 0.036 and 0.002)."
+    }
+  ]
+}

@@ -393,6 +393,21 @@ button:disabled { color: #6e7781; }
   line-height: 44px;
 }
 
+.check-table {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.check-table th,
+.check-table td {
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
 /* T-034: on phones the map stays large and the disclaimer stays on screen (FR-037),
    so the pass controls and legend scroll inside their own area. */
 @media (max-width: 700px) {

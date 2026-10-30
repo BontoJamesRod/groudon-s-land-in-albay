@@ -1,7 +1,7 @@
-// Tasks T-030, T-031 and T-032: the "What am I looking at?" panel, the Data sources
-// panel and the site picker. Text from data files is set with textContent, never as HTML.
+// Tasks T-030, T-031, T-032 and T-035: the "What am I looking at?" panel, the Data sources
+// panel, the site picker and the "How we checked this" panel. Text from data files is set with textContent, never as HTML.
 
-import { loadJson } from "./data.js";
+import { loadJson, loadValidation } from "./data.js";
 import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
@@ -134,6 +134,49 @@ export async function fillSources(body, getPair, timeZone) {
     const failed = element("p", `${STRINGS.sourcesError} `);
     failed.append(retryButton(() => fillSources(body, getPair, timeZone)));
     contextHolder.replaceWith(failed);
+  }
+}
+
+function checkTable(items) {
+  const table = element("table", undefined, "check-table");
+  const head = element("tr");
+  head.append(...STRINGS.checkColumns.map((title) => element("th", title)));
+  table.append(head);
+  for (const item of items) {
+    const row = element("tr");
+    row.append(
+      element("td", item.place_name),
+      element("td", item.reported_in_source ? STRINGS.checkYes : STRINGS.checkNo),
+      element("td", STRINGS.checkDetected[item.detected]),
+      element("td", item.note || ""),
+    );
+    table.append(row);
+  }
+  return table;
+}
+
+// SCR-07: the pair's validation record. No record is normal, not an error (FR-048).
+export async function fillCheck(body, getPair) {
+  const pair = getPair();
+  if (!pair) {
+    body.replaceChildren(element("p", STRINGS.checkEmpty));
+    return;
+  }
+  body.replaceChildren(element("p", STRINGS.checkLoading));
+  try {
+    const record = await loadValidation(pair.folder);
+    if (!record) {
+      body.replaceChildren(element("p", STRINGS.checkEmpty));
+      return;
+    }
+    const source = element("p", `${STRINGS.checkSource(record.source_name, record.source_date)} `);
+    source.append(externalLink(STRINGS.checkSourceLink, record.source_url));
+    body.replaceChildren(source, element("p", record.method), checkTable(record.items));
+  } catch (problem) {
+    console.error(problem.message);
+    const failed = element("p", `${STRINGS.checkError} `);
+    failed.append(retryButton(() => fillCheck(body, getPair)));
+    body.replaceChildren(failed);
   }
 }
 
