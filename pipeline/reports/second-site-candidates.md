@@ -1,6 +1,22 @@
 # Second-site candidates (T-036 decision prep)
 
-**No site is chosen.** This is the owner's decision. Nothing here was processed: the passes come from ASF's product list only, so whether the new-material method actually detects each event is untested.
+**No site is chosen.** This is the owner's decision. Passes come from ASF's product list. A small radar crop was then read for each candidate (`second_site_probe.py`, results in `second-site-probe.json`) to compare brightness change in the pair spanning the event with the pair before. It didn't use coherence, classify or masking of water, so the full new-material method is still untested at these sites.
+
+## Radar probe results
+
+Land flagged by brightness change alone (km²). The levels are test values only.
+
+| Candidate, pair | Valid pixels | 3 dB: before → event | 4 dB: before → event | 5 dB: before → event |
+| --- | --- | --- | --- | --- |
+| Panama, track 141 frame 85, 09-27 → 10-09 | 98% | 0.51 → **2.51** | 0.13 → **1.16** | 0.04 → **0.65** |
+| Fuego, track 134, 07-17 → 08-10 | 95% | 0.89 → 1.46 | 0.31 → 0.70 | 0.14 → 0.37 |
+| Nyamulagira, track 14, 07-21 → 08-14 | 89% | 3.79 → 0.97 | 0.80 → 0.30 | 0.10 → 0.09 |
+
+- **Panama** stands out clearly on track 141. **Tracks 4, 40 and 76 have almost no valid pixels over the cluster** (0%, 0.1%, 3.8%), even though their footprints contain it, so they aren't usable there.
+- **Fuego** shows about twice the area, but the gap is 24 days and the pair before is 12, so part of that may come from the wait.
+- **Nyamulagira** shows no sign of the flow on this pair: the pair before flags more. This box and pair may simply miss it.
+
+The boxes are rough: 11 × 11 km around the Panama cluster, about 13 × 11 km around Fuego's west side, and 16 × 14 km on Nyamulagira.
 
 All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCOV, a PROVISIONAL GUNW and a previous-pair GUNW for coherence loss, unless noted. Search only shows that a product touches the area, not how much of it has usable data. Run `python pipeline/reports/second_site_search.py` to repeat the search; full granule names are in `second-site-search.json`.
 
@@ -11,8 +27,9 @@ All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCO
 | Continent | North America (Central America) | North America (Central America) | Africa |
 | Event | Landslides from a Mw 7.7 earthquake | Pyroclastic flows in a paroxysm | Lava flow |
 | Date | 2026-10-09 | 2026-08-03 to 08-05 | Active on 2026-08-09 (start not known) |
-| Best pair | 12 days | 24 days | 24 days |
+| Best pair | 12 days (track 141) | 24 days | 24 days |
 | Independent check | Good: Sentinel-2, 2,351 mapped | Medium: named ravines | Weak: one flow length |
+| Radar probe | Clear change on track 141 | About twice the area | No sign of it |
 | Main risk | Earthquake lowers coherence widely; partial frames | 24-day gap; steep ravines | Start date; access to reports |
 
 ## A: Azuero Peninsula landslides, Panama
@@ -23,12 +40,12 @@ All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCO
 
 | Track, frame, direction | Before → after | Note |
 | --- | --- | --- |
-| 4, 5, ascending | 2026-09-30 → 10-12 | After pass covers the cluster |
-| 40, 85, descending | 2026-10-02 → 10-14 | After pass covers the cluster |
-| 76, 5, ascending | 2026-10-05 → 10-17 | After pass covers the cluster |
-| 141, 85, descending | 2026-09-27 → 10-09 | Same day as the earthquake: check the earthquake's time first |
+| 141, 85, descending | 2026-09-27 → 10-09 | **98% valid.** The after pass starts at about 23:53 UTC on the day of the earthquake: confirm the earthquake came first. The strong change suggests it did |
+| 76, 5, ascending | 2026-10-05 → 10-17 | Only 3.8% valid over the cluster, and its previous pair spans 24 days |
+| 4, 5, ascending | 2026-09-30 → 10-12 | **Not usable here:** no valid pixels over the cluster |
+| 40, 85, descending | 2026-10-02 → 10-14 | **Not usable here:** 0.1% valid over the cluster |
 
-These are **partial frames** on ASF (`_P_` in the name, `frameCoverage: Partial`). The after passes' footprints above contain the cluster at 7.477, −80.865; the before passes were not checked. Track 141 frame 84 and track 76 frame 6 don't cover it, so they are left out.
+All of these are partial frames on ASF (`_P_` in the name, `frameCoverage: Partial`). Track 141 frame 84 and track 76 frame 6 don't reach the cluster at 7.477, −80.865, so they are left out.
 
 - **Why it fits:** the 12-day gap matches Mayon's method. Landslides strip the surface, which should change brightness, and optical images allow a real validation.
 - **Risks:** this is not a volcano, so the app's wording about new material would need to fit a landslide, and there is no summit or danger zone (05 §10 covers that case). Ground shaking and movement could lower coherence across the whole scene, so false high-confidence areas are a real risk. The landslides are described as mainly shallow.
@@ -73,5 +90,5 @@ These are **partial frames** on ASF (`_P_` in the name, `frameCoverage: Partial`
 ## Checks before choosing
 
 1. Boundary data for the chosen site (`docs/05` Open Question 4). None was checked for any candidate.
-2. Process one pair and look at the result. Each costs about 0.3 GB.
+2. Process one full pair, with coherence, and look at the result. Each costs about 0.3 GB.
 3. Does the Space Apps challenge want a volcano, or any surface change?
