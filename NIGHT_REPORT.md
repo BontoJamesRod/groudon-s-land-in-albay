@@ -113,16 +113,16 @@ Branch `night-1`. Nothing pushed, nothing merged. `docs/` wasn't edited; `docs/N
 | --- | --- | --- | --- | --- |
 | 0 | Finish night 1 | Done | 61b6904, 0f26788, 50bc6d5, 5a17008, b72ca05 | T-016 and T-022 to T-025 finished. T-007 still hasn't run on GitHub (below) |
 | 1 | Independent review | Done, 2 passes, all Critical and Major findings fixed | 219c6cd, dc94da5 | Findings below |
-| 2 | T-026 readout | Done | d10e008, dc94da5 | TC-008, 009, 012 driven in headless Edge. TC-010: off-grid point gives "outside radar coverage". TC-011 not driven |
+| 2 | T-026 readout | Done | d10e008, dc94da5 | TC-008, 009, 012 driven in headless Edge. TC-010: off-grid point gives "outside radar coverage". TC-011: a real 253 cell gives "a slope the radar can't see" |
 | 3 | T-027 search | Done | e3a62a4, dc94da5 | TC-005, 006, 007 driven |
-| 4 | T-029 compare | Done; drag test blocked | 27740a5, dc94da5 | TC-018 driven by keyboard; clip follows the divider. **Dragging by finger or mouse not tested.** TC-019's path was read, not driven |
+| 4 | T-029 compare | Done; drag test blocked | 27740a5, dc94da5 | TC-018 driven by keyboard; clip follows the divider. **Dragging by finger or mouse not tested.** TC-019 driven on a temp copy with the image removed: exact message, map unchanged |
 | 5 | T-030 help, `strings.js`, wording test | Done | b20b892, dc94da5 | TC-028 driven. `test_wording.py` covers TC-030; a word list can still miss things, so read the text yourself |
 | 6 | T-031 data sources | Done | b20b892 | TC-031, TC-032 driven. ASF links not opened (06 Open Question 3) |
 | 7 | T-032 site picker | Done, one site | b20b892, dc94da5 | Picker opens and closes. Failure on switching untested until a second site exists |
-| 8 | T-033 404 and README | Done | 4c98f0c | Script commands tried. 404 page not opened in a browser |
+| 8 | T-033 404 and README | Done | 4c98f0c | Script commands tried. 404 page opened in Edge: "Page not found" with its link. Not tried at a GitHub Pages address |
 | 9 | T-034 phone and color-blind | Done in emulation; real phone blocked | 65741e3 | 360 px iframe in Edge: no horizontal scroll, no tap target under 44 px, disclaimer stays on screen. Palette validator: CVD and normal-vision checks pass. **No real phone used.** The orange's contrast is low (2.19:1), which is allowed because each class has a text label |
 | 10 | T-020 track 111 backlog | Done | 7116d6e | 9 of 9 pairs published, 2026-06-21 to 10-19. None left. `site/data` is 74 MB |
-| 11 | T-035 panel, `validation.py`, draft | Done; publishing blocked on your review | 91fd0a2, 75729dd | TC-041 driven. **TC-040 not driven**, because no published record exists. Draft is refused by `--publish` and isn't in `site/data` |
+| 11 | T-035 panel, `validation.py`, draft | Done; publishing blocked on your review | 91fd0a2, 75729dd | TC-041 driven. TC-040 driven on a temp copy only, using the draft's table. Draft is refused by `--publish` and isn't in `site/data` |
 | 12a | Channel lines (T-010) prep | Done, not built | a52f480 | `pipeline/reports/channel-candidates.md` |
 | 12b | Second site (T-036) prep | Done, none chosen | 22fc3bd, b686bf4 | `pipeline/reports/second-site-candidates.md` |
 
@@ -136,10 +136,11 @@ These parts of the tasks above are not done, and I can't finish them tonight.
 | --- | --- | --- | --- |
 | 9, T-034 | Check on a real phone | No phone is available in this session; 360 px and tap targets were only emulated in Edge | Your phone check, to-do item 2 |
 | 4, T-029 | Dragging the divider by finger or mouse | Headless Edge can't send a real pointer drag here; only the keyboard path was driven | The same phone check |
-| 11, T-035 | Publishing the July validation, and TC-040 on a published record | The plan requires your review of the draft | Your answer to decision 3 below |
+| 11, T-035 | Publishing the July validation | The plan requires your review of the draft | Your answer to decision 3 below |
+| 12b, T-036 | Boundary data and a full-method run for a second site | `NIGHT_PLAN_2.md` doesn't ask for these, and both depend on which site you choose. The candidates were checked by ASF metadata and a brightness-only probe | Your choice of site |
 | 1, and night 1 T-006 and T-007 | Running CI and the fake-secret test on GitHub | Hard rule 1 forbids pushing, and running the gitleaks binary locally was denied by the session's safety check. `pytest` and the contract check pass on the last commit locally only | To-do item 1 |
 
-Not blocked, but not done because the plan didn't ask for it: boundary data for the second-site candidates wasn't checked, and it's listed as a check to do before choosing in `pipeline/reports/second-site-candidates.md`.
+"Done" in the table above means the task's work is finished and tested as its evidence column says. Anything that needs a real phone, GitHub or your decision is in this table instead.
 
 ## Track 111 backlog (PROVISIONAL values)
 
