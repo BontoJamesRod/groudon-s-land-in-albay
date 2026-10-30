@@ -162,7 +162,7 @@ def search_gunw(config, start, searcher=_asf_search, cutoff=BLIND_CUTOFF):
                        end=cutoff - timedelta(seconds=1))
     products = []
     for name, props in _safe_results(results, cutoff):
-        parsed = parse_gunw(name, props.get("url"))
+        parsed = parse_gunw(name, props.get("url")) if maturity_of(props) else None
         if parsed:
             products.append(parsed)
     return _keep_newest_versions(products, ("track", "frame", "orbit_direction",

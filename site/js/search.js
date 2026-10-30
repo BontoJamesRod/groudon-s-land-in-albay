@@ -51,8 +51,13 @@ export function createSearch(elements, towns, onPick) {
   elements.form.onsubmit = (event) => {
     event.preventDefault();
     const text = elements.input.value;
-    const matches = towns.features.filter((town) => town.properties.name.toLowerCase().includes(text.trim().toLowerCase()));
-    if (!text.trim() || matches.length === 0) {
+    if (text.trim().length < MIN_LETTERS) {
+      showSuggestions([]);
+      elements.message.textContent = STRINGS.searchHint;
+      return;
+    }
+    const matches = matchingTowns(towns, text);
+    if (matches.length === 0) {
       showSuggestions([]);
       elements.message.textContent = STRINGS.searchNoMatch;
       return;

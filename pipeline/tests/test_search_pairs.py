@@ -72,6 +72,13 @@ def test_gunw_search_drops_a_product_whose_second_date_is_after_the_cutoff():
     assert [p["granule_id"] for p in products] == [GUNW_SAFE]
 
 
+def test_a_gunw_of_unknown_maturity_is_left_out():
+    urgent = FakeResult(GUNW_SAFE.replace("_PR_", "_UR_"))
+    urgent.properties["url"] = "https://example.org/URGENT/x.h5"
+    products = search_gunw(load_site("mayon"), "2026-06-17", searcher=lambda **options: [urgent, FakeResult(GUNW_SAFE)])
+    assert [p["granule_id"] for p in products] == [GUNW_SAFE]
+
+
 def test_mixed_tracks_stop_with_the_exact_message():
     with pytest.raises(PairError) as caught:
         check_same_track(parse_gcov(GCOV_1), parse_gcov(GCOV_OTHER))

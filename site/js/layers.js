@@ -33,7 +33,7 @@ function legendRow(item) {
 function showLegend(elements, layer, pair) {
   elements.title.textContent = layer.title;
   elements.rows.replaceChildren(...layer.legend.map(legendRow));
-  elements.area.textContent = STRINGS.totalArea(pair.new_material_area_km2);
+  elements.area.textContent = `${STRINGS.layerUnits(layer.units)}. ${STRINGS.totalArea(pair.new_material_area_km2)}`;
 }
 
 function summaryText(pair, timeZone) {
@@ -53,10 +53,11 @@ export function createNewMaterialLayer(map, elements, site) {
     else overlay.remove();
   };
 
-  return async function showPair(pair) {
+  return async function showPair(pair, isCurrent) {
     const layer = pair.layers.find((item) => item.kind === "new_material");
     const url = `${pair.folder}/${layer.image_path}`;
     await loadImage(url);
+    if (!isCurrent()) return;
     if (overlay) overlay.remove();
     overlay = L.imageOverlay(url, layerBounds(layer), { pane: RADAR_PANE, alt: layer.title, className: "radar-image" });
     if (elements.toggle.checked) overlay.addTo(map);

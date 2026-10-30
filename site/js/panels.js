@@ -51,7 +51,8 @@ export function createPanel(dialog, fill) {
 }
 
 function legendList(layer) {
-  const rows = (layer ? layer.legend : []).map((item) => {
+  if (!layer) return list([...STRINGS.helpClasses, STRINGS.helpNoColor]);
+  const rows = layer.legend.map((item) => {
     const row = element("span", null, "legend-line");
     const swatch = element("span", undefined, "swatch");
     swatch.style.backgroundColor = item.color;

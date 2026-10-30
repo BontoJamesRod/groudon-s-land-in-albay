@@ -101,7 +101,10 @@ def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLD
         shutil.move(str(target), str(backup))
     now = utc_now_text()
     try:
-        shutil.copytree(source, target)
+        # A validation never travels with a pair: only validation.py publishes one, after review.
+        shutil.copytree(source, target, ignore=shutil.ignore_patterns("validation.json"))
+        if (backup / "validation.json").is_file():
+            shutil.copy(backup / "validation.json", target / "validation.json")
         content = json.loads((target / "pair.json").read_text(encoding="utf-8"))
         pair = content["data"]
         pair.update(status="published", published_at=now, updated_at=now)

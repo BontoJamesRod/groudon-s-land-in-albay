@@ -367,6 +367,14 @@ def test_command_line_exit_codes(data_dir, capsys):
     assert "error(s)" in capsys.readouterr().out
 
 
+def test_a_draft_validation_fails_when_published(data_dir):
+    record = {"id": f"val_{PAIR_ID}", "pair_id": PAIR_ID, "source_name": "s", "source_url": "https://x.org",
+              "source_date": "2026-07-13", "method": "DRAFT, owner must review.", "items": [],
+              "created_at": STAMP, "updated_at": STAMP}
+    write(pair_path(data_dir).parent / "validation.json", envelope(record))
+    assert any("draft validation" in e for e in check_data_dir(data_dir))
+
+
 def test_fixture_builders_are_independent():
     first = site_row()
     second = copy.deepcopy(first)

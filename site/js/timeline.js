@@ -35,10 +35,12 @@ function optionText(pair, events, timeZone) {
   return names.length ? STRINGS.optionWithEvents(pairDates(pair, timeZone), names.join(", ")) : pairDates(pair, timeZone);
 }
 
-// Set up the timeline. `onSelect` loads a pair and rejects if it can't.
-export function createTimeline(elements, site, pairs, events, onSelect) {
+// Set up the timeline. `onSelect` loads a pair and rejects if it can't. It also gets a
+// function that says if this is still the latest choice, as a slow load can arrive late.
+export function createTimeline(elements, site, pairs, events, siteIsShown, onSelect) {
   const timeZone = site.time_zone;
   let selected = pairs.length - 1;
+  let latestChoice = 0;
 
   function showSelected() {
     const pair = pairs[selected];
@@ -53,10 +55,15 @@ export function createTimeline(elements, site, pairs, events, onSelect) {
   async function select(index) {
     elements.message.textContent = "";
     elements.retry.hidden = true;
+    latestChoice += 1;
+    const thisChoice = latestChoice;
+    const isCurrent = () => thisChoice === latestChoice && siteIsShown();
     try {
-      await onSelect(pairs[index]);
+      await onSelect(pairs[index], isCurrent);
+      if (!isCurrent()) return;
       selected = index;
     } catch (problem) {
+      if (!isCurrent()) return;
       console.error(problem.message);
       elements.message.textContent = STRINGS.passLoadError;
       elements.retry.hidden = false;

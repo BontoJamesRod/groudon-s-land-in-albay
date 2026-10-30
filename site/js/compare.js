@@ -3,6 +3,7 @@
 // Both images sit on the map, one over the other. Each shows only its own side of
 // the divider, using a clip that is worked out again whenever the map moves.
 
+import { COMPARE_PANE } from "./map.js";
 import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
@@ -22,6 +23,7 @@ function preload(url) {
 export function createCompare(map, elements, site, hideRadar) {
   let overlays = null;
   let fraction = 0.5; // where the divider is, as a share of the map's width
+  let request = 0; // closing, or opening again, cancels a load that is still running
 
   function applyClip() {
     if (!overlays) return;
@@ -38,6 +40,7 @@ export function createCompare(map, elements, site, hideRadar) {
   }
 
   function close() {
+    request += 1;
     if (!overlays) return;
     overlays.before.remove();
     overlays.after.remove();
@@ -79,23 +82,25 @@ export function createCompare(map, elements, site, hideRadar) {
 
   function addOverlay({ layer, url }) {
     const bounds = [[layer.bounds_south, layer.bounds_west], [layer.bounds_north, layer.bounds_east]];
-    return L.imageOverlay(url, bounds, { className: "radar-image", alt: layer.title }).addTo(map);
+    return L.imageOverlay(url, bounds, { pane: COMPARE_PANE, className: "radar-image", alt: layer.title }).addTo(map);
   }
 
   // Load both images first. If either fails, the map stays exactly as it was (FR-020).
   async function open(pair) {
     close();
+    const thisRequest = request;
     elements.message.textContent = STRINGS.compareLoading;
-    const before = imageUrl(pair, "before_db");
-    const after = imageUrl(pair, "after_db");
+    const before = pair && imageUrl(pair, "before_db");
+    const after = pair && imageUrl(pair, "after_db");
     try {
       if (!before || !after) throw new Error("The pair has no before or after layer");
       await Promise.all([preload(before.url), preload(after.url)]);
     } catch (problem) {
       console.error(problem.message);
-      elements.message.textContent = STRINGS.compareMissing;
+      if (thisRequest === request) elements.message.textContent = STRINGS.compareMissing;
       return;
     }
+    if (thisRequest !== request) return;
     elements.message.textContent = "";
     hideRadar(true);
     overlays = { before: addOverlay(before), after: addOverlay(after) };

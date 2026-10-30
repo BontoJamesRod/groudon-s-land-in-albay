@@ -15,7 +15,7 @@ import { createTimeline } from "./timeline.js";
 const byId = (id) => document.getElementById(id);
 
 // What is on screen now.
-const app = { sites: [], site: null, map: null, pair: null, compare: null };
+const app = { sites: [], site: null, map: null, pair: null, compare: null, openRequest: 0 };
 
 function showError(text, retry) {
   byId("app-message").textContent = text;
@@ -66,6 +66,9 @@ function setUpPairs(map, site, siteData, readout) {
     return Promise.resolve();
   }
   byId("panel").hidden = false;
+  // Showing the panel made the map shorter, and Leaflet only notices that when told.
+  map.invalidateSize({ pan: false });
+  map.setView([site.center_lat, site.center_lon], site.default_zoom, { animate: false });
   const showPair = createNewMaterialLayer(map, {
     toggle: byId("layer-toggle"),
     title: byId("legend-title"),
@@ -74,6 +77,7 @@ function setUpPairs(map, site, siteData, readout) {
     summary: byId("summary"),
   }, site);
   byId("compare-button").onclick = () => app.compare.open(app.pair);
+  const siteIsShown = () => app.site === site;
   return createTimeline({
     list: byId("pair-list"),
     label: byId("pair-label"),
@@ -82,9 +86,11 @@ function setUpPairs(map, site, siteData, readout) {
     next: byId("next"),
     message: byId("timeline-message"),
     retry: byId("timeline-retry"),
-  }, site, siteData.pairs, siteData.events, async (summary) => {
+  }, site, siteData.pairs, siteData.events, siteIsShown, async (summary, isCurrent) => {
     const pair = await loadPair(site.id, summary.id);
-    await showPair(pair);
+    if (!isCurrent()) return;
+    await showPair(pair, isCurrent);
+    if (!isCurrent()) return;
     app.compare.close();
     app.compare.clearMessage();
     app.pair = pair;
@@ -122,10 +128,14 @@ async function showSite(site, siteData) {
 async function openSite(site) {
   clearMessage();
   byId("loading").hidden = false;
+  app.openRequest += 1;
+  const thisRequest = app.openRequest; // only the site picked last may open
   let siteData;
   try {
     siteData = await loadSiteData(site.id);
+    if (thisRequest !== app.openRequest) return;
   } catch (problem) {
+    if (thisRequest !== app.openRequest) return;
     console.error(problem.message);
     showError(STRINGS.siteLoadError(site.name), () => openSite(site));
     return;

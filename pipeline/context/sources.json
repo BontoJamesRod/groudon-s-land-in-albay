@@ -9,6 +9,15 @@
     "retrieved_on": "2026-10-31"
   },
   {
+    "id": "ph_coastline",
+    "name": "Coastline, from the union of the Philippine municipal and city boundaries",
+    "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
+    "used_for": "coastline",
+    "url": "https://github.com/faeldon/philippines-json-maps",
+    "license": "CC BY-IGO",
+    "retrieved_on": "2026-10-31"
+  },
+  {
     "id": "esri_world_imagery",
     "name": "World Imagery background map",
     "provider": "Esri",

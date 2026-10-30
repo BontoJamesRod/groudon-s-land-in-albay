@@ -69,6 +69,31 @@ def test_publishing_again_replaces_the_pair_and_keeps_created_at(folders):
     assert check_data_dir(data) == []
 
 
+def test_a_validation_in_the_output_is_never_published_with_the_pair(folders):
+    out, data = folders
+    (out / "sites" / "mayon" / "pairs" / PAIR / "validation.json").write_text("{}", encoding="utf-8")
+    (out / "sites" / "mayon" / "pairs" / PAIR / "validation.json").unlink()
+    (out / "sites" / "mayon" / "pairs" / PAIR / "validation.json").write_text("draft", encoding="utf-8")
+    try:
+        run(out, data)
+    except PublishError:
+        pass
+    assert not (data / "sites" / "mayon" / "pairs" / PAIR / "validation.json").exists()
+
+
+def test_publishing_again_keeps_a_reviewed_validation(folders):
+    out, data = folders
+    run(out, data)
+    target = data / "sites" / "mayon" / "pairs" / PAIR / "validation.json"
+    record = {"data": {"id": f"val_{PAIR}", "pair_id": PAIR, "source_name": "s", "source_url": "https://x.org",
+                       "source_date": "2026-07-13", "method": "Checked.", "items": [],
+                       "created_at": "2026-11-01T00:00:00Z", "updated_at": "2026-11-01T00:00:00Z"},
+              "meta": {"generated_at": "2026-11-01T00:00:00Z", "schema_version": "1.0"}}
+    target.write_text(json.dumps(record), encoding="utf-8")
+    run(out, data)
+    assert target.is_file()
+
+
 def test_missing_pair_stops(folders):
     out, data = folders
     with pytest.raises(PublishError):

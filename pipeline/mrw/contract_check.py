@@ -754,7 +754,7 @@ def _check_pair_layers(pair, folder, path, errors):
         errors.append(f"{path}: layers missing {sorted(needed - set(kinds))}")
 
 
-def check_validation(path, pair_id, errors):
+def check_validation(path, pair_id, errors, published=False):
     """Check an optional validation.json."""
     row = load_json_file(path, errors)
     if not isinstance(row, dict):
@@ -763,6 +763,8 @@ def check_validation(path, pair_id, errors):
     check_row(row, VALIDATIONS, path, errors)
     if row.get("pair_id") != pair_id:
         errors.append(f"{path}: pair_id should be {pair_id!r}")
+    if published and "DRAFT" in json.dumps(row):
+        errors.append(f"{path}: a draft validation can't be published")
     items = row.get("items")
     for number, item in enumerate(items if isinstance(items, list) else []):
         where = f"{path} item {number}"
@@ -828,7 +830,7 @@ def check_site_folder(folder, source_ids, errors, published=True):
         if published and pair_folder.name not in listed:
             errors.append(f"{pair_folder}: this folder is not listed in pairs.json (FR-059)")
         if pair and (pair_folder / "validation.json").is_file():
-            check_validation(pair_folder / "validation.json", pair.get("id"), errors)
+            check_validation(pair_folder / "validation.json", pair.get("id"), errors, published)
     return _known_files(folder)
 
 
@@ -877,10 +879,10 @@ def check_data_dir(root, published=True):
     for folder in sorted((root / "sites").glob("*")):
         if folder.is_dir():
             known |= check_site_folder(folder, source_ids, errors, published)
-    # Every data file must be one the contract describes.
+    # Every data file must be one the contract describes. Drafts have their own folder in pipeline/out.
     for pattern in ("*.json", "*.geojson"):
         for path in sorted(root.rglob(pattern)):
-            if path not in known:
+            if path not in known and "validation_drafts" not in path.parts:
                 errors.append(f"{path}: this file is not part of the data contract")
     return errors
 

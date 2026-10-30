@@ -8,8 +8,8 @@
    "description": "PHIVOLCS reported a pyroclastic density current down the slopes of Mayon after part of a lava flow collapsed from the summit crater, followed by light ashfall in parts of Albay.",
    "source_name": "Philippine Daily Inquirer via Asia News Network, citing PHIVOLCS",
    "source_url": "https://asianews.network/?p=287449",
-   "created_at": "2026-10-30T22:03:22Z",
-   "updated_at": "2026-10-30T22:03:22Z"
+   "created_at": "2026-10-30T23:14:16Z",
+   "updated_at": "2026-10-30T23:14:16Z"
   },
   {
    "id": "mayon_20261030_eruption",
@@ -19,12 +19,12 @@
    "description": "PHIVOLCS raised Mayon to Alert Level 3 after an eruption at 11:53 AM.",
    "source_name": "Manila Bulletin, citing PHIVOLCS",
    "source_url": "https://mb.com.ph/2026/10/30/mayon-volcano-alert-status-raised-to-level-3",
-   "created_at": "2026-10-30T22:03:22Z",
-   "updated_at": "2026-10-30T22:03:22Z"
+   "created_at": "2026-10-30T23:14:16Z",
+   "updated_at": "2026-10-30T23:14:16Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-30T22:03:22Z",
+  "generated_at": "2026-10-30T23:14:16Z",
   "schema_version": "1.0"
  }
 }

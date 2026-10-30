@@ -76,6 +76,7 @@ function line(text, className) {
 export function createReadout(elements, site, towns) {
   let pair = null;
   let grid = null; // the grid of the selected pair, only downloaded when first needed
+  let gridPairId = null;
   let spot = null;
   let request = 0; // a newer tap replaces an older one that is still loading
 
@@ -103,16 +104,22 @@ export function createReadout(elements, site, towns) {
   }
 
   async function open(lat, lon, name) {
-    if (!pair) return;
     spot = { lat, lon, name };
     request += 1;
     const thisRequest = request;
     const place = placeLines(lat, lon, name);
-    const layer = pair.layers.find((item) => item.kind === "new_material");
     elements.retry.hidden = true;
+    // With no pair on screen there are no radar values, but the place is still useful.
+    if (!pair) {
+      showLines(place);
+      return;
+    }
+    const shownPair = pair;
+    const layer = pair.layers.find((item) => item.kind === "new_material");
     showLines([...place, line(STRINGS.readoutLoading)]);
+    let cells = gridPairId === shownPair.id ? grid : null;
     try {
-      grid = grid || await loadGrid(pair.folder, layer);
+      cells = cells || await loadGrid(shownPair.folder, layer);
     } catch (problem) {
       if (thisRequest !== request) return;
       console.error(problem.message);
@@ -120,8 +127,13 @@ export function createReadout(elements, site, towns) {
       elements.retry.hidden = false;
       return;
     }
+    // Keep a download only for the pair it belongs to, even if a newer tap came along.
+    if (shownPair === pair) {
+      grid = cells;
+      gridPairId = shownPair.id;
+    }
     if (thisRequest !== request) return;
-    const results = resultLines(gridValue(layer, grid, lat, lon), layer).map((text) => line(text, "readout-result"));
+    const results = resultLines(gridValue(layer, cells, lat, lon), layer).map((text) => line(text, "readout-result"));
     const dates = STRINGS.pairDates(localDate(pair.before_acquired_start, site.time_zone),
       localDate(pair.after_acquired_start, site.time_zone));
     showLines([...place, ...results, line(dates)]);
@@ -134,6 +146,7 @@ export function createReadout(elements, site, towns) {
   function setPair(newPair) {
     pair = newPair;
     grid = null;
+    gridPairId = null;
     if (spot) open(spot.lat, spot.lon, spot.name);
   }
 

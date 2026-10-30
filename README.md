@@ -58,6 +58,10 @@ python pipeline/mrw/export.py mayon <before GCOV granule> <after GCOV granule>
 # Copy a checked pair into site/data/
 python pipeline/mrw/publish.py mayon <pair id>
 
+# Write a validation sheet to pipeline/out/validation_drafts/, or publish it once reviewed
+python pipeline/mrw/validation.py mayon <pair id>
+python pipeline/mrw/validation.py mayon <pair id> --publish
+
 # Check everything in site/data/ against the data contract
 python pipeline/mrw/contract_check.py
 ```

@@ -3,9 +3,12 @@
 Run from the project folder:
     python pipeline/mrw/validation.py mayon <pair id>
 
+    python pipeline/mrw/validation.py mayon <pair id> --publish
+
 A sheet lives in pipeline/context/validation_sheets/<pair id>.json. The record is written
-to pipeline/out/, where the contract check reads it. A sheet with "draft": true can never
-reach the public site: the owner reviews it first and sets "draft" to false.
+to pipeline/out/validation_drafts/, away from the pair folders that the publish step copies.
+A draft can never reach the public site. To publish, the owner reviews the sheet, removes
+"DRAFT" from its text, and sets "draft" to false.
 """
 import json
 import shutil
@@ -55,7 +58,7 @@ def build_record(pair_id, sheet, now):
 def write_record(site_id, pair_id, out_folder=OUT_FOLDER, sheet_folder=SHEET_FOLDER):
     """Write the record to pipeline/out/ and check it. Drafts are allowed here."""
     record = build_record(pair_id, load_sheet(pair_id, sheet_folder), utc_now_text())
-    path = Path(out_folder) / "sites" / site_id / "pairs" / pair_id / "validation.json"
+    path = Path(out_folder) / "validation_drafts" / f"{pair_id}.json"
     write_json(path, record, record["created_at"])
     errors = []
     check_validation(path, pair_id, errors)
@@ -67,7 +70,8 @@ def write_record(site_id, pair_id, out_folder=OUT_FOLDER, sheet_folder=SHEET_FOL
 
 def publish_record(site_id, pair_id, out_folder=OUT_FOLDER, data_folder=DATA_FOLDER, sheet_folder=SHEET_FOLDER):
     """Copy a reviewed record to site/data/. A draft stops here."""
-    if load_sheet(pair_id, sheet_folder).get("draft") is not False:
+    sheet = load_sheet(pair_id, sheet_folder)
+    if sheet.get("draft") is not False or "DRAFT" in json.dumps(build_record(pair_id, sheet, "")):
         raise ValidationError("This validation sheet is a draft: the owner must review it before it is published")
     source = write_record(site_id, pair_id, out_folder, sheet_folder)
     target = Path(data_folder) / "sites" / site_id / "pairs" / pair_id
@@ -77,4 +81,8 @@ def publish_record(site_id, pair_id, out_folder=OUT_FOLDER, data_folder=DATA_FOL
 
 
 if __name__ == "__main__":
-    print(f"Wrote {write_record(sys.argv[1], sys.argv[2])}")
+    if "--publish" in sys.argv:
+        publish_record(sys.argv[1], sys.argv[2])
+        print(f"Published the validation of {sys.argv[2]}")
+    else:
+        print(f"Wrote {write_record(sys.argv[1], sys.argv[2])}")

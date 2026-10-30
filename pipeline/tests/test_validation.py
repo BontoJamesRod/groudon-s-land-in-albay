@@ -57,9 +57,24 @@ def test_a_draft_can_never_be_published(folders, draft):
     assert not list(data.rglob("validation.json")) if data.exists() else True
 
 
-def test_a_reviewed_sheet_is_published(folders):
+def test_draft_text_left_in_a_reviewed_sheet_stops(folders):
     out, data, sheets = folders
     save(sheets, sheet(draft=False))
+    with pytest.raises(ValidationError):
+        publish_record("mayon", PAIR, out, data, sheets)
+
+
+def test_the_draft_is_written_away_from_the_pair_folders(folders):
+    out, _data, sheets = folders
+    save(sheets, sheet())
+    assert "pairs" not in write_record("mayon", PAIR, out, sheets).parts
+
+
+def test_a_reviewed_sheet_is_published(folders):
+    out, data, sheets = folders
+    reviewed = sheet(draft=False)
+    reviewed["method"] = "Compared by flank."
+    save(sheets, reviewed)
     (data / "sites" / "mayon" / "pairs" / PAIR).mkdir(parents=True)
     publish_record("mayon", PAIR, out, data, sheets)
     assert (data / "sites" / "mayon" / "pairs" / PAIR / "validation.json").is_file()

@@ -12,6 +12,7 @@ const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" 
 
 // Radar images go in their own layer, under the borders so that towns stay readable.
 export const RADAR_PANE = "radar";
+export const COMPARE_PANE = "compare";
 
 function addBackground(map, notice) {
   const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
@@ -63,6 +64,7 @@ export function createMap(site, siteData, notice) {
     .setView([site.center_lat, site.center_lon], site.default_zoom);
   map.attributionControl.addAttribution(STRINGS.boundaryAttribution);
   map.createPane(RADAR_PANE).style.zIndex = 350;
+  map.createPane(COMPARE_PANE).style.zIndex = 340;
   addBackground(map, notice);
   L.geoJSON(siteData.land, { style: COAST_STYLE, interactive: false }).addTo(map);
   addTowns(map, siteData.towns);
