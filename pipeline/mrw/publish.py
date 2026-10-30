@@ -83,8 +83,13 @@ def _restore(target, backup, lists):
             path.write_bytes(content)
 
 
-def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLDER, sites_folder=SITES_FOLDER):
-    """Publish one pair, and undo everything if the result fails the contract check."""
+def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLDER, sites_folder=SITES_FOLDER,
+                 more_to_come=False):
+    """Publish one pair, and undo everything if the result fails the contract check.
+
+    Use more_to_come=True when replacing pairs that depend on each other: the check on
+    site/data then waits for the last pair. Run the contract check afterwards.
+    """
     out_folder, data_folder = Path(out_folder), Path(data_folder)
     source = out_folder / "sites" / site_id / "pairs" / pair_key
     _check_ready(source)
@@ -111,7 +116,7 @@ def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLD
         write_json(target / "pair.json", pair, now)
         rebuild_pairs_list(site_folder, now)
         rebuild_sites_list(data_folder, now, sites_folder)
-        errors = check_data_dir(data_folder)
+        errors = [] if more_to_come else check_data_dir(data_folder)
     except Exception:
         _restore(target, backup, lists)
         raise

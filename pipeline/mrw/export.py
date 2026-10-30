@@ -27,7 +27,7 @@ from mrw.contract_check import check_data_dir
 from mrw.context import DATA_FOLDER, write_json
 from mrw.download import read_crop
 from mrw.gcov import GCOV_DATASETS, GCOV_GROUP, HAS_VALUE, MASKED_BY_PRODUCT, OUTSIDE_COVERAGE, SEA, process_gcov
-from mrw.pairs import check_consecutive, check_same_track, find_gunw, pair_id, pass_id, require_product
+from mrw.pairs import check_consecutive, check_same_track, find_gunw, same_gap, pair_id, pass_id, require_product
 from mrw.search import search_gcov, search_gunw, vertex_url
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -258,7 +258,8 @@ def run_pair(site_id, before_granule, after_granule, out_folder=OUT_FOLDER,
     products = search_products(config, SEARCH_START)
     gunw = find_gunw(before, after, products)
     previous = _previous_pass(passes, before)
-    previous_gunw = find_gunw(previous, before, products) if previous else None
+    # With unequal gaps there is no fair baseline, so the pair uses brightness only (FR-030).
+    previous_gunw = find_gunw(previous, before, products) if previous and same_gap(previous, before, after) else None
     bounds = site_bounds(config)
     crops = [read_crop(p["granule_id"], p["url"], GCOV_GROUP, GCOV_DATASETS, bounds) for p in (before, after)]
     gcov_result = process_gcov(crops[0], crops[1], load_land(site_id))

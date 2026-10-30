@@ -375,6 +375,11 @@ def test_a_draft_validation_fails_when_published(data_dir):
     assert any("draft validation" in e for e in check_data_dir(data_dir))
 
 
+def test_coherence_with_unequal_gaps_fails(data_dir):
+    edit_json(pair_path(data_dir), lambda c: c["data"].update(previous_pair_id="mayon_A111F008_20260913_20261007"))
+    assert any("same time gap" in e for e in check_data_dir(data_dir))
+
+
 def test_fixture_builders_are_independent():
     first = site_row()
     second = copy.deepcopy(first)

@@ -5,6 +5,8 @@ if they come from the same track, frame and direction. A pair is two consecutive
 passes like that. The stop messages are the exact ones from docs/01 (FR-027, FR-028).
 """
 
+from datetime import date
+
 SAME_TRACK_FIELDS = ("track", "frame", "orbit_direction")
 MIXED_PASSES_MESSAGE = "Passes are not from the same track, frame and direction"
 
@@ -25,6 +27,21 @@ def check_consecutive(before, after, passes):
                and before["acquired_start"] < p["acquired_start"] < after["acquired_start"]]
     if after["acquired_start"] <= before["acquired_start"] or between:
         raise PairError("Passes are not consecutive on this track")
+
+
+def gap_days(before_time, after_time):
+    """Count the days between two UTC times, by date."""
+    return (date.fromisoformat(after_time[:10]) - date.fromisoformat(before_time[:10])).days
+
+
+def same_gap(previous, before, after):
+    """Do the two pairs span the same number of days?
+
+    Coherence falls as time passes. So comparing a 24-day pair with a 12-day pair would
+    show "coherence loss" that comes only from the longer wait, not from the ground.
+    """
+    return (gap_days(previous["acquired_start"], before["acquired_start"])
+            == gap_days(before["acquired_start"], after["acquired_start"]))
 
 
 def require_product(granule_id, available_ids):

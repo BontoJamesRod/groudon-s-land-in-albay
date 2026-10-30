@@ -3,7 +3,7 @@ import pytest
 
 from mrw.config import load_site
 from mrw.pairs import (MIXED_PASSES_MESSAGE, PairError, build_track_pairs, check_same_track, find_gunw,
-                       pair_id, pass_id, require_product)
+                       pair_id, pass_id, require_product, same_gap)
 from mrw.search import (BlindnessError, is_before_cutoff, parse_gcov, parse_gunw, require_before_cutoff,
                         search_gcov, search_gunw)
 
@@ -106,6 +106,14 @@ def test_consecutive_pairs_never_mix_tracks_and_link_the_previous_pair():
     assert [p["id"] for p in pairs] == ["mayon_A111F008_20261007_20261019", "mayon_A111F008_20261019_20261029"]
     assert pairs[0]["previous"] is None
     assert pairs[1]["previous"] is pairs[0]
+
+
+def test_same_gap_compares_the_number_of_days():
+    first, second = parse_gcov(GCOV_1), parse_gcov(GCOV_2)
+    twelve_days_earlier = {**first, "acquired_start": "2026-09-25T21:13:19Z"}
+    twenty_four_days_earlier = {**first, "acquired_start": "2026-09-13T21:13:19Z"}
+    assert same_gap(twelve_days_earlier, first, second)
+    assert not same_gap(twenty_four_days_earlier, first, second)
 
 
 def test_gunw_is_matched_to_exactly_its_two_passes():

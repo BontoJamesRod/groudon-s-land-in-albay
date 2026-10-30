@@ -92,17 +92,17 @@
    "previous_pair_id": "mayon_A111F008_20260715_20260727",
    "gunw_granule_id": "NISAR_L2_PR_GUNW_026_111_A_008_028_4000_SH_20260727T211321_20260727T211355_20260820T211319_20260820T211354_P05023_N_F_J_001",
    "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_026_111_A_008_028_4000_SH_20260727T211321_20260727T211355_20260820T211319_20260820T211354_P05023_N_F_J_001",
-   "coherence_used": true,
+   "coherence_used": false,
    "brightness_threshold_db": 3.0,
-   "coherence_loss_threshold": 0.3,
-   "high_confidence_area_km2": 0.45,
-   "low_confidence_area_km2": 38.47,
-   "new_material_area_km2": 38.92,
+   "coherence_loss_threshold": null,
+   "high_confidence_area_km2": 0.0,
+   "low_confidence_area_km2": 14.51,
+   "new_material_area_km2": 14.51,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-30T23:01:52Z",
-   "created_at": "2026-10-30T23:01:50Z",
-   "updated_at": "2026-10-30T23:01:52Z"
+   "published_at": "2026-10-30T23:36:02Z",
+   "created_at": "2026-10-30T23:35:53Z",
+   "updated_at": "2026-10-30T23:36:02Z"
   },
   {
    "id": "mayon_A111F008_20260820_20260901",
@@ -118,17 +118,17 @@
    "previous_pair_id": "mayon_A111F008_20260727_20260820",
    "gunw_granule_id": "NISAR_L2_PR_GUNW_028_111_A_008_029_4000_SH_20260820T211319_20260820T211354_20260901T211319_20260901T211354_P05023_N_F_J_001",
    "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_028_111_A_008_029_4000_SH_20260820T211319_20260820T211354_20260901T211319_20260901T211354_P05023_N_F_J_001",
-   "coherence_used": true,
+   "coherence_used": false,
    "brightness_threshold_db": 3.0,
-   "coherence_loss_threshold": 0.3,
-   "high_confidence_area_km2": 0.06,
-   "low_confidence_area_km2": 3.18,
-   "new_material_area_km2": 3.24,
+   "coherence_loss_threshold": null,
+   "high_confidence_area_km2": 0.0,
+   "low_confidence_area_km2": 3.11,
+   "new_material_area_km2": 3.11,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-30T23:02:00Z",
-   "created_at": "2026-10-30T23:01:57Z",
-   "updated_at": "2026-10-30T23:02:00Z"
+   "published_at": "2026-10-30T23:36:02Z",
+   "created_at": "2026-10-30T23:36:00Z",
+   "updated_at": "2026-10-30T23:36:02Z"
   },
   {
    "id": "mayon_A111F008_20260901_20260913",
@@ -236,7 +236,7 @@
   }
  ],
  "meta": {
-  "generated_at": "2026-10-30T23:02:32Z",
+  "generated_at": "2026-10-30T23:36:02Z",
   "schema_version": "1.0"
  }
 }

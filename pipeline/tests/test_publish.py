@@ -94,6 +94,13 @@ def test_publishing_again_keeps_a_reviewed_validation(folders):
     assert target.is_file()
 
 
+def test_a_later_pair_can_finish_the_check(folders):
+    out, data = folders
+    (data / "sources.json").unlink()
+    publish_pair("mayon", PAIR, out_folder=out, data_folder=data, sites_folder=SITES_FOLDER, more_to_come=True)
+    assert (data / "sites" / "mayon" / "pairs" / PAIR / "pair.json").is_file()
+
+
 def test_missing_pair_stops(folders):
     out, data = folders
     with pytest.raises(PublishError):

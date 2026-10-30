@@ -542,6 +542,17 @@ def _check_pass(row, pair, where, errors):
             errors.append(f"{where}: id should be {expected!r}")
 
 
+def _unequal_gaps(row):
+    """Read the dates in the two pair ids, and say if the pairs span different numbers of days."""
+    try:
+        first, second = str(row["previous_pair_id"]).split("_")[-2:]
+        third = str(row["id"]).split("_")[-1]
+        days = [datetime.strptime(text, "%Y%m%d") for text in (first, second, third)]
+    except (KeyError, ValueError):
+        return False  # a bad id has already been reported
+    return second != str(row["id"]).split("_")[-2] or days[1] - days[0] != days[2] - days[1]
+
+
 def check_pair_row(row, where, errors, published=True):
     """Check one pair record (05 TBL-05), with the rules that link its columns."""
     table = PAIRS
@@ -564,6 +575,8 @@ def check_pair_row(row, where, errors, published=True):
         errors.append(f"{where}: coherence_loss_threshold is needed when coherence is used")
     if used is True and (row.get("gunw_granule_id") is None or row.get("previous_pair_id") is None):
         errors.append(f"{where}: coherence needs gunw_granule_id and previous_pair_id")
+    if used is True and _unequal_gaps(row):
+        errors.append(f"{where}: coherence needs a previous pair with the same time gap")
     if used is False and row.get("high_confidence_area_km2") not in (0, 0.0):
         errors.append(f"{where}: no coherence means no high-confidence area (FR-030)")
     areas = [row.get(k) for k in ("high_confidence_area_km2", "low_confidence_area_km2",
