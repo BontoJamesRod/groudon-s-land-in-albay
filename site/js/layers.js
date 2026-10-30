@@ -1,6 +1,7 @@
 // Task T-025: the new-material layer, its legend and the area summary.
 
 import { RADAR_PANE } from "./map.js";
+import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 function layerBounds(layer) {
@@ -24,7 +25,7 @@ function legendRow(item) {
   swatch.className = "swatch";
   swatch.style.backgroundColor = item.color;
   const text = document.createElement("span");
-  text.textContent = `${item.label}. Confidence: ${item.confidence}`;
+  text.textContent = STRINGS.classWithConfidence(item.label, item.confidence);
   row.append(swatch, text);
   return row;
 }
@@ -32,25 +33,25 @@ function legendRow(item) {
 function showLegend(elements, layer, pair) {
   elements.title.textContent = layer.title;
   elements.rows.replaceChildren(...layer.legend.map(legendRow));
-  elements.area.textContent = `Total detected area: ${pair.new_material_area_km2.toFixed(2)} km²`;
+  elements.area.textContent = STRINGS.totalArea(pair.new_material_area_km2);
 }
 
 function summaryText(pair, timeZone) {
   if (pair.new_material_area_km2 !== 0) return "";
   const before = localDate(pair.before_acquired_start, timeZone);
   const after = localDate(pair.after_acquired_start, timeZone);
-  return `No new material detected between ${before} and ${after}`;
+  return STRINGS.nothingDetected(before, after);
 }
 
 // Set up the layer's toggle. Returns the function that shows a pair on the map.
 export function createNewMaterialLayer(map, elements, site) {
   let overlay = null;
 
-  elements.toggle.addEventListener("change", () => {
+  elements.toggle.onchange = () => {
     if (!overlay) return;
     if (elements.toggle.checked) overlay.addTo(map);
     else overlay.remove();
-  });
+  };
 
   return async function showPair(pair) {
     const layer = pair.layers.find((item) => item.kind === "new_material");

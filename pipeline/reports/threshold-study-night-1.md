@@ -68,12 +68,12 @@ Three candidates for the owner to weigh. Area is km² of land flagged, as high +
 | --- | --- | --- | --- | --- | --- |
 | A: 3.0 dB, 0.3 (the PROVISIONAL values) | 3.24–8.60 | 0.06–0.76 | 7.06 (0.12) | 5.20 | 6.83 |
 | B: 4.0 dB, 0.4 | 1.10–2.53 | 0.02–0.24 | 2.85 (0.05) | 2.29 | 2.74 |
-| C: 5.0 dB, 0.5 | 0.51–0.98 | 0.01–0.05 | 1.29 (0.02) | 1.15 | 1.22 |
+| C: 5.0 dB, 0.5 | 0.41–0.98 | 0.01–0.05 | 1.29 (0.02) | 1.15 | 1.22 |
 
 Trade-offs:
 
 - **A** catches the most but looks noisy: the reference pair, with no recorded event, shows 8.60 km² of "new material" on the map.
-- **B** has about a third of A's false area, and the July total is still above all quiet pairs.
+- **B** has about a third of A's false area. Its July totals (2.29–2.85) overlap the top of the quiet range (up to 2.53).
 - **C** flags the least, but so little that a small deposit could be missed. The July pairs are only slightly above the quiet range.
 
 Inside the danger zone, flagged area doesn't rise in July at any candidate. At candidate A, the quiet range is 0.06–2.49 km², and the July pairs have 0.20–0.49 km².
@@ -93,5 +93,5 @@ The full grid (brightness 2–6 dB by loss 0.2–0.5) is in the JSON.
 - **The location of the July deposit is unknown here.** Without it, detection can't be measured directly, only total area. A validation against named gullies would give a better test (T-035).
 - **The baseline may hide the event.** Coherence loss compares with the previous pair. If the slope was already changing, its coherence was already low.
 - **The event date needs checking.** The Asia News Network article appears to place the current on a Monday, and 2026-07-14 is a Tuesday. Either date falls in the same pairs.
-- **Eight July coherence numbers rest on one pair.** Track 39 is the only July pair with a baseline, so the coherence result is thin.
+- **The July coherence result rests on one pair.** Track 39 is the only July pair with a baseline, so this evidence is thin.
 - **Thresholds were tested on a 5 × 5 filtered 10 m grid.** Single pixels and small specks count fully. There is no minimum patch size, because the docs don't call for one.

@@ -8,40 +8,96 @@
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+  <!-- The text of these elements comes from js/strings.js. -->
   <header class="topbar">
-    <strong id="site-name">Mayon Radar Watch</strong>
+    <button id="site-name" class="site-name" type="button" data-text="appName"></button>
+    <span class="topbar-actions">
+      <button id="search-button" type="button" data-text="searchButton"></button>
+      <button id="help-button" type="button" data-text="helpButton"></button>
+    </span>
   </header>
+
   <div class="map-area">
-    <main id="map" aria-label="Map of the selected site"></main>
-    <p id="loading" class="map-notice" role="status">Loading radar data…</p>
-    <p id="background-notice" class="map-notice" role="status" hidden>Background map unavailable</p>
+    <main id="map" data-label="mapLabel"></main>
+    <p id="loading" class="map-notice" role="status" data-text="loadingRadar"></p>
+    <p id="background-notice" class="map-notice notice-low" role="status" data-text="backgroundUnavailable" hidden></p>
+
+    <div id="compare-view" class="compare-view" hidden>
+      <span id="compare-before" class="compare-label compare-label-before"></span>
+      <span id="compare-after" class="compare-label compare-label-after"></span>
+      <button id="compare-close" class="compare-close" type="button" data-text="close"></button>
+      <div id="compare-divider" class="compare-divider" role="slider" tabindex="0"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" data-label="compareDivider"><span></span></div>
+    </div>
+
+    <section id="search-panel" class="floating-card search-panel" hidden>
+      <form id="search-form" class="search-form" role="search">
+        <input id="search-input" type="search" autocomplete="off" data-label="searchField">
+        <button type="submit" data-text="searchSubmit"></button>
+        <button id="search-close" type="button" data-text="close"></button>
+      </form>
+      <p id="search-message" aria-live="polite"></p>
+      <ul id="search-suggestions" class="search-suggestions"></ul>
+    </section>
+
+    <section id="readout-card" class="floating-card readout-card" aria-live="polite" hidden>
+      <div id="readout-body"></div>
+      <div class="card-actions">
+        <button id="readout-retry" type="button" data-text="retry" hidden></button>
+        <button id="readout-close" type="button" data-text="close"></button>
+      </div>
+    </section>
   </div>
+
   <div class="app-status" aria-live="polite">
     <span id="app-message"></span>
-    <button id="app-retry" type="button" hidden>Retry</button>
+    <button id="app-retry" type="button" data-text="retry" hidden></button>
   </div>
-  <section id="panel" class="panel" aria-label="Radar pass and legend" hidden>
+
+  <section id="panel" class="panel" data-label="panelLabel" hidden>
     <div class="timeline">
       <div class="timeline-controls">
-        <button id="previous" type="button">Previous</button>
-        <select id="pair-list" aria-label="Radar pass"></select>
-        <button id="next" type="button">Next</button>
+        <button id="previous" type="button" data-text="previous"></button>
+        <select id="pair-list" data-label="radarPassList"></select>
+        <button id="next" type="button" data-text="next"></button>
       </div>
       <p id="pair-label" class="pair-label"></p>
       <p id="pair-events" class="pair-events"></p>
       <p class="timeline-status" aria-live="polite">
         <span id="timeline-message"></span>
-        <button id="timeline-retry" type="button" hidden>Retry</button>
+        <button id="timeline-retry" type="button" data-text="retry" hidden></button>
       </p>
     </div>
     <div class="legend">
-      <label class="layer-toggle"><input id="layer-toggle" type="checkbox" checked> <span id="legend-title">New material</span></label>
+      <label class="layer-toggle"><input id="layer-toggle" type="checkbox" checked> <span id="legend-title"></span></label>
       <ul id="legend-rows" class="legend-rows"></ul>
       <p id="legend-area" class="legend-area"></p>
       <p id="summary" class="summary"></p>
+      <p class="legend-actions">
+        <button id="compare-button" type="button" data-text="compareButton"></button>
+        <span id="compare-message" aria-live="polite"></span>
+      </p>
     </div>
   </section>
-  <p class="disclaimer">This is not an official warning. Follow PHIVOLCS and your LGU.</p>
+
+  <footer class="footer">
+    <p class="disclaimer" data-text="disclaimer"></p>
+    <span class="footer-links"><button id="sources-button" class="link-button" type="button" data-text="sourcesButton"></button></span>
+  </footer>
+
+  <dialog id="help-panel" class="panel-dialog">
+    <header><h2 data-text="helpButton"></h2><button type="button" data-close data-text="close"></button></header>
+    <div data-body></div>
+  </dialog>
+  <dialog id="sources-panel" class="panel-dialog">
+    <header><h2 data-text="sourcesTitle"></h2><button type="button" data-close data-text="close"></button></header>
+    <div data-body></div>
+  </dialog>
+  <dialog id="picker-panel" class="panel-dialog">
+    <header><h2 data-text="pickerTitle"></h2><button type="button" data-close data-text="close"></button></header>
+    <div data-body></div>
+  </dialog>
+
   <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>

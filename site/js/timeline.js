@@ -1,7 +1,7 @@
 // Task T-024: the pair list, Previous and Next, the label and the event markers.
 // Pairs arrive oldest first (docs/06, API-007), so the latest pair is the last one.
 
-const LATEST_MESSAGE = "This is the latest pass";
+import { STRINGS } from "./strings.js";
 
 // Format a UTC time as a day in the site's own time zone (FR-014).
 export function localDate(utcText, timeZone) {
@@ -23,16 +23,16 @@ export function eventsInPair(pair, events, timeZone) {
 }
 
 function pairDates(pair, timeZone) {
-  return `${localDate(pair.before_acquired_start, timeZone)} to ${localDate(pair.after_acquired_start, timeZone)}`;
+  return STRINGS.pairRange(localDate(pair.before_acquired_start, timeZone), localDate(pair.after_acquired_start, timeZone));
 }
 
 function pairLabel(pair, timeZone) {
-  return `${pairDates(pair, timeZone)} (${timeZone}), track ${pair.track}, frame ${pair.frame}, ${pair.orbit_direction}`;
+  return STRINGS.pairLabel(pairDates(pair, timeZone), timeZone, pair.track, pair.frame, pair.orbit_direction);
 }
 
 function optionText(pair, events, timeZone) {
   const names = eventsInPair(pair, events, timeZone).map((event) => event.name);
-  return names.length ? `${pairDates(pair, timeZone)}: ${names.join(", ")}` : pairDates(pair, timeZone);
+  return names.length ? STRINGS.optionWithEvents(pairDates(pair, timeZone), names.join(", ")) : pairDates(pair, timeZone);
 }
 
 // Set up the timeline. `onSelect` loads a pair and rejects if it can't.
@@ -45,7 +45,7 @@ export function createTimeline(elements, site, pairs, events, onSelect) {
     elements.list.value = pair.id;
     elements.label.textContent = pairLabel(pair, timeZone);
     const names = eventsInPair(pair, events, timeZone).map((event) => event.name);
-    elements.events.textContent = names.length ? `Event in this period: ${names.join(", ")}` : "";
+    elements.events.textContent = names.length ? STRINGS.eventInPeriod(names.join(", ")) : "";
     elements.previous.disabled = selected === 0;
   }
 
@@ -58,31 +58,32 @@ export function createTimeline(elements, site, pairs, events, onSelect) {
       selected = index;
     } catch (problem) {
       console.error(problem.message);
-      elements.message.textContent = "Couldn't load this pass. Try again.";
+      elements.message.textContent = STRINGS.passLoadError;
       elements.retry.hidden = false;
       elements.retry.onclick = () => select(index);
     }
     showSelected();
   }
 
+  elements.list.replaceChildren();
   for (const pair of pairs) {
     const option = document.createElement("option");
     option.value = pair.id;
     option.textContent = optionText(pair, events, timeZone);
     elements.list.append(option);
   }
-  elements.previous.addEventListener("click", () => {
+  elements.previous.onclick = () => {
     if (selected > 0) select(selected - 1);
-  });
-  elements.next.addEventListener("click", () => {
+  };
+  elements.next.onclick = () => {
     if (selected === pairs.length - 1) {
-      elements.message.textContent = LATEST_MESSAGE;
+      elements.message.textContent = STRINGS.latestPass;
     } else {
       select(selected + 1);
     }
-  });
-  elements.list.addEventListener("change", () => {
+  };
+  elements.list.onchange = () => {
     select(pairs.findIndex((pair) => pair.id === elements.list.value));
-  });
+  };
   return select(selected);
 }

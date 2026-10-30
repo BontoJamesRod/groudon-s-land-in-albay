@@ -2,9 +2,9 @@
 // and the layers the app draws from its own data: town borders and names, the
 // coastline and the danger-zone ring. These stay visible if the imagery fails (FR-005).
 
+import { STRINGS } from "./strings.js";
+
 const TILE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
-const TILE_ATTRIBUTION = "Tiles &copy; Esri";
-const BOUNDARY_ATTRIBUTION = "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)";
 const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false };
 const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
 const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
@@ -13,7 +13,7 @@ const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" 
 export const RADAR_PANE = "radar";
 
 function addBackground(map, notice) {
-  const tiles = L.tileLayer(TILE_URL, { attribution: TILE_ATTRIBUTION, maxZoom: map.getMaxZoom() });
+  const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
   let anyTileLoaded = false;
   tiles.on("tileload", () => {
     anyTileLoaded = true;
@@ -59,7 +59,7 @@ function addDangerZone(map, site) {
 export function createMap(site, siteData, notice) {
   const map = L.map("map", { minZoom: site.min_zoom, maxZoom: site.max_zoom })
     .setView([site.center_lat, site.center_lon], site.default_zoom);
-  map.attributionControl.addAttribution(BOUNDARY_ATTRIBUTION);
+  map.attributionControl.addAttribution(STRINGS.boundaryAttribution);
   map.createPane(RADAR_PANE).style.zIndex = 350;
   addBackground(map, notice);
   L.geoJSON(siteData.land, { style: COAST_STYLE, interactive: false }).addTo(map);

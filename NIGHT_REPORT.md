@@ -41,7 +41,7 @@ Full report: `pipeline/reports/threshold-study-night-1.md`. **No values were cho
 | --- | --- | --- |
 | A: 3.0 dB, 0.3 (PROVISIONAL) | 3.24–8.60 | 5.20–7.06 |
 | B: 4.0 dB, 0.4 | 1.10–2.53 | 2.29–2.85 |
-| C: 5.0 dB, 0.5 | 0.51–0.98 | 1.15–1.29 |
+| C: 5.0 dB, 0.5 | 0.41–0.98 | 1.15–1.29 |
 
 The method doesn't clearly separate the July event from quiet pairs at any candidate. Coherence loss shows no July signal, though only one July pair has a baseline. Both July maps do show a narrow streak on the slope, seen by eye only.
 
