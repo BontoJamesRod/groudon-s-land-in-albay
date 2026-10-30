@@ -9,9 +9,38 @@
 </head>
 <body>
   <header class="topbar">
-    <strong>Mayon Radar Watch</strong>
+    <strong id="site-name">Mayon Radar Watch</strong>
   </header>
-  <main id="map" aria-label="Map of the Mayon area"></main>
+  <div class="map-area">
+    <main id="map" aria-label="Map of the selected site"></main>
+    <p id="loading" class="map-notice" role="status">Loading radar data…</p>
+    <p id="background-notice" class="map-notice" role="status" hidden>Background map unavailable</p>
+  </div>
+  <div class="app-status" aria-live="polite">
+    <span id="app-message"></span>
+    <button id="app-retry" type="button" hidden>Retry</button>
+  </div>
+  <section id="panel" class="panel" aria-label="Radar pass and legend" hidden>
+    <div class="timeline">
+      <div class="timeline-controls">
+        <button id="previous" type="button">Previous</button>
+        <select id="pair-list" aria-label="Radar pass"></select>
+        <button id="next" type="button">Next</button>
+      </div>
+      <p id="pair-label" class="pair-label"></p>
+      <p id="pair-events" class="pair-events"></p>
+      <p class="timeline-status" aria-live="polite">
+        <span id="timeline-message"></span>
+        <button id="timeline-retry" type="button" hidden>Retry</button>
+      </p>
+    </div>
+    <div class="legend">
+      <label class="layer-toggle"><input id="layer-toggle" type="checkbox" checked> <span id="legend-title">New material</span></label>
+      <ul id="legend-rows" class="legend-rows"></ul>
+      <p id="legend-area" class="legend-area"></p>
+      <p id="summary" class="summary"></p>
+    </div>
+  </section>
   <p class="disclaimer">This is not an official warning. Follow PHIVOLCS and your LGU.</p>
   <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
   <script type="module" src="js/main.js"></script>

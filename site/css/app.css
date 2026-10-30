@@ -25,9 +25,136 @@ body {
   border-bottom: 1px solid var(--line);
 }
 
+[hidden] { display: none !important; }
+
+.map-area {
+  position: relative;
+  flex: 1;
+  min-height: 300px;
+  display: flex;
+}
+
 #map {
   flex: 1;
   min-height: 300px;
+}
+
+/* Sits above Leaflet's panes and controls (their highest z-index is 1000). */
+.map-notice {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1100;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: nowrap;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.town-label,
+.zone-label {
+  padding: 1px 4px;
+  border: 0;
+  box-shadow: none;
+  font-size: 12px;
+  color: var(--paper);
+  background: rgba(31, 35, 40, 0.7);
+}
+
+.town-label::before,
+.zone-label::before { display: none; }
+
+.radar-image { image-rendering: pixelated; }
+
+.app-status:has(#app-message:not(:empty)),
+.app-status:has(#app-retry:not([hidden])) {
+  padding: 8px 16px;
+  border-top: 1px solid var(--line);
+}
+
+.panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.timeline,
+.legend {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.timeline-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.timeline-controls select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* FR-049: every tap target is at least 44 x 44 px. */
+button,
+select {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 12px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+button:disabled { color: #6e7781; }
+
+.pair-label,
+.pair-events,
+.timeline-status,
+.legend-area,
+.summary { margin: 6px 0 0; }
+
+.pair-events { font-weight: 600; }
+
+.layer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.layer-toggle input {
+  width: 20px;
+  height: 20px;
+}
+
+.legend-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend-rows li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.swatch {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
 }
 
 .disclaimer {
