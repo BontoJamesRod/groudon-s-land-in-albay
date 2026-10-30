@@ -99,7 +99,7 @@ Not checked: real phones, 360 px, TC-013 and TC-015 (only one pair is published)
 
 Branch `night-1`. Nothing pushed, nothing merged. `docs/` wasn't edited; `docs/NIGHT_PLAN_2.md` is your file, and I left it untracked.
 
-**Final evidence:** `pytest -q`: 190 passed. Contract check: 0 errors on `site/data`, 0 on `pipeline/out`. Both ran locally. **Downloaded tonight: 1.34 GB** of 20 GB (night 1: 3.34 GB), including 1.08 GB for the second-site probe, with one repeat of 0.55 GB because I reran it after adding Panama tracks. The repeat only fetched the new tracks, so the probe totals below come from the log.
+**Final evidence:** `pytest -q`: 190 passed. Contract check: 0 errors on `site/data`, 0 on `pipeline/out`. Both ran locally. **Downloaded tonight: 1.34 GB** of 20 GB (night 1: 3.34 GB), including 1.08 GB for the second-site probe. Nothing was fetched twice tonight.
 
 ## Read this first
 
