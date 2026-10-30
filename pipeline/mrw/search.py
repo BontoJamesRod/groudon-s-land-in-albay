@@ -132,13 +132,14 @@ def _keep_newest_versions(products, key_names):
 def maturity_of(props):
     """Read the maturity from the product's collection or link, e.g. ..._PROVISIONAL_V1.
 
-    A wrong label would mislead visitors (FR-039), so an unknown one stops the search.
+    Returns None for anything else, such as Urgent Response products (_UR_ in the name).
+    docs/05 only allows BETA and PROVISIONAL, so those products are left out of the list.
     """
     text = f"{props.get('collectionName')} {props.get('url')}"
     for maturity in ("BETA", "PROVISIONAL"):
         if maturity in text:
             return maturity
-    raise ValueError(f"Can't tell the maturity of {props.get('sceneName')}")
+    return None
 
 
 def search_gcov(config, start, searcher=_asf_search, cutoff=BLIND_CUTOFF):
@@ -147,7 +148,8 @@ def search_gcov(config, start, searcher=_asf_search, cutoff=BLIND_CUTOFF):
                        end=cutoff - timedelta(seconds=1))
     passes = []
     for name, props in _safe_results(results, cutoff):
-        parsed = parse_gcov(name, maturity_of(props), props.get("url"))
+        maturity = maturity_of(props)
+        parsed = parse_gcov(name, maturity, props.get("url")) if maturity else None
         if parsed:
             passes.append(parsed)
     passes = _keep_newest_versions(passes, ("track", "frame", "orbit_direction", "acquired_start"))

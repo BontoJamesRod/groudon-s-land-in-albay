@@ -60,6 +60,13 @@ def test_search_drops_eruption_products_and_limits_the_request():
     assert searcher.options["end"].strftime("%Y-%m-%d") == "2026-10-29"
 
 
+def test_products_with_an_unknown_maturity_are_left_out():
+    urgent = FakeResult(GCOV_1)
+    urgent.properties["url"] = "https://example.org/URGENT/x.h5"
+    passes = search_gcov(load_site("mayon"), "2026-06-17", searcher=lambda **options: [urgent, FakeResult(GCOV_2)])
+    assert [p["granule_id"] for p in passes] == [GCOV_2]
+
+
 def test_gunw_search_drops_a_product_whose_second_date_is_after_the_cutoff():
     products = search_gunw(load_site("mayon"), "2026-06-17", searcher=fake_searcher(GUNW_SAFE, GUNW_ERUPTION))
     assert [p["granule_id"] for p in products] == [GUNW_SAFE]
