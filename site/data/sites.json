@@ -1,0 +1,33 @@
+{
+ "data": [
+  {
+   "id": "mayon",
+   "name": "Mayon Volcano, Albay",
+   "country": "Philippines",
+   "status": "published",
+   "time_zone": "Asia/Manila",
+   "center_lat": 13.2572,
+   "center_lon": 123.6856,
+   "bounds_west": 123.56,
+   "bounds_south": 13.14,
+   "bounds_east": 123.81,
+   "bounds_north": 13.38,
+   "default_zoom": 12,
+   "min_zoom": 10,
+   "max_zoom": 16,
+   "summit_lat": 13.2572,
+   "summit_lon": 123.6856,
+   "danger_zone_radius_km": 6,
+   "danger_zone_label": "Permanent Danger Zone (6 km)",
+   "change_types": [
+    "new_material"
+   ],
+   "created_at": "2026-10-30T22:15:48Z",
+   "updated_at": "2026-10-30T22:15:48Z"
+  }
+ ],
+ "meta": {
+  "generated_at": "2026-10-30T22:15:48Z",
+  "schema_version": "1.0"
+ }
+}
