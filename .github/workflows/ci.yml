@@ -12,12 +12,22 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
+      # fetch-depth 0 gets the whole history, so old commits are scanned too.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Task T-007: stop if a password or key is in the code. No license is
+      # needed for a repository on a personal account (gitleaks-action README).
+      - name: Scan for secrets
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

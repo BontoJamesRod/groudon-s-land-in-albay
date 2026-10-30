@@ -20,6 +20,9 @@ concurrency:
 jobs:
   # Task T-006: the same checks as ci.yml. Any failure stops the deploy.
   checks:
+    permissions:
+      contents: read
+      pull-requests: read
     uses: ./.github/workflows/ci.yml
 
   deploy:
