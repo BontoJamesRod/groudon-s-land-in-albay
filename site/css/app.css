@@ -392,3 +392,12 @@ button:disabled { color: #6e7781; }
   height: 44px;
   line-height: 44px;
 }
+
+/* T-034: on phones the map stays large and the disclaimer stays on screen (FR-037),
+   so the pass controls and legend scroll inside their own area. */
+@media (max-width: 700px) {
+  .topbar { padding: 4px 16px; gap: 4px; }
+  .map-area, #map { min-height: 200px; }
+  .panel { flex: none; max-height: 36vh; overflow-y: auto; }
+  .footer { flex: none; font-size: 13px; }
+}
