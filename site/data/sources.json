@@ -8,23 +8,23 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T22:01:28Z",
-   "updated_at": "2026-10-30T22:01:28Z"
+   "created_at": "2026-10-30T22:03:22Z",
+   "updated_at": "2026-10-30T22:03:22Z"
   },
   {
    "id": "esri_world_imagery",
    "name": "World Imagery background map",
    "provider": "Esri",
    "used_for": "basemap",
-   "url": "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9",
+   "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
    "license": "Esri terms of use, with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T22:01:28Z",
-   "updated_at": "2026-10-30T22:01:28Z"
+   "created_at": "2026-10-30T22:03:22Z",
+   "updated_at": "2026-10-30T22:03:22Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-30T22:01:28Z",
+  "generated_at": "2026-10-30T22:03:22Z",
   "schema_version": "1.0"
  }
 }

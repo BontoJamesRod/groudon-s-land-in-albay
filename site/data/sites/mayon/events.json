@@ -1,0 +1,30 @@
+{
+ "data": [
+  {
+   "id": "mayon_20260714_pdc",
+   "site_id": "mayon",
+   "name": "Pyroclastic density current",
+   "event_date": "2026-07-14",
+   "description": "PHIVOLCS reported a pyroclastic density current down the slopes of Mayon after part of a lava flow collapsed from the summit crater, followed by light ashfall in parts of Albay.",
+   "source_name": "Philippine Daily Inquirer via Asia News Network, citing PHIVOLCS",
+   "source_url": "https://asianews.network/?p=287449",
+   "created_at": "2026-10-30T22:03:22Z",
+   "updated_at": "2026-10-30T22:03:22Z"
+  },
+  {
+   "id": "mayon_20261030_eruption",
+   "site_id": "mayon",
+   "name": "Moderately explosive eruption",
+   "event_date": "2026-10-30",
+   "description": "PHIVOLCS raised Mayon to Alert Level 3 after an eruption at 11:53 AM.",
+   "source_name": "Manila Bulletin, citing PHIVOLCS",
+   "source_url": "https://mb.com.ph/2026/10/30/mayon-volcano-alert-status-raised-to-level-3",
+   "created_at": "2026-10-30T22:03:22Z",
+   "updated_at": "2026-10-30T22:03:22Z"
+  }
+ ],
+ "meta": {
+  "generated_at": "2026-10-30T22:03:22Z",
+  "schema_version": "1.0"
+ }
+}
