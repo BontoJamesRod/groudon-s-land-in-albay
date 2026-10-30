@@ -115,6 +115,22 @@ export async function loadSiteData(siteId) {
   return { towns, land, pairs, events };
 }
 
+// Download a layer's value grid. Its size must match the record exactly (docs/06, API-010).
+export async function loadGrid(folder, layer) {
+  const path = `${folder}/${layer.grid_path}`;
+  const response = await request(path);
+  let bytes;
+  try {
+    bytes = await response.arrayBuffer();
+  } catch (problem) {
+    throw new DataError("NETWORK_ERROR", path, `stopped downloading (${problem.name})`);
+  }
+  if (bytes.byteLength !== layer.grid_width * layer.grid_height) {
+    throw new DataError("INVALID_DATA", path, `has ${bytes.byteLength} bytes, which doesn't match the record`);
+  }
+  return new Uint8Array(bytes);
+}
+
 // Load one pair with its passes and layers. Image paths are relative to the pair's folder.
 export async function loadPair(siteId, pairId) {
   const folder = `data/sites/${siteId}/pairs/${pairId}`;
