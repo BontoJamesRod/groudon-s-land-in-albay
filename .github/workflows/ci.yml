@@ -1,0 +1,29 @@
+# Task T-006: run the tests and the data contract check.
+# Runs on every pull request and on every push. Pushes to main run these same
+# checks through deploy.yml, which is why main is left out of the push list here:
+# that way a push to main is checked once, and deploy only starts if the checks pass.
+name: CI
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the pipeline libraries
+        run: pip install -r pipeline/requirements.txt
+      - name: Run the tests
+        run: pytest
+      - name: Check published data against docs/05
+        run: python pipeline/mrw/contract_check.py

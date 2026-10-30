@@ -18,7 +18,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Task T-006: the same checks as ci.yml. Any failure stops the deploy.
+  checks:
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: checks
     runs-on: ubuntu-latest
     environment:
       name: github-pages
