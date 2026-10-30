@@ -2,7 +2,7 @@
 
 **No site is chosen.** This is the owner's decision. Nothing here was processed: the passes come from ASF's product list only, so whether the new-material method actually detects each event is untested.
 
-All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCOV, a GUNW and a previous-pair GUNW for coherence loss, unless noted. Run `python pipeline/reports/second_site_search.py` to repeat the search; full granule names are in `second-site-search.json`.
+All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCOV, a PROVISIONAL GUNW and a previous-pair GUNW for coherence loss, unless noted. Search only shows that a product touches the area, not how much of it has usable data. Run `python pipeline/reports/second_site_search.py` to repeat the search; full granule names are in `second-site-search.json`.
 
 ## Summary
 
@@ -13,7 +13,7 @@ All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCO
 | Date | 2026-10-09 | 2026-08-03 to 08-05 | Active on 2026-08-09 (start not known) |
 | Best pair | 12 days | 24 days | 24 days |
 | Independent check | Good: Sentinel-2, 2,351 mapped | Medium: named ravines | Weak: one flow length |
-| Main risk | Earthquake lowers coherence widely | 24-day gap; steep ravines | Start date; access to reports |
+| Main risk | Earthquake lowers coherence widely; partial frames | 24-day gap; steep ravines | Start date; access to reports |
 
 ## A: Azuero Peninsula landslides, Panama
 
@@ -23,10 +23,12 @@ All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCO
 
 | Track, frame, direction | Before → after | Note |
 | --- | --- | --- |
-| 4, 5, ascending | 2026-09-30 → 10-12 | Clearly after the earthquake |
-| 40, 85, descending | 2026-10-02 → 10-14 | Clearly after the earthquake |
-| 76, 5, ascending | 2026-10-05 → 10-17 | Clearly after the earthquake |
-| 141, 84 or 85, descending | 2026-09-27 → 10-09 | After pass is the same day: check the earthquake's time first |
+| 4, 5, ascending | 2026-09-30 → 10-12 | After pass covers the cluster |
+| 40, 85, descending | 2026-10-02 → 10-14 | After pass covers the cluster |
+| 76, 5, ascending | 2026-10-05 → 10-17 | After pass covers the cluster |
+| 141, 85, descending | 2026-09-27 → 10-09 | Same day as the earthquake: check the earthquake's time first |
+
+These are **partial frames** on ASF (`_P_` in the name, `frameCoverage: Partial`). The after passes' footprints above contain the cluster at 7.477, −80.865; the before passes were not checked. Track 141 frame 84 and track 76 frame 6 don't cover it, so they are left out.
 
 - **Why it fits:** the 12-day gap matches Mayon's method. Landslides strip the surface, which should change brightness, and optical images allow a real validation.
 - **Risks:** this is not a volcano, so the app's wording about new material would need to fit a landslide, and there is no summit or danger zone (05 §10 covers that case). Ground shaking and movement could lower coherence across the whole scene, so false high-confidence areas are a real risk. The landslides are described as mainly shallow.
@@ -43,7 +45,7 @@ All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCO
 | 62, 9, ascending | 2026-07-24 → 08-17 | 24 days |
 | 127, 81, descending | 2026-07-17 → 08-22 | 36 days |
 
-- **Why it fits:** the closest match to Mayon: a stratovolcano with pyroclastic deposits in named ravines.
+- **Why it fits:** the closest match to Mayon: a volcano with pyroclastic deposits in named ravines.
 - **Risks:** there is no 12-day pair, and a longer gap lowers coherence anyway. Fuego erupts constantly, so "before" is not a quiet surface. The Mayon result suggests this kind of deposit may be hard to separate from background change. Also the same continent as candidate A.
 
 ## C: Nyamulagira, DR Congo
@@ -66,7 +68,7 @@ All passes were acquired before 2026-10-30. Every pair below has PROVISIONAL GCO
 - **Kīlauea, Hawaii:** track 151, frame 11, ascending, 2026-08-11 → 08-23, has a 12-day pair spanning an overflow of more than 600 m on 08-12. New flows land on older lava inside a caldera, so the change may be subtle. It's in the Pacific, not on a continent, so I left it out of the three.
 - **Krasheninnikov, Kamchatka:** a [JPL NISAR time-lapse](https://www.jpl.nasa.gov/news/us-india-satellite-captures-time-lapse-video-of-volcanic-eruption/) shows lava spreading, but Kamchatka is in Asia, the same continent as Mayon.
 - **Langtang, Nepal:** the 26 August collapse is also in Asia.
-- **Urgent Response products:** ASF also lists `_UR_` GCOV products, such as one over Panama from 2026-10-29. They aren't PROVISIONAL or BETA, so the pipeline leaves them out.
+- **Urgent Response products:** ASF also lists `_UR_` products, such as a GCOV over Panama from 2026-10-29. They aren't PROVISIONAL or BETA, so the pipeline leaves them out of both GCOV and GUNW searches.
 
 ## Checks before choosing
 

@@ -50,7 +50,8 @@ def describe(pair):
             "direction": pair["before"]["orbit_direction"], "before": pair["before"]["acquired_start"],
             "after": pair["after"]["acquired_start"], "gap_days": gap, "gunw": bool(pair["gunw"]),
             "previous_gunw": has_baseline, "maturity": pair["before"]["maturity"],
-            "before_granule": pair["before"]["granule_id"], "after_granule": pair["after"]["granule_id"]}
+            "before_granule": pair["before"]["granule_id"], "after_granule": pair["after"]["granule_id"],
+            "gunw_granule": pair["gunw"]["granule_id"] if pair["gunw"] else None}
 
 
 def main():
