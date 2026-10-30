@@ -30,7 +30,9 @@ from mrw.search import search_gcov, search_gunw
 
 # name: (flank's compass bearing from the summit, half-width in degrees, reach in km).
 # Flanks are from search summaries of the reports; reach is the longest reported lava flow.
-GULLIES = {"Basud": (90, 30, 4.0), "Bonga": (135, 30, 3.2), "Mi-isi": (180, 30, 2.1)}
+GULLIES = {"Basud": (90, 30, 3.8), "Bonga": (135, 30, 3.2), "Mi-isi": (180, 30, 2.1)}
+# The study's pairs, plus the other quiet track 111 pair that was published later.
+ALL_PAIRS = {**PAIRS, "mayon_A111F008_20260901_20260913": "quiet"}
 
 
 def bearings_and_distances(result, config):
@@ -69,18 +71,24 @@ def main():
                                                    search_gunw(config, SEARCH_START))}
     thresholds = config["thresholds"]
     records = []
-    for pair_key, kind in PAIRS.items():
+    for pair_key, kind in ALL_PAIRS.items():
         result, loss = read_pair(pairs[pair_key], bounds, land)
         classes = classify(result["change_db"], loss, result["reasons"],
                            thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
+        # The July track 111 pair has brightness only, so every pair is also measured that
+        # way. Otherwise quiet pairs would have one more way of being flagged.
+        brightness_only = classify(result["change_db"], None, result["reasons"],
+                                   thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
         bearing, distance = bearings_and_distances(result, config)
         cell_km2 = result["spacing_x_m"] * result["spacing_y_m"] / 1e6
         record = {"id": pair_key, "kind": kind, "thresholds": "PROVISIONAL",
                   "gullies": {g: wedge_numbers(classes, result["reasons"], bearing, distance, g, cell_km2) for g in GULLIES},
+                  "brightness_only": {g: wedge_numbers(brightness_only, result["reasons"], bearing, distance, g, cell_km2)["flagged_km2"]
+                                      for g in GULLIES},
                   "flagged_by_bearing_within_8_km": flagged_clusters(classes, bearing, distance, cell_km2)}
         records.append(record)
-        print(pair_key.removeprefix("mayon_"), kind, {g: v["flagged_km2"] for g, v in record["gullies"].items()},
-              record["flagged_by_bearing_within_8_km"], flush=True)
+        print(pair_key.removeprefix("mayon_"), kind, "both", {g: v["flagged_km2"] for g, v in record["gullies"].items()},
+              "brightness", record["brightness_only"], flush=True)
     (REPORTS / "july-gully-check.json").write_text(json.dumps(records, indent=1) + "\n", encoding="utf-8")
 
 

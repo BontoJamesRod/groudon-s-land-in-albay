@@ -7,7 +7,7 @@
    "Basud": {
     "flagged_km2": 0.006,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -22,6 +22,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0007
    }
+  },
+  "brightness_only": {
+   "Basud": 0.006,
+   "Bonga": 0.009,
+   "Mi-isi": 0.007
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.013,
@@ -44,9 +49,9 @@
   "thresholds": "PROVISIONAL",
   "gullies": {
    "Basud": {
-    "flagged_km2": 0.181,
+    "flagged_km2": 0.174,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -61,6 +66,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0007
    }
+  },
+  "brightness_only": {
+   "Basud": 0.002,
+   "Bonga": 0.004,
+   "Mi-isi": 0.0
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.011,
@@ -85,7 +95,7 @@
    "Basud": {
     "flagged_km2": 0.016,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -100,6 +110,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0007
    }
+  },
+  "brightness_only": {
+   "Basud": 0.003,
+   "Bonga": 0.005,
+   "Mi-isi": 0.0
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.035,
@@ -124,7 +139,7 @@
    "Basud": {
     "flagged_km2": 0.058,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -139,6 +154,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0007
    }
+  },
+  "brightness_only": {
+   "Basud": 0.002,
+   "Bonga": 0.002,
+   "Mi-isi": 0.004
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.365,
@@ -163,7 +183,7 @@
    "Basud": {
     "flagged_km2": 0.418,
     "high_km2": 0.006,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -178,6 +198,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0
    }
+  },
+  "brightness_only": {
+   "Basud": 0.077,
+   "Bonga": 0.026,
+   "Mi-isi": 0.003
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.04,
@@ -202,7 +227,7 @@
    "Basud": {
     "flagged_km2": 0.056,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -217,6 +242,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0
    }
+  },
+  "brightness_only": {
+   "Basud": 0.056,
+   "Bonga": 0.055,
+   "Mi-isi": 0.001
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.043,
@@ -241,8 +271,8 @@
    "Basud": {
     "flagged_km2": 0.013,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
-    "no_value_share": 0.0007
+    "wedge_km2": 7.56,
+    "no_value_share": 0.0008
    },
    "Bonga": {
     "flagged_km2": 0.004,
@@ -256,6 +286,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0
    }
+  },
+  "brightness_only": {
+   "Basud": 0.007,
+   "Bonga": 0.004,
+   "Mi-isi": 0.002
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.006,
@@ -280,7 +315,7 @@
    "Basud": {
     "flagged_km2": 0.011,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -295,6 +330,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0007
    }
+  },
+  "brightness_only": {
+   "Basud": 0.011,
+   "Bonga": 0.04,
+   "Mi-isi": 0.061
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.021,
@@ -317,9 +357,9 @@
   "thresholds": "PROVISIONAL",
   "gullies": {
    "Basud": {
-    "flagged_km2": 0.117,
+    "flagged_km2": 0.114,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
+    "wedge_km2": 7.56,
     "no_value_share": 0.0
    },
    "Bonga": {
@@ -334,6 +374,11 @@
     "wedge_km2": 2.31,
     "no_value_share": 0.0
    }
+  },
+  "brightness_only": {
+   "Basud": 0.114,
+   "Bonga": 0.099,
+   "Mi-isi": 0.098
   },
   "flagged_by_bearing_within_8_km": {
    "0": 0.052,
@@ -356,10 +401,10 @@
   "thresholds": "PROVISIONAL",
   "gullies": {
    "Basud": {
-    "flagged_km2": 0.028,
+    "flagged_km2": 0.027,
     "high_km2": 0.0,
-    "wedge_km2": 8.38,
-    "no_value_share": 0.0051
+    "wedge_km2": 7.56,
+    "no_value_share": 0.0052
    },
    "Bonga": {
     "flagged_km2": 0.019,
@@ -374,6 +419,11 @@
     "no_value_share": 0.0046
    }
   },
+  "brightness_only": {
+   "Basud": 0.027,
+   "Bonga": 0.019,
+   "Mi-isi": 0.068
+  },
   "flagged_by_bearing_within_8_km": {
    "0": 0.036,
    "30": 0.03,
@@ -387,6 +437,50 @@
    "270": 0.08,
    "300": 0.088,
    "330": 0.039
+  }
+ },
+ {
+  "id": "mayon_A111F008_20260901_20260913",
+  "kind": "quiet",
+  "thresholds": "PROVISIONAL",
+  "gullies": {
+   "Basud": {
+    "flagged_km2": 0.002,
+    "high_km2": 0.0,
+    "wedge_km2": 7.56,
+    "no_value_share": 0.0
+   },
+   "Bonga": {
+    "flagged_km2": 0.002,
+    "high_km2": 0.0,
+    "wedge_km2": 5.36,
+    "no_value_share": 0.0
+   },
+   "Mi-isi": {
+    "flagged_km2": 0.001,
+    "high_km2": 0.0,
+    "wedge_km2": 2.31,
+    "no_value_share": 0.0007
+   }
+  },
+  "brightness_only": {
+   "Basud": 0.002,
+   "Bonga": 0.002,
+   "Mi-isi": 0.001
+  },
+  "flagged_by_bearing_within_8_km": {
+   "0": 0.017,
+   "30": 0.012,
+   "60": 0.003,
+   "90": 0.011,
+   "120": 0.152,
+   "150": 0.146,
+   "180": 0.061,
+   "210": 0.025,
+   "240": 0.006,
+   "270": 0.085,
+   "300": 0.025,
+   "330": 0.013
   }
  }
 ]

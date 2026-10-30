@@ -6,10 +6,29 @@ Reproduce with `python pipeline/reports/threshold_study_night_1.py`. All numbers
 
 ## What the evidence says
 
-1. **The two signals don't yet separate the July event from quiet pairs at any candidate.** Total flagged area is similar in both groups, so most of what gets flagged is background change, not new material.
+1. **Over the whole site, the two signals don't separate the July event from quiet pairs at any candidate.** Total flagged area is similar in both groups, so most of what gets flagged is background change, not new material. A later check on the named gullies does show a signal (see the night 2 section).
 2. **Brightness change gives a modest area signal.** At 3 and 4 dB, all three July pairs flag more land than every quiet pair (at 4 dB: 2.3–2.9 km² against 1.1–1.8 km²). The gap closes by 5–6 dB. The extra area is spread across the whole site, so it may be rain or farming rather than the current.
 3. **Coherence loss shows no July signal.** The only July pair with a baseline (track 39) has one of the lowest coherence-loss tails of all pairs (99.9th percentile 0.29, quiet 0.24–0.48), and its high-confidence area is within the quiet range.
 4. **There is one spatial hint.** In `threshold-study-maps.png`, both July pairs show a narrow linear streak near the middle of the map, on the volcano's slope, that the two quiet pairs mapped do not show. It could be a channel-confined deposit. This was seen by eye only, on 2 July and 2 quiet maps, and hasn't been compared with a source.
+
+## Added on night 2: brightness change on the named gullies
+
+Later checks changed point 2 above. Whole-site totals hide a clearer signal on the flanks where PHIVOLCS reported lava flows. This table is land flagged by brightness change alone at 3.0 dB, in a 60-degree wedge of each flank out to the reported flow length (km²):
+
+| Track | Group | Basud (E) | Bonga (SE) | Mi-isi (S) |
+| --- | --- | --- | --- | --- |
+| 111 | 5 quiet pairs | 0.002–0.006 | 0.002–0.009 | 0–0.007 |
+| 111 | **Spans the event** | **0.011** | **0.040** | **0.061** |
+| 39 | 2 quiet pairs | 0.056–0.077 | 0.026–0.055 | 0.001–0.003 |
+| 39 | **Spans the event** | **0.114** | **0.099** | **0.098** |
+| 104 | 1 quiet pair | 0.007 | 0.004 | 0.002 |
+| 104 | **Spans the event** | **0.027** | **0.019** | **0.068** |
+
+On every track and flank, the July pair is above the quiet pairs. Mi-isi stands out most. Adding coherence loss raises the quiet pairs' numbers more than the July pairs', which is why a first comparison hid this.
+
+Limits: these are small areas, the wedges are coarse and overlap, only 8 quiet pairs were used, and the rule was chosen after a first attempt gave a misleading result. It measures change on a flank, not a deposit in a gully. Only 3.0 dB was tested. See `july-gully-check.json`.
+
+**For the owner's decision:** this suggests brightness may carry more of the signal than coherence loss on these slopes, at least for this event. It doesn't choose values.
 
 ## Pairs studied
 
