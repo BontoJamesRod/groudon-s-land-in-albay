@@ -181,7 +181,7 @@ Three tasks share a commit (T-030 to T-032), since their code is in the same fil
 
 ## Decision reports, in short
 
-**Channel lines (T-010):** OSM has 714 waterway segments but only 58 are named, and name matching finds just **2 channels: Bulawan and Basud**. Basud-Lidong may be Basud. The other 11 listed names, including Mi-isi and Bonga, are missing. OSM alone can't supply them by name; matching unnamed lines by hand is possible, but it's manual work. OSM's ODbL license needs reading first.
+**Channel lines (T-010):** OSM has 714 waterway segments but only 58 are named, and name matching finds just **2 channels: Bulawan and Basud**. Basud-Lidong may be Basud. The other 12 listed channels, including Mi-isi and Bonga, are missing. OSM alone can't supply them by name; matching unnamed lines by hand is possible, but it's manual work. OSM's ODbL license needs reading first.
 
 **Second site (T-036):** three candidates, none processed yet.
 
