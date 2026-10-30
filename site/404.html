@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found · Mayon Radar Watch</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 24px 16px; color: #1f2328; }
+  </style>
+</head>
+<body>
+  <h1>Page not found</h1>
+  <p><a id="home" href="/">Back to the map</a></p>
+  <script>
+    // On GitHub Pages a project site lives at /<repository>/, so point the link there.
+    if (location.hostname.endsWith("github.io")) {
+      const repo = location.pathname.split("/")[1];
+      document.getElementById("home").href = "/" + repo + "/";
+    }
+  </script>
+</body>
+</html>

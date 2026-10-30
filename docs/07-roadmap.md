@@ -1,0 +1,202 @@
+# Roadmap: Mayon Radar Watch
+
+| Version | Status | Last updated | Based on |
+| --- | --- | --- | --- |
+| 0.1 | Draft | 2026-10-31 | 00 v0.3, 01–06 v0.1 (all Draft), consistency-01 |
+
+No calendar is given, because weekly hours aren't known yet (02 Open Question 1). The dates below are fixed outside events and the targets already set in 02 §6, not estimates.
+
+## 1. Phases
+
+| Phase | Goal | Includes (F-IDs) | Exit criteria |
+| --- | --- | --- | --- |
+| Phase 0: Setup | Project ready to build and deploy | — | An empty Leaflet map opens at the public URL in a private window; CI runs tests, the contract check and the secret scan |
+| Phase 1: MVP | Show where Mayon put new material after the Oct 30, 2026 eruption and which channels it's in, plus a second site (02 §1) | F-01, F-02, F-03, F-04, F-05, F-08, F-09, F-10, F-11, F-12, F-13, F-19 | 02 §6 success criteria 1–4 met; 08 exit criteria met; entry submitted |
+| Phase 2: v1.1 | Add the deferred Could features that reuse the same data | F-06, F-07, F-14 | Their stories (US-010, US-011, US-019) pass their acceptance criteria |
+| Phase 3: v1.2 | Reach more residents and stop manual runs | F-16, F-17 | US-020 and US-021 pass their acceptance criteria |
+| Phase 4: v2 | Other change types and places | F-18 | US-022 passes its acceptance criteria |
+
+## 2. Milestones
+
+| # | Milestone | Done when | Fixed date or target |
+| --- | --- | --- | --- |
+| 1 | Setup done | T-001 to T-007 done: empty map live at the public URL | Before the eruption data arrives |
+| 2 | Thin slice | Build-order steps 8–22 done (T-008 to T-025, except T-010, T-020 and T-021): one real pair runs from ASF to the live map | Before 2026-11-03, when eruption products are expected (brief §7) |
+| 3 | Eruption pair live | T-038 done | Target 2026-11-07 (02 §6, criterion 2) |
+| 4 | MVP feature-complete | Second site (T-037), validation (T-039) and phone pass (T-034) done | Target 2026-11-13 (02 §6, criteria 3 and 4) |
+| 5 | Tested and submitted | T-040 to T-042 done | Hackathon 2026-11-14 to 2026-11-15 (fixed) |
+| 6 | Readability test | T-043 done | Target 2026-11-30 (02 §6, criterion 5) |
+
+## 3. Task Breakdown
+
+### Phase 0: Setup
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-001 | Create the public repository with the folders from 04 §10, a `.gitignore` for `raw/`, `*.h5`, `.netrc`, `pipeline/out/` and `pipeline/logs/`, and a README stub | ADR-001, ADR-003, US-016 | S | — | The repository and README open in a signed-out browser |
+| T-002 | Write `pipeline/requirements.txt` and install it in Colab and on Windows | ADR-002 | S | T-001 | `import asf_search, earthaccess, h5py, rasterio` works in both places |
+| T-003 | Log in with `earthaccess` and search NISAR GCOV over the Mayon bounds | US-009, ADR-002 | S | T-002 | The search lists tracks 111, 104 and 39 as in the brief |
+| T-004 | Create `site/index.html`, `site/404.html` and `site/css/`, copy Leaflet 1.9.4 into `site/vendor/`, show an empty map at the Mayon center | SCR-01, SCR-09, ADR-004, US-016 | S | T-001 | `python -m http.server` in `site/` shows the map on localhost |
+| T-005 | Add the GitHub Actions workflow that deploys `site/` to the chosen host | ADR-005, US-016 | S | T-004 | The public URL shows the map in a private window with no login |
+| T-006 | Set up `pytest` and the `contract_check` skeleton (envelope and `schema_version` for every JSON file under `site/data/`) and run both in CI | TBL-01, API-001, NFR-008 | M | T-005 | A broken JSON file fails CI; a correct one passes |
+| T-007 | Add a secret-scanning step to CI | NFR-002 | S | T-005 | A fake secret on a test branch fails the check |
+
+### Phase 1: MVP
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-008 | Write `pipeline/sites/mayon.json` and the `config` module that checks it and builds the `sites` row | US-015, TBL-01, SCR-12 | S | T-002 | A valid config gives the row; reversed bounds stop with "Invalid bounds in site config: <file>" |
+| T-009 | Build `towns.geojson`, `land.geojson` and the boundary row of `sources.json` for Mayon from the Albay boundary file | US-001, US-003, TBL-02, TBL-10, TBL-11, API-002, API-003, API-004 | M | T-008 | Files pass the contract check; town borders line up with the background imagery on localhost |
+| T-010 | Compile the channel names from PHIVOLCS bulletins, get their lines from the chosen source, link each to its towns, write `channels.geojson` and its `sources.json` row | US-023, TBL-03, TBL-10, API-005, ADR-008 | M | T-009 | Every channel has a line, at least 1 town and a name source; the file passes the contract check |
+| T-011 | Write `events.json` with the 2026-07-14 and 2026-10-30 events and their sources | US-005, TBL-07, API-006 | S | T-008 | The file passes the contract check |
+| T-012 | Build the `search` and `pairs` modules: list passes per track, frame and direction, form consecutive pairs, stop on mixed passes or missing GCOV products | US-009, TBL-04, TBL-05, SCR-12 | M | T-003, T-008 | Track 111 pairs match Vertex; mixed tracks and an unknown granule give the exact 01 messages and write no files |
+| T-013 | Build the `download` module: download or stream, crop to the site bounds, cache in `raw/` (or Google Drive in Colab) | US-009 | M | T-012 | A second run uses the cache; cropped arrays cover the site bounds |
+| T-014 | Build the `gcov` module: HH backscatter in dB, 5 × 5 speckle filter, brightness change, sea, coverage and product masks with no-data reasons | US-008, TBL-06, TBL-11 | M | T-013, T-009 | Unit tests pass; the Oct 7 → Oct 19 track 111 pair gives a median land change near the +0.14 dB found in the progress notes |
+| T-015 | Build the `coherence` module: GUNW coherence for the current and previous pair, resampled to the GCOV grid; brightness-only fallback | US-008, ADR-006 | M | T-013 | Unit tests pass on small test arrays; a pair without GUNW sets `coherence_used` to `false` |
+| T-016 | Study thresholds on at least 3 quiet pairs and the July 14 pair; record the chosen values and the reasons in 01 FR-023 and 05 | US-008, TBL-05 | M | T-014, T-015 | Thresholds are written down and dated before any pair after 2026-10-30 is opened |
+| T-017 | Build the `classify` module: none, low and high classes, areas in km², `new_material` grid with no-data codes | US-008, TBL-05, TBL-06 | S | T-016 | Tests cover every class and code; `new_material_area_km2` equals high + low |
+| T-018 | Build the `export` module: reproject to EPSG:4326, colorize, write the 5 layer images, `new_material.bin` and `pair.json` to `pipeline/out/`, print the summary | US-007, US-009, US-013, TBL-04, TBL-05, TBL-06, API-008, API-009, API-010, SCR-12 | M | T-017 | `pair.json` passes the contract check; images line up with town borders on localhost |
+| T-019 | Build the `publish` module: copy a pair to `site/data/`, set `published` and `published_at`, rebuild `pairs.json` and `sites.json` | US-009, US-015, TBL-01, TBL-05, API-001, API-007, SCR-12, ADR-009 | S | T-018 | Only published pairs appear in `pairs.json`; nothing from `pipeline/out/` reaches `site/` otherwise |
+| T-020 | Process and publish the track 111 backlog since 2026-06-17, including the pair that spans 2026-07-14 | US-005, US-006 | M | T-019 | `pairs.json` lists every available track 111 pair |
+| T-021 | Process and publish the track 104 backlog since 2026-06-17 | US-005 | M | T-020 | `pairs.json` lists every available track 104 pair |
+| T-022 | Build `data.js`: fetch files, check the envelope and `schema_version`, map failures to NOT_FOUND, NETWORK_ERROR and INVALID_DATA | API-001, API-002, API-003, API-004, API-005, API-006, API-007, API-008, API-009, API-010, API-011, US-014 | S | T-004 | A 404, an offline browser and a broken file each give the right code |
+| T-023 | Build `map.js`: site settings, zoom limits, background tiles with the "Background map unavailable" fallback, town borders and names, coastline, danger-zone ring | US-001, US-002, SCR-01, API-001, API-003, API-004 | M | T-022, T-009 | TC-001 to TC-004 pass |
+| T-024 | Build `timeline.js`: pair list, latest pair by default, Previous and Next, "This is the latest pass", local-date label, event markers, empty state | US-005, US-006, SCR-01, API-006, API-007 | M | T-023, T-011, T-019 | TC-013 to TC-017 pass |
+| T-025 | Build `layers.js` for new material: overlay, legend, total area, zero-area message, disclaimer line | US-008, US-012, SCR-01, API-008, API-009 | M | T-024 | TC-020, TC-021 and TC-029 pass |
+| T-026 | Build `readout.js`: decode the grid, find the town, distance, danger-zone notice, class and confidence, no-data reasons, loading and error states | US-004, SCR-02, API-010 | M | T-025 | TC-008 to TC-012 pass |
+| T-027 | Build `search.js`: suggestions after 2 letters, center and open the card, no-match message | US-003, SCR-03 | S | T-026 | TC-005 to TC-007 pass |
+| T-028 | Add the channel layer, the channel card, the channel line in the readout, channel sources in the legend, and the "Channels unavailable" fallback | US-023, SCR-02, API-005 | M | T-026, T-010 | TC-044 to TC-047 pass |
+| T-029 | Build `compare.js`: before and after images with a divider and dates, and the missing-image message | US-007, SCR-04, API-009 | M | T-025 | TC-018 and TC-019 pass |
+| T-030 | Write the "What am I looking at?" panel and put every interface text in `strings.js`; review all text against FR-038 | US-012, SCR-05 | S | T-025 | TC-028 and TC-030 pass |
+| T-031 | Build the Data sources panel | US-013, SCR-06, API-002, API-008 | S | T-025 | TC-031 and TC-032 pass |
+| T-032 | Build the site picker, switching, and the retry error | US-014, SCR-08, API-001 | S | T-024 | TC-034 passes; TC-033 passes once the second site exists |
+| T-033 | Finish the 404 page and the public README (what the app is, data sources, how to run the pipeline) | US-016, SCR-09 | S | T-005 | TC-038 and TC-039 pass |
+| T-034 | Phone and color-blind pass: 360 px layout, 44 × 44 px tap targets, palette check, text labels for every class | US-018, SCR-01, NFR-004 | M | T-028, T-029, T-030, T-031, T-032 | TC-042, TC-043 and TC-055 pass |
+| T-035 | Build the "How we checked this" panel and the `validation` module; create the validation record for the July 14 pair from a PHIVOLCS bulletin | US-017, SCR-07, TBL-08, TBL-09, API-011 | M | T-020, T-025 | TC-040 and TC-041 pass |
+| T-036 | Choose the second site; write its config and build its towns, land and sources files | US-015, F-10, TBL-01, TBL-02, TBL-10, TBL-11 | M | T-008, T-009 | Its files pass the contract check with no code changes |
+| T-037 | Process and publish at least 1 pair for the second site | US-014, US-015 | M | T-036, T-019, T-032 | TC-033 and TC-035 pass |
+| T-038 | Process and publish the eruption pairs (tracks 104 and 111, 2026-10-19 → 2026-10-31 UTC) as soon as they are on ASF, including each track's previous pair if not yet done | US-005, US-008, F-05 | M | T-016, T-019 | At least 1 post-eruption pair is live (G-02) |
+| T-039 | Create the validation record for an eruption pair | US-017, TBL-08, TBL-09 | S | T-038, T-035 | The panel shows it on the live site |
+| T-040 | Run the whole test plan (08) on the live site; fix every Critical and Major bug | All MVP stories (US-001 to US-023), NFR-001 to NFR-009 | M | T-034, T-037, T-039 | 08 exit criteria met |
+| T-041 | With the presenter, write and record the 30-second demo, write the submission text and data citations | F-11, US-016 | M | T-040 | Demo is 30 s or less, public, in English, with subtitles |
+| T-042 | Release v1.0: final deploy, private-window check, first `CHANGELOG.md` entry | F-11, US-016 | S | T-041 | Public link and repository open in a private window; entry submitted |
+| T-043 | Run the readability test with 10 residents or LGU staff | US-012, US-018 | M | T-042 | Results recorded against 02 §6 criterion 5 |
+
+### Phase 2: v1.1
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-044 | Add the ground-movement layer with plane removal and the "within the noise" message | US-010, F-06 | M | T-042 | US-010 acceptance criteria pass |
+| T-045 | Add a lowlands site and the flood layer | US-011, F-07 | M | T-042 | US-011 acceptance criteria pass |
+| T-046 | Add the point history chart | US-019, F-14 | M | T-042 | US-019 acceptance criteria pass |
+
+### Phase 3: v1.2
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-047 | Translate `strings.js` into Filipino and Bikol with an English fallback | US-020, F-16 | M | T-042 | US-020 acceptance criteria pass |
+| T-048 | Schedule the pipeline in GitHub Actions with Earthdata credentials in repository secrets | US-021, F-17 | M | T-042 | US-021 acceptance criteria pass |
+
+### Phase 4: v2
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-049 | Add the first additional change type at a new site | US-022, F-18 | M | T-042 | US-022 acceptance criteria pass |
+
+## 4. Build Order
+
+1. T-001: everything else lives in the repository.
+2. T-002: the pipeline needs its libraries.
+3. T-003: proves Earthdata access before any processing work.
+4. T-004: the web side needs a page to grow from.
+5. T-005: deploy early so problems with hosting show up while they're cheap.
+6. T-006: the contract check guards every later data file.
+7. T-007: no secret should ever reach the public repository.
+8. T-008: every pipeline step needs the site config.
+9. T-009: towns and land are needed for masks and the map.
+10. T-011: small; the timeline needs it later.
+11. T-012: finding and pairing passes comes before downloading.
+12. T-013: downloads feed both processing modules.
+13. T-014: brightness change is the first signal.
+14. T-015: coherence loss is the second signal.
+15. T-016: thresholds must be fixed before the eruption data arrives.
+16. T-017: classification needs the thresholds.
+17. T-018: export makes the files the web app reads.
+18. T-019: publishing puts the first pair on the site.
+19. T-022: the web app needs its data loader first.
+20. T-023: the map is the base for every layer.
+21. T-024: the timeline picks which pair to show.
+22. T-025: completes the thin slice (milestone 2).
+23. T-038: the eruption pairs, as soon as they're on ASF (milestone 3).
+24. T-026: the readout makes the map readable at one spot.
+25. T-010: channel data for the next task.
+26. T-028: channels connect new material to towns.
+27. T-027: search reuses the readout.
+28. T-029: compare view.
+29. T-030: explainer and the wording review.
+30. T-031: data sources for judges.
+31. T-032: site picker, needed before the second site goes live.
+32. T-036: second-site data.
+33. T-037: second site live.
+34. T-020: track 111 backlog, including the July 14 pair.
+35. T-021: track 104 backlog.
+36. T-035: validation panel, first record on the July 14 pair.
+37. T-039: validation of an eruption pair.
+38. T-033: 404 page and README.
+39. T-034: phone and color-blind pass over the finished screens.
+40. T-040: full test run (milestone 4 complete).
+41. T-041: demo and submission text.
+42. T-042: release v1.0 (milestone 5).
+43. T-043: readability test (milestone 6).
+44. T-044: ground movement.
+45. T-045: floods.
+46. T-046: point history.
+47. T-047: Filipino and Bikol.
+48. T-048: automatic updates.
+49. T-049: another change type.
+
+## 5. Definition of Done
+
+- [ ] Code follows the technical design, database design, and API spec
+- [ ] Acceptance criteria for the related stories pass
+- [ ] Tests written or updated
+- [ ] No secrets or passwords in the code
+- [ ] Documents updated if behavior changed
+- [ ] Every published file passes the contract check
+- [ ] New or changed interface text reviewed against FR-038
+
+## 6. Schedule Risks
+
+| Risk | Impact on schedule | Mitigation |
+| --- | --- | --- |
+| Eruption products arrive after 2026-11-04 | Milestone 3 slips by the same number of days | Finish the thin slice first, so T-038 takes hours, not days |
+| Threshold study (T-016) is inconclusive | Milestones 2 and 3 slip by [TBD] days | Use the July 14 pair as the reference event; keep low and high confidence separate instead of forcing one threshold |
+| Large downloads on slow internet; Colab resets | Each backlog task takes longer | Crop early, cache on Google Drive, process the eruption pairs before the backlogs |
+| No second site with a clear change | Milestone 4 slips; R7 at risk | Decide the site (T-036) right after the thin slice |
+| Event rules forbid pre-built code | Most of Phase 1 has to happen during the 48 hours | Check the rules first (brief Open Question 5); keep this roadmap as the 48-hour plan if needed |
+| One builder | Any sickness or school deadline stops all work | Keep deferred features deferred; the presenter takes T-041 |
+
+## 7. Assumptions
+
+- One builder does every task except the demo recording, which is shared with the presenter (T-041).
+- Sizes assume a beginner using the existing notebook and scripts as a starting point.
+- GitHub Pages is the host (04 ADR-005, still a Suggestion); another static host changes only T-005.
+
+## 8. Open Questions
+
+| # | Question | Affects |
+| --- | --- | --- |
+| 1 | What is the start date and how many hours per week are available? Needed to put dates on the plan. | §2 |
+| 2 | Which channel line source? | T-010 |
+| 3 | Which second site? | T-036, T-037 |
+| 4 | Do the event rules allow building before 2026-11-14? | All of Phase 1 |
+
+## 9. Conflicts with Earlier Documents
+
+None.
+
+## 10. Revision History
+
+| Version | Date | Changes |
+| --- | --- | --- |
+| 0.1 | 2026-10-31 | First draft |

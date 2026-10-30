@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Large or private files: never commit these
+raw/
+*.h5
+pipeline/out/
+pipeline/logs/
+.netrc
+_netrc
+.env
+
+# Editors and OS
+.DS_Store
+Thumbs.db
