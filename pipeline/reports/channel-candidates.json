@@ -1,0 +1,162 @@
+{
+ "waterway_segments": 714,
+ "named_segments": 58,
+ "distinct_names": [
+  "Baclayon River",
+  "Bagtang-Maroroy Creek",
+  "Baranghawon River",
+  "Basud RIver",
+  "Basud River",
+  "Bogñabong River",
+  "Bulawan River",
+  "Cabilogan River",
+  "Guinale River",
+  "Makabalo River",
+  "Nawang",
+  "Pawa-Burabod River",
+  "Sagumayon River",
+  "San Fernando",
+  "San Francisco River",
+  "Tagas River",
+  "Tayhi River",
+  "Tiagao River",
+  "Tibu River",
+  "Tobgon River",
+  "Yawa River"
+ ],
+ "segments_within_8_km_of_summit": 209,
+ "channels": [
+  {
+   "channel": "Mabinit",
+   "expected_town": "Legazpi City",
+   "matches": []
+  },
+  {
+   "channel": "Buyuan-Padang",
+   "expected_town": "Legazpi City",
+   "matches": []
+  },
+  {
+   "channel": "Miisi",
+   "expected_town": "Daraga",
+   "matches": []
+  },
+  {
+   "channel": "Tumpa",
+   "expected_town": "Camalig",
+   "matches": []
+  },
+  {
+   "channel": "Anoling",
+   "expected_town": "Camalig",
+   "matches": []
+  },
+  {
+   "channel": "Quirangay",
+   "expected_town": "Camalig",
+   "matches": []
+  },
+  {
+   "channel": "Maninila",
+   "expected_town": "Guinobatan",
+   "matches": []
+  },
+  {
+   "channel": "Basud-Lidong",
+   "expected_town": "Santo Domingo",
+   "matches": []
+  },
+  {
+   "channel": "Bulawan",
+   "expected_town": "Malilipot",
+   "matches": [
+    {
+     "osm_name": "Bulawan River",
+     "name_score": 1.0,
+     "segments": 5,
+     "osm_ids": [
+      84641302,
+      84641358,
+      84641367,
+      780413158,
+      780413159
+     ],
+     "length_km": 15.7,
+     "closest_to_summit_km": 1.3,
+     "towns_crossed": [
+      "Bacacay",
+      "Malilipot"
+     ],
+     "expected_town_crossed": true
+    }
+   ]
+  },
+  {
+   "channel": "San Vicente",
+   "expected_town": "Tabaco City",
+   "matches": []
+  },
+  {
+   "channel": "Buang",
+   "expected_town": "Tabaco City",
+   "matches": []
+  },
+  {
+   "channel": "Upper Nasisi",
+   "expected_town": "Ligao City",
+   "matches": []
+  },
+  {
+   "channel": "Upper Nabonton",
+   "expected_town": "Ligao City",
+   "matches": []
+  },
+  {
+   "channel": "Mi-isi",
+   "expected_town": null,
+   "matches": []
+  },
+  {
+   "channel": "Bonga",
+   "expected_town": null,
+   "matches": []
+  },
+  {
+   "channel": "Basud",
+   "expected_town": null,
+   "matches": [
+    {
+     "osm_name": "Basud River",
+     "name_score": 1.0,
+     "segments": 4,
+     "osm_ids": [
+      84641309,
+      553656278,
+      553656279,
+      554777833
+     ],
+     "length_km": 10.0,
+     "closest_to_summit_km": 1.5,
+     "towns_crossed": [
+      "Santo Domingo"
+     ],
+     "expected_town_crossed": null
+    },
+    {
+     "osm_name": "Basud RIver",
+     "name_score": 1.0,
+     "segments": 1,
+     "osm_ids": [
+      555279291
+     ],
+     "length_km": 2.5,
+     "closest_to_summit_km": 4.9,
+     "towns_crossed": [
+      "Santo Domingo"
+     ],
+     "expected_town_crossed": null
+    }
+   ]
+  }
+ ]
+}
