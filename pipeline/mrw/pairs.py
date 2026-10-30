@@ -75,11 +75,3 @@ def build_track_pairs(site_id, passes, gunw_products=()):
             pairs.append(pair)
             previous = pair
     return sorted(pairs, key=lambda p: p["after"]["acquired_start"])
-
-
-def find_pair(pairs, track_id):
-    """Return the pair with this id. Stop with FR-028 if it can't be built from ASF's list."""
-    for pair in pairs:
-        if pair["id"] == track_id:
-            return pair
-    raise PairError(f"Product not available yet: {track_id}")
