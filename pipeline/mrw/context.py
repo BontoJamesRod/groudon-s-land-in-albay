@@ -17,6 +17,9 @@ from shapely import make_valid, set_precision
 from shapely.geometry import Point, box, mapping, shape
 from shapely.ops import unary_union
 
+# Lets this file run as a script from the project folder.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from mrw.config import load_site, utc_now_text
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

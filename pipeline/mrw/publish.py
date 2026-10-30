@@ -12,6 +12,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+# Lets this file run as a script from the project folder.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from mrw.config import SITES_FOLDER, build_sites_row, load_site_config, utc_now_text
 from mrw.context import DATA_FOLDER, write_json
 from mrw.contract_check import check_data_dir

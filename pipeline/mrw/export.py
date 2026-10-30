@@ -16,6 +16,9 @@ from PIL import Image
 from pyproj import Transformer
 from shapely.geometry import shape
 
+# Lets this file run as a script from the project folder.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from mrw import __version__
 from mrw.classify import HIGH, LOW, areas_km2, classify
 from mrw.coherence import GUNW_DATASETS, GUNW_GROUP, compute_coherence_loss
