@@ -52,6 +52,7 @@ def visible_text_files():
     data = SITE / "data"
     return (sorted((SITE / "js").glob("*.js")) + [SITE / "index.html", SITE / "404.html"]
             + sorted(data.glob("*.json")) + sorted(data.glob("sites/*/*.json"))
+            + sorted(data.glob("sites/*/channels.geojson"))
             + sorted(data.glob("sites/*/pairs/*/*.json")) + sorted(SHEETS.glob("*.json")))
 
 

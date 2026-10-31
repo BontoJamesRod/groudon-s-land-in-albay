@@ -143,11 +143,19 @@ button:disabled { color: #6e7781; }
 
 .pair-label,
 .pair-events,
+.pair-gap,
 .timeline-status,
 .legend-area,
 .summary { margin: 6px 0 0; }
 
 .pair-events { font-weight: 600; }
+
+/* A pair with an unequal gap: dimmed, and always with its note, so it never depends on color. */
+.pair-dim { color: #57606a; }
+
+.pair-gap { font-weight: 600; color: #57606a; }
+
+.pair-gap:empty { display: none; }
 
 .layer-toggle {
   display: flex;
@@ -549,6 +557,16 @@ button:disabled { color: #6e7781; }
   flex: none;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.channel-bar-dim { color: #57606a; }
+
+.channel-bar-dim .channel-bar-fill { opacity: 0.45; }
+
+.channel-bar-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
 }
 
 /* Bars grow from one baseline, and the rounded end is the end that shows the value. */

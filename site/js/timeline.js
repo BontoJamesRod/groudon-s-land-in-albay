@@ -3,6 +3,9 @@
 
 import { STRINGS } from "./strings.js";
 
+const USUAL_GAP_DAYS = 12;
+const MS_PER_DAY = 86400000;
+
 // Format a UTC time as a day in the site's own time zone (FR-014).
 export function localDate(utcText, timeZone) {
   return new Intl.DateTimeFormat("en-PH", { timeZone, year: "numeric", month: "short", day: "numeric" })
@@ -26,13 +29,22 @@ export function pairDates(pair, timeZone) {
   return STRINGS.pairRange(localDate(pair.before_acquired_start, timeZone), localDate(pair.after_acquired_start, timeZone));
 }
 
+// A longer gap can show more change, so its pair can't be compared with the others (FR-066).
+// Passes on a track come at about the same time of day, so rounding gives the whole days.
+export function gapNote(pair) {
+  const days = Math.round((new Date(pair.after_acquired_start) - new Date(pair.before_acquired_start)) / MS_PER_DAY);
+  return days === USUAL_GAP_DAYS ? null : STRINGS.gapNote(days);
+}
+
 function pairLabel(pair, timeZone) {
   return STRINGS.pairLabel(pairDates(pair, timeZone), timeZone, pair.track, pair.frame, pair.orbit_direction);
 }
 
 function optionText(pair, events, timeZone) {
   const names = eventsInPair(pair, events, timeZone).map((event) => event.name);
-  return names.length ? STRINGS.optionWithEvents(pairDates(pair, timeZone), names.join(", ")) : pairDates(pair, timeZone);
+  const text = names.length ? STRINGS.optionWithEvents(pairDates(pair, timeZone), names.join(", ")) : pairDates(pair, timeZone);
+  const note = gapNote(pair);
+  return note ? STRINGS.optionWithGap(text, note) : text;
 }
 
 // Set up the timeline. `onSelect` loads a pair and rejects if it can't. It also gets a
@@ -48,6 +60,8 @@ export function createTimeline(elements, site, pairs, events, siteIsShown, onSel
     elements.label.textContent = pairLabel(pair, timeZone);
     const names = eventsInPair(pair, events, timeZone).map((event) => event.name);
     elements.events.textContent = names.length ? STRINGS.eventInPeriod(names.join(", ")) : "";
+    elements.gap.textContent = gapNote(pair) || "";
+    elements.list.classList.toggle("pair-dim", gapNote(pair) !== null);
     elements.previous.disabled = selected === 0;
   }
 
@@ -77,6 +91,7 @@ export function createTimeline(elements, site, pairs, events, siteIsShown, onSel
     const option = document.createElement("option");
     option.value = pair.id;
     option.textContent = optionText(pair, events, timeZone);
+    option.classList.toggle("pair-dim", gapNote(pair) !== null);
     elements.list.append(option);
   }
   elements.previous.onclick = () => {

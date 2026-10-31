@@ -26,6 +26,8 @@ export const STRINGS = {
   pairLabel: (range, timeZone, track, frame, direction) =>
     `${range} (${timeZone}), track ${track}, frame ${frame}, ${direction}`,
   optionWithEvents: (range, names) => `${range}: ${names}`,
+  optionWithGap: (text, note) => `${text} (${note})`,
+  gapNote: (days) => `${days}-day gap, not comparable`,
   eventInPeriod: (names) => `Event in this period: ${names}`,
   layerUnits: (units) => `Units: ${units}`,
   totalArea: (km2) => `Total detected area: ${km2.toFixed(2)} km²`,

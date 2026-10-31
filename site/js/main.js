@@ -69,7 +69,7 @@ function setUpChannelLayer(map, siteData, readout) {
     note: byId("channel-note"),
     unavailable: byId("channels-unavailable"),
   };
-  if (siteData.channels) {
+  if (siteData.channels && siteData.channels.features.length) {
     createChannelLayer(map, elements, siteData.channels, (channel, latlng) => {
       readout.open(latlng.lat, latlng.lng, undefined, channel);
     });
@@ -129,6 +129,7 @@ function setUpPairs(map, site, siteData, readout) {
     list: byId("pair-list"),
     label: byId("pair-label"),
     events: byId("pair-events"),
+    gap: byId("pair-gap"),
     previous: byId("previous"),
     next: byId("next"),
     message: byId("timeline-message"),

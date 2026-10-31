@@ -1,4 +1,4 @@
-// Tasks T-075, T-076 and T-091: the channel list, one channel's bars, and its strip on the map.
+// Tasks T-075, T-076, T-077 and T-091: the channel list, one channel's bars, and its strip on the map.
 // The browser only shows these areas: the pipeline works them out (FR-064).
 
 import { loadChannelAreas, loadChannels } from "./data.js";
@@ -6,7 +6,7 @@ import { channelLines } from "./layers.js";
 import { STRIP_PANE } from "./map.js";
 import { element } from "./panels.js";
 import { STRINGS } from "./strings.js";
-import { pairDates } from "./timeline.js";
+import { gapNote, pairDates } from "./timeline.js";
 
 const STRIP_STYLE = { color: "#22d3ee", weight: 1.5, opacity: 0.9, fillColor: "#22d3ee", fillOpacity: 0.22, interactive: false };
 const FIT_PADDING_PX = 24;
@@ -113,6 +113,11 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       track.append(fill);
       button.append(track);
     }
+    const note = gapNote(pair);
+    if (note) {
+      button.classList.add("channel-bar-dim");
+      button.append(element("span", note, "channel-bar-note"));
+    }
     button.onclick = () => onPickPair(pair.id);
     const row = element("li");
     row.append(button);
@@ -150,11 +155,15 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     elements.title.focus();
   }
 
-  // SCR-13: the channels, most changed first, for the latest pair.
-  function showList() {
+  function showListTitle() {
     elements.title.textContent = STRINGS.channelsTitle;
     elements.back.hidden = true;
     removeStrip();
+  }
+
+  // SCR-13: the channels, most changed first, for the latest pair.
+  function showList() {
+    showListTitle();
     if (channels.features.length === 0) {
       showStatus(STRINGS.channelsEmpty, false);
       return;
@@ -168,8 +177,10 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     const sorted = sortChannels(channels.features, (channel) => flaggedArea(channel, latest));
     const list = element("ul", undefined, "channel-rows");
     list.append(...sorted.map((channel) => listRow(channel, latest)));
+    const lead = STRINGS.channelsLatest(pairDates(latest, site.time_zone), latest.track);
+    const note = gapNote(latest);
     elements.body.replaceChildren(
-      element("p", STRINGS.channelsLatest(pairDates(latest, site.time_zone), latest.track), "channel-lead"),
+      element("p", note ? STRINGS.optionWithGap(lead, note) : lead, "channel-lead"),
       list,
       element("p", STRINGS.channelsHow(site.channel_strip_half_width_m, site.detection_reach_km), "channel-note"),
       element("p", STRINGS.channelsOnlyConfirmed, "channel-note"),
@@ -180,6 +191,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
   async function load() {
     request += 1;
     const thisRequest = request;
+    showListTitle();
     showStatus(STRINGS.channelsLoading, false);
     try {
       const loaded = channels || await loadChannels(site.id);
@@ -203,9 +215,9 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
 
   function open() {
     setOpen(true);
-    elements.title.focus();
     if (rows) showList();
     else load();
+    elements.title.focus();
   }
 
   function close() {
@@ -228,7 +240,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
   function pairChanged(pair) {
     selectedPairId = pair.id;
     markSelectedBar();
-    if (rows) showStatus("", false, true);
+    if (elements.status.textContent === STRINGS.passLoadError) showStatus("", false, true);
   }
 
   // On a phone the pass controls are hidden behind this panel, so it has to say so itself.

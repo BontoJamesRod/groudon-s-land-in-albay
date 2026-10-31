@@ -208,9 +208,17 @@ def test_tc065_no_confirmed_channels(page, site_url):
     empty_channels(page)
     page.goto(site_url)
     wait_until_ready(page)
+    # With no lines on the map, there's no channel legend and nothing to credit.
+    expect(page.locator("#channel-layer")).to_be_hidden()
+    expect(page.locator(".leaflet-control-attribution")).not_to_contain_text("OpenStreetMap")
     page.click("#channels-button")
     expect(page.locator("#channel-status")).to_have_text("No confirmed channels yet for this site")
     expect(page.locator("#channel-body .channel-row")).to_have_count(0)
+    # Picking another pair must not wipe the message.
+    page.select_option("#pair-list", "mayon_A111F008_20260703_20260715")
+    expect(page.locator("#pair-list")).to_have_value("mayon_A111F008_20260703_20260715")
+    expect(page.locator(".leaflet-radar-pane img[src*='20260703_20260715']")).to_have_count(1)
+    expect(page.locator("#channel-status")).to_have_text("No confirmed channels yet for this site")
 
 
 def test_tc065_a_site_with_no_channel_data_has_no_button(app):
@@ -228,6 +236,7 @@ def test_tc066_loading_then_the_list(app, slow_files):
     slow_files["channel_areas.json"] = 1.0
     app.click("#channels-button")
     expect(app.locator("#channel-status")).to_have_text("Loading channel changes…")
+    expect(app.locator("#channel-title")).to_have_text("Channels")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     expect(app.locator("#channel-status")).to_have_text("")
 
@@ -237,6 +246,7 @@ def test_tc066_a_failed_load_offers_retry_and_the_map_stays(app):
     app.route("**/sites/mayon/channel_areas.json", lambda route: route.abort())
     app.click("#channels-button")
     expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
+    expect(app.locator("#channel-title")).to_have_text("Channels")
     expect(app.locator("#channel-retry")).to_be_visible()
     assert map_center(app) == pytest.approx(center, abs=0.05) and map_zoom(app) == zoom
     expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
@@ -288,7 +298,7 @@ def open_phone(page, site_url):
 def test_the_list_fits_a_phone(page, site_url):
     open_phone(page, site_url)
     assert controls_too_small(page) == []
-    assert page.locator(".topbar").bounding_box()["height"] < 110
+    assert page.locator("#map").bounding_box()["height"] >= 300
     page.click("#channels-button")
     expect(page.locator("#channel-body .channel-row")).to_have_count(4)
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
@@ -343,7 +353,7 @@ def test_tc067_one_bar_per_pair_in_order_with_its_dates_and_value(app):
     texts = bar_rows(app)
     assert [bar.get_attribute("data-pair") for bar in app.locator("#channel-body .channel-bar").all()] == [pair["id"] for pair in pairs]
     for text, pair in zip(texts, pairs):
-        assert text.endswith(f"{rows[pair['id']]['flagged_area_km2']:.2f} km²")
+        assert f"{rows[pair['id']]['flagged_area_km2']:.2f} km²" in text
         assert f"track {pair['track']}" in text
     assert texts[-1].startswith("Oct 8, 2026 to Oct 20, 2026, track 111")
 
@@ -361,12 +371,13 @@ def test_tc068_the_strip_shows_the_map_fits_it_and_back_removes_it(app):
     expect(strip_paths(app)).to_have_count(0)
     open_channel(app, "Mi-isi")
     expect(strip_paths(app)).to_have_count(1)
-    lats_lons = shape(channel("Mi-isi")["properties"]["strip_geometry"]).bounds
-    inside = app.evaluate(f"testMap.getBounds().contains(L.latLngBounds([{lats_lons[1]}, {lats_lons[0]}], [{lats_lons[3]}, {lats_lons[2]}]))")
+    props = channel("Mi-isi")["properties"]
+    west, south, east, north = shape(props["strip_geometry"]).bounds
+    inside = app.evaluate(f"testMap.getBounds().contains(L.latLngBounds([{south}, {west}], [{north}, {east}]))")
     assert inside
-    # The map moved to the strip: its center is now the middle of the strip, not the site's.
-    center = map_center(app)
-    assert center == pytest.approx(((lats_lons[1] + lats_lons[3]) / 2, (lats_lons[0] + lats_lons[2]) / 2), abs=0.002)
+    # The map moved to the channel: its center is now the middle of the strip and the part past it.
+    west, south, east, north = shape(props["strip_geometry"]).union(shape(props["not_checked_geometry"])).bounds
+    assert map_center(app) == pytest.approx(((south + north) / 2, (west + east) / 2), abs=0.002)
     app.click("#channel-back")
     expect(strip_paths(app)).to_have_count(0)
     expect(app.locator("#channel-title")).to_have_text("Channels")
@@ -510,3 +521,74 @@ def test_tc081_the_strip_stops_at_the_reach_and_nothing_past_it_counts(app):
     expect(card(app)).to_contain_text("Not checked: this map only looks within 10 km of the summit")
     expect(card(app)).not_to_contain_text("No new material detected")
     assert not shape(channel("Mi-isi")["properties"]["strip_geometry"]).contains(shape({"type": "Point", "coordinates": [lon, lat]}))
+
+
+GAP_PAIR = "mayon_A111F008_20260727_20260820"
+GAP_NOTE = "24-day gap, not comparable"
+
+
+def test_tc070_the_24_day_bar_is_dimmed_with_its_note(app):
+    open_channel(app, "Mi-isi")
+    bars = app.locator("#channel-body .channel-bar")
+    dimmed = app.locator("#channel-body .channel-bar-dim")
+    expect(dimmed).to_have_count(1)
+    assert dimmed.get_attribute("data-pair") == GAP_PAIR
+    expect(dimmed).to_contain_text(GAP_NOTE)
+    assert sum(GAP_NOTE in text for text in bars.all_inner_texts()) == 1
+    opacity = dimmed.locator(".channel-bar-fill").evaluate("(fill) => getComputedStyle(fill).opacity")
+    assert float(opacity) < 1
+    other = bars.first.locator(".channel-bar-fill").evaluate("(fill) => getComputedStyle(fill).opacity")
+    assert float(other) == 1
+
+
+def test_tc071_the_24_day_pair_is_dimmed_on_the_pass_timeline(app):
+    dimmed = app.locator("#pair-list option.pair-dim")
+    expect(dimmed).to_have_count(1)
+    assert dimmed.get_attribute("value") == GAP_PAIR
+    expect(dimmed).to_contain_text(GAP_NOTE)
+    assert app.locator("#pair-list option").count() == len(read_data("sites/mayon/pairs.json"))
+
+
+def test_tc071_selecting_it_shows_the_note_and_dims_the_list(app):
+    expect(app.locator("#pair-gap")).to_have_text("")
+    expect(app.locator("#pair-list")).not_to_have_class("pair-dim")
+    app.select_option("#pair-list", GAP_PAIR)
+    expect(app.locator("#pair-gap")).to_have_text(GAP_NOTE)
+    expect(app.locator("#pair-list")).to_have_class("pair-dim")
+    app.select_option("#pair-list", LATEST_PAIR)
+    expect(app.locator("#pair-gap")).to_have_text("")
+    expect(app.locator("#pair-list")).not_to_have_class("pair-dim")
+
+
+def test_tc071_the_note_shows_on_a_phone_with_the_drawer_closed(page, site_url):
+    open_phone(page, site_url)
+    page.select_option("#pair-list", GAP_PAIR)
+    expect(page.locator("#pair-gap")).to_be_visible()
+    expect(page.locator("#pair-gap")).to_have_text(GAP_NOTE)
+
+
+def test_tc071_panamas_pairs_are_all_12_days(app):
+    app.click("#site-name")
+    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
+    expect(app.locator("#pair-list option.pair-dim")).to_have_count(0)
+
+
+def test_the_latest_pair_line_says_when_its_gap_is_unequal(page, site_url):
+    """Uses a test browser's own copy of the list, with the 24-day pair last."""
+    pairs = read_data("sites/mayon/pairs.json")
+    gap = next(pair for pair in pairs if pair["id"] == GAP_PAIR)
+    reordered = [pair for pair in pairs if pair["id"] != GAP_PAIR] + [gap]
+    prepare_page(page)
+    page.route("**/sites/mayon/pairs.json", lambda route: route.fulfill(body=envelope(reordered), content_type="application/json"))
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click("#channels-button")
+    expect(page.locator(".channel-lead")).to_contain_text(GAP_NOTE)
+
+
+def test_axe_with_the_24_day_pair_selected(app):
+    app.select_option("#pair-list", GAP_PAIR)
+    expect(app.locator("#pair-gap")).to_have_text(GAP_NOTE)
+    open_channel(app, "Basud")
+    assert problems_on(app) == []

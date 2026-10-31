@@ -44,6 +44,19 @@ def test_us026_publishing_adds_the_pairs_channel_rows(folders):
     assert check_data_dir(data) == []
 
 
+def test_a_failed_publish_puts_the_channel_rows_back(folders):
+    out, data = folders
+    run(out, data)
+    areas = data / "sites" / "mayon" / "channel_areas.json"
+    before = areas.read_bytes()
+    sources = json.loads((data / "sources.json").read_text(encoding="utf-8"))
+    sources["data"][0]["license"] = None
+    (data / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    with pytest.raises(PublishError):
+        run(out, data)
+    assert areas.read_bytes() == before
+
+
 def test_publish_sets_status_and_lists_the_pair(folders):
     out, data = folders
     pair = run(out, data)
