@@ -41,8 +41,8 @@ NO_DATA_CODES = {str(MASKED_BY_PRODUCT): "masked_by_product", str(SEA): "sea",
                  str(OUTSIDE_COVERAGE): "outside_coverage"}
 CLASS_COLORS = {LOW: "#E69F00", HIGH: "#D55E00"}  # orange and vermillion: color-blind safe
 CLASS_LEGEND = [
-    {"value": LOW, "label": "Possible new material (one signal)", "color": CLASS_COLORS[LOW], "confidence": "low"},
-    {"value": HIGH, "label": "New material (both signals)", "color": CLASS_COLORS[HIGH], "confidence": "high"},
+    {"value": LOW, "label": "Possible new material (brightness only)", "color": CLASS_COLORS[LOW], "confidence": "low"},
+    {"value": HIGH, "label": "Likely new material (brightness and coherence agree)", "color": CLASS_COLORS[HIGH], "confidence": "high"},
 ]
 # kind: (title, units, color map, lowest value, highest value)
 CONTINUOUS_LAYERS = {

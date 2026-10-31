@@ -559,8 +559,8 @@ None (`GET`).
         "color_scale_min": null,
         "color_scale_max": null,
         "legend": [
-          { "value": 1, "label": "Possible new material (one signal)", "color": "#E69F00", "confidence": "low" },
-          { "value": 2, "label": "New material (both signals)", "color": "#D55E00", "confidence": "high" }
+          { "value": 1, "label": "Possible new material (brightness only)", "color": "#E69F00", "confidence": "low" },
+          { "value": 2, "label": "Likely new material (brightness and coherence agree)", "color": "#D55E00", "confidence": "high" }
         ],
         "source_granule_ids": [
           "NISAR_L2_PR_GCOV_032_111_A_008_4005_DHDH_A_20261007T211319_20261007T211354_P05023_N_F_J_001",

@@ -76,8 +76,8 @@ export const STRINGS = {
   helpColorsTitle: "What each color means",
   helpNoColor: "No color: no new material detected, or no radar data.",
   helpClasses: [
-    "Orange: possible new material (the brightness changed). Confidence: low",
-    "Dark orange: new material (the brightness changed, and the passes became less alike). Confidence: high",
+    "Orange: possible new material (brightness only). Confidence: low",
+    "Dark orange: likely new material (brightness and coherence agree). Confidence: high",
   ],
   helpConfidenceTitle: "Confidence levels",
   helpConfidence: [
