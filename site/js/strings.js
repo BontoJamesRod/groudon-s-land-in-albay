@@ -132,6 +132,16 @@ export const STRINGS = {
   channelsUnavailable: "Channels unavailable",
   channelLineNote: "Solid line: checked. Dashed white line: past the reach of this map, so not checked.",
   channelSources: "Names: PHIVOLCS. Lines: OpenStreetMap contributors (ODbL), confirmed by the project owner.",
+  channelsButton: "Channels",
+  channelsTitle: "Channels",
+  channelsLoading: "Loading channel changes…",
+  channelsError: "Couldn't load channel changes. Try again.",
+  channelsEmpty: "No confirmed channels yet for this site",
+  channelsLatest: (range, track) => `Most changed first, since the last pass: ${range}, track ${track}`,
+  channelArea: (km2) => `${km2.toFixed(2)} km²`,
+  channelNoData: "No radar data",
+  channelsHow: (halfWidth, reach) => `This is the area flagged as possible or likely new material in a strip ${halfWidth} m on each side of the line${reach ? `, within ${reach} km of the summit` : ""}.`,
+  channelsOnlyConfirmed: "Only channels the project owner has checked are listed. Other channels also drain Mayon.",
   channelCredit: 'Channel lines: <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> (ODbL)',
 
   // Site picker (SCR-08)

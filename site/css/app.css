@@ -27,9 +27,17 @@ body {
 
 [hidden] { display: none !important; }
 
+/* An explicit minimum: otherwise a long channel list would make the map's row taller, not scroll. */
+.map-row {
+  flex: 1;
+  display: flex;
+  min-height: 300px;
+}
+
 .map-area {
   position: relative;
   flex: 1;
+  min-width: 0;
   min-height: 300px;
   display: flex;
 }
@@ -439,11 +447,82 @@ button:disabled { color: #6e7781; }
   vertical-align: top;
 }
 
+/* The channel panel sits beside the map, so that the strip stays in view. On phones it goes under it. */
+.channel-panel {
+  flex: 0 0 380px;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+  border-left: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.channel-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  background: var(--paper);
+}
+
+.channel-header h2 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+.channel-header h2:focus { outline: none; }
+
+.channel-status-line:has(#channel-status:empty):has(#channel-retry[hidden]) { display: none; }
+
+.channel-status-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.channel-lead { margin: 0 0 8px; font-weight: 600; }
+
+.channel-rows {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.channel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+  text-align: left;
+}
+
+.channel-row-name { font-weight: 600; }
+
 /* T-034: on phones the map stays large and the disclaimer stays on screen (FR-037),
    so the pass controls and legend scroll inside their own area. */
 @media (max-width: 700px) {
   .topbar { padding: 4px 16px; gap: 4px; }
   .map-area, #map { min-height: 200px; }
+  .map-row { flex-direction: column; min-height: 200px; }
+  .channel-panel {
+    flex: 0 0 55%;
+    min-height: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  /* The channel panel takes over from the pass controls, so the map and the panel both get room. */
+  body.channels-open #panel { display: none; }
+  .topbar-actions { flex-wrap: wrap; }
+  .topbar-actions button { padding: 0 8px; font-size: 14px; }
   .panel { flex: none; max-height: 45vh; overflow-y: auto; padding-top: 0; gap: 4px 24px; }
   .drawer-toggle {
     display: block;

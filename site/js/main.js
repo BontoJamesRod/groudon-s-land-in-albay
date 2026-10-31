@@ -2,6 +2,7 @@
 // then its latest pair. Switching sites loads the new site before removing the old
 // one, so the previous site stays on screen if loading fails (FR-042).
 
+import { createChannels } from "./channels.js";
 import { createCompare } from "./compare.js";
 import { loadPair, loadSiteData, loadSites } from "./data.js";
 import { createDrawer } from "./drawer.js";
@@ -16,7 +17,7 @@ import { createTimeline } from "./timeline.js";
 const byId = (id) => document.getElementById(id);
 
 // What is on screen now.
-const app = { sites: [], site: null, map: null, pair: null, compare: null, drawer: null, openRequest: 0 };
+const app = { sites: [], site: null, map: null, pair: null, compare: null, channels: null, drawer: null, openRequest: 0 };
 
 function showError(text, retry) {
   byId("app-message").textContent = text;
@@ -77,6 +78,22 @@ function setUpChannelLayer(map, siteData, readout) {
   }
 }
 
+// The Channels button shows only for a site with channel data (US-024/AC-2).
+function setUpChannels(map, site, siteData) {
+  const button = byId("channels-button");
+  button.hidden = site.channel_strip_half_width_m == null;
+  app.channels = button.hidden ? null : createChannels({
+    panel: byId("channel-panel"),
+    title: byId("channel-title"),
+    close: byId("channel-close"),
+    status: byId("channel-status"),
+    retry: byId("channel-retry"),
+    body: byId("channel-body"),
+    opener: button,
+  }, site, siteData, () => map.invalidateSize({ animate: false }));
+  button.onclick = () => app.channels.open();
+}
+
 // Connect the pair list, map layer, readout and compare view for the site on screen.
 function setUpPairs(map, site, siteData, readout) {
   if (siteData.pairs.length === 0) {
@@ -132,6 +149,7 @@ async function showSite(site, siteData) {
   byId("readout-card").hidden = true;
   byId("search-panel").hidden = true;
   if (app.compare) app.compare.close();
+  if (app.channels) app.channels.close();
   if (app.map) app.map.remove();
   app.map = null;
   app.pair = null;
@@ -150,6 +168,7 @@ async function showSite(site, siteData) {
   }, site, siteData.towns, siteData.channels);
   map.on("click", (event) => readout.open(event.latlng.lat, event.latlng.lng));
   setUpChannelLayer(map, siteData, readout);
+  setUpChannels(map, site, siteData);
   setUpSearch(map, site, siteData, readout);
   await setUpPairs(map, site, siteData, readout);
   byId("loading").hidden = true;

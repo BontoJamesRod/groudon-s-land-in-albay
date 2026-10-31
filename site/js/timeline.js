@@ -22,7 +22,7 @@ export function eventsInPair(pair, events, timeZone) {
   return events.filter((event) => event.event_date >= first && event.event_date <= last);
 }
 
-function pairDates(pair, timeZone) {
+export function pairDates(pair, timeZone) {
   return STRINGS.pairRange(localDate(pair.before_acquired_start, timeZone), localDate(pair.after_acquired_start, timeZone));
 }
 

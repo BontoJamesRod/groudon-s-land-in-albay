@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=d9640cdcfb">
+  <link rel="stylesheet" href="css/app.css?v=5004ee1ed6">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
   <header class="topbar">
     <h1 class="site-title"><button id="site-name" class="site-name" type="button" data-text="appName"></button></h1>
     <span class="topbar-actions">
+      <button id="channels-button" type="button" data-text="channelsButton" hidden></button>
       <button id="search-button" type="button" data-text="searchButton"></button>
       <button id="help-button" type="button" data-text="helpButton"></button>
     </span>
   </header>
 
+  <div class="map-row">
   <main class="map-area">
     <div id="map" role="region" data-label="mapLabel"></div>
     <p id="loading" class="map-notice" role="status" data-text="loadingRadar"></p>
@@ -48,6 +50,19 @@
       </div>
     </section>
   </main>
+
+  <section id="channel-panel" class="channel-panel" data-label="channelsTitle" hidden>
+    <header class="channel-header">
+      <h2 id="channel-title" tabindex="-1"></h2>
+      <button id="channel-close" type="button" data-text="close"></button>
+    </header>
+    <p class="channel-status-line" aria-live="polite">
+      <span id="channel-status"></span>
+      <button id="channel-retry" type="button" data-text="retry" hidden></button>
+    </p>
+    <div id="channel-body"></div>
+  </section>
+  </div>
 
   <div class="app-status" aria-live="polite">
     <span id="app-message"></span>
@@ -115,20 +130,21 @@
   <script type="importmap">
 {
   "imports": {
+    "./js/channels.js": "./js/channels.js?v=ccf061f33f",
     "./js/compare.js": "./js/compare.js?v=992505293c",
-    "./js/data.js": "./js/data.js?v=2e2462dc5c",
+    "./js/data.js": "./js/data.js?v=4dcc91f5d5",
     "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
     "./js/layers.js": "./js/layers.js?v=8fc89d424a",
-    "./js/main.js": "./js/main.js?v=1c3d873eba",
+    "./js/main.js": "./js/main.js?v=3e8c9febba",
     "./js/map.js": "./js/map.js?v=cf89a226ed",
-    "./js/panels.js": "./js/panels.js?v=faebdd7870",
+    "./js/panels.js": "./js/panels.js?v=1249ebdf55",
     "./js/readout.js": "./js/readout.js?v=f0f7a4cf7a",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=99b4642719",
-    "./js/timeline.js": "./js/timeline.js?v=e7616d12bd"
+    "./js/strings.js": "./js/strings.js?v=be65bd7deb",
+    "./js/timeline.js": "./js/timeline.js?v=5793490f27"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=1c3d873eba"></script>
+  <script type="module" src="js/main.js?v=3e8c9febba"></script>
 </body>
 </html>

@@ -7,8 +7,9 @@ from playwright.sync_api import expect
 from shapely import contains_xy
 from shapely.geometry import shape
 
-from .conftest import SITE, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
-from .test_mvp import card, tap_at
+from .conftest import SITE, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .test_accessibility import problems_on
+from .test_mvp import card, controls_too_small, map_center, map_zoom, tap_at
 
 pytestmark = pytest.mark.e2e
 
@@ -150,3 +151,163 @@ def test_a_site_with_no_channel_data_says_nothing_about_channels(page, site_url)
     expect(page.locator(".channel-label")).to_have_count(0)
     expect(page.locator(".leaflet-control-attribution")).not_to_contain_text("OpenStreetMap")
     assert not any("panama/channels" in url for url in asked)
+
+
+def area_rows(latest_areas):
+    """Rows for every channel and pair. `latest_areas` sets the latest pair's flagged area by channel id."""
+    rows = []
+    for pair in read_data("sites/mayon/pairs.json"):
+        for item in channels():
+            area = latest_areas.get(item["id"], 0.02) if pair["id"] == LATEST_PAIR else 0.02
+            rows.append({"id": f"{item['id']}__{pair['id']}", "site_id": "mayon", "channel_id": item["id"], "pair_id": pair["id"],
+                         "flagged_area_km2": area, "checked_area_km2": 0 if area is None else 1.0,
+                         "created_at": "2026-11-01T00:00:00Z", "updated_at": "2026-11-01T00:00:00Z"})
+    return rows
+
+
+def serve_areas(page, rows):
+    page.route("**/sites/mayon/channel_areas.json", lambda route: route.fulfill(body=envelope(rows), content_type="application/json"))
+
+
+def list_rows(page):
+    return [" ".join(text.split()) for text in page.locator("#channel-body .channel-row").all_inner_texts()]
+
+
+def test_tc064_the_channels_are_sorted_with_no_data_last(app):
+    serve_areas(app, area_rows({"mayon_padang": 0.12, "mayon_miisi": 0.03, "mayon_basud": 0.03, "mayon_lidong": None}))
+    app.click("#channels-button")
+    expect(app.locator("#channel-body .channel-row")).to_have_count(4)
+    assert list_rows(app) == ["Padang 0.12 km²", "Basud 0.03 km²", "Mi-isi 0.03 km²", "Lidong No radar data"]
+
+
+def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
+    latest = {row["channel_id"]: row["flagged_area_km2"] for row in read_data("sites/mayon/channel_areas.json") if row["pair_id"] == LATEST_PAIR}
+    names = {item["id"]: item["properties"]["name"] for item in channels()}
+    wanted = sorted(latest, key=lambda channel_id: (-latest[channel_id], names[channel_id]))
+    app.click("#channels-button")
+    expect(app.locator("#channel-body .channel-row")).to_have_count(4)
+    assert list_rows(app) == [f"{names[channel_id]} {latest[channel_id]:.2f} km²" for channel_id in wanted]
+    expect(app.locator(".channel-lead")).to_have_text("Most changed first, since the last pass: Oct 8, 2026 to Oct 20, 2026, track 111")
+
+
+def test_the_list_says_how_the_area_is_counted_and_what_is_left_out(app):
+    app.click("#channels-button")
+    panel = app.locator("#channel-panel")
+    expect(panel).to_contain_text("200 m on each side of the line, within 10 km of the summit")
+    expect(panel).to_contain_text("Only channels the project owner has checked are listed")
+
+
+def empty_channels(page):
+    body = json.dumps({"type": "FeatureCollection", "generated_at": "2026-11-01T00:00:00Z", "schema_version": "1.0", "features": []})
+    page.route("**/sites/mayon/channels.geojson", lambda route: route.fulfill(body=body, content_type="application/json"))
+    serve_areas(page, [])
+
+
+def test_tc065_no_confirmed_channels(page, site_url):
+    prepare_page(page)
+    empty_channels(page)
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click("#channels-button")
+    expect(page.locator("#channel-status")).to_have_text("No confirmed channels yet for this site")
+    expect(page.locator("#channel-body .channel-row")).to_have_count(0)
+
+
+def test_tc065_a_site_with_no_channel_data_has_no_button(app):
+    expect(app.locator("#channels-button")).to_be_visible()
+    app.click("#channels-button")
+    expect(app.locator("#channel-panel")).to_be_visible()
+    app.click("#site-name")
+    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
+    expect(app.locator("#channels-button")).to_be_hidden()
+    expect(app.locator("#channel-panel")).to_be_hidden()
+
+
+def test_tc066_loading_then_the_list(app, slow_files):
+    slow_files["channel_areas.json"] = 1.0
+    app.click("#channels-button")
+    expect(app.locator("#channel-status")).to_have_text("Loading channel changes…")
+    expect(app.locator("#channel-body .channel-row")).to_have_count(4)
+    expect(app.locator("#channel-status")).to_have_text("")
+
+
+def test_tc066_a_failed_load_offers_retry_and_the_map_stays(app):
+    center, zoom = map_center(app), map_zoom(app)
+    app.route("**/sites/mayon/channel_areas.json", lambda route: route.abort())
+    app.click("#channels-button")
+    expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
+    expect(app.locator("#channel-retry")).to_be_visible()
+    assert map_center(app) == pytest.approx(center, abs=0.05) and map_zoom(app) == zoom
+    expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
+    app.unroute("**/sites/mayon/channel_areas.json")
+    app.click("#channel-retry")
+    expect(app.locator("#channel-body .channel-row")).to_have_count(4)
+    expect(app.locator("#channel-retry")).to_be_hidden()
+
+
+def test_a_channel_file_that_failed_at_first_is_tried_again_from_the_list(page, site_url):
+    prepare_page(page)
+    page.route("**/sites/mayon/channels.geojson", lambda route: route.abort())
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click("#channels-button")
+    expect(page.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
+    page.unroute("**/sites/mayon/channels.geojson")
+    page.click("#channel-retry")
+    expect(page.locator("#channel-body .channel-row")).to_have_count(4)
+
+
+@pytest.mark.parametrize("change", [{"channel_id": "mayon_nowhere"}, {"pair_id": "mayon_A111F008_20200101_20200113"}, {"flagged_area_km2": None}])
+def test_a_broken_areas_file_gives_the_error_state(app, change):
+    rows = area_rows({})
+    rows[0].update(change)
+    serve_areas(app, rows)
+    app.click("#channels-button")
+    expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
+
+
+def test_closing_the_list_gives_the_map_its_room_back(app):
+    width = app.locator("#map").bounding_box()["width"]
+    app.click("#channels-button")
+    expect(app.locator("#channel-panel")).to_be_visible()
+    assert app.locator("#map").bounding_box()["width"] < width
+    assert app.evaluate("testMap.getSize().x") == pytest.approx(app.locator("#map").bounding_box()["width"], abs=1)
+    app.click("#channel-close")
+    expect(app.locator("#channel-panel")).to_be_hidden()
+    assert app.locator("#map").bounding_box()["width"] == pytest.approx(width)
+    assert app.evaluate("testMap.getSize().x") == pytest.approx(width, abs=1)
+
+
+def open_phone(page, site_url):
+    prepare_page(page, width=360, height=740)
+    page.goto(site_url)
+    wait_until_ready(page)
+
+
+def test_the_list_fits_a_phone(page, site_url):
+    open_phone(page, site_url)
+    assert controls_too_small(page) == []
+    assert page.locator(".topbar").bounding_box()["height"] < 110
+    page.click("#channels-button")
+    expect(page.locator("#channel-body .channel-row")).to_have_count(4)
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    assert controls_too_small(page) == []
+    assert page.locator("#map").bounding_box()["height"] >= 200
+    expect(page.locator("#panel")).to_be_hidden()
+    expect(page.locator(".disclaimer")).to_be_in_viewport()
+    page.click("#channel-close")
+    expect(page.locator("#panel")).to_be_visible()
+
+
+def test_axe_on_the_list(app):
+    app.click("#channels-button")
+    expect(app.locator("#channel-body .channel-row")).to_have_count(4)
+    assert problems_on(app) == []
+
+
+def test_axe_on_the_list_on_a_phone(page, site_url):
+    open_phone(page, site_url)
+    page.click("#channels-button")
+    expect(page.locator("#channel-body .channel-row")).to_have_count(4)
+    assert problems_on(page) == []
