@@ -1,0 +1,278 @@
+{
+ "type": "FeatureCollection",
+ "note": "Barangay points used to match channel names, read from OpenStreetMap on 2026-11-01. CANDIDATE only. Data (c) OpenStreetMap contributors, ODbL.",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040348,
+    "name": "San Vicente",
+    "alt_name": null,
+    "place": "village",
+    "town": "Tabaco City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6985973,
+     13.3576682
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040370,
+    "name": "Buang",
+    "alt_name": null,
+    "place": "village",
+    "town": "Tabaco City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6417316,
+     13.3115366
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040629,
+    "name": "Nabonton",
+    "alt_name": null,
+    "place": "village",
+    "town": "Ligao City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.5918761,
+     13.2512065
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040630,
+    "name": "Nasisi",
+    "alt_name": null,
+    "place": "village",
+    "town": "Ligao City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.5846235,
+     13.2576508
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040663,
+    "name": "Bogña",
+    "alt_name": "Barangay 53",
+    "place": "village",
+    "town": "Legazpi City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.727648,
+     13.1881913
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040664,
+    "name": "Mabinit",
+    "alt_name": "Barangay 54",
+    "place": "village",
+    "town": "Legazpi City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.7169566,
+     13.1844317
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040680,
+    "name": "Maninila",
+    "alt_name": null,
+    "place": "village",
+    "town": "Guinobatan"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6267755,
+     13.2094718
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345040682,
+    "name": "Masarawag",
+    "alt_name": null,
+    "place": "village",
+    "town": "Guinobatan"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6190082,
+     13.2217647
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345041426,
+    "name": "Busay",
+    "alt_name": null,
+    "place": "village",
+    "town": "Daraga"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6974671,
+     13.1648878
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345041451,
+    "name": "Anoling",
+    "alt_name": null,
+    "place": "village",
+    "town": "Camalig"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6754494,
+     13.1994056
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345041455,
+    "name": "Salugan",
+    "alt_name": null,
+    "place": "village",
+    "town": "Camalig"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6643712,
+     13.1873404
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345041456,
+    "name": "Quirangay",
+    "alt_name": null,
+    "place": "village",
+    "town": "Camalig"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6564388,
+     13.1900888
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 5345041473,
+    "name": "Tumpa",
+    "alt_name": null,
+    "place": "village",
+    "town": "Camalig"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.6380313,
+     13.1983895
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 7260028626,
+    "name": "Matanag",
+    "alt_name": "Barangay 52",
+    "place": "village",
+    "town": "Legazpi City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.7330727,
+     13.1951874
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 7260028627,
+    "name": "Buyoan",
+    "alt_name": "Barangay 51;Buyuan",
+    "place": "village",
+    "town": "Legazpi City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.7414335,
+     13.2045163
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "osm_id": 7260028628,
+    "name": "Padang",
+    "alt_name": "Barangay 50",
+    "place": "village",
+    "town": "Legazpi City"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     123.7546372,
+     13.2093101
+    ]
+   }
+  }
+ ]
+}

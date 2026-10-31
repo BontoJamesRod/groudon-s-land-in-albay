@@ -813,3 +813,39 @@ Your five answers are in. T-092 to T-095 are the new tasks.
 
 - **One step isn't always enough.** With wider fonts at 320 x 568, the label is still 14 px behind the credits. On this machine's fonts at that size, it clears by 1 px.
 - **Three town names give way on short phones.** At the opening view at 360 x 640, Daraga, Legazpi City and Camalig are hidden because they touch the danger-zone label, the existing rule when zoomed out. They return one zoom step in. The channel labels and Santo Domingo also sit close together at that zoom.
+
+# Channel names, second try (2026-11-01)
+
+**T-096 is done on `night-1` and nothing is published. 16 names now have a line: 1 high, 5 medium and 10 low match confidence.** Open `pipeline/context/channel_name_candidates_v2.kml` in Google Earth. The evidence for each line is in its popup and in `pipeline/reports/channel-names-v2.md`. The colours are match confidence, NOT hazard level, and they deliberately avoid green, yellow and red.
+
+- **High:** Bulawan.
+- **Medium:** Maninila, Anoling, Buang, Upper Nasisi, Upper Nabonton.
+- **Low:** Bonga, Mabinit, Matanag, Buyuan, Masarawag, Salugan, Quirangay, Tumpa, Busay, San Vicente.
+
+## What the network showed
+
+- **Bonga and Mabinit look swapped in the first try.** The new lines share no OSM way with the old ones. The two branches join just north of Mabinit, with Bogña to the east of the east branch and Mabinit to the west of the west branch. But each barangay is 558 to 663 m from both branches, so distance doesn't settle it, and both stay low.
+- **Masarawag was on the wrong river.** There are three parallel rivers, not two. The northern one is now Masarawag's, the southern one Maninila's, and the middle one, tagged San Francisco River, has no name of its own here.
+- **Buyuan has its own evidence now.** OSM spells the barangay Buyoan, with Barangay 51 and Buyuan as alternate names, which is why the first try missed it. The nearer upper branch isn't the one the first try used. The line still passes closer to Padang (522 m) than to Buyoan (552 m), so it stays low.
+- **Below each join is its own grey line,** given to neither name: Pawa-Burabod and Yawa below Bonga and Mabinit, and San Francisco and Cabilogan below the western rivers.
+
+## Decisions for you
+
+I'm stopping here. Your Google Earth check decides each line, and these need your eye most:
+
+1. **Bonga or Mabinit: which branch is which?** The west branch starts higher (2.0 km against 3.6 km out), and PHIVOLCS reports new deposits in the Bonga Gully. That could mean the west branch is Bonga, which is the opposite of what the barangay positions suggest.
+2. **Is OSM's Bogña (Barangay 53) the Bonga PHIVOLCS means?** That's my reading. OSM has no Legazpi place spelled Bonga.
+3. **Matanag is the exact line you rejected on 2026-11-01.** No better line exists in OSM. If it's still wrong, the true gully isn't in OSM and would need drawing by hand.
+4. **Your confirmed Mi-isi line runs along the same lower Yawa River** that the split now treats as a shared river. It's published that way. Should it stop at its join, as the new names do? I didn't change it.
+5. **Salugan and Busay come only from your hint list.** I gave them lines, but I found no PHIVOLCS source naming them as channels here. Busay's branch stops at a join 888 m short of the barangay, so nothing above the join passes it.
+6. **Masarawag isn't in docs/05 section 8.** It came from the first candidate list. It still has a line, the farthest from its barangay of any at 765 m.
+
+## Things to know
+
+- **Hints:** Matanag is Barangay 52 (yes), Buyuan is 51, and Padang is 50, by OSM alternate names. Anoling, Salugan, Tumpa and Quirangay are in Camalig, and a Busay is near Cagsawa in Daraga. OSM's Anoling Elementary School is about 12 km out, far from the Anoling point, so that point may be off.
+- **Not resolved:** Binaan, reported from the 2026 advisory for Daraga, has no place or waterway in OSM, so it has no line. It isn't in docs/05 section 8.
+- **Hand choices:** I chose each top segment and fork by hand, by looking at the network, so the rules grade those choices but don't make them.
+- **Unbridged gaps:** Matanag, Quirangay and Tumpa start 5 to 6 km out, partly because OSM's lines do. I didn't join gaps.
+- **Old verdicts:** the record in `mayon_channels.json` still lists these names as not confirmed. It stays that way until you give a verdict on the new lines.
+
+**Evidence:** see the CI page for `night-1`. A new test file checks the splitting, that no name uses another place's evidence, the KML legend, and that nothing is published.
