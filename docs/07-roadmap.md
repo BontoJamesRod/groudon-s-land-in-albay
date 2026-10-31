@@ -134,7 +134,9 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 
 | T-090 | Draw only real coastline and town borders, not the edge where they're clipped to the site; show the quiet Panama pair's role in "How we checked this" | FR-003, FR-048, US-001, US-017, SCR-01, SCR-07, TBL-05, API-008, TC-079, TC-080 | S | T-037 | TC-079 and TC-080 pass |
 
-T-073 waits for the owner's Google Earth check, and T-010 and T-074 to T-078 wait for T-073.
+| T-091 | Draw the part of a channel past the reach distance as "Not checked", never as zero change | F-20, FR-071, US-025, SCR-01, SCR-14, TBL-03, API-005, TC-081 | S | T-076 | TC-081 passes |
+
+T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 
 ### Done work added on 2026-11-01
 
@@ -169,7 +171,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 
 ## 4. Build Order
 
-Done work from T-050 to T-072, and T-079 to T-090, is listed in §3 and isn't repeated here.
+Done work from T-050 to T-072, and T-079 to T-090, is listed in §3 and isn't repeated here. T-091 comes right after T-076.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.
