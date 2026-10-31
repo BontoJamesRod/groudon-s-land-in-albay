@@ -102,6 +102,9 @@ function setUpPairs(map, site, siteData, readout) {
     app.compare.pairChanged(pair);
     byId("compare-button").disabled = false;
     readout.setPair(pair);
+    // The legend has just filled in, so the panel may have grown and the map shrunk. Leaflet
+    // only notices when told, and otherwise the map jumps at some later moment.
+    map.invalidateSize({ animate: false });
   });
 }
 

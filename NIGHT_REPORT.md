@@ -486,3 +486,7 @@ You chose **within 10 km alone** and asked to go live. Filter `max_distance_km: 
 **Known limits on the live map:** thresholds are still PROVISIONAL. Most of what's left is still likely not new material. Oct 8 → Oct 20 is unresolved. `reach` is set in two places, the site config and `map.js`, and a test fails if they differ. On a phone at the default view the ring is off screen, so the closed drawer's handle states the limit.
 
 **Live:** https://bontojamesrod.github.io/groudon-s-land-in-albay/ . Checked there in Chromium at 1280 and 360 px: map, 12 town labels, radar layer, ring and legend limit, Compare still open after 2.5 s, TC-038 (404 status, "Page not found", link opens the map), all requests HTTPS, no console errors. This replaces the earlier block on the 404 check. Drawer, swipe and the larger credit link haven't been checked on a real phone.
+
+## Compare labels stay still
+
+You found town labels sliding around while dragging the divider. That came from my day 3 fix, which pushed labels aside. Labels now never move, and the white line runs behind them, so they stay readable. This replaces the "Divider" item under Day 3's UI fixes.
