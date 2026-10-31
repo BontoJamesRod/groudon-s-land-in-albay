@@ -121,12 +121,33 @@ These tasks are done. They're listed so that every piece of finished work has an
 
 | T-ID | Task | Related IDs | Size | Depends on | Done when |
 | --- | --- | --- | --- | --- | --- |
+| T-050 | Republish the 11 pairs under the final thresholds and rule | FR-023, US-008, TBL-05, TBL-06 | M | T-066 | Done on 2026-11-01 |
+| T-051 | Fix the test's low cell for the final rule, and write the night 5 report | FR-023, TC-011 | S | T-050 | Done on 2026-11-01 |
+| T-052 | Add the browser test harness and browser tests for the MVP test cases | US-001 to US-023, TC-001 to TC-049 | M | T-034 | Done on 2026-10-31 |
+| T-053 | Write the Day 3 report and add the owner's night 2 and day 3 plans to the repository | F-11 | S | — | Done on 2026-10-31 |
+| T-054 | Measure the first view on Fast 4G and add version strings to JS and CSS links | NFR-001, TC-050 | S | T-025 | Done on 2026-10-31 |
+| T-055 | List the exact doc edits the owner needs to decide on (`docs/notes/proposed-doc-changes.md`) | FR-011, FR-022, FR-030, TC-024 | S | — | Done on 2026-10-31 |
+| T-056 | Write the afternoon run report | F-11 | S | — | Done on 2026-10-31 |
+| T-057 | Limit Mayon detections to the reach distance, show the limit on the map, the card and the phone drawer, and republish all pairs | FR-060, US-004, US-008, TC-061, TC-062 | M | T-020 | Done on 2026-10-31 |
+| T-058 | Add the evening calibration study and the guarded eruption script (the commit also published two track 104 pairs, which count towards T-021) | T-016, T-021, T-038, FR-023 | M | T-019 | Done on 2026-10-31 |
+| T-059 | Add the eruption runbook, and make the blind and threshold tests still work after the cutoff is lifted | T-038, FR-023 | S | T-058 | Done on 2026-10-31 |
+| T-060 | Write the evening report and tidy the eruption runbook | T-038 | S | T-059 | Done on 2026-10-31 |
+| T-061 | Add the night 4 channel test and its report | F-19, F-20 | M | T-020 | Done on 2026-10-31 |
+| T-062 | Write the night 4 report, with a note on the brightness-leads branch | F-19 | S | T-061 | Done on 2026-10-31 |
+| T-063 | Add an optional brightness-leads rule to `classify`, off by default | FR-023, ADR-006, TC-022, TC-063 | S | T-017 | Done on 2026-10-31 |
+| T-064 | Run the rain study for the channel test, with heavy-rain and low-rain checks, and add its results | F-19 | M | T-061 | Done on 2026-11-01 |
+| T-065 | Add candidate matches between PHIVOLCS channels and OSM lines | F-19, FR-058, T-010 | M | — | Done on 2026-11-01 |
+| T-066 | Lock the final thresholds and the brightness-leads rule, and lift the blind cutoff | FR-023, ADR-006, T-016 | S | T-063 | Done on 2026-11-01 |
 | T-067 | Apply the 6 approved changes in `docs/notes/proposed-doc-changes.md`, with the code, test and data parts of changes 2 and 6 | FR-011, FR-022, FR-030, TC-011, TC-024, API-008, TBL-10, US-004 | S | — | Done on 2026-11-01 |
 | T-068 | Record the owner's decisions in the docs: the final rule, the reach limit, the lifted blind cutoff and the held pair | FR-023, FR-060, ADR-006, US-004, US-008, TC-022, TC-061, TC-062, TC-063 | S | — | Done on 2026-11-01 |
 | T-069 | Add the Channel timeline to every doc, with new IDs | F-20, US-024, US-025, US-026, FR-061 to FR-067, SCR-13, SCR-14, ADR-011, TBL-12, API-012, TC-064 to TC-074 | M | — | Done on 2026-11-01 |
 | T-070 | Add the out-of-scope lines and the legal-label rule, and name Panama as the second site | F-10, US-004, US-012, FR-068, FR-069, TC-075, TC-076 | S | — | Done on 2026-11-01 |
+| T-071 | Repair the task IDs: add the done work to this roadmap, the ID errata and the rule in `CLAUDE.md` | §11 | S | — | Done on 2026-11-01 |
+| T-072 | Update `PROGRESS.md` and the README, write `reviews/consistency-03.md` and the docs run report | §3 | S | T-071 | Done on 2026-11-01 |
 
 ## 4. Build Order
+
+Done work from T-050 to T-072 is listed in §3 and isn't repeated here.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.
@@ -167,16 +188,22 @@ These tasks are done. They're listed so that every piece of finished work has an
 37. T-039: validation of an eruption pair.
 38. T-033: 404 page and README.
 39. T-034: phone and color-blind pass over the finished screens.
-40. T-040: full test run (milestone 4 complete).
-41. T-041: demo and submission text.
-42. T-042: release v1.0 (milestone 5).
-43. T-043: readability test (milestone 6).
-44. T-044: ground movement.
-45. T-045: floods.
-46. T-046: point history.
-47. T-047: Filipino and Bikol.
-48. T-048: automatic updates.
-49. T-049: another change type.
+40. T-073: the owner confirms channel lines first; everything below needs them.
+41. T-074: channel strips and areas in the pipeline.
+42. T-075: channel list.
+43. T-076: channel view, bars and strip.
+44. T-077: unequal-gap marking on both timelines.
+45. T-078: the rule against legal labels in the wording test.
+46. T-040: full test run (milestone 4 complete).
+47. T-041: demo and submission text.
+48. T-042: release v1.0 (milestone 5).
+49. T-043: readability test (milestone 6).
+50. T-044: ground movement.
+51. T-045: floods.
+52. T-046: point history.
+53. T-047: Filipino and Bikol.
+54. T-048: automatic updates.
+55. T-049: another change type.
 
 ## 5. Definition of Done
 
@@ -223,3 +250,32 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | Added the Channel timeline tasks, the done work (T-050 to T-072), milestone 7 and the ID errata. Named Panama for T-036 and T-037. |
+
+## 11. ID Errata
+
+From the afternoon of Oct 31, some commit labels stopped matching this roadmap. History isn't rewritten: this table gives each commit's real task ID. The IDs in the "Label used" column keep their meaning from §3 (for example, T-042 is still "Release v1.0"). Commits 78ff330 (T-050) and 33807d9 (T-051) already match. From now on, commit messages use only IDs that exist in this file.
+
+| Commit | Label used | Real task ID | What it did |
+| --- | --- | --- | --- |
+| d0b5561 | T-029 | T-052 | Fix compare closing, and add the browser test harness (the fix part stays T-029) |
+| 88ce6eb | T-034 | T-052 | Browser tests for the MVP test cases |
+| 3caa367 | T-037 | T-053 | Day 3 report |
+| 13c65c3 | T-037 | T-053 | Owner's night 2 and day 3 plans |
+| 06f0fb5 | T-039 | T-054 | First-view measurement and version strings |
+| bdde5b7 | T-037 | T-055 | List of proposed doc edits |
+| 0906405 | T-037 | T-056 | Afternoon report |
+| 5768d19 | T-037 | T-056 | Afternoon download total |
+| d274224 | T-038 | T-057 | 10 km reach limit and republish |
+| d551c8f | T-034 | T-057 | 10 km limit on the phone drawer |
+| 8045b2e | T-039 | T-058 | Evening calibration, eruption script, two track 104 pairs (those count towards T-021) |
+| fb1f1e6 | T-040 | T-059 | Eruption runbook |
+| f1da270 | T-041 | T-060 | Evening report |
+| c00d4ae | T-042 | T-061 | Night 4 channel test |
+| 68d6684 | T-043 | T-062 | Night 4 report |
+| f41a49c | T-044 | T-063 | Brightness-leads rule |
+| e10cb3d | T-045 | T-062 | Brightness-leads note in the night 4 report |
+| 35263c2 | T-046 | T-064 | Blocked rain rerun, heavy-rain and low-rain checks |
+| b24eb24 | T-047 | T-064 | Rain rerun results |
+| 06c1926 | T-048 | T-065 | Channel candidate matches |
+| 0104a01 | T-049 | T-066 | Final thresholds and rule, blind cutoff lifted |
