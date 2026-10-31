@@ -148,6 +148,7 @@ erDiagram
         number low_confidence_area_km2
         number new_material_area_km2
         string pipeline_version
+        string check_note
         string error_message
         string published_at
         string created_at
@@ -267,7 +268,7 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
 
-The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, for sites with channels, the strip width on each side of the line `channel_strip_half_width_m` (FR-064), the ground-movement mask `ground_movement.min_coherence` (FR-031), and `layer_wording`, the layer title and legend labels for a site with its own wording (FR-070).
+The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, for sites with channels, the strip width on each side of the line `channel_strip_half_width_m` (FR-064), the ground-movement mask `ground_movement.min_coherence` (FR-031), and `layer_wording`, the layer title, legend labels and check notes for a site with its own wording (FR-048, FR-070).
 
 ### TBL-02: `towns`
 
@@ -354,6 +355,7 @@ A row is two consecutive passes on the same track, frame and orbit direction, an
 | `low_confidence_area_km2` | number | Yes | `0` | ≥ 0 | Area classed low confidence, km² |
 | `new_material_area_km2` | number | Yes | `0` | = high + low | Total detected area, km² (FR-025, FR-026) |
 | `pipeline_version` | string | Yes | — | Semantic version | Pipeline version that made the pair |
+| `check_note` | string | No | `null` | Set from the site config | What the pair was used for, shown when it has no validation record (FR-048) |
 | `error_message` | string | No | `null` | Only when `status` is `failed`; never published | Why processing failed |
 | `published_at` | string (date-time) | No | `null` | Set by the publish step | When the pair was published |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |

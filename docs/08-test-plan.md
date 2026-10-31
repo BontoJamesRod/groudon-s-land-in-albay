@@ -91,6 +91,8 @@ Fixtures used below are listed in §5.
 | TC-076 | US-004/AC-5 | FR-069, SCR-02, TBL-01 | Site with no summit | 1. Switch to Panama. 2. Tap a land point. | Card shows the town and the result, with no distance or danger-zone line | Edge | High |
 | TC-077 | US-013/AC-3 | FR-040, SCR-01, SCR-06, TBL-10, API-001, API-002 | Credit and sources follow the site | 1. On Mayon, read the map credit and open Data sources. 2. Switch to a second site and do the same. | Each site shows its own boundary credit and sources plus the shared ones, never the other site's | Positive | High |
 | TC-078 | US-014/AC-3 | FR-070, SCR-01, SCR-02, SCR-05, TBL-01, TBL-06, API-001 | A site's own wording | 1. Switch to Panama. 2. Read the legend, a card, the disclaimer, the help panel and the phone handle. 3. Switch back. | Panama says "change", names SINAPROC, titles the earthquake pair "Changed after the earthquake", and never says landslides there; Mayon's text comes back unchanged | Positive | High |
+| TC-079 | US-001/AC-3 | FR-003, SCR-01, API-004 | No line along a clipped edge | 1. Build the coast and town lines for each site. | The real lines are there; no segment runs along the site's edge | Negative | Medium |
+| TC-080 | US-017/AC-3 | FR-048, SCR-07, TBL-05, API-008 | A pair's check note | 1. Switch to Panama. 2. Select the quiet pair. 3. Open "How we checked this". | "Used as the 'before' comparison for the earthquake pair", not "Not yet checked" | Positive | Medium |
 
 ## 4. Non-Functional Tests
 
@@ -130,7 +132,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 
 | US-ID | Acceptance criteria | TC-IDs |
 | --- | --- | --- |
-| US-001 | AC-1, AC-2 | TC-001, TC-002 |
+| US-001 | AC-1, AC-2, AC-3 | TC-001, TC-002, TC-079 |
 | US-002 | AC-1, AC-2 | TC-003, TC-004 |
 | US-003 | AC-1, AC-2 | TC-005, TC-007, TC-006 |
 | US-004 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061, TC-076 |
@@ -144,7 +146,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-014 | AC-1, AC-2, AC-3 | TC-033, TC-034, TC-078 |
 | US-015 | AC-1, AC-2 | TC-035, TC-036 |
 | US-016 | AC-1, AC-2, AC-3 | TC-037, TC-038, TC-039 |
-| US-017 | AC-1, AC-2 | TC-040, TC-041 |
+| US-017 | AC-1, AC-2, AC-3 | TC-040, TC-041, TC-080 |
 | US-018 | AC-1, AC-2 | TC-042, TC-043 |
 | US-023 | AC-1, AC-2, AC-3 | TC-044, TC-045, TC-046, TC-047 |
 | US-024 | AC-1, AC-2, AC-3 | TC-064, TC-065, TC-066 |
@@ -195,4 +197,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-078. |
+| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-080. |

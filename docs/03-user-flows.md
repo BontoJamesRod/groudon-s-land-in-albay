@@ -454,7 +454,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 
 | State | What the user sees |
 | --- | --- |
-| Empty | "Not yet checked against an independent source" (US-017/AC-2) |
+| Empty | "Not yet checked against an independent source" (US-017/AC-2), or the pair's check note (US-017/AC-3) |
 | Loading | "Loading check…" |
 | Error | Suggestion: "Couldn't load this check. Try again." with a Retry button |
 | Success | Source line and table |

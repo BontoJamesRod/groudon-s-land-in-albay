@@ -68,6 +68,7 @@ As a visitor, I want to open the app and see a map of the Mayon area with town b
 
 - **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
 - **US-001/AC-2:** Given background map imagery fails to load, when the map appears, then town borders, the coastline and the danger-zone ring still show and the notice "Background map unavailable" appears.
+- **US-001/AC-3:** Given the site's land file stops at the site's edge, when the map appears, then no coastline or town border is drawn along that edge.
 
 #### US-002: Pan and zoom
 
@@ -281,6 +282,7 @@ As a visitor or judge, I want to see a result compared with an independent sourc
 
 - **US-017/AC-1:** Given a pair with a validation record, when the visitor opens "How we checked this", then a table lists each place from the independent source, whether the source reported activity there, whether the app detected new material there (yes, no, or not visible to radar), and the source's name, date and link.
 - **US-017/AC-2:** Given a pair with no validation record, when the visitor opens the panel, then "Not yet checked against an independent source" appears.
+- **US-017/AC-3:** Given a pair with no validation record and a check note, when the visitor opens the panel, then the note appears instead, for example "Used as the 'before' comparison for the earthquake pair".
 
 ### F-13: Mobile-friendly, color-blind-safe design
 
@@ -414,7 +416,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | --- | --- | --- | --- |
 | FR-001 | The system shall center the map on the selected site's center point at the site's default zoom. | F-01 | US-001 |
 | FR-002 | The system shall draw town borders and town names for the selected site. | F-01 | US-001 |
-| FR-003 | The system shall draw the coastline from the app's own land data, not from background imagery. | F-01 | US-001 |
+| FR-003 | The system shall draw the coastline from the app's own land data, not from background imagery, and shall not draw a coastline or town border where the data is only clipped to the site's edge. | F-01 | US-001 |
 | FR-004 | The system shall draw a ring of the site's danger-zone radius around the summit, labeled with the site's danger-zone label, when the site defines one. | F-01 | US-001 |
 | FR-005 | The system shall show "Background map unavailable" when background imagery fails to load, while keeping borders, coastline and the danger-zone ring visible. | F-01 | US-001 |
 | FR-006 | The system shall let the visitor pan and zoom only between the site's minimum and maximum zoom levels. | F-01 | US-002 |
@@ -459,7 +461,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-045 | The system shall be reachable at a public URL with no login. | F-11 | US-016 |
 | FR-046 | The system shall show a "Page not found" page with a link back to the map for unknown paths. | F-11 | US-016 |
 | FR-047 | The system's code shall be in a public repository with a README. | F-11 | US-016 |
-| FR-048 | The system shall show a pair's validation table when a validation record exists, and "Not yet checked against an independent source" otherwise. | F-12 | US-017 |
+| FR-048 | The system shall show a pair's validation table when a validation record exists, a note saying what the pair was used for when it has one and no record, and "Not yet checked against an independent source" otherwise. | F-12 | US-017 |
 | FR-049 | The system shall fit screens 360 px wide without horizontal scrolling, with every tap target at least 44 × 44 px. | F-13 | US-018 |
 | FR-050 | The system shall use color-blind-safe palettes and give every color class a text label. | F-13 | US-018 |
 | FR-051 | The system shall chart the value at a tapped point across all pairs of the site, or show "History needs at least two passes". | F-14 | US-019 |

@@ -18,8 +18,8 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 89 tasks; ID errata in §11 |
-| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 78 test cases |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 90 tasks; ID errata in §11 |
+| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 80 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
 

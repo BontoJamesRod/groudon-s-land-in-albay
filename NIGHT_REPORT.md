@@ -731,3 +731,12 @@ The earthquake pair now flags about 3 times the quiet pair, and the old 26% came
 - **Site size:** Panama adds 13 MB to `site/data`. Mayon still opens first, so its first view doesn't load these files.
 
 **Evidence:** `pytest -q`: 396 passed, 5 skipped, exit code 0, with TC-033 and TC-076 no longer skipped. Contract check: 0 errors, exit code 0. Checked by eye in screenshots at desktop and phone width, in the test browser, not on a real phone.
+
+# Coastline and quiet pair note (2026-11-01)
+
+**T-090 is done on `night-1`, not merged into `main`.**
+
+- **Coastline:** lines along the site's edge are no longer drawn, because the land file is only clipped there. This applies to every site, so Mayon loses its box outline too.
+- **Town borders (not asked for):** they had the same false line at the same place, so the same code now removes it. Otherwise a white line stayed where the blue one was.
+- **Quiet pair:** "How we checked this" now says "Used as the 'before' comparison for the earthquake pair". It's a new optional `check_note` on the pair, set in the site config. The quiet pair was republished with its areas unchanged. Pairs with no note still say "Not yet checked".
+- **Not changed:** Mayon's land stops at Albay's province border, where that falls inside the site, so a line can still appear there. It's inside the site, so this fix doesn't catch it.
