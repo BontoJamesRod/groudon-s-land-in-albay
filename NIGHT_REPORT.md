@@ -490,3 +490,48 @@ You chose **within 10 km alone** and asked to go live. Filter `max_distance_km: 
 ## Compare labels stay still
 
 You found town labels sliding around while dragging the divider. That came from my day 3 fix, which pushed labels aside. Labels now never move, and the white line runs behind them, so they stay readable. This replaces the "Divider" item under Day 3's UI fixes.
+
+# Evening run
+
+**One thing differs from what you asked:** I published 2 of the 3 track 104 pairs, and held back 09-25 → 10-07. It would have shown 102.26 km² of new material on the public map, about a third of the land inside the 10 km ring, and only 1.94 km² of that reaches the brightness threshold. The cause is its baseline (09-13 → 09-25), whose coherence is unusually high, so coherence appears to fall across the whole scene. It passes the contract check and is ready in `pipeline/out`. To publish it anyway: `python pipeline/mrw/publish.py mayon mayon_D104F082_20260925_20261007`.
+
+| Task | Result | Evidence |
+| --- | --- | --- |
+| 1. Label and 36 px fixes live | Done | Merged as 6781de6 after CI passed on 403a385. Live site in Chromium: 12 labels didn't move at any of 5 slider positions at 1280 and 360 px; Compare moved the map 0 px at 1280 px; TC-038 passed. The drag used a mouse, not a real phone |
+| 2. Remove the test branch, scan history | Done, nothing to delete | `throwaway/fake-secret-test` was already gone from GitHub when I checked. I don't know who removed it. "Scan history for secrets" run [41202424240](https://github.com/BontoJamesRod/groudon-s-land-in-albay/actions/runs/41202424240): 61 commits scanned across all branches, **no leaks found**. It ran on 6781de6, so T-039 and later commits get the normal CI scan, not this one. I started it from your signed-in Chrome, because `gh` isn't logged in here |
+| 3. Calibration check | Done | "Evening run" in `pipeline/reports/threshold-study-night-1.md`. At 3.0 dB its wedge numbers match night 2's. No default changed |
+| 4. Track 104 pairs | Done, except the held pair above | Published 09-13 → 09-25 (0.93 km²) and 10-07 → 10-19 (2.13 km²). The track 104 eruption pair's baseline, 10-07 → 10-19, is ready. 0.26 GB of the 10 GB limit used |
+| 5. Eruption runbook | Done, not run on eruption data | `pipeline/RUNBOOK-eruption.md` and `pipeline/mrw/eruption_run.py`. The script stops before contacting ASF unless thresholds are FINAL and the cutoff is lifted. I ran it for real only to confirm it refuses. On a throwaway copy with both edits made, all tests pass, using fake data only |
+| 6. This report | Done | |
+
+**The blind rule held.** The latest pass any search returned was 2026-10-19. Thresholds in the config are still PROVISIONAL, at 3.0 dB and 0.3. Nothing in `docs/` changed.
+
+**Tests changed for the runbook:** five tests assumed the cutoff and PROVISIONAL status could never change, so they would have failed on the day. They now check the same refusals in a way that survives the lift.
+
+## What the calibration says
+
+Full tables are in the study. All of this is within 10 km, and none of it chooses a value.
+
+| T | Pairs labelled quiet, total (km²) | July pairs, total (km²) |
+| --- | --- | --- |
+| 3.0 dB | 0.755–1.937 | 1.804–2.239 |
+| 4.0 dB | 0.286–0.586 | 0.742–0.816 |
+| 5.0 dB | 0.165–0.226 | 0.339–0.375 |
+
+- **Dropping coherence-alone removes most of the area,** and 4 and 5 dB separate July from the quiet pairs. That separation doesn't hold against every pair: 06-21 → 07-03 and the 24-day pair are above the July pairs at all three values.
+- **Coherence at 0.4 doesn't confirm July.** The only July pair with a baseline has 0.003–0.005 km² of high confidence, below most of the quiet pairs with a baseline.
+- **Mi-isi holds up on all three tracks at all three values, but it isn't only in the event pair.** The pairs just before and after July on track 111 have about the same area.
+- **I need to correct the night 2 claim.** It said July beat quiet on every track and flank. With more quiet pairs on track 104, Basud and Bonga no longer do at any T.
+- **The October patch mostly doesn't repeat on track 104.** Coherence-only area in the danger zone is 0.304 km², against 2.434 km² on track 111, and 0.000 against 1.167 km² northwest of the summit. That leans against change on the ground without settling it.
+- **The October track 104 pairs have more brightness change in the danger zone than any July pair** (0.44–0.455 km² at 3 dB, against 0.205–0.429). Nothing here says why, and these are the last pairs before the eruption.
+
+## Decisions waiting for you
+
+1. **Final thresholds, and the rule.** "Brightness leads" isn't how the site works today. If you choose it, `classify.py` must change first, as step 1 of the runbook says. Everything else about the eruption pairs waits on this.
+2. **The held pair, D104 09-25 → 10-07.** My recommendation is to leave it off the public map. It isn't needed as a baseline for the eruption pair.
+3. **What to do about baselines like that one.** The same problem could inflate an eruption pair's coherence loss. Under "brightness leads" it can only raise confidence, not add area, which is one point in that rule's favour. The runbook tells you to check for it before publishing. I didn't add a fix, because that's a method change.
+4. **Still open from before:** Oct 8 → Oct 20 against rain records and PHIVOLCS; a real-phone check on the live site; second site; doc edits; event date; July draft; channel source; cropland.
+
+**Worth knowing:** the timeline now mixes two tracks, and each pair's label names its track. Areas from different tracks aren't directly comparable, because the viewing angle differs.
+
+**Final evidence:** `pytest -q`: 337 passed, 6 skipped. Contract check: 0 errors on `site/data`. **Downloaded this evening: 0.26 GB** of 10 GB (5.25 GB logged in `raw/` in total). Nothing from on or after 2026-10-30 was searched for or opened.

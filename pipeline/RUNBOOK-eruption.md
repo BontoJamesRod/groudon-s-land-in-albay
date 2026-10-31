@@ -83,8 +83,6 @@ python pipeline/mrw/eruption_run.py process
 python pipeline/mrw/contract_check.py pipeline/out --unpublished
 ```
 
-If the contract check says it doesn't know `--unpublished`, skip that line: the export already checks `pipeline/out` and `publish.py` checks again.
-
 The download budget in `download.py` counts every byte ever logged in `raw/`, up to 20 GB. Each pair should need under 0.2 GB.
 
 **Before publishing, check the printed areas.** Look at the median coherence of both pairs if the total is far above about 8 km². D104 09-25 → 10-07 showed 102 km² only because its baseline had unusually high coherence, which made the whole scene look changed. The current baseline's median is about 0.29 on track 104. See "A coherence baseline problem" in `pipeline/reports/threshold-study-night-1.md`.
