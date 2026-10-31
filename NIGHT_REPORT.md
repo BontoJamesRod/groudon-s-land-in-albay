@@ -535,3 +535,63 @@ Full tables are in the study. All of this is within 10 km, and none of it choose
 **Worth knowing:** the timeline now mixes two tracks, and each pair's label names its track. Areas from different tracks aren't directly comparable, because the viewing angle differs.
 
 **Final evidence:** `pytest -q`: 337 passed, 6 skipped. Contract check: 0 errors on `site/data`. **Downloaded this evening: 0.26 GB** of 10 GB (5.25 GB logged in `raw/` in total). Nothing from on or after 2026-10-30 was searched for or opened.
+
+# Night 4
+
+The full report is [pipeline/reports/channel-test.md](pipeline/reports/channel-test.md). It's for gate 1 on Sunday.
+
+**Verdict: GO, by the smallest possible margin.** The quarry-to-quiet ratio reached 2.0 in exactly 5 of 9 track 111 pairs at 3.0 dB combined. Leaving out either of two single quarries makes it 4 of 9, and the test can't say whether the change is digging or bare gravel responding to the weather.
+
+- **Part A:** OpenStreetMap has 8 quarries (77.81 ha), all kept. Six are near Padang, and none is near Budiao or Maninila. Check them by eye in `pipeline/context/channel_test_sites.kml`.
+- **Part B: skipped on the first attempt.** NASA's server refused the IMERG files with a 403. "Rain rerun" below has the results.
+- **Part C:** the channel-to-land ratio reached 1.5 in 9 of 9 pairs, but a strip mask would keep 53–62% of the 10 km circle's flagged area while already covering 51% of its land.
+
+**Downloads:** IMERG rain 0 bytes on the first attempt (see "Rain rerun" below). OpenStreetMap quarries and places were two small Overpass queries. NISAR nothing.
+
+**No NISAR product was searched for or opened** beyond the cached crops already in `raw/`, the latest dated 2026-10-19. `site/`, the site config, `classify.py`, the thresholds and `docs/` are unchanged on `night-1`, and nothing was merged into `main`. `docs/NIGHT_PLAN_4.md` is still untracked, because the plan says not to change `docs/`.
+
+**Commits:** c00d4ae (the test and its report), plus the commit that adds this section.
+
+**Part E, optional, done:** branch `brightness-leads-prep` (f41a49c) adds a `thresholds.rule` switch to `classify.py`. Brightness alone decides whether a pixel is flagged, and coherence can only raise it to high. The default is unchanged, Mayon's config doesn't choose it, and no existing test changed. It's pushed but not merged, and it contains no threshold values. On that branch: 354 passed, 6 skipped.
+
+**Final evidence:** `pytest -q` on `night-1`: 344 passed, 6 skipped. Contract check: 0 errors on `site/data`.
+
+**Rain rerun: the quarry ratio reaches 2.0 in 2 of the 3 low-rain pairs, and no pair meets the heavy-rain rule** (100 mm in 3 days; the most was 50.5 mm), so the verdict stays GO and heavy rain is untested. Oct 8 → Oct 20 was on the wet side but not extreme: 95.5 mm, the highest daily rate of the 9 pairs. Rain download: 1.699 GB, after the owner raised the limit from 1.5 to 1.75 GB for this fetch. No NISAR product was searched for or opened. Details are under "Rain rerun" in [pipeline/reports/channel-test.md](pipeline/reports/channel-test.md).
+
+# Night 5
+
+**Eruption data: not on ASF yet, so nothing was downloaded or processed.** `eruption_run.py check` at 2026-10-31 16:26 UTC (the computer's clock) reports no new pass on track 104 or track 111. Earlier passes suggest about 10:16 UTC for track 104 and 21:13 UTC for track 111, so at that time the track 111 pass hadn't been due yet. Only names were checked. To look again: `python pipeline/mrw/eruption_run.py check`.
+
+**The owner's gate 2 decision is in place on `night-1`, and not on `main`.** Thresholds are FINAL and the rule is brightness leads. The cutoff opens the Oct 31 passes only. T-049, which holds the decision and the lifted cutoff, was committed before any search for eruption passes, so the history shows the thresholds came first.
+
+All 11 published pairs were redone. Areas are km² within 10 km. High confidence didn't change on any pair, because this rule only removes coherence-only area.
+
+| Pair (UTC) | Coherence used | Total before | Total now | Removed | High confidence |
+| --- | --- | --- | --- | --- | --- |
+| A111 06-21 → 07-03 | No | 2.38 | 2.38 | 0.00 | 0.00 |
+| A111 07-03 → 07-15 | No | 1.80 | 1.80 | 0.00 | 0.00 |
+| A111 07-15 → 07-27 | Yes | 2.31 | 1.76 | 0.55 | 0.03 |
+| A111 07-27 → 08-20 | No | 4.09 | 4.09 | 0.00 | 0.00 |
+| A111 08-20 → 09-01 | No | 1.15 | 1.15 | 0.00 | 0.00 |
+| A111 09-01 → 09-13 | Yes | 1.74 | 1.26 | 0.48 | 0.02 |
+| A111 09-13 → 09-25 | Yes | 1.24 | 0.77 | 0.47 | 0.05 |
+| A111 09-25 → 10-07 | Yes | 1.36 | 0.86 | 0.50 | 0.08 |
+| A111 10-07 → 10-19 | Yes | 4.07 | 0.75 | 3.32 | 0.05 |
+| D104 09-13 → 09-25 | Yes | 0.93 | 0.81 | 0.12 | 0.01 |
+| D104 10-07 → 10-19 | Yes | 2.13 | 1.65 | 0.48 | 0.02 |
+
+- **The biggest change is A111 10-07 → 10-19, from 4.07 to 0.75 km².** The October patch was mostly coherence loss alone, so it has largely gone from the map.
+- **The tallest pair on the timeline is now the 24-day pair, at 4.09 km².** Its gap is twice the others', and pairs without coherence never lost any area because they never had coherence-only area.
+- **The held pair, D104 09-25 → 10-07, stays off the map.** It's still only in `pipeline/out`, under the old rule.
+
+**What changed on the site, for your morning check:** the legend title no longer says PROVISIONAL. The drawer now says "PROVISIONAL radar products", because the products still are. The help panel's confidence wording describes the new rule, and it says the thresholds haven't been checked against field reports. The legend's "one signal" and "both signals" labels stay, because they're still accurate.
+
+**Worth knowing:**
+- **I pushed once with a failing test.** My command only checked the contract result before pushing 78ff330, which you asked me not to do. One test failed because its saved "low" map cell was coherence-only and now correctly reads "none". T-051 gives it a cell that is low under the final rule, and I didn't rewrite history.
+- **Tests changed for the decision:** two legend tests now check that PROVISIONAL is gone, and the rule test now checks Mayon uses the owner's rule.
+- **`channel_test.py` still uses the old rule for its "site rule" sensitivity column.** I didn't rerun or change it. Its verdict uses 3.0 dB brightness only and isn't affected.
+- **The runbook names no report file for eruption results.** With no data yet, this didn't matter tonight. Results will need a place, such as a new section in this file.
+
+**Downloaded tonight:** 0 bytes of NISAR data. No threshold values were written into `docs/`.
+
+**Final evidence:** `pytest -q`: 360 passed, 6 skipped. Contract check: 0 errors on `site/data`. A second check at 16:28 UTC also found no new pass on either track.

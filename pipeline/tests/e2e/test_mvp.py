@@ -244,7 +244,7 @@ def test_tc020_layer_legend_and_area_on_the_latest_pair(app):
     rows = [" ".join(row.split()) for row in app.locator("#legend-rows li").all_inner_texts()]
     assert rows == [f"{item['label']}. Confidence: {item['confidence']}" for item in layer["legend"]]
     expect(app.locator("#legend-area")).to_have_text(f"Units: class. Total detected area: {pair['new_material_area_km2']:.2f} km²")
-    expect(app.locator("#legend-title")).to_contain_text("PROVISIONAL")
+    expect(app.locator("#legend-title")).not_to_contain_text("PROVISIONAL")
 
 
 def test_tc021_pair_with_nothing_detected(page, site_url):
