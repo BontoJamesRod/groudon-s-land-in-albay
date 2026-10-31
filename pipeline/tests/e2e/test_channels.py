@@ -325,6 +325,26 @@ def test_the_list_fits_a_phone(page, site_url):
     expect(page.locator("#panel")).to_be_visible()
 
 
+@pytest.mark.parametrize("width", [320, 360])
+def test_the_top_bar_keeps_two_rows_with_a_wider_font(page, site_url, width):
+    """The third button mustn't push a third row, which takes about 50 px from the map.
+
+    CI's Linux font and some phones' fonts are wider than Windows's. Extra space between
+    the letters makes any machine's font at least that wide, so this fails the same way everywhere.
+    """
+    prepare_page(page, width=width, height=740)
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.add_style_tag(content="* { letter-spacing: 1px !important; }")
+    assert page.locator(".topbar").bounding_box()["height"] < 110
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    for button in ("#channels-button", "#search-button", "#help-button"):
+        box = page.locator(button).bounding_box()
+        assert box["width"] >= 44 and box["height"] >= 44
+        # A label that wraps inside its button must still fit in it.
+        assert page.locator(button).evaluate("(node) => node.scrollHeight <= node.clientHeight")
+
+
 def test_axe_on_the_list(app):
     app.click("#channels-button")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)

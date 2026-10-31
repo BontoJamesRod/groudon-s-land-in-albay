@@ -598,7 +598,8 @@ button:disabled { color: #6e7781; }
   }
   /* The channel panel takes over from the pass controls, so the map and the panel both get room. */
   body.channels-open #panel { display: none; }
-  .topbar-actions { flex-wrap: wrap; }
+  /* A long label wraps inside its button, not onto a new row, so the map keeps its height. */
+  .topbar-actions { flex-wrap: nowrap; }
   .topbar-actions button { padding: 0 8px; font-size: 14px; }
   .panel { flex: none; max-height: 45vh; overflow-y: auto; padding-top: 0; gap: 4px 24px; }
   .drawer-toggle {
