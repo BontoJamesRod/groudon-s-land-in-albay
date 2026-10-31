@@ -18,9 +18,10 @@
   "danger_zone_radius_km": 6,
   "danger_zone_label": "Permanent Danger Zone (6 km)",
   "change_types": ["new_material"],
-  "provisional_fields": ["default_zoom", "min_zoom", "max_zoom", "thresholds"],
+  "provisional_fields": ["default_zoom", "min_zoom", "max_zoom"],
   "thresholds": {
-    "status": "PROVISIONAL",
+    "status": "FINAL",
+    "rule": "brightness_leads",
     "brightness_threshold_db": 3.0,
     "coherence_loss_threshold": 0.3
   },

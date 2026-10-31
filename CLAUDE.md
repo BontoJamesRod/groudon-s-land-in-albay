@@ -6,4 +6,4 @@
 - Never commit `raw/`, `*.h5`, `pipeline/out/` or credentials. Never print Earthdata credentials.
 - Never push or merge to `main` unless the owner asks.
 - The owner is a Python beginner: keep code simple and explain radar steps in plain comments.
-- IMPORTANT: until the owner sets the final thresholds, never open NISAR products acquired on or after 2026-10-30 (UTC).
+- The owner set the final thresholds on 2026-11-01, and lifted the blind cutoff to open the Oct 31 passes only. Never open NISAR products acquired on or after 2026-11-01 (UTC) unless the owner moves `BLIND_CUTOFF` again.

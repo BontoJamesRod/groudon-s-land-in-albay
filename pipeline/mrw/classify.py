@@ -7,8 +7,10 @@
 Brightness alone can also change after rain or wind, which is why one signal is
 only low confidence. Without coherence data, nothing can reach high (FR-030).
 
-The thresholds are not set here. They come from the site config and stay
-PROVISIONAL until the owner chooses the final values.
+That describes the either_signal rule. Mayon uses brightness_leads, set in its site config:
+only brightness can flag a pixel, so coherence loss alone gives none.
+
+The thresholds are not set here. They come from the site config.
 """
 import numpy as np
 

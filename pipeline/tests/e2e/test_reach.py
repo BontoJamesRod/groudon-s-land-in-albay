@@ -12,7 +12,7 @@ OAS = (13.3186, 123.57845)  # about 13.5 km from the summit, on land
 
 def test_legend_says_how_far_the_map_looks(app):
     expect(app.locator("#legend-title")).to_contain_text("within 10 km of the summit")
-    expect(app.locator("#legend-title")).to_contain_text("PROVISIONAL")
+    expect(app.locator("#legend-title")).not_to_contain_text("PROVISIONAL")
 
 
 def test_the_limit_is_drawn_on_the_map(app):

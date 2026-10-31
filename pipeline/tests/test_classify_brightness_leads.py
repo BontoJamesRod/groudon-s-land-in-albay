@@ -61,8 +61,8 @@ def test_unknown_rule_stops():
         run([1.0], [0.9], rule="something_else")
 
 
-def test_mayon_config_does_not_choose_a_rule():
-    assert "rule" not in load_site("mayon")["thresholds"]
+def test_mayon_uses_the_owners_rule():
+    assert load_site("mayon")["thresholds"]["rule"] == BRIGHTNESS_LEADS
 
 
 def test_bad_rule_in_a_config_stops(tmp_path):

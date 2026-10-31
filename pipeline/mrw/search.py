@@ -12,7 +12,7 @@ so the check below looks at EVERY date in a product's name.
 import re
 from datetime import datetime, timedelta, timezone
 
-BLIND_CUTOFF = datetime(2026, 10, 30, tzinfo=timezone.utc)
+BLIND_CUTOFF = datetime(2026, 11, 1, tzinfo=timezone.utc)
 
 # Examples of the names, from docs/06:
 # NISAR_L2_PR_GCOV_032_111_A_008_4005_DHDH_A_<start>_<end>_P05023_N_F_J_001
