@@ -12,7 +12,7 @@ export const STRINGS = {
   radarPassList: "Radar pass",
   mapLabel: "Map of the selected site",
   panelLabel: "Radar pass and legend",
-  drawerShow: "Show legend and details (PROVISIONAL results)",
+  drawerShow: "Show legend and details (PROVISIONAL, within 10 km of the summit)",
   drawerHide: "Hide legend and details",
   disclaimer: "This is not an official warning. Follow PHIVOLCS and your LGU.",
   loadingRadar: "Loading radar data…",

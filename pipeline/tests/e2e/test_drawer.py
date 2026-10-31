@@ -44,6 +44,7 @@ def test_closed_on_a_phone_and_the_map_is_bigger_than_the_panel(phone):
 
 def test_the_closed_drawer_says_the_results_are_provisional(phone):
     expect(phone.locator("#drawer-toggle")).to_contain_text("PROVISIONAL")
+    expect(phone.locator("#drawer-toggle")).to_contain_text("within 10 km")
 
 
 def test_tap_opens_and_closes(phone):
