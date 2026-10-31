@@ -367,7 +367,7 @@ These replace the matching lines above where they differ.
 
 Branch `night-1`. `main` wasn't touched. `site/data` wasn't changed. This section also covers the earlier "After Day 3 analysis" request, whose tasks are inside this plan.
 
-**Final evidence:** `pytest -q`: 317 passed, 6 skipped, no expected failures left. Contract check: 0 errors on `site/data`, and 0 on `pipeline/out` under its unpublished rules. **Downloaded: about 0.33 GB** of 10 GB: 0.315 GB of NISAR crops for Panama plus the boundary file. Nothing from on or after 2026-10-30 was opened.
+**Final evidence:** `pytest -q`: 317 passed, 6 skipped, no expected failures left. Contract check: 0 errors on `site/data`, and 0 on `pipeline/out` under its unpublished rules. **Downloaded: about 0.35 GB** of 10 GB: 0.315 GB of NISAR crops for Panama plus the 32 MB boundary file. Nothing from on or after 2026-10-30 was opened.
 
 ## Read this first
 
