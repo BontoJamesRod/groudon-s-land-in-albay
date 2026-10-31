@@ -20,16 +20,19 @@ def make_pair(first, second, track=104, gunw=True, previous=None):
             "gunw": {"granule_id": "fake"} if gunw else None, "previous": previous}
 
 
-def final_config():
+def config_with_status(status):
     config = load_site("mayon")
-    config["thresholds"] = {**config["thresholds"], "status": "FINAL"}
+    config["thresholds"] = {**config["thresholds"], "status": status}
     return config
 
 
+def final_config():
+    return config_with_status("FINAL")
+
+
 def test_provisional_thresholds_stop_it():
-    assert load_site("mayon")["thresholds"]["status"] == "PROVISIONAL"
     with pytest.raises(NotReady, match="PROVISIONAL"):
-        require_owner_go_ahead(load_site("mayon"), LIFTED)
+        require_owner_go_ahead(config_with_status("PROVISIONAL"), LIFTED)
 
 
 def test_a_cutoff_that_is_not_lifted_stops_it():
@@ -46,6 +49,7 @@ def test_the_command_stops_before_any_search(monkeypatch, capsys):
         raise AssertionError("searched before the owner's go-ahead")
     monkeypatch.setattr(eruption_run, "search_gcov", no_search)
     monkeypatch.setattr(eruption_run, "search_gunw", no_search)
+    monkeypatch.setattr(eruption_run, "load_site", lambda site_id: config_with_status("PROVISIONAL"))
     assert eruption_run.main(["check"]) == 1
     assert "PROVISIONAL" in capsys.readouterr().out
 

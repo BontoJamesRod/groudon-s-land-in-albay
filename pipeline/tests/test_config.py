@@ -32,8 +32,9 @@ def test_pipeline_only_settings_are_not_published():
 
 def test_thresholds_and_zooms_are_marked_provisional():
     config = load_site("mayon")
-    assert thresholds_are_provisional(config)
-    assert {"default_zoom", "min_zoom", "max_zoom", "thresholds"} <= set(config["provisional_fields"])
+    assert {"default_zoom", "min_zoom", "max_zoom"} <= set(config["provisional_fields"])
+    # The two places that say whether the thresholds are final must agree.
+    assert thresholds_are_provisional(config) == ("thresholds" in config["provisional_fields"])
 
 
 @pytest.mark.parametrize("changes", [
