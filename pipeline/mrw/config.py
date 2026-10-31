@@ -11,11 +11,12 @@ published:
 - tracks: the radar tracks that cover the site.
 - filters: optional false-alarm filters (mrw/filters.py). All off unless the owner turns them on.
   max_distance_km also reaches the browser, as detection_reach_km in sites.json.
-- channel_strip_half_width_m: for the channel timeline, how far the strip goes on each side
-  of a channel line, in metres.
 - layer_wording: for a site that shows change in general, the layer title and legend labels
   to use instead of "new material", with optional titles and check notes for chosen pairs.
 - ground_movement: min_coherence hides movement where the two passes are too unlike to trust.
+
+channel_strip_half_width_m, for a site with channels, is published in the `sites` row: how far a
+channel's strip goes on each side of its line, in metres. The Channels screen needs it.
 """
 import json
 from datetime import datetime, timezone
@@ -25,7 +26,7 @@ from mrw.contract_check import SITES, check_row
 from mrw.filters import FilterConfigError, check_filters
 
 SITES_FOLDER = Path(__file__).resolve().parents[1] / "sites"
-PIPELINE_ONLY = ("thresholds", "provisional_fields", "tracks", "filters", "channel_strip_half_width_m", "ground_movement", "layer_wording")
+PIPELINE_ONLY = ("thresholds", "provisional_fields", "tracks", "filters", "ground_movement", "layer_wording")
 TIMESTAMPS = ("created_at", "updated_at")
 
 

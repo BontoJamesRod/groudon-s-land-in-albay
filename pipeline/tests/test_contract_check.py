@@ -385,3 +385,102 @@ def test_fixture_builders_are_independent():
     second = copy.deepcopy(first)
     second["id"] = "other"
     assert first["id"] == "mayon"
+
+
+def channel_feature(**changes):
+    """One channel inside the fixture's reach, named and dated as in the owner's real record."""
+    summit_lat, summit_lon = site_row()["summit_lat"], site_row()["summit_lon"]
+    line = [[summit_lon + 0.01, summit_lat], [summit_lon + 0.02, summit_lat]]
+    properties = {
+        "id": "mayon_miisi", "site_id": "mayon", "name": "Mi-isi", "alt_names": ["Miisi"],
+        "town_ids": ["mayon_tabaco_city"], "name_source": "PHIVOLCS", "name_source_url": None,
+        "line_source_id": "ph_admin_boundaries", "confirmed_by": "project owner",
+        "confirmed_on": "2026-11-01", "imagery_date": "2026-05-16",
+        "label_lat": summit_lat, "label_lon": summit_lon + 0.015,
+        "strip_geometry": {"type": "Polygon", "coordinates": [[[line[0][0], summit_lat - 0.001], [line[1][0], summit_lat - 0.001],
+                                                               [line[1][0], summit_lat + 0.001], [line[0][0], summit_lat + 0.001],
+                                                               [line[0][0], summit_lat - 0.001]]]},
+        "checked_geometry": {"type": "LineString", "coordinates": line},
+        "not_checked_geometry": None,
+    }
+    properties.update(changes)
+    return {"type": "Feature", "id": properties["id"], "properties": properties,
+            "geometry": {"type": "LineString", "coordinates": line}}
+
+
+def add_channels(root, *features):
+    """Make the fixture a site with channels."""
+    edit_json(root / "sites.json", lambda c: c["data"][0].update(channel_strip_half_width_m=200, detection_reach_km=10))
+    write(root / "sites" / "mayon" / "channels.geojson", collection(list(features)))
+
+
+def test_a_confirmed_channel_passes(data_dir):
+    add_channels(data_dir, channel_feature())
+    assert check_data_dir(data_dir) == []
+
+
+def test_tc074_a_channel_without_a_confirmation_date_fails(data_dir):
+    add_channels(data_dir, channel_feature(confirmed_on=None))
+    assert any("confirmed_on" in e for e in check_data_dir(data_dir))
+
+
+def test_tc074_a_channel_with_no_confirmed_by_fails(data_dir):
+    feature = channel_feature()
+    del feature["properties"]["confirmed_by"]
+    add_channels(data_dir, feature)
+    assert any("confirmed_by" in e for e in check_data_dir(data_dir))
+
+
+@pytest.mark.parametrize("name", ["Buyuan", "Bonga", "Mabinit", "Maninila", "Masarawag", "Matanag", "Made-up"])
+def test_tc074_a_channel_the_owner_did_not_confirm_fails(data_dir, name):
+    add_channels(data_dir, channel_feature(name=name))
+    assert any("no recorded confirmation from the owner" in e for e in check_data_dir(data_dir))
+
+
+def test_a_confirmation_date_that_differs_from_the_record_fails(data_dir):
+    add_channels(data_dir, channel_feature(confirmed_on="2026-10-01"))
+    assert any("differs from the owner's record" in e for e in check_data_dir(data_dir))
+
+
+def test_an_unconfirmed_name_anywhere_in_the_published_data_fails(data_dir):
+    edit_json(data_dir / "sources.json", lambda c: c["data"][0].update(name="Boundaries near Bonga"))
+    assert any("a channel the owner hasn't confirmed" in e and "Bonga" in e for e in check_data_dir(data_dir))
+
+
+def test_a_longer_word_holding_an_unconfirmed_name_is_fine(data_dir):
+    edit_json(data_dir / "sources.json", lambda c: c["data"][0].update(name="Boundaries near Bongabong"))
+    assert check_data_dir(data_dir) == []
+
+
+def test_a_channel_needs_a_town(data_dir):
+    add_channels(data_dir, channel_feature(town_ids=[]))
+    assert any("at least 1 town" in e for e in check_data_dir(data_dir))
+
+
+def test_a_strip_past_the_reach_fails(data_dir):
+    lat, lon = site_row()["summit_lat"], site_row()["summit_lon"]
+    far = {"type": "Polygon", "coordinates": [[[lon, lat], [lon + 0.5, lat], [lon + 0.5, lat + 0.1], [lon, lat]]]}
+    add_channels(data_dir, channel_feature(strip_geometry=far))
+    assert any("strip_geometry goes past the reach" in e for e in check_data_dir(data_dir))
+
+
+def test_a_checked_line_past_the_reach_fails(data_dir):
+    lat, lon = site_row()["summit_lat"], site_row()["summit_lon"]
+    add_channels(data_dir, channel_feature(checked_geometry={"type": "LineString", "coordinates": [[lon, lat], [lon + 0.5, lat]]}))
+    assert any("checked_geometry goes past the reach" in e for e in check_data_dir(data_dir))
+
+
+def test_a_not_checked_part_inside_the_reach_fails(data_dir):
+    lat, lon = site_row()["summit_lat"], site_row()["summit_lon"]
+    add_channels(data_dir, channel_feature(not_checked_geometry={"type": "LineString", "coordinates": [[lon, lat], [lon + 0.5, lat]]}))
+    assert any("not_checked_geometry starts inside the reach" in e for e in check_data_dir(data_dir))
+
+
+def test_a_site_with_a_strip_width_needs_its_channels_file(data_dir):
+    edit_json(data_dir / "sites.json", lambda c: c["data"][0].update(channel_strip_half_width_m=200))
+    assert any("channels.geojson: this required file is missing" in e for e in check_data_dir(data_dir))
+
+
+def test_a_channels_file_needs_a_strip_width_in_the_site_row(data_dir):
+    write(data_dir / "sites" / "mayon" / "channels.geojson", collection([channel_feature()]))
+    assert any("needs channel_strip_half_width_m" in e for e in check_data_dir(data_dir))

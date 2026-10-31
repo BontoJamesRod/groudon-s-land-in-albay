@@ -30,6 +30,26 @@
     "retrieved_on": "2026-10-31"
   },
   {
+    "id": "channel_names",
+    "site_id": "mayon",
+    "name": "Channel names",
+    "provider": "PHIVOLCS: the Mayon Volcano Bulletin of 24 March 2000, and the advisory of 16 January 2026 as reported by GMA News",
+    "used_for": "channels",
+    "url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
+    "license": "Names only, cited from the source",
+    "retrieved_on": "2026-11-01"
+  },
+  {
+    "id": "channel_lines",
+    "site_id": "mayon",
+    "name": "Channel lines, from OpenStreetMap waterways, confirmed by the project owner in Google Earth Pro",
+    "provider": "OpenStreetMap contributors",
+    "used_for": "channels",
+    "url": "https://www.openstreetmap.org/copyright",
+    "license": "ODbL 1.0",
+    "retrieved_on": "2026-10-31"
+  },
+  {
     "id": "esri_world_imagery",
     "name": "World Imagery background map",
     "provider": "Esri",

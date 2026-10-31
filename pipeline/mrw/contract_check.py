@@ -16,10 +16,16 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from PIL import Image
+from pyproj import Geod
+from shapely import get_coordinates
 from shapely.geometry import shape
 
 SCHEMA_VERSION = "1.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
+CONTEXT_FOLDER = REPO_ROOT / "pipeline" / "context"
+# The pipeline measures the reach on the radar's map projection, and this check measures on the
+# Earth's shape. They differ by a few metres at 10 km, and shapes are rounded to about 1 m.
+REACH_TOLERANCE_KM = 0.05
 
 # Enums from 05 section 5
 SITE_STATUS = {"draft", "published"}
@@ -77,6 +83,7 @@ SITES = {
     "danger_zone_radius_km": field("number", required=False),
     "danger_zone_label": field("string", required=False),
     "detection_reach_km": field("number", required=False),
+    "channel_strip_half_width_m": field("number", required=False),
     "wording_set": field("string", required=False, enum={"plain_change"}),
     "boundary_credit": field("string", required=False),
     "boundary_credit_url": field("url", required=False),
@@ -103,6 +110,14 @@ CHANNELS = {
     "name_source": field("string"),
     "name_source_url": field("url", required=False),
     "line_source_id": field("string"),
+    "confirmed_by": field("string"),
+    "confirmed_on": field("date"),
+    "imagery_date": field("date"),
+    "label_lat": field("number", low=-90, high=90),
+    "label_lon": field("number", low=-180, high=180),
+    "strip_geometry": field("object"),
+    "checked_geometry": field("object"),
+    "not_checked_geometry": field("object", required=False),
 }
 LAND = {
     "id": field("string"),
@@ -502,17 +517,90 @@ def check_land(path, site_id, source_ids, errors):
             errors.append(f"{where}: source_id {props.get('source_id')!r} is not in sources.json")
 
 
-def check_channels(path, site_id, source_ids, town_ids, errors):
-    """Check channels.geojson."""
+def _owner_checks(site_id, context_folder):
+    """Read the owner's verdicts on a site's channels. A site with no record has none."""
+    path = Path(context_folder) / f"{site_id}_channels.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {"checks": []}
+
+
+def _km_from_summit(geom, site_row):
+    """The distance over the Earth's surface from the summit to each point of a shape."""
+    points = get_coordinates(geom)
+    summit_lons = [site_row["summit_lon"]] * len(points)
+    summit_lats = [site_row["summit_lat"]] * len(points)
+    metres = Geod(ellps="WGS84").inv(summit_lons, summit_lats, points[:, 0].tolist(), points[:, 1].tolist())[2]
+    return [value / 1000 for value in metres]
+
+
+def _check_channel_reach(props, site_row, where, errors):
+    """The strip stops at the reach, and what lies past it is drawn as not checked (FR-064, FR-071)."""
+    strip = _check_geometry({"geometry": props.get("strip_geometry")}, {"Polygon", "MultiPolygon"}, f"{where} strip_geometry", errors)
+    checked = _check_geometry({"geometry": props.get("checked_geometry")}, {"LineString", "MultiLineString"}, f"{where} checked_geometry", errors)
+    beyond = None
+    if props.get("not_checked_geometry") is not None:
+        beyond = _check_geometry({"geometry": props["not_checked_geometry"]}, {"LineString", "MultiLineString"}, f"{where} not_checked_geometry", errors)
+    reach = (site_row or {}).get("detection_reach_km")
+    if not reach:
+        return
+    if strip is not None and max(_km_from_summit(strip, site_row)) > reach + REACH_TOLERANCE_KM:
+        errors.append(f"{where}: strip_geometry goes past the reach distance")
+    if checked is not None and max(_km_from_summit(checked, site_row)) > reach + REACH_TOLERANCE_KM:
+        errors.append(f"{where}: checked_geometry goes past the reach distance")
+    if beyond is not None and min(_km_from_summit(beyond, site_row)) < reach - REACH_TOLERANCE_KM:
+        errors.append(f"{where}: not_checked_geometry starts inside the reach distance")
+
+
+def check_channels(path, site_id, source_ids, town_ids, errors, site_row=None, context_folder=CONTEXT_FOLDER):
+    """Check channels.geojson and return its channel ids. Only confirmed lines may be here (FR-065)."""
     features = load_geojson_file(path, errors) or []
     allowed = {"LineString", "MultiLineString"}
+    confirmed = {check["channel"]: check for check in _owner_checks(site_id, context_folder)["checks"]
+                 if check["verdict"] == "confirmed"}
+    ids = set()
     for where, props, _geom in _feature_rows(features, CHANNELS, allowed, path, site_id, errors):
+        if props.get("id") in ids:
+            errors.append(f"{where}: duplicate id {props.get('id')!r}")
+        ids.add(props.get("id"))
         if props.get("line_source_id") not in source_ids:
             errors.append(f"{where}: line_source_id is not in sources.json")
         towns = props.get("town_ids")
+        if not towns:
+            errors.append(f"{where}: a channel needs at least 1 town")
         for town_id in towns if isinstance(towns, list) else []:
             if town_id not in town_ids:
                 errors.append(f"{where}: town_ids item {town_id!r} is not in towns.geojson")
+        check = confirmed.get(props.get("name"))
+        if check is None:
+            errors.append(f"{where}: {props.get('name')!r} has no recorded confirmation from the owner (FR-065)")
+        elif props.get("confirmed_on") != check["checked_on"]:
+            errors.append(f"{where}: confirmed_on differs from the owner's record (FR-065)")
+        _check_channel_reach(props, site_row, where, errors)
+    return ids
+
+
+def _names_never_shown(context_folder):
+    """Every candidate channel the owner hasn't confirmed, from the records and their candidate files."""
+    names = set()
+    for path in Path(context_folder).glob("*_channels.json"):
+        record = json.loads(path.read_text(encoding="utf-8"))
+        confirmed = {check["channel"] for check in record["checks"] if check["verdict"] == "confirmed"}
+        candidates = json.loads((Path(context_folder) / record["candidates_file"]).read_text(encoding="utf-8"))["features"]
+        names |= {check["channel"] for check in record["checks"]} | {item["properties"]["channel"] for item in candidates}
+        names -= confirmed
+    return names
+
+
+def check_no_unconfirmed_names(root, errors, context_folder=CONTEXT_FOLDER):
+    """An unconfirmed channel must never be shown, so its name can't be in any published file (FR-065)."""
+    names = _names_never_shown(context_folder)
+    if not names:
+        return
+    pattern = re.compile(r"\b(" + "|".join(re.escape(name) for name in sorted(names)) + r")\b", re.IGNORECASE)
+    for suffix in ("*.json", "*.geojson"):
+        for path in sorted(Path(root).rglob(suffix)):
+            found = pattern.search(path.read_text(encoding="utf-8"))
+            if found:
+                errors.append(f"{path}: names {found.group(0)!r}, a channel the owner hasn't confirmed (FR-065)")
 
 
 def check_events(path, site_id, errors):
@@ -833,7 +921,7 @@ def check_pairs_list(path, site_id, site_folder, errors):
     return {row.get("id") for row in rows if isinstance(row, dict)}
 
 
-def check_site_folder(folder, source_ids, errors, published=True):
+def check_site_folder(folder, source_ids, errors, published=True, site_row=None):
     """Check the files of one site. Which ones must exist is decided in check_data_dir."""
     site_id = folder.name
     town_ids = set()
@@ -842,7 +930,9 @@ def check_site_folder(folder, source_ids, errors, published=True):
     if (folder / "land.geojson").is_file():
         check_land(folder / "land.geojson", site_id, source_ids, errors)
     if (folder / "channels.geojson").is_file():
-        check_channels(folder / "channels.geojson", site_id, source_ids, town_ids, errors)
+        if site_row and site_row.get("channel_strip_half_width_m") is None:
+            errors.append(f"{folder / 'channels.geojson'}: a site with channels needs channel_strip_half_width_m (FR-064)")
+        check_channels(folder / "channels.geojson", site_id, source_ids, town_ids, errors, site_row)
     if (folder / "events.json").is_file():
         check_events(folder / "events.json", site_id, errors)
     listed = set()
@@ -875,9 +965,13 @@ def _check_required_top_files(root, errors):
             errors.append(f"{root / name}: this required file is missing")
 
 
-def _check_required_site_files(folder, errors):
-    """A listed site needs these to open. Channels and events are optional for the screen (03 section 5)."""
-    for name in ("towns.geojson", "land.geojson", "pairs.json"):
+def _check_required_site_files(folder, errors, site_row):
+    """A listed site needs these to open. Channels and events are optional for the screen (03 section 5),
+    but a site that says it has channels must have them, or its Channels button would lead nowhere."""
+    names = ["towns.geojson", "land.geojson", "pairs.json"]
+    if site_row.get("channel_strip_half_width_m") is not None:
+        names.append("channels.geojson")
+    for name in names:
         if not (folder / name).is_file():
             errors.append(f"{folder / name}: this required file is missing")
 
@@ -900,10 +994,13 @@ def check_data_dir(root, published=True):
         if site_id and not (root / "sites" / str(site_id)).is_dir():
             errors.append(f"{root / 'sites.json'}: site {site_id!r} has no data folder")
         elif site_id and published:
-            _check_required_site_files(root / "sites" / str(site_id), errors)
+            _check_required_site_files(root / "sites" / str(site_id), errors, row)
+    rows_by_id = {row.get("id"): row for row in site_rows if isinstance(row, dict)}
     for folder in sorted((root / "sites").glob("*")):
         if folder.is_dir():
-            known |= check_site_folder(folder, source_ids, errors, published)
+            known |= check_site_folder(folder, source_ids, errors, published, rows_by_id.get(folder.name))
+    if published:
+        check_no_unconfirmed_names(root, errors)
     # Every data file must be one the contract describes. Drafts have their own folder in pipeline/out.
     for pattern in ("*.json", "*.geojson"):
         for path in sorted(root.rglob(pattern)):

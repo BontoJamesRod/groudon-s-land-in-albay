@@ -26,7 +26,7 @@ def folders(tmp_path):
     (data / "sites" / "mayon").mkdir(parents=True)
     shutil.copytree(DATA_FOLDER / "sites" / "panama", data / "sites" / "panama")  # the other published site
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
-    for name in ("towns.geojson", "land.geojson"):
+    for name in ("towns.geojson", "land.geojson", "channels.geojson"):
         shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)
     return out, data
 

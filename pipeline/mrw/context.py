@@ -140,13 +140,18 @@ def _stamped(rows, now):
     return [{**row, "created_at": now, "updated_at": now} for row in rows]
 
 
+def write_sources(data_folder, context_folder, now):
+    """Write sources.json, which all sites share."""
+    sources = json.loads((Path(context_folder) / "sources.json").read_text(encoding="utf-8"))
+    write_json(Path(data_folder) / "sources.json", _stamped(sources, now), now)
+
+
 def build_context(site_id, data_folder=DATA_FOLDER, context_folder=CONTEXT_FOLDER):
     """Write sources, towns, land and events for one site."""
     config = load_site(site_id)
     now = utc_now_text()
     site_folder = Path(data_folder) / "sites" / site_id
-    sources = json.loads((context_folder / "sources.json").read_text(encoding="utf-8"))
-    write_json(Path(data_folder) / "sources.json", _stamped(sources, now), now)
+    write_sources(data_folder, context_folder, now)
     boundary_file = context_folder / f"{site_id}_boundaries.json"
     source = json.loads(boundary_file.read_text(encoding="utf-8"))
     # A boundary file can name its own source and license. Without them it's the Philippine source.
