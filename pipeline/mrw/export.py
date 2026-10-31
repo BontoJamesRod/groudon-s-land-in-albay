@@ -147,7 +147,9 @@ def pass_record(one_pass, site_id, spacing_m, now):
 
 def new_material_title(config):
     """Say on the layer itself when its thresholds aren't final."""
-    return "New material (PROVISIONAL thresholds)" if thresholds_are_provisional(config) else "New material"
+    title = "New material (PROVISIONAL thresholds)" if thresholds_are_provisional(config) else "New material"
+    reach = (config.get("filters") or {}).get("max_distance_km")
+    return f"{title}, within {reach:g} km of the summit" if reach else title
 
 
 def write_layers(folder, gcov_result, loss, classes, config, pair_key, granules, now):
@@ -207,13 +209,24 @@ def build_pair_record(config, before, after, gunw, previous_id, used_coherence, 
     }
 
 
+def distance_from_summit(gcov_result, config):
+    """Work out each radar pixel's distance from the summit in km, if the site's filter needs it."""
+    if not (config.get("filters") or {}).get("max_distance_km"):
+        return None
+    to_utm = Transformer.from_crs(4326, gcov_result["epsg"], always_xy=True)
+    x0, y0 = to_utm.transform(config["summit_lon"], config["summit_lat"])
+    xs, ys = np.meshgrid(gcov_result["x"], gcov_result["y"])
+    return np.hypot(xs - x0, ys - y0) / 1000
+
+
 def write_pair(gcov_result, loss, before, after, gunw, previous_gunw, previous_id, config, out_folder):
     """Classify a processed pair and write all its files. Returns the pair record."""
     thresholds = config["thresholds"]
     classes = classify(gcov_result["change_db"], loss, gcov_result["reasons"],
                        thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
-    # All filters are off unless the owner turns them on in the site config.
-    classes = apply_filters(classes, config.get("filters"), gcov_result["spacing_x_m"] * gcov_result["spacing_y_m"])
+    # Filters are off unless the owner turns them on in the site config.
+    classes = apply_filters(classes, config.get("filters"), gcov_result["spacing_x_m"] * gcov_result["spacing_y_m"],
+                            distance_km=distance_from_summit(gcov_result, config))
     areas = areas_km2(classes, gcov_result["spacing_x_m"], gcov_result["spacing_y_m"])
     now = utc_now_text()
     pair = build_pair_record(config, before, after, gunw, previous_id, loss is not None, areas, now)

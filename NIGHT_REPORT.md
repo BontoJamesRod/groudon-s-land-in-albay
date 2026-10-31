@@ -464,3 +464,23 @@ Fast 4G, cold cache, real tiles, median of 3 loads, from a local server. A real 
 5. **Second site:** Panama now has a full-method result, but it's unvalidated. Compare it with the mapped landslides, or try Fuego?
 6. **Doc edits:** accept or change the six items in `docs/notes/proposed-doc-changes.md`. Item 1 is also the 24-day decision. Item 2 changes visitor wording.
 7. **Still open from earlier:** event date (July 13 or 14), July validation draft, channel source, cropland.
+
+# Going live
+
+You chose **within 10 km alone** and asked to go live. Filter `max_distance_km: 10` is on for Mayon, and all 9 pairs were republished from cache, with no radar data downloaded.
+
+| Pair (UTC dates) | Before (km²) | Within 10 km (km²) |
+| --- | --- | --- |
+| 06-21 → 07-03 | 7.39 | 2.38 |
+| 07-03 → 07-15 (July event) | 5.20 | 1.80 |
+| 07-15 → 07-27 | 6.39 | 2.31 |
+| 07-27 → 08-20 (24 days) | 14.51 | 4.09 |
+| 08-20 → 09-01 | 3.11 | 1.15 |
+| 09-01 → 09-13 | 5.80 | 1.74 |
+| 09-13 → 09-25 | 4.95 | 1.24 |
+| 09-25 → 10-07 | 4.74 | 1.36 |
+| 10-07 → 10-19 | 8.60 | 4.07 |
+
+**How the limit shows:** a white dotted ring, "within 10 km of the summit" in the legend title, a line in the help panel, and a tap beyond the ring says "Not checked: this map only looks within 10 km of the summit" rather than "No new material detected".
+
+**Known limits on the live map:** thresholds are still PROVISIONAL. Most of what's left is still likely not new material. Oct 8 → Oct 20 is unresolved. `reach` is set in two places, the site config and `map.js`, and a test fails if they differ. On the closed phone drawer, the legend's limit needs a tap to read, though the ring is on the map.

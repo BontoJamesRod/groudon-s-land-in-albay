@@ -25,6 +25,7 @@
     "coherence_loss_threshold": 0.3
   },
   "filters": {
+    "max_distance_km": 10,
     "min_cluster_m2": null,
     "high_confidence_only": false,
     "persist_across_pairs": false

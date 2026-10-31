@@ -2,6 +2,7 @@
 // from the pair's value grid, entirely in the browser: nothing is sent anywhere.
 
 import { loadGrid } from "./data.js";
+import { DETECTION_REACH_KM } from "./map.js";
 import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
@@ -98,6 +99,15 @@ export function createReadout(elements, site, towns) {
     return lines;
   }
 
+  // Beyond the reach, "none" only means this map didn't look, so it must not say nothing was found.
+  function resultText(value, layer, lat, lon) {
+    const reach = DETECTION_REACH_KM[site.id];
+    if (value === NONE && reach && distanceKm(lat, lon, site.summit_lat, site.summit_lon) > reach) {
+      return [STRINGS.beyondReach(reach)];
+    }
+    return resultLines(value, layer);
+  }
+
   function showLines(lines) {
     elements.body.replaceChildren(...lines);
     elements.card.hidden = false;
@@ -133,7 +143,7 @@ export function createReadout(elements, site, towns) {
       gridPairId = shownPair.id;
     }
     if (thisRequest !== request) return;
-    const results = resultLines(gridValue(layer, cells, lat, lon), layer).map((text) => line(text, "readout-result"));
+    const results = resultText(gridValue(layer, cells, lat, lon), layer, lat, lon).map((text) => line(text, "readout-result"));
     const dates = STRINGS.pairDates(localDate(pair.before_acquired_start, site.time_zone),
       localDate(pair.after_acquired_start, site.time_zone));
     showLines([...place, ...results, line(dates)]);

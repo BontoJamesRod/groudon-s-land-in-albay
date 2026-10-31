@@ -27,8 +27,27 @@ def test_all_off_changes_nothing(filters):
     assert np.array_equal(apply_filters(grid(), filters, CELL_M2), grid())
 
 
-def test_the_site_config_ships_with_every_filter_off():
-    assert load_site("mayon")["filters"] == FILTERS_OFF
+def test_mayon_uses_only_the_owner_chosen_10_km_reach():
+    assert load_site("mayon")["filters"] == {**FILTERS_OFF, "max_distance_km": 10}
+
+
+def test_the_web_app_knows_the_same_reach_as_the_config():
+    text = (SITES_FOLDER.parents[1] / "site" / "js" / "map.js").read_text(encoding="utf-8")
+    assert "DETECTION_REACH_KM = { mayon: 10 }" in text
+
+
+def test_reach_clears_far_detections_and_keeps_codes():
+    distance = np.full(grid().shape, 5.0)
+    distance[:, 0] = 11.0
+    result = apply_filters(grid(), {"max_distance_km": 10}, CELL_M2, distance_km=distance)
+    assert result[0, 0] == NONE and result[1, 0] == NONE
+    assert result[0, 1] == LOW
+    assert result[0, 4] == SEA
+
+
+def test_reach_stops_without_distances():
+    with pytest.raises(FilterConfigError, match="distance"):
+        apply_filters(grid(), {"max_distance_km": 10}, CELL_M2)
 
 
 def test_small_clusters_go_and_no_data_codes_stay():
@@ -78,7 +97,7 @@ def test_persistence_stops_on_different_sizes():
         keep_persistent(grid(), np.zeros((2, 2), dtype="uint8"))
 
 
-@pytest.mark.parametrize("filters", [{"min_cluster_m2": 0}, {"min_cluster_m2": True}, {"high_confidence_only": "yes"},
+@pytest.mark.parametrize("filters", [{"max_distance_km": 0}, {"max_distance_km": "far"}, {"min_cluster_m2": 0}, {"min_cluster_m2": True}, {"high_confidence_only": "yes"},
                                      {"persist_across_pairs": 1}, {"mystery": 1}])
 def test_bad_settings_stop(filters):
     with pytest.raises(FilterConfigError):

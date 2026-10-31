@@ -263,3 +263,7 @@ The quiet set is 7 pairs. It leaves out the July pair and Oct 8 → Oct 20, so i
 | **Within 10 km + clusters from 2,000 m²** | Removes 77% | Loses 31% of the July flank signal for 7 more points |
 
 None of these tells real change from false alarms inside the zone. They limit where the map looks.
+
+## Note on rerunning these studies
+
+**Published grids changed after this study.** Mayon now uses the 10 km reach, so `false_alarm_study.py` and `reach_zone_study.py` read masked grids if rerun today. Their numbers above came from the grids before the mask. To reproduce them, check out commit 5768d19.

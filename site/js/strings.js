@@ -47,6 +47,7 @@ export const STRINGS = {
   outsideTowns: "Outside the mapped towns",
   distanceToSummit: (km) => `Distance to summit: ${km.toFixed(1)} km`,
   noNewMaterial: "No new material detected. Confidence: none",
+  beyondReach: (km) => `Not checked: this map only looks within ${km} km of the summit`,
   classWithConfidence: (label, confidence) => `${label}. Confidence: ${confidence}`,
   pairDates: (before, after) => `Radar passes: ${before} to ${after}`,
   close: "Close",
@@ -88,6 +89,7 @@ export const STRINGS = {
   helpLimits: [
     "A pass usually comes every 12 days, and sometimes the gap is longer. The map can be days old and shows nothing about what happens next. Longer gaps can show more change.",
     "Some colored spots are not new material. Crops, rain and building work can look the same to the radar.",
+    "At Mayon, this map only looks within 10 km of the summit, shown by the white dotted ring. It can't show anything beyond that, including in towns further away.",
     "Steep slopes facing away from the radar can't be seen, and small deposits can be missed.",
     "The radar products are provisional, and the detection thresholds are provisional until they are reviewed.",
   ],

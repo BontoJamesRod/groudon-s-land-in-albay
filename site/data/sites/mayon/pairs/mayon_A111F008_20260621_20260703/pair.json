@@ -17,13 +17,13 @@
   "brightness_threshold_db": 3.0,
   "coherence_loss_threshold": null,
   "high_confidence_area_km2": 0.0,
-  "low_confidence_area_km2": 7.39,
-  "new_material_area_km2": 7.39,
+  "low_confidence_area_km2": 2.38,
+  "new_material_area_km2": 2.38,
   "pipeline_version": "0.1.0",
   "error_message": null,
-  "published_at": "2026-10-30T22:59:26Z",
-  "created_at": "2026-10-30T22:59:24Z",
-  "updated_at": "2026-10-30T22:59:26Z",
+  "published_at": "2026-10-31T09:17:52Z",
+  "created_at": "2026-10-31T09:17:50Z",
+  "updated_at": "2026-10-31T09:17:52Z",
   "passes": [
    {
     "id": "A111F008_20260621T211323",
@@ -44,8 +44,8 @@
     "pixel_spacing_m": 10.0,
     "maturity": "PROVISIONAL",
     "vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GCOV_023_111_A_008_4005_DHDH_A_20260621T211323_20260621T211357_P05023_N_F_J_001",
-    "created_at": "2026-10-30T22:59:24Z",
-    "updated_at": "2026-10-30T22:59:24Z"
+    "created_at": "2026-10-31T09:17:50Z",
+    "updated_at": "2026-10-31T09:17:50Z"
    },
    {
     "id": "A111F008_20260703T211322",
@@ -66,8 +66,8 @@
     "pixel_spacing_m": 10.0,
     "maturity": "PROVISIONAL",
     "vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GCOV_024_111_A_008_4005_DHDH_A_20260703T211322_20260703T211356_P05023_N_F_J_001",
-    "created_at": "2026-10-30T22:59:24Z",
-    "updated_at": "2026-10-30T22:59:24Z"
+    "created_at": "2026-10-31T09:17:50Z",
+    "updated_at": "2026-10-31T09:17:50Z"
    }
   ],
   "layers": [
@@ -111,8 +111,8 @@
     "source_granule_ids": [
      "NISAR_L2_PR_GCOV_023_111_A_008_4005_DHDH_A_20260621T211323_20260621T211357_P05023_N_F_J_001"
     ],
-    "created_at": "2026-10-30T22:59:24Z",
-    "updated_at": "2026-10-30T22:59:24Z"
+    "created_at": "2026-10-31T09:17:50Z",
+    "updated_at": "2026-10-31T09:17:50Z"
    },
    {
     "id": "mayon_A111F008_20260621_20260703_after_db",
@@ -154,8 +154,8 @@
     "source_granule_ids": [
      "NISAR_L2_PR_GCOV_024_111_A_008_4005_DHDH_A_20260703T211322_20260703T211356_P05023_N_F_J_001"
     ],
-    "created_at": "2026-10-30T22:59:24Z",
-    "updated_at": "2026-10-30T22:59:24Z"
+    "created_at": "2026-10-31T09:17:50Z",
+    "updated_at": "2026-10-31T09:17:50Z"
    },
    {
     "id": "mayon_A111F008_20260621_20260703_change_db",
@@ -198,14 +198,14 @@
      "NISAR_L2_PR_GCOV_023_111_A_008_4005_DHDH_A_20260621T211323_20260621T211357_P05023_N_F_J_001",
      "NISAR_L2_PR_GCOV_024_111_A_008_4005_DHDH_A_20260703T211322_20260703T211356_P05023_N_F_J_001"
     ],
-    "created_at": "2026-10-30T22:59:24Z",
-    "updated_at": "2026-10-30T22:59:24Z"
+    "created_at": "2026-10-31T09:17:50Z",
+    "updated_at": "2026-10-31T09:17:50Z"
    },
    {
     "id": "mayon_A111F008_20260621_20260703_new_material",
     "pair_id": "mayon_A111F008_20260621_20260703",
     "kind": "new_material",
-    "title": "New material (PROVISIONAL thresholds)",
+    "title": "New material (PROVISIONAL thresholds), within 10 km of the summit",
     "units": "class",
     "image_path": "new_material.png",
     "image_format": "png",
@@ -246,13 +246,13 @@
      "NISAR_L2_PR_GCOV_023_111_A_008_4005_DHDH_A_20260621T211323_20260621T211357_P05023_N_F_J_001",
      "NISAR_L2_PR_GCOV_024_111_A_008_4005_DHDH_A_20260703T211322_20260703T211356_P05023_N_F_J_001"
     ],
-    "created_at": "2026-10-30T22:59:24Z",
-    "updated_at": "2026-10-30T22:59:24Z"
+    "created_at": "2026-10-31T09:17:50Z",
+    "updated_at": "2026-10-31T09:17:50Z"
    }
   ]
  },
  "meta": {
-  "generated_at": "2026-10-30T22:59:26Z",
+  "generated_at": "2026-10-31T09:17:52Z",
   "schema_version": "1.0"
  }
 }
