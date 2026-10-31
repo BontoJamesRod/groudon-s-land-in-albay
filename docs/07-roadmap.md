@@ -135,6 +135,10 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-090 | Draw only real coastline and town borders, not the edge where they're clipped to the site; show the quiet Panama pair's role in "How we checked this" | FR-003, FR-048, US-001, US-017, SCR-01, SCR-07, TBL-05, API-008, TC-079, TC-080 | S | T-037 | TC-079 and TC-080 pass |
 
 | T-091 | Draw the part of a channel past the reach distance as "Not checked", never as zero change | F-20, FR-071, US-025, SCR-01, SCR-14, TBL-03, API-005, TC-081 | S | T-076 | TC-081 passes |
+| T-092 | Record the owner's verdict on Matanag (not confirmed), accept ODbL for the channel files, and cite the PHIVOLCS advisory of 16 January 2026 (DZRH report) for Lidong and Padang next to the 2000 bulletin | F-19, FR-065, TBL-03, TBL-10, API-005 | S | T-073 | The record, the report and the published channels agree |
+| T-093 | Narrow the unconfirmed-name rule to drawing or listing a channel, so a validation can cite such a place name | FR-065, US-026, TC-074 | S | T-074 | TC-074 passes; a cited name in a validation passes the contract check |
+| T-094 | Show channel areas with 3 decimals | FR-061, FR-064, US-024, TBL-12, API-012, SCR-13, SCR-14, TC-064 | S | T-076 | TC-064 passes; all rows are rebuilt from the final rule |
+| T-095 | On a short phone screen, open the map one zoom step further out when the danger-zone label wouldn't clear the map credits | FR-001, FR-004, US-001, TBL-01, TC-001, TC-082 | S | T-023 | TC-001 and TC-082 pass |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 
