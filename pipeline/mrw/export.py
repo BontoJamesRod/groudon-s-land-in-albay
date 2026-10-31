@@ -26,6 +26,7 @@ from mrw.config import load_site, thresholds_are_provisional, utc_now_text
 from mrw.contract_check import check_data_dir
 from mrw.context import DATA_FOLDER, write_json
 from mrw.download import read_crop
+from mrw.filters import apply_filters
 from mrw.gcov import GCOV_DATASETS, GCOV_GROUP, HAS_VALUE, MASKED_BY_PRODUCT, OUTSIDE_COVERAGE, SEA, process_gcov
 from mrw.pairs import check_consecutive, check_same_track, find_gunw, same_gap, pair_id, pass_id, require_product
 from mrw.search import search_gcov, search_gunw, vertex_url
@@ -211,6 +212,8 @@ def write_pair(gcov_result, loss, before, after, gunw, previous_gunw, previous_i
     thresholds = config["thresholds"]
     classes = classify(gcov_result["change_db"], loss, gcov_result["reasons"],
                        thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
+    # All filters are off unless the owner turns them on in the site config.
+    classes = apply_filters(classes, config.get("filters"), gcov_result["spacing_x_m"] * gcov_result["spacing_y_m"])
     areas = areas_km2(classes, gcov_result["spacing_x_m"], gcov_result["spacing_y_m"])
     now = utc_now_text()
     pair = build_pair_record(config, before, after, gunw, previous_id, loss is not None, areas, now)

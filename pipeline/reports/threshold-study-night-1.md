@@ -115,3 +115,86 @@ The full grid (brightness 2–6 dB by loss 0.2–0.5) is in the JSON.
 - **One quiet baseline spans 24 days.** A111 08-20 → 09-01 uses 07-27 → 08-20 as its baseline, because no pass was found for 08-08. A longer gap lowers coherence, which may be why its median loss is so negative (−0.112). This pair's coherence numbers here are from before the pipeline stopped comparing unequal gaps (night 2), so its published record now has brightness only.
 - **The July coherence result rests on one pair.** Track 39 is the only July pair with a baseline, so this evidence is thin.
 - **Thresholds were tested on a 5 × 5 filtered 10 m grid.** Single pixels and small specks count fully. There is no minimum patch size, because the docs don't call for one.
+
+## Added on day 3: false-alarm study
+
+**No filter was turned on, and no default or threshold changed.** All filters stay off in `pipeline/sites/mayon.json`; choosing is the owner's decision. Every number uses the PROVISIONAL thresholds and the 9 published pairs, all from before 2026-10-30. To reproduce: `python pipeline/reports/false_alarm_study.py`. Full numbers are in `false-alarm-study.json`.
+
+### What it found
+
+1. **Most detections are on cropland.** Cropland is 7.7% of the land but holds 41–80% of the detected area in every pair. So the map is largely showing farming, and possibly wet or dry fields.
+2. **No filter separates the July event from quiet pairs by itself.** Each one removes real signal along with the false alarms. "High confidence only" removes July completely, because that pair has no coherence data.
+3. **The upper northwest slopes stand out in one pair only.** See "One pair to check" below. I wouldn't call that pair a false alarm yet.
+
+### Where detections fall (km²)
+
+Each cell gets one place, first match wins: steep and facing the radar, within 500 m of the sea, built-up, cropland, then other.
+
+| Pair (UTC dates) | Coherence | Total | Steep, facing radar | Coast | Built-up | Cropland | Other | In danger zone* | NW of summit, in zone* |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 06-21 → 07-03 | No | 7.47 | 0.21 | 0.22 | 0.17 | 3.86 | 3.01 | 0.32 | 0.04 |
+| **07-03 → 07-15 (July event)** | No | 5.23 | 0.12 | 0.19 | 0.15 | 3.39 | 1.38 | 0.21 | 0.06 |
+| 07-15 → 07-27 | Yes | 6.41 | 0.16 | 0.28 | 0.23 | 3.86 | 1.89 | 0.60 | 0.09 |
+| 07-27 → 08-20 (24 days) | No | 14.57 | 0.10 | 0.52 | 0.22 | 11.67 | 2.06 | 0.14 | 0.06 |
+| 08-20 → 09-01 | No | 3.15 | 0.07 | 0.17 | 0.13 | 1.83 | 0.95 | 0.07 | 0.02 |
+| 09-01 → 09-13 | Yes | 5.84 | 0.20 | 0.29 | 0.22 | 2.76 | 2.36 | 0.22 | 0.04 |
+| 09-13 → 09-25 | Yes | 4.99 | 0.15 | 0.28 | 0.15 | 3.22 | 1.19 | 0.25 | 0.02 |
+| 09-25 → 10-07 | Yes | 4.76 | 0.05 | 0.28 | 0.15 | 3.02 | 1.26 | 0.06 | 0.01 |
+| **10-07 → 10-19** | Yes | 8.66 | 0.37 | 0.45 | 0.20 | 3.58 | 4.05 | **2.49** | **1.20** |
+| Share of all land | | | 5.1% | 3.2% | 3.1% | 7.7% | 80.9% | | |
+
+\* These two columns overlap the place columns.
+
+Totals here run up to 0.08 km² above the published ones, because this study measures cells on the 20 m web grid and the pipeline measures them on the radar's own grid. The app shows these same two pairs in Philippine dates: 09-25 → 10-07 is Sep 26 → Oct 8, and 10-07 → 10-19 is Oct 8 → Oct 20.
+
+![Where the detections fall](false-alarm-places.png)
+
+### What each filter does
+
+"Removed" compares the mean total on the 8 quiet pairs with no filter. The flank columns use the same three wedges as the night 2 check (Basud, Bonga and Mi-isi).
+
+| Filter | Quiet mean (km²) | Removed | Quiet worst (km²) | July total (km²) | July, in the flanks (km²) | Quiet worst, in the flanks (km²) |
+| --- | --- | --- | --- | --- | --- | --- |
+| No filter | 6.98 | | 14.57 | 5.23 | 0.120 | 0.375 |
+| Clusters from 1,000 m² | 6.37 | 9% | 13.83 | 4.48 | 0.097 | 0.356 |
+| Clusters from 2,000 m² | 5.85 | 16% | 13.13 | 3.83 | 0.084 | 0.335 |
+| Clusters from 5,000 m² | 4.49 | 36% | 11.16 | 2.32 | 0.051 | 0.322 |
+| Clusters from 10,000 m² | 3.18 | 54% | 9.71 | 1.53 | 0.051 | 0.279 |
+| High confidence only | 0.21 | 97% | 0.58 | **0.00** | **0.000** | 0.003 |
+| Persists into next pair | 0.95 | 86% | 2.34 | 0.94 | 0.021 | 0.019 |
+| Persists + clusters from 1,000 m² | 0.76 | 89% | 2.06 | 0.71 | 0.016 | 0.016 |
+| Persists + clusters from 2,000 m² | 0.60 | 91% | 1.80 | 0.51 | 0.013 | 0.013 |
+| High only + clusters from 1,000 m² | 0.20 | 97% | 0.55 | **0.00** | **0.000** | 0.002 |
+| Mixed: high only with coherence, else clusters from 10,000 m² | 1.74 | 75% | 9.71 | 1.53 | 0.051 | 0.035 |
+
+Persistence is counted on 7 quiet pairs, because the latest pair has no next pair yet. The mixed row applies different rules to different pairs, so its flank comparison isn't like for like.
+
+![What each filter leaves](false-alarm-filters.png)
+
+### Recommended combinations, for the owner to choose from
+
+None of these makes the map ready to present as detection on its own.
+
+| Option | Why | What it costs | Config |
+| --- | --- | --- | --- |
+| **1. Light clean-up: clusters from 2,000 m²** | Keeps most of the July flank signal (70%), so it's the safest | Only removes 16%, so the map still looks busy | `min_cluster_m2: 2000` |
+| **2. Stronger clean-up: clusters from 10,000 m²** | Removes 54%. It keeps the same July flank area as 5,000 m² while removing more | Loses 58% of the July flank signal, and the worst quiet pair still shows 9.71 km² | `min_cluster_m2: 10000` |
+| **3. Mixed: high confidence where coherence exists, else clusters from 10,000 m²** | Removes the most (75%) while keeping some July signal, and the only row where July clearly beats the quiet pairs in the flanks | **Needs a small code change.** Rests on one event, and the high-only half is untested on a real event because the July pair has no coherence | Not expressible yet |
+
+**Not recommended: persistence.** It needs the next pass, so results would arrive at least 12 days late. A deposit that appears once and then stays the same should change in one pair only, so this filter tends to remove what the app is looking for. That fits the result: it keeps only 18% of the July flank signal. For that reason it's available to this study, and a normal pipeline run stops with a clear message if it's turned on.
+
+**An idea outside the brief:** hiding or dimming cropland would remove 41–80% of the area at once, more than any cluster filter. It wasn't tested as a filter, because new material can reach fields too, and a land-cover map from 2021 won't show recent changes.
+
+### One pair to check
+
+10-07 → 10-19 has 2.49 km² inside the danger zone, about 4 to 40 times the other pairs, and 1.20 km² of that is northwest of the summit. Those northwest slopes face away from the radar. This is the last pair before the 2026-10-30 eruption.
+
+It might be a false alarm, for example from weather. It might also be real change on the volcano before the eruption. **This study can't tell which**, so calling it quiet is an assumption. Check it against PHIVOLCS bulletins for October before tuning anything to remove it.
+
+### Limits
+
+- **One event.** All the July evidence comes from one pair, with brightness only, and the wedges are coarse flank shapes, not channels.
+- **Quiet is assumed.** Quiet pairs may hold real change. 07-15 → 07-27 has the highest flank total (0.375 km²), right after the event, and it can flag on coherence alone, which the July pair can't. So flank comparisons between pairs with and without coherence aren't like for like. The night 2 section compares them fairly, using brightness only.
+- **Land cover is from 2021**, at 10 m, and is read here at 20 m. Coconut groves count as tree cover, so some farming is in "other". WorldCover is context only, and isn't drawn on the map.
+- **Steep slopes:** 20° or more, from a 30 m elevation model, within 60° of the direction to the radar (77°). The product metadata says `lookDirection: Left` and `Ascending`, which gives that direction. The published images don't confirm it: average brightness barely changes with slope direction, probably because the product corrects for terrain.
+- **Sources** are cited in `site/data/sources.json` as `validation`, the closest value `docs/05` allows, since it has none for analysis.

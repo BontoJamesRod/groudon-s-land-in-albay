@@ -2,22 +2,24 @@
 
 Each site has one file, pipeline/sites/<id>.json, so a new site needs no code
 changes (FR-043). The file uses the column names of the `sites` table in
-docs/05-database-design.md, plus three pipeline-only settings that are never
+docs/05-database-design.md, plus four pipeline-only settings that are never
 published:
 
 - thresholds: the values that decide what counts as new material. They are
   PROVISIONAL until the owner sets the final values (docs/05, Open Question 2).
 - provisional_fields: which settings are still PROVISIONAL.
 - tracks: the radar tracks that cover the site.
+- filters: optional false-alarm filters (mrw/filters.py). All off unless the owner turns them on.
 """
 import json
 from datetime import datetime, timezone
 from pathlib import Path
 
 from mrw.contract_check import SITES, check_row
+from mrw.filters import FilterConfigError, check_filters
 
 SITES_FOLDER = Path(__file__).resolve().parents[1] / "sites"
-PIPELINE_ONLY = ("thresholds", "provisional_fields", "tracks")
+PIPELINE_ONLY = ("thresholds", "provisional_fields", "tracks", "filters")
 TIMESTAMPS = ("created_at", "updated_at")
 
 
@@ -79,6 +81,10 @@ def load_site_config(path):
     _check_bounds(config, path)
     _check_columns(config, path)
     _check_thresholds(config, path)
+    try:
+        check_filters(config.get("filters"))
+    except FilterConfigError as problem:
+        raise SiteConfigError(f"{problem} in site config: {path}") from problem
     return config
 
 

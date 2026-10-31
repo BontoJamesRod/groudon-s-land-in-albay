@@ -24,6 +24,11 @@
     "brightness_threshold_db": 3.0,
     "coherence_loss_threshold": 0.3
   },
+  "filters": {
+    "min_cluster_m2": null,
+    "high_confidence_only": false,
+    "persist_across_pairs": false
+  },
   "tracks": [
     {"track": 111, "frame": 8, "orbit_direction": "ascending"},
     {"track": 104, "frame": 82, "orbit_direction": "descending"},
