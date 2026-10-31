@@ -2,11 +2,11 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 00-project-brief.md v0.3 (Draft), 01-prd.md v0.1 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 00-project-brief.md v0.4 (Draft), 01-prd.md v0.2 (Draft) |
 
 ## 1. MVP Goal
 
-**This MVP proves that:** NISAR radar, shown in a simple public web app, can show non-experts where Mayon put new material after the Oct 30, 2026 eruption and which named channels it sits in, and that the same engine works on a second site on another continent.
+**This MVP proves that:** NISAR radar, shown in a simple public web app, can show non-experts how Mayon's named channels change between passes, including after the Oct 30, 2026 eruption, and that the same engine works on a second site on another continent.
 
 ## 2. MVP Constraints
 
@@ -27,11 +27,12 @@
 | F-05 | New-material layer | US-008, US-009 | The core result, made from real NISAR data (R2, R3, R5, R6) |
 | F-08 | "What am I looking at?" panel | US-012 | Makes radar understandable and keeps the app honest (R8) |
 | F-09 | Data sources panel | US-013 | Judges must see NISAR products named and dated (R2, R3) |
-| F-10 | Second showcase site | US-014, US-015 | Required for "locations around the world" (R7) |
+| F-10 | Second showcase site (two Panama pairs) | US-014, US-015 | Required for "locations around the world" (R7) |
 | F-11 | Public app and code | US-016 | Judges can't score what they can't open |
 | F-12 | Validation check | US-017 | Proves the core result is true; supports the Validity criterion |
 | F-13 | Mobile-friendly, color-blind-safe design | US-018 | Residents mainly use phones; cheaper to build in from the start |
 | F-19 | Channels and towns | US-023 | The link from new material to the people downstream (R8) |
+| F-20 | Channel timeline | US-024, US-025, US-026 | Shows how each channel changes from pass to pass; the owner's chosen feature for the Nov 5–10 build (R4, R8) |
 
 ## 4. Deferred
 
@@ -53,10 +54,11 @@
 4. They swipe between the before and after radar images. (US-007)
 5. They tap a detected area and read the card: town, distance to the summit, danger-zone status, confidence, and the channel it's in. (US-004, US-023)
 6. They step back through the timeline to the July 14, 2026 pyroclastic flow. (US-005)
-7. They open "What am I looking at?", "Data sources" and "How we checked this". (US-012, US-013, US-017)
-8. They switch to the second site and see the same method there. (US-014)
+7. They open the channel list, see which channels changed most, and open one to see its bars and strip. (US-024, US-025)
+8. They open "What am I looking at?", "Data sources" and "How we checked this". (US-012, US-013, US-017)
+9. They switch to the second site and see the same method there. (US-014)
 
-Behind the journey, the maintainer processes and publishes each pair and adds the second site from a config file. (US-009, US-015) The whole journey works on a phone. (US-018)
+Behind the journey, the maintainer processes and publishes each pair and adds the second site from a config file; the pipeline computes the channel areas. (US-009, US-015, US-026) The whole journey works on a phone. (US-018)
 
 ## 6. MVP Success Criteria
 
@@ -67,6 +69,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | 3 | Second site live (R7) | 1 site on another continent with ≥ 1 published pair by 2026-11-13 | Site list on the live app |
 | 4 | Result checked against an independent source | ≥ 1 pair with a validation record by 2026-11-13 | "How we checked this" panel on the live app |
 | 5 | Readable for non-experts (G-03) | ≥ 7 of 10 testers correctly say where new material is and which channel it's in, by 2026-11-30 | Short test session with a written answer sheet |
+| 6 | Channel timeline live (F-20) | At least 1 confirmed channel with its bars on the live app, by 2026-11-10 | Open the channel list on the live app |
 
 ## 7. Allowed Shortcuts
 
@@ -76,7 +79,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | Validation records are typed by hand from PHIVOLCS bulletins | A repeatable validation routine for every pair | More validated pairs in v1.1 |
 | Channel lines are prepared once and kept as a fixed file | A maintained channel dataset | Reviewed after the hackathon (v1.1) |
 | English only | Filipino and Bikol | F-16, US-020 (v1.2) |
-| The second site has 1 pair | A full timeline for the second site | v1.1 |
+| The second site has 2 pairs | A full timeline for the second site | v1.1 |
 | No staging site; the maintainer checks on localhost before publishing | A separate staging deployment | Reviewed in v1.1 |
 
 ## 8. Risks and Mitigations
@@ -86,8 +89,8 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | Space Apps or local-event rules don't allow code written before 2026-11-14 | [TBD] | High | Check the rules first (brief Open Question 5); if not allowed, keep the docs and rebuild during the event from the roadmap |
 | The eruption pair shows no clear new material | Med | High | Keep the July 14, 2026 pyroclastic-flow pair as the backup showcase |
 | Post-eruption products arrive later than 36–72 h | Med | Med | Prepare the pipeline on older pairs first so the eruption pair takes hours, not days |
-| No suitable second site is found in time | Med | High | Choose the second site in the first days; prefer an event with an obvious surface change |
-| Thresholds are tuned to make the eruption look good | Med | High | Fix thresholds on quiet pairs before looking at the eruption pair (PRD Open Question 2) |
+| The Panama result hasn't been checked against mapped landslides | Med | Med | Show it as one plain change map with its limits stated, and compare it with mapped landslides before publishing |
+| Thresholds are tuned to make the eruption look good | Med | High | Done: the thresholds were set on 2026-11-01, before the post-eruption passes were opened (FR-023) |
 | Text reads like a lahar forecast | Med | High | Review all text against FR-038 before release |
 | Large downloads on slow internet; Colab resets | High | Med | Crop early, cache downloads, save outputs to Google Drive |
 | Solo beginner builder runs out of time | Med | High | Build the thin slice first (one pair end to end), then widen; deferred items stay deferred |
@@ -105,7 +108,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | 1 | How many hours per week can the builder spend? | §2, 07-roadmap |
 | 2 | Who are the 10 testers, and when can the test session happen? | §6 criterion 5 |
 | 3 | Do the event rules allow code written before 2026-11-14? | §8 |
-| 4 | Which second site? | F-10, §6 criterion 3 |
+| 4 | Closed on 2026-11-01: Panama, two pairs. | F-10, §6 criterion 3 |
 
 ## 11. Conflicts with Earlier Documents
 
@@ -116,3 +119,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | Added F-20 Channel timeline and criterion 6. Second site is Panama. |

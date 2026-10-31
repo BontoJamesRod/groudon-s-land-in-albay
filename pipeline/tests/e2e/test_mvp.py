@@ -21,7 +21,6 @@ LATEST_PAIR = "mayon_A111F008_20261007_20261019"
 SUMMIT = (13.2572, 123.6856)
 DISCLAIMER = "This is not an official warning. Follow PHIVOLCS and your LGU."
 NO_ERUPTION_PAIR = "No eruption pair: nothing acquired on or after 2026-10-30 may be opened until the thresholds are set."
-NO_CHANNELS = "Channels (T-010, T-028) aren't built: they wait for the owner's choice of channel source."
 
 
 def map_center(page):
@@ -182,11 +181,11 @@ def test_tc010_outside_radar_coverage(app):
     expect(card(app)).to_contain_text("outside radar coverage")
 
 
-def test_tc011_masked_slope(app):
+def test_tc011_flagged_invalid_by_the_product(app):
     row = cell(253)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text("No radar data here")
-    expect(card(app)).to_contain_text("a slope the radar can't see")
+    expect(card(app)).to_contain_text("the radar product marked this spot as invalid")
 
 
 def test_tc012_inside_danger_zone(app):
@@ -308,18 +307,22 @@ def test_tc031_radar_sources_on_the_latest_pair(app):
 
 
 def test_tc032_context_sources(app):
-    """Channels aren't listed yet, because channels aren't built (see the TC-044 to TC-047 skips)."""
     app.click("#sources-button")
     context = app.locator("#sources-panel h3:has-text('Context data') + ul")
     expect(context).to_be_visible()
     for row in read_data("sources.json"):
+        if row.get("site_id") not in (None, "mayon"):
+            continue  # another site's source (TC-077)
         expect(context).to_contain_text(row["name"])
         expect(context).to_contain_text(row["license"])
 
 
-@pytest.mark.skip(reason="No second site: choosing one is the owner's decision.")
-def test_tc033_switch_to_the_second_site():
-    pass
+def test_tc033_switch_to_the_second_site(app):
+    app.click("#site-name")
+    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    expect(app.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
+    expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
+    expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
 
 
 def test_tc034_second_site_fails_and_mayon_stays(page, site_url):
@@ -419,7 +422,7 @@ def test_tc042_credit_link_is_a_real_44_px_target_and_still_shows(page, site_url
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    link = page.locator(".leaflet-control-attribution a")
+    link = page.locator(".leaflet-control-attribution a", has_text="Leaflet")
     expect(link).to_be_visible()
     expect(link).to_contain_text("Leaflet")
     box = link.bounding_box()
@@ -453,9 +456,3 @@ def test_tc043_colors_stay_apart(app, deficiency):
     assert distance > 40, f"{low} and {high} are too close"
     for row in app.locator("#legend-rows li").all_inner_texts():
         assert "Confidence:" in row
-
-
-@pytest.mark.skip(reason=NO_CHANNELS)
-@pytest.mark.parametrize("case", ["TC-044", "TC-045", "TC-046", "TC-047"])
-def test_tc044_to_047_channels(case):
-    pass

@@ -1,8 +1,8 @@
 # Progress
 
 **Project:** Mayon Radar Watch
-**Current step:** Review all drafts. Start by fixing consistency-02 issues 1 and 2, then approve 00.
-**Last updated:** 2026-10-31
+**Current step:** The Channel timeline (T-073, T-010, T-028, T-074 to T-077, T-091) is merged into `main`, with 4 confirmed channels.
+**Last updated:** 2026-11-01
 
 Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · `Skipped` · `Reopened`
 
@@ -10,17 +10,31 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 
 | Order | Document | Status | Version | Approved on | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `00-project-brief.md` | Draft ready | 0.3 | — | Consistency-02 issues 1 and 7 |
-| 2 | `01-prd.md` | Draft ready | 0.1 | — | Consistency-02 issues 2, 3, 8, 9 |
-| 3 | `02-mvp-scope.md` | Draft ready | 0.1 | — | All Must features included |
-| 4 | `03-user-flows.md` | Draft ready | 0.1 | — | 11 Suggestion messages to accept or reject |
-| 5 | `04-technical-design.md` | Draft ready | 0.1 | — | Stack gate open: frontend approach and hosting |
-| 6 | `05-database-design.md` | Draft ready | 0.1 | — | No database engine: static files (ADR-003) |
-| 7 | `06-api-spec.md` | Draft ready | 0.1 | — | No backend: static-file contract (ADR-001) |
+| 1 | `00-project-brief.md` | Draft ready | 0.4 | — | Summary now about channels; F-20 added |
+| 2 | `01-prd.md` | Draft ready | 0.2 | — | FR-060 to FR-069, US-024 to US-026 |
+| 3 | `02-mvp-scope.md` | Draft ready | 0.2 | — | F-20 in the MVP |
+| 4 | `03-user-flows.md` | Draft ready | 0.2 | — | SCR-13, SCR-14, Flow 9 |
+| 5 | `04-technical-design.md` | Draft ready | 0.2 | — | Final rule in ADR-006; ADR-011 |
+| 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
+| 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.1 | — | 49 tasks; no dates until weekly hours are known |
-| 10 | `08-test-plan.md` | Draft ready | 0.1 | — | 60 test cases; 41 / 41 MVP acceptance criteria covered |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 91 tasks; ID errata in §11 |
+| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 81 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
+| 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
+
+## Where Things Stand
+
+| Item | State on 2026-11-01 |
+| --- | --- |
+| Gate 1 (channels) | Decided: build only the Channel timeline (F-20), on top of F-19. No quarry hint or rain labels (00 §6) |
+| Gate 2 (rule and thresholds) | Decided before any post-eruption data was opened. The final rule is live on the public site on 11 pairs |
+| Products | NISAR products are still PROVISIONAL |
+| Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
+| Second site | Panama, two pairs, same final rule with no per-site tuning, published on `night-1` with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088). Not on the public site until `night-1` is merged |
+| Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
+| Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag was then given as not confirmed, and stays off (`pipeline/reports/owner-checks.md`) |
+| Next | T-078, which wasn't in the owner's request; T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
 
 ## After Launch
 
@@ -38,17 +52,28 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-10-31 | One core question: where new material landed, and which channels and towns are near it | 00 §1 (v0.2) |
 | 2026-10-31 | Past-years water comparison (F-15) removed; water-shortage users dropped | 00 §5, §13 (v0.2) |
 | 2026-10-31 | All documents drafted in one pass at the owner's request, instead of one at a time with approval between | This file |
+| 2026-11-01 | Gate 1: the Nov 5–10 build is the Channel timeline only (F-20) | 00 §5, 07 §3 |
+| 2026-11-01 | Second site is Panama, for R7, using the same final rule. Two pairs, by owner decision | 00 §5, F-10 |
+| 2026-11-01 | Channel strip width set in the site config, the same as the channel test | 01 FR-064, 07 T-080 |
+| 2026-11-01 | Plan files moved from `docs/` to `plans/` | 07 T-081 |
+| 2026-11-01 | Ground-movement mask moved to the site config; reach distance read from it | 07 T-082, T-084 |
+| 2026-11-01 | Legend labels renamed to say which signals agree; 11 pairs republished | 07 T-085 |
+| 2026-10-31 | Detections are limited by a reach distance from the summit set in the site config (live since Oct 31) | 01 FR-060, 04 ADR-006 |
+| 2026-11-01 | Gate 2: final classification rule and thresholds locked before any post-eruption data was opened. Brightness change flags a pixel; coherence loss only raises it to high confidence. Values live in the site config | 01 FR-023, 04 ADR-006 |
+| 2026-11-01 | Blind cutoff lifted for the Oct 31 passes only | 04 ADR-006, `CLAUDE.md` |
+| 2026-11-01 | Pair D104 2026-09-25 → 2026-10-07 stays off the map by owner decision, because its baseline's coherence is unusually high | This file |
+| 2026-11-01 | Channel lines confirmed by the owner in Google Earth Pro; only those are published. Change is counted within the reach distance, and what lies past it is drawn as not checked | `pipeline/reports/owner-checks.md`, 01 FR-065, FR-071 |
 
 ## Open Questions Carried Forward
 
 | # | Question | From | Blocks |
 | --- | --- | --- | --- |
 | 1 | Do the Space Apps and Legazpi local-event rules allow code written before 2026-11-14? | 00 OQ5 | All of Phase 1 in 07 |
-| 2 | Which second site, and which boundary data for it? | 00 OQ4, 01 OQ5 | F-10, T-036, consistency-02 #2, #6 |
-| 3 | What brightness-change and coherence-loss thresholds count as new material? | 00 OQ7, 01 OQ2 | FR-023, T-016 (before 2026-11-03) |
-| 4 | Where do the channel lines come from? | 01 OQ4 | F-19, T-010 |
-| 5 | What distance from a channel counts as "in or near" it? | 01 OQ3 | US-023/AC-2, TC-045, TC-046 |
-| 6 | Frontend approach and hosting: accept the Suggestions (plain JavaScript, GitHub Pages)? | 04 OQ1, OQ2 | T-004, T-005 |
+| 2 | Closed on 2026-11-01: the owner accepted CC BY-SA 4.0 for the Panama borders. | 01 OQ5 | Nothing now |
+| 3 | Closed on 2026-11-01: the owner confirmed Basud, Lidong, Mi-isi and Padang. | 01 OQ4 | Nothing now |
+| 4 | Closed on 2026-11-01: strip width is in the site config. | 01 OQ8 | Nothing now |
+| 5 | Answered for now, and the owner can change it: "in or near" means inside the channel's strip. | 01 OQ3 | Nothing now |
+| 6 | Frontend approach and hosting: accept the Suggestions (plain JavaScript, GitHub Pages)? They're what was built. | 04 OQ1, OQ2 | Nothing now |
 | 7 | How many hours per week can the builder spend? | 02 OQ1 | Dates in 07 |
 | 8 | How do people near Mayon find out today what changed, and what goes wrong with that? | 00 OQ1, OQ2 | 00 §2 |
 | 9 | Monthly budget? | 00 OQ6 | 04 §2 |

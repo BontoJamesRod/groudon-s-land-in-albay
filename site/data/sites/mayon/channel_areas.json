@@ -1,0 +1,449 @@
+{
+ "data": [
+  {
+   "id": "mayon_basud__mayon_A111F008_20260621_20260703",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260621_20260703",
+   "flagged_area_km2": 0.011,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260621_20260703",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260621_20260703",
+   "flagged_area_km2": 0.002,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260621_20260703",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260621_20260703",
+   "flagged_area_km2": 0.053,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260621_20260703",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260621_20260703",
+   "flagged_area_km2": 0.027,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260703_20260715",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260703_20260715",
+   "flagged_area_km2": 0.01,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260703_20260715",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260703_20260715",
+   "flagged_area_km2": 0.002,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260703_20260715",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260703_20260715",
+   "flagged_area_km2": 0.025,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260703_20260715",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260703_20260715",
+   "flagged_area_km2": 0.014,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260715_20260727",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260715_20260727",
+   "flagged_area_km2": 0.009,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260715_20260727",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260715_20260727",
+   "flagged_area_km2": 0.002,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260715_20260727",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260715_20260727",
+   "flagged_area_km2": 0.028,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260715_20260727",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260715_20260727",
+   "flagged_area_km2": 0.003,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260727_20260820",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260727_20260820",
+   "flagged_area_km2": 0.007,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260727_20260820",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260727_20260820",
+   "flagged_area_km2": 0.009,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260727_20260820",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260727_20260820",
+   "flagged_area_km2": 0.039,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260727_20260820",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260727_20260820",
+   "flagged_area_km2": 0.013,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260820_20260901",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260820_20260901",
+   "flagged_area_km2": 0.006,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260820_20260901",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260820_20260901",
+   "flagged_area_km2": 0.006,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260820_20260901",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260820_20260901",
+   "flagged_area_km2": 0.022,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260820_20260901",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260820_20260901",
+   "flagged_area_km2": 0.011,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260901_20260913",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260901_20260913",
+   "flagged_area_km2": 0.009,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260901_20260913",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260901_20260913",
+   "flagged_area_km2": 0.002,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260901_20260913",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260901_20260913",
+   "flagged_area_km2": 0.018,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260901_20260913",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260901_20260913",
+   "flagged_area_km2": 0.011,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_D104F082_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_D104F082_20260913_20260925",
+   "flagged_area_km2": 0.015,
+   "checked_area_km2": 3.99,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_D104F082_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_D104F082_20260913_20260925",
+   "flagged_area_km2": 0.018,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_D104F082_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_D104F082_20260913_20260925",
+   "flagged_area_km2": 0.013,
+   "checked_area_km2": 3.748,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_D104F082_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_D104F082_20260913_20260925",
+   "flagged_area_km2": 0.017,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260913_20260925",
+   "flagged_area_km2": 0.017,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260913_20260925",
+   "flagged_area_km2": 0.002,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260913_20260925",
+   "flagged_area_km2": 0.032,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260913_20260925",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260913_20260925",
+   "flagged_area_km2": 0.007,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20260925_20261007",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20260925_20261007",
+   "flagged_area_km2": 0.006,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20260925_20261007",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20260925_20261007",
+   "flagged_area_km2": 0.003,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20260925_20261007",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20260925_20261007",
+   "flagged_area_km2": 0.022,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20260925_20261007",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20260925_20261007",
+   "flagged_area_km2": 0.009,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_D104F082_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_D104F082_20261007_20261019",
+   "flagged_area_km2": 0.022,
+   "checked_area_km2": 3.99,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_D104F082_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_D104F082_20261007_20261019",
+   "flagged_area_km2": 0.019,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_D104F082_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_D104F082_20261007_20261019",
+   "flagged_area_km2": 0.043,
+   "checked_area_km2": 3.748,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_D104F082_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_D104F082_20261007_20261019",
+   "flagged_area_km2": 0.029,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_basud__mayon_A111F008_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_basud",
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "flagged_area_km2": 0.015,
+   "checked_area_km2": 3.993,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_lidong__mayon_A111F008_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_lidong",
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "flagged_area_km2": 0.008,
+   "checked_area_km2": 3.555,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_miisi__mayon_A111F008_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_miisi",
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "flagged_area_km2": 0.024,
+   "checked_area_km2": 3.747,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  },
+  {
+   "id": "mayon_padang__mayon_A111F008_20261007_20261019",
+   "site_id": "mayon",
+   "channel_id": "mayon_padang",
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "flagged_area_km2": 0.006,
+   "checked_area_km2": 2.505,
+   "created_at": "2026-10-31T21:49:07Z",
+   "updated_at": "2026-10-31T23:13:03Z"
+  }
+ ],
+ "meta": {
+  "generated_at": "2026-10-31T23:13:03Z",
+  "schema_version": "1.0",
+  "license": "ODbL 1.0, (c) OpenStreetMap contributors"
+ }
+}

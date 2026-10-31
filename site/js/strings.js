@@ -26,11 +26,12 @@ export const STRINGS = {
   pairLabel: (range, timeZone, track, frame, direction) =>
     `${range} (${timeZone}), track ${track}, frame ${frame}, ${direction}`,
   optionWithEvents: (range, names) => `${range}: ${names}`,
+  optionWithGap: (text, note) => `${text} (${note})`,
+  gapNote: (days) => `${days}-day gap, not comparable`,
   eventInPeriod: (names) => `Event in this period: ${names}`,
   layerUnits: (units) => `Units: ${units}`,
   totalArea: (km2) => `Total detected area: ${km2.toFixed(2)} km²`,
   nothingDetected: (before, after) => `No new material detected between ${before} and ${after}`,
-  boundaryAttribution: "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)",
   tileAttribution: "Tiles &copy; Esri",
 
   // Readout card (SCR-02)
@@ -38,7 +39,7 @@ export const STRINGS = {
   readoutGridError: "Couldn't load radar values. Try again.",
   noRadarData: "No radar data here",
   noDataReasons: {
-    253: "a slope the radar can't see",
+    253: "the radar product marked this spot as invalid",
     254: "sea",
     255: "outside radar coverage",
   },
@@ -46,6 +47,9 @@ export const STRINGS = {
   outsideDangerZone: "Outside the danger zone",
   outsideTowns: "Outside the mapped towns",
   distanceToSummit: (km) => `Distance to summit: ${km.toFixed(1)} km`,
+  inOrNearChannel: (names) => `New material detected in or near ${names}`,
+  notInChannel: "Not in a named channel on this map",
+  channelTowns: (names) => `Towns along this channel: ${names}`,
   noNewMaterial: "No new material detected. Confidence: none",
   beyondReach: (km) => `Not checked: this map only looks within ${km} km of the summit`,
   classWithConfidence: (label, confidence) => `${label}. Confidence: ${confidence}`,
@@ -76,8 +80,8 @@ export const STRINGS = {
   helpColorsTitle: "What each color means",
   helpNoColor: "No color: no new material detected, or no radar data.",
   helpClasses: [
-    "Orange: possible new material (the brightness changed). Confidence: low",
-    "Dark orange: new material (the brightness changed, and the passes became less alike). Confidence: high",
+    "Orange: possible new material (brightness only). Confidence: low",
+    "Dark orange: likely new material (brightness and coherence agree). Confidence: high",
   ],
   helpConfidenceTitle: "Confidence levels",
   helpConfidence: [
@@ -92,6 +96,7 @@ export const STRINGS = {
     "At Mayon, this map only looks within 10 km of the summit, shown by the white dotted ring. It can't show anything beyond that, including in towns further away.",
     "Steep slopes facing away from the radar can't be seen, and small deposits can be missed.",
     "The radar products are provisional. The detection thresholds are set, but they haven't been checked against field reports.",
+    "Only channels the project owner has checked are drawn. Other channels also drain Mayon, and they aren't on this map.",
   ],
   helpOfficialTitle: "Official warnings",
   helpOfficial: "For warnings and advice, follow PHIVOLCS and your LGU.",
@@ -124,11 +129,66 @@ export const STRINGS = {
   checkNo: "No",
   checkDetected: { yes: "Yes", no: "No", not_visible: "Not visible to radar" },
 
+  // Channel layer (SCR-01)
+  channelLayerLabel: "Channels",
+  channelsUnavailable: "Channels unavailable",
+  channelLineNote: "Solid line: checked. Dashed white line: past the reach of this map, so not checked.",
+  channelSources: "Names: PHIVOLCS. Lines: OpenStreetMap contributors (ODbL), confirmed by the project owner.",
+  channelsButton: "Channels",
+  channelsTitle: "Channels",
+  channelsLoading: "Loading channel changes…",
+  channelsError: "Couldn't load channel changes. Try again.",
+  channelsEmpty: "No confirmed channels yet for this site",
+  channelsLatest: (range, track) => `Most changed first, since the last pass: ${range}, track ${track}`,
+  channelArea: (km2) => `${km2.toFixed(3)} km²`,
+  channelNoData: "No radar data",
+  channelsHow: (halfWidth, reach) => `This is the area flagged as possible or likely new material in a strip ${halfWidth} m on each side of the line${reach ? `, within ${reach} km of the summit` : ""}.`,
+  channelsOnlyConfirmed: "Only channels the project owner has checked are listed. Other channels also drain Mayon.",
+  channelBack: "Back",
+  channelBarsLead: "Area flagged in each radar pass. Tap one to show that pass on the map.",
+  channelBarLabel: (range, track) => `${range}, track ${track}`,
+  channelBarsScale: "All channels use the same scale, so their bars can be compared.",
+  channelNotChecked: "Not checked",
+  channelNotCheckedNote: (reach) => `The dashed white part of this channel is more than ${reach} km from the summit. It's not checked and not counted, which doesn't mean that nothing changed there.`,
+  channelCredit: 'Channel lines: <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> (ODbL)',
+
   // Site picker (SCR-08)
   pickerTitle: "Choose a site",
   pickerEmpty: "No sites available yet",
   pickerOption: (name, country) => `${name}, ${country}`,
 };
+
+// A site whose map shows change in general, not volcanic material. Its `wording_set` in
+// sites.json is "plain_change". Anything not listed here is the same for every site.
+const PLAIN_CHANGE = {
+  drawerShow: "Show legend and details (PROVISIONAL radar products)",
+  disclaimer: "This is not an official warning. Follow SINAPROC and your local authorities.",
+  nothingDetected: (before, after) => `No change detected between ${before} and ${after}`,
+  noNewMaterial: "No change detected. Confidence: none",
+  helpHowRadar: [
+    STRINGS.helpHowRadar[0],
+    "Comparing two passes from the same angle shows where the ground changed. Changed ground reflects the radar differently, and it can make the two passes look less alike.",
+  ],
+  helpNoColor: "No color: no change detected, or no radar data.",
+  helpClasses: [
+    "Orange: possible change (brightness only). Confidence: low",
+    "Dark orange: likely change (brightness and coherence agree). Confidence: high",
+  ],
+  helpLimits: [
+    STRINGS.helpLimits[0],
+    "This map shows where the ground changed, not why. Crops, rain and building work can look the same to the radar.",
+    "Steep slopes facing away from the radar can't be seen, and small changes can be missed.",
+    STRINGS.helpLimits[4],
+  ],
+  helpOfficial: "For warnings and advice, follow SINAPROC and your local authorities.",
+  helpOfficialLink: "SINAPROC website",
+  helpOfficialUrl: "https://www.sinaproc.gob.pa/",
+};
+
+// The text for one site: the shared text, with that site's wording on top.
+export function textFor(site) {
+  return site && site.wording_set === "plain_change" ? { ...STRINGS, ...PLAIN_CHANGE } : STRINGS;
+}
 
 // Put the text into the page's fixed elements: `data-text` sets what it shows,
 // and `data-label` sets what a screen reader says.

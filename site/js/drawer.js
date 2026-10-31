@@ -2,19 +2,19 @@
 // and legend slide up when asked for. On a large screen the CSS hides the handle
 // and always shows everything, so nothing here has any effect there.
 
-import { STRINGS } from "./strings.js";
+import { STRINGS, textFor } from "./strings.js";
 
 const SWIPE_PX = 30; // a finger moving less than this is a tap, not a swipe
 
-// `onResize` runs after the drawer changes the map's height.
-export function createDrawer(panel, toggle, onResize) {
+// `onResize` runs after the drawer changes the map's height. `getSite` gives the site on screen.
+export function createDrawer(panel, toggle, onResize, getSite) {
   let startY = null;
   let swiped = false;
 
   function setOpen(open) {
     panel.classList.toggle("drawer-closed", !open);
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.textContent = open ? STRINGS.drawerHide : STRINGS.drawerShow;
+    toggle.textContent = open ? STRINGS.drawerHide : textFor(getSite()).drawerShow;
     onResize();
   }
 
@@ -48,5 +48,7 @@ export function createDrawer(panel, toggle, onResize) {
     close: () => {
       if (isOpen()) setOpen(false);
     },
+    // The closed handle's text depends on the site.
+    siteChanged: () => setOpen(isOpen()),
   };
 }

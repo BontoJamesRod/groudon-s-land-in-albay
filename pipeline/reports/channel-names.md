@@ -1,6 +1,6 @@
 # Channel names: PHIVOLCS channels matched to OpenStreetMap lines
 
-**These are candidates, not a channel map: 1 high, 3 medium and 6 low confidence.** Nothing has been checked by eye or against a hazard map. Open `pipeline/context/channel_name_candidates.kml` in Google Earth: green is high, yellow medium, red low.
+**These are candidates, not a channel map: 1 high, 3 medium and 6 low confidence.** Nothing has been checked by eye or against a hazard map. Open `pipeline/context/channel_name_candidates.kml` in Google Earth: green is high, yellow medium, red low. The owner's verdicts on these lines are in `pipeline/reports/owner-checks.md`, and only the lines confirmed there are used.
 
 | Channel | OSM ids | Length (km) | Start from summit (km) | Town reached | Confidence | Reason | Check by eye |
 | --- | --- | --- | --- | --- | --- | --- | --- |

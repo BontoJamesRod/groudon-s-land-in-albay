@@ -110,14 +110,58 @@ async function loadEvents(folder) {
   }
 }
 
+const CHANNEL_FIELDS = ["id", "name", "town_ids", "strip_geometry", "checked_geometry", "label_lat", "label_lon"];
+
+// Read a site's channels.
+export async function loadChannels(siteId) {
+  const path = `data/sites/${siteId}/channels.geojson`;
+  const channels = await loadGeoJson(path);
+  channels.features.forEach((channel) => requireFields(channel.properties, CHANNEL_FIELDS, path));
+  return channels;
+}
+
+const AREA_FIELDS = ["id", "channel_id", "pair_id", "checked_area_km2"];
+
+// Read a site's channel areas (docs/06, API-012). Every row must belong to a known channel and pair.
+export async function loadChannelAreas(siteId, channels, pairs) {
+  const path = `data/sites/${siteId}/channel_areas.json`;
+  const rows = await loadJson(path);
+  if (!Array.isArray(rows)) throw new DataError("INVALID_DATA", path, "is not a list");
+  const channelIds = new Set(channels.features.map((channel) => channel.properties.id));
+  const pairIds = new Set(pairs.map((pair) => pair.id));
+  for (const row of rows) {
+    requireFields(row, AREA_FIELDS, path);
+    if (!channelIds.has(row.channel_id) || !pairIds.has(row.pair_id)) {
+      throw new DataError("INVALID_DATA", path, `has a row for an unknown channel or pair: ${row.id}`);
+    }
+    if (row.flagged_area_km2 == null && row.checked_area_km2 > 0) {
+      throw new DataError("INVALID_DATA", path, `has no flagged area for checked ground: ${row.id}`);
+    }
+  }
+  return rows;
+}
+
+// The channel file is optional for the screen: without it, the map has no channel layer (03 section 5).
+// A site with no channel data has nothing to load, so it isn't reported as a failure.
+async function loadOptionalChannels(site) {
+  if (site.channel_strip_half_width_m == null) return { channels: null, channelsFailed: false };
+  try {
+    return { channels: await loadChannels(site.id), channelsFailed: false };
+  } catch (problem) {
+    console.warn(problem.message);
+    return { channels: null, channelsFailed: true };
+  }
+}
+
 // Load what a site needs before any pair is shown.
-export async function loadSiteData(siteId) {
-  const folder = `data/sites/${siteId}`;
-  const [towns, land, pairs, events] = await Promise.all([
+export async function loadSiteData(site) {
+  const folder = `data/sites/${site.id}`;
+  const [towns, land, pairs, events, channelData] = await Promise.all([
     loadGeoJson(`${folder}/towns.geojson`),
     loadGeoJson(`${folder}/land.geojson`),
     loadJson(`${folder}/pairs.json`),
     loadEvents(folder),
+    loadOptionalChannels(site),
   ]);
   if (!Array.isArray(pairs)) throw new DataError("INVALID_DATA", `${folder}/pairs.json`, "is not a list");
   for (const pair of pairs) {
@@ -127,7 +171,7 @@ export async function loadSiteData(siteId) {
     }
     checkAreas(pair, `${folder}/pairs.json`);
   }
-  return { towns, land, pairs, events };
+  return { towns, land, pairs, events, ...channelData };
 }
 
 // Download a layer's value grid. Its size must match the record exactly (docs/06, API-010).

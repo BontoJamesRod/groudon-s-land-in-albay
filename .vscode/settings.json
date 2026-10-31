@@ -2,6 +2,7 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.testing.pytestEnabled": true,
   "python.testing.unittestEnabled": false,
+  "cSpell.words": ["importmap"],
   "files.exclude": {
     "**/__pycache__": true,
     "**/.pytest_cache": true

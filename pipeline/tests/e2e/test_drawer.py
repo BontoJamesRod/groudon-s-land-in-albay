@@ -7,6 +7,7 @@ from .conftest import open_drawer_if_closed, prepare_page, wait_until_ready
 pytestmark = pytest.mark.e2e
 
 DISCLAIMER = "This is not an official warning. Follow PHIVOLCS and your LGU."
+DEFAULT_ZOOM = 12
 
 
 @pytest.fixture
@@ -109,6 +110,29 @@ def test_danger_zone_label_shows_clear_of_the_credits_at_the_default_view(phone)
     area = phone.locator("#map").bounding_box()
     assert label["y"] + label["height"] <= credits["y"]
     assert label["y"] >= area["y"]
+
+
+def open_at(page, site_url, width, height):
+    prepare_page(page, width=width, height=height)
+    page.goto(site_url)
+    wait_until_ready(page)
+
+
+def test_tc082_a_short_phone_opens_one_zoom_step_out_with_the_label_clear(page, site_url):
+    open_at(page, site_url, 360, 640)
+    assert page.evaluate("testMap.getZoom()") == DEFAULT_ZOOM - 1
+    center = page.evaluate("(() => { const c = testMap.getCenter(); return [c.lat, c.lng]; })()")
+    assert center == pytest.approx([13.2572, 123.6856], abs=0.001)
+    label = page.locator(".zone-label").bounding_box()
+    credits = page.locator(".leaflet-control-attribution").bounding_box()
+    assert label["y"] >= page.locator("#map").bounding_box()["y"]
+    assert label["y"] + label["height"] <= credits["y"]
+
+
+@pytest.mark.parametrize("width, height", [(390, 844), (1280, 500)])
+def test_tc082_a_tall_phone_or_a_short_desktop_keeps_the_default_zoom(page, site_url, width, height):
+    open_at(page, site_url, width, height)
+    assert page.evaluate("testMap.getZoom()") == DEFAULT_ZOOM
 
 
 def test_helper_opens_only_when_closed(phone):

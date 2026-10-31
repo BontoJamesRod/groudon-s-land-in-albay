@@ -3,10 +3,10 @@
 Run from the project folder:
     python pipeline/reports/panama_trial.py
 
-Output goes to pipeline/out/ only, never site/data/, and no site is chosen by this. The
-config lives here, not in pipeline/sites/, so the publish step can't list this site. It
-measures the pair spanning the 2026-10-09 earthquake and the quiet pair before it.
-Thresholds are the same PROVISIONAL values as Mayon: nothing is tuned for this site.
+Output goes to pipeline/out/ only, never site/data/. The config lives here, not in
+pipeline/sites/, so the publish step can't list this site. It measures the pair spanning the
+2026-10-09 earthquake and the quiet pair before it. The rule and thresholds are read from
+Mayon's config when this runs: nothing is tuned for this site.
 """
 import json
 import sys
@@ -23,7 +23,7 @@ sys.path.insert(0, str(REPORTS.parent))
 
 from mrw.classify import HIGH, LOW, classify
 from mrw.coherence import GUNW_DATASETS, GUNW_GROUP, compute_coherence_loss
-from mrw.config import load_site_config
+from mrw.config import load_site, load_site_config
 from mrw.contract_check import check_data_dir
 from mrw.download import read_crop, total_bytes_logged
 from mrw.export import OUT_FOLDER, site_bounds, write_pair
@@ -54,7 +54,7 @@ def make_land(bounds):
     land = unary_union([make_valid(shape(f["geometry"])).intersection(site) for f in features])
     LAND_PATH.write_text(json.dumps({"type": "Feature", "properties": {
         "source": "geoBoundaries gbOpen PAN ADM2 (Smithsonian Tropical Research Institute, 2012)",
-        "license": "CC BY 4.0"}, "geometry": mapping(land)}) + "\n", encoding="utf-8")
+        "license": "CC BY-SA 4.0"}, "geometry": mapping(land)}) + "\n", encoding="utf-8")
     return land
 
 
@@ -82,7 +82,7 @@ def cluster_mask(result):
 def measure(result, loss, config):
     """Report each signal's area, over the whole site and in the cluster box."""
     thresholds = config["thresholds"]
-    classes = classify(result["change_db"], loss, result["reasons"], thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
+    classes = classify(result["change_db"], loss, result["reasons"], thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"], rule=thresholds["rule"])
     cell_km2 = result["spacing_x_m"] * result["spacing_y_m"] / 1e6
     has_value = result["reasons"] == HAS_VALUE
     near = cluster_mask(result)
@@ -92,7 +92,7 @@ def measure(result, loss, config):
     def km2(cells):
         return round(float(np.count_nonzero(cells)) * cell_km2, 3)
     flagged = np.isin(classes, (LOW, HIGH))
-    return {"coherence_used": loss is not None, "land_km2": km2(has_value), "valid_share": round(float(has_value.mean()), 3),
+    return {"coherence_used": loss is not None, "flagged_share_of_land": round(km2(flagged) / km2(has_value), 3), "land_km2": km2(has_value), "valid_share": round(float(has_value.mean()), 3),
             "low_km2": km2(classes == LOW), "high_km2": km2(classes == HIGH), "total_km2": km2(flagged),
             "brightness_km2": km2(bright), "cluster_land_km2": km2(has_value & near), "cluster_total_km2": km2(flagged & near),
             "cluster_high_km2": km2((classes == HIGH) & near), "cluster_brightness_km2": km2(bright & near),
@@ -101,6 +101,8 @@ def measure(result, loss, config):
 
 def main():
     config = load_site_config(CONFIG_PATH)
+    # The same final rule and values as Mayon, whatever the trial config file still holds.
+    config["thresholds"] = load_site("mayon")["thresholds"]
     bounds = site_bounds(config)
     land = make_land(bounds)
     start_bytes = total_bytes_logged()
@@ -118,7 +120,8 @@ def main():
     results["after_pass_start_utc"] = pairs[EVENT_PAIR]["after"]["acquired_start"]
     results["gb_fetched"] = round((total_bytes_logged() - start_bytes) / 1e9, 3)
     results["contract_errors_pipeline_out"] = len(check_data_dir(OUT_FOLDER, published=False))
-    (REPORTS / "panama-trial.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    (OUT_FOLDER / "reports").mkdir(exist_ok=True)
+    (OUT_FOLDER / "reports" / "panama-trial-final-rule.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
     print("GB fetched", results["gb_fetched"], "contract errors", results["contract_errors_pipeline_out"], "after pass", results["after_pass_start_utc"])
 
 

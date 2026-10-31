@@ -5,5 +5,6 @@
 - The planning docs in `docs/` are the spec: 04 design, 05 data files, 06 file contract, 07 tasks, 08 tests. Don't edit them unless the owner asks.
 - Never commit `raw/`, `*.h5`, `pipeline/out/` or credentials. Never print Earthdata credentials.
 - Never push or merge to `main` unless the owner asks.
+- Use only task IDs that exist in `docs/07-roadmap.md` in commit messages. If the work isn't there, add it to 07 first, with the next free ID.
 - The owner is a Python beginner: keep code simple and explain radar steps in plain comments.
 - The owner set the final thresholds on 2026-11-01, and lifted the blind cutoff to open the Oct 31 passes only. Never open NISAR products acquired on or after 2026-11-01 (UTC) unless the owner moves `BLIND_CUTOFF` again.

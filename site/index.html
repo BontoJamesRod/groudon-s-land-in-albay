@@ -5,20 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=71792ce5eb">
+  <link rel="stylesheet" href="css/app.css?v=b7402d78eb">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
   <header class="topbar">
-    <button id="site-name" class="site-name" type="button" data-text="appName"></button>
+    <h1 class="site-title"><button id="site-name" class="site-name" type="button" data-text="appName"></button></h1>
     <span class="topbar-actions">
+      <button id="channels-button" type="button" data-text="channelsButton" hidden></button>
       <button id="search-button" type="button" data-text="searchButton"></button>
       <button id="help-button" type="button" data-text="helpButton"></button>
     </span>
   </header>
 
-  <div class="map-area">
-    <main id="map" data-label="mapLabel"></main>
+  <div class="map-row">
+  <main class="map-area">
+    <div id="map" role="region" data-label="mapLabel"></div>
     <p id="loading" class="map-notice" role="status" data-text="loadingRadar"></p>
     <p id="background-notice" class="map-notice notice-low" role="status" data-text="backgroundUnavailable" hidden></p>
 
@@ -47,6 +49,20 @@
         <button id="readout-close" type="button" data-text="close"></button>
       </div>
     </section>
+  </main>
+
+  <section id="channel-panel" class="channel-panel" data-label="channelsTitle" hidden>
+    <header class="channel-header">
+      <button id="channel-back" type="button" data-text="channelBack" hidden></button>
+      <h2 id="channel-title" tabindex="-1"></h2>
+      <button id="channel-close" type="button" data-text="close"></button>
+    </header>
+    <p class="channel-status-line" aria-live="polite">
+      <span id="channel-status"></span>
+      <button id="channel-retry" type="button" data-text="retry" hidden></button>
+    </p>
+    <div id="channel-body"></div>
+  </section>
   </div>
 
   <div class="app-status" aria-live="polite">
@@ -64,6 +80,7 @@
       </div>
       <p id="pair-label" class="pair-label"></p>
       <p id="pair-events" class="pair-events"></p>
+      <p id="pair-gap" class="pair-gap"></p>
       <p class="timeline-status" aria-live="polite">
         <span id="timeline-message"></span>
         <button id="timeline-retry" type="button" data-text="retry" hidden></button>
@@ -78,6 +95,14 @@
         <button id="compare-button" type="button" data-text="compareButton"></button>
         <span id="compare-message" aria-live="polite"></span>
       </p>
+    </div>
+    <div id="channel-legend" class="channel-legend" hidden>
+      <div id="channel-layer">
+        <label class="layer-toggle"><input id="channel-toggle" type="checkbox" checked> <span data-text="channelLayerLabel"></span></label>
+        <p id="channel-note" class="channel-note" data-text="channelLineNote"></p>
+        <p id="channel-sources" class="channel-note" data-text="channelSources"></p>
+      </div>
+      <p id="channels-unavailable" class="summary" data-text="channelsUnavailable" hidden></p>
     </div>
   </section>
 
@@ -107,20 +132,21 @@
   <script type="importmap">
 {
   "imports": {
+    "./js/channels.js": "./js/channels.js?v=9c7a7484bf",
     "./js/compare.js": "./js/compare.js?v=992505293c",
-    "./js/data.js": "./js/data.js?v=a45739cc5b",
-    "./js/drawer.js": "./js/drawer.js?v=39b777602b",
-    "./js/layers.js": "./js/layers.js?v=34b3c7e5b2",
-    "./js/main.js": "./js/main.js?v=bd1ec550e5",
-    "./js/map.js": "./js/map.js?v=4bc7da038e",
-    "./js/panels.js": "./js/panels.js?v=7349722b76",
-    "./js/readout.js": "./js/readout.js?v=d64aadc4d9",
+    "./js/data.js": "./js/data.js?v=4dcc91f5d5",
+    "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
+    "./js/layers.js": "./js/layers.js?v=9d3b3edbe4",
+    "./js/main.js": "./js/main.js?v=5bd6467ad1",
+    "./js/map.js": "./js/map.js?v=09e64dd4bb",
+    "./js/panels.js": "./js/panels.js?v=1249ebdf55",
+    "./js/readout.js": "./js/readout.js?v=a8efc307b7",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=3008ea1a4c",
-    "./js/timeline.js": "./js/timeline.js?v=e7616d12bd"
+    "./js/strings.js": "./js/strings.js?v=6cab50418f",
+    "./js/timeline.js": "./js/timeline.js?v=f1f56ad0e9"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=bd1ec550e5"></script>
+  <script type="module" src="js/main.js?v=5bd6467ad1"></script>
 </body>
 </html>

@@ -41,8 +41,8 @@ NO_DATA_CODES = {str(MASKED_BY_PRODUCT): "masked_by_product", str(SEA): "sea",
                  str(OUTSIDE_COVERAGE): "outside_coverage"}
 CLASS_COLORS = {LOW: "#E69F00", HIGH: "#D55E00"}  # orange and vermillion: color-blind safe
 CLASS_LEGEND = [
-    {"value": LOW, "label": "Possible new material (one signal)", "color": CLASS_COLORS[LOW], "confidence": "low"},
-    {"value": HIGH, "label": "New material (both signals)", "color": CLASS_COLORS[HIGH], "confidence": "high"},
+    {"value": LOW, "label": "Possible new material (brightness only)", "color": CLASS_COLORS[LOW], "confidence": "low"},
+    {"value": HIGH, "label": "Likely new material (brightness and coherence agree)", "color": CLASS_COLORS[HIGH], "confidence": "high"},
 ]
 # kind: (title, units, color map, lowest value, highest value)
 CONTINUOUS_LAYERS = {
@@ -145,8 +145,20 @@ def pass_record(one_pass, site_id, spacing_m, now):
     }
 
 
-def new_material_title(config):
+def class_legend(config):
+    """The legend for the class layer. A site can word it in its own config."""
+    wording = config.get("layer_wording")
+    if not wording:
+        return CLASS_LEGEND
+    labels = {LOW: wording["low_label"], HIGH: wording["high_label"]}
+    return [{**item, "label": labels[item["value"]]} for item in CLASS_LEGEND]
+
+
+def new_material_title(config, pair_key=None):
     """Say on the layer itself when its thresholds aren't final."""
+    wording = config.get("layer_wording")
+    if wording:
+        return wording.get("pair_titles", {}).get(pair_key, wording["title"])
     title = "New material (PROVISIONAL thresholds)" if thresholds_are_provisional(config) else "New material"
     reach = (config.get("filters") or {}).get("max_distance_km")
     return f"{title}, within {reach:g} km of the summit" if reach else title
@@ -173,8 +185,8 @@ def write_layers(folder, gcov_result, loss, classes, config, pair_key, granules,
     web_classes[~inside] = OUTSIDE_COVERAGE
     save_png(colorize_classes(web_classes), folder / "new_material.png")
     (folder / "new_material.bin").write_bytes(web_classes.astype("uint8").tobytes())
-    record = layer_record(pair_key, "new_material", new_material_title(config), "class", bounds, size,
-                          granules["new_material"], CLASS_LEGEND, now)
+    record = layer_record(pair_key, "new_material", new_material_title(config, pair_key), "class", bounds, size,
+                          granules["new_material"], class_legend(config), now)
     record.update(grid_path="new_material.bin", grid_dtype="uint8", grid_scale=1,
                   no_data_codes=NO_DATA_CODES, grid_width=size[0], grid_height=size[1])
     layers.append(record)
@@ -192,8 +204,9 @@ def layer_granules(before, after, gunw, previous_gunw):
 def build_pair_record(config, before, after, gunw, previous_id, used_coherence, areas, now):
     """Build the `pairs` row (docs/05 TBL-05) with status 'ready' (FR-029)."""
     thresholds = config["thresholds"]
+    key = pair_id(config["id"], before, after)
     return {
-        "id": pair_id(config["id"], before, after), "site_id": config["id"], "status": "ready",
+        "id": key, "site_id": config["id"], "status": "ready",
         "track": before["track"], "frame": before["frame"], "orbit_direction": before["orbit_direction"],
         "before_pass_id": pass_id(before), "after_pass_id": pass_id(after),
         "before_acquired_start": before["acquired_start"], "after_acquired_start": after["acquired_start"],
@@ -205,6 +218,7 @@ def build_pair_record(config, before, after, gunw, previous_id, used_coherence, 
         "coherence_loss_threshold": thresholds["coherence_loss_threshold"] if used_coherence else None,
         **areas,
         "pipeline_version": __version__, "error_message": None, "published_at": None,
+        "check_note": (config.get("layer_wording") or {}).get("pair_check_notes", {}).get(key),
         "created_at": now, "updated_at": now,
     }
 

@@ -1,26 +1,88 @@
 {
  "data": [
   {
+   "id": "pa_admin_boundaries",
+   "site_id": "panama",
+   "name": "Panama district boundaries, clipped to the site",
+   "provider": "geoBoundaries gbOpen (Panama ADM2), from the Smithsonian Tropical Research Institute data portal and the National Geographic Institute Tommy Guardia",
+   "used_for": "boundaries",
+   "url": "https://www.geoboundaries.org/",
+   "license": "CC BY-SA 4.0",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
    "id": "ph_admin_boundaries",
+   "site_id": "mayon",
    "name": "Philippine municipal and city boundaries",
    "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
    "used_for": "boundaries",
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T23:14:16Z",
-   "updated_at": "2026-10-30T23:14:16Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "ph_coastline",
+   "site_id": "mayon",
    "name": "Coastline, from the union of the Philippine municipal and city boundaries",
    "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
    "used_for": "coastline",
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T23:14:16Z",
-   "updated_at": "2026-10-30T23:14:16Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
+   "id": "channel_names",
+   "site_id": "mayon",
+   "name": "Channel names",
+   "provider": "PHIVOLCS: the advisory of 16 January 2026 as reported by GMA News (Mi-isi, Basud)",
+   "used_for": "channels",
+   "url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
+   "license": "Names only, cited from the source",
+   "retrieved_on": "2026-11-01",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
+   "id": "channel_names_dzrh",
+   "site_id": "mayon",
+   "name": "Channel names",
+   "provider": "PHIVOLCS: the lahar advisory of 16 January 2026 as reported by DZRH News (Lidong, Padang)",
+   "used_for": "channels",
+   "url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+   "license": "Names only, cited from the source",
+   "retrieved_on": "2026-11-01",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
+   "id": "channel_names_bulletin",
+   "site_id": "mayon",
+   "name": "Channel names",
+   "provider": "PHIVOLCS: the Mayon Volcano Bulletin of 24 March 2000 (Lidong, Padang)",
+   "used_for": "channels",
+   "url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
+   "license": "Names only, cited from the source",
+   "retrieved_on": "2026-11-01",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
+   "id": "channel_lines",
+   "site_id": "mayon",
+   "name": "Channel lines, from OpenStreetMap waterways, confirmed by the project owner in Google Earth Pro",
+   "provider": "OpenStreetMap contributors",
+   "used_for": "channels",
+   "url": "https://www.openstreetmap.org/copyright",
+   "license": "ODbL 1.0",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "esri_world_imagery",
@@ -30,34 +92,36 @@
    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
    "license": "Esri terms of use, with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T23:14:16Z",
-   "updated_at": "2026-10-30T23:14:16Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "esa_worldcover_2021",
+   "site_id": "mayon",
    "name": "ESA WorldCover 2021 land cover, used only as context in the false-alarm study",
    "provider": "European Space Agency",
-   "used_for": "validation",
+   "used_for": "analysis",
    "url": "https://esa-worldcover.org/",
    "license": "CC BY 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T00:00:00Z",
-   "updated_at": "2026-10-31T00:00:00Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "copernicus_dem_glo30",
+   "site_id": "mayon",
    "name": "Copernicus DEM GLO-30 elevation, used only as context in the false-alarm study",
    "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
-   "used_for": "validation",
+   "used_for": "analysis",
    "url": "https://registry.opendata.aws/copernicus-dem/",
    "license": "Copernicus DEM GLO-30 licence, free with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T00:00:00Z",
-   "updated_at": "2026-10-31T00:00:00Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T00:00:00Z",
+  "generated_at": "2026-10-31T23:13:04Z",
   "schema_version": "1.0"
  }
 }

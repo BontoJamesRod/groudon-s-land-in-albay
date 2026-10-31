@@ -2,12 +2,12 @@
 // panel, the site picker and the "How we checked this" panel. Text from data files is set with textContent, never as HTML.
 
 import { loadJson, loadValidation } from "./data.js";
-import { STRINGS } from "./strings.js";
+import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 const VERTEX_URL = "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=";
 
-function element(tag, text, className) {
+export function element(tag, text, className) {
   const node = document.createElement(tag);
   if (text !== undefined) node.textContent = text;
   if (className) node.className = className;
@@ -50,8 +50,8 @@ export function createPanel(dialog, fill) {
   };
 }
 
-function legendList(layer) {
-  if (!layer) return list([...STRINGS.helpClasses, STRINGS.helpNoColor]);
+function legendList(layer, text) {
+  if (!layer) return list([...text.helpClasses, text.helpNoColor]);
   const rows = layer.legend.map((item) => {
     const row = element("span", null, "legend-line");
     const swatch = element("span", undefined, "swatch");
@@ -59,20 +59,21 @@ function legendList(layer) {
     row.append(swatch, element("span", STRINGS.classWithConfidence(item.label, item.confidence)));
     return row;
   });
-  return list([...rows, STRINGS.helpNoColor]);
+  return list([...rows, text.helpNoColor]);
 }
 
 // SCR-05. `getPair` returns the selected pair, or null when there is none.
-export function fillHelp(body, getPair) {
+export function fillHelp(body, getPair, site) {
+  const text = textFor(site);
   const pair = getPair();
   const layer = pair ? pair.layers.find((item) => item.kind === "new_material") : null;
-  const official = element("p", `${STRINGS.helpOfficial} `);
-  official.append(externalLink(STRINGS.helpOfficialLink, STRINGS.helpOfficialUrl));
+  const official = element("p", `${text.helpOfficial} `);
+  official.append(externalLink(text.helpOfficialLink, text.helpOfficialUrl));
   body.append(
-    element("h3", STRINGS.helpHowRadarTitle), ...STRINGS.helpHowRadar.map((text) => element("p", text)),
-    element("h3", STRINGS.helpColorsTitle), legendList(layer),
+    element("h3", STRINGS.helpHowRadarTitle), ...text.helpHowRadar.map((paragraph) => element("p", paragraph)),
+    element("h3", STRINGS.helpColorsTitle), legendList(layer, text),
     element("h3", STRINGS.helpConfidenceTitle), list(STRINGS.helpConfidence),
-    element("h3", STRINGS.helpLimitsTitle), list(STRINGS.helpLimits),
+    element("h3", STRINGS.helpLimitsTitle), list(text.helpLimits),
     element("h3", STRINGS.helpOfficialTitle), official,
   );
 }
@@ -121,19 +122,21 @@ function contextSources(rows) {
   }));
 }
 
-// SCR-06: radar data for the selected pair, and context data from sources.json.
-export async function fillSources(body, getPair, timeZone) {
+// SCR-06: radar data for the selected pair, and context data from sources.json: this site's
+// sources and the shared ones, which have no site_id.
+export async function fillSources(body, getPair, site) {
   const pair = getPair();
-  const radar = pair ? radarSources(pair, timeZone) : [element("p", STRINGS.sourcesEmpty)];
+  const radar = pair ? radarSources(pair, site.time_zone) : [element("p", STRINGS.sourcesEmpty)];
   body.replaceChildren(element("h3", STRINGS.sourcesRadarTitle), ...radar,
     element("h3", STRINGS.sourcesContextTitle), element("p", STRINGS.sourcesLoading));
   const contextHolder = body.lastChild;
   try {
-    contextHolder.replaceWith(contextSources(await loadJson("data/sources.json")));
+    const rows = await loadJson("data/sources.json");
+    contextHolder.replaceWith(contextSources(rows.filter((row) => !row.site_id || row.site_id === site.id)));
   } catch (problem) {
     console.error(problem.message);
     const failed = element("p", `${STRINGS.sourcesError} `);
-    failed.append(retryButton(() => fillSources(body, getPair, timeZone)));
+    failed.append(retryButton(() => fillSources(body, getPair, site)));
     contextHolder.replaceWith(failed);
   }
 }
@@ -167,7 +170,8 @@ export async function fillCheck(body, getPair) {
   try {
     const record = await loadValidation(pair.folder);
     if (!record) {
-      body.replaceChildren(element("p", STRINGS.checkEmpty));
+      // A pair can say why it has no check of its own.
+      body.replaceChildren(element("p", pair.check_note || STRINGS.checkEmpty));
       return;
     }
     const source = element("p", `${STRINGS.checkSource(record.source_name, record.source_date)} `);

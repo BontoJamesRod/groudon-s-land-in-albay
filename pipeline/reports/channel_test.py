@@ -65,7 +65,7 @@ HEAVY_RAIN_MM = 100  # the owner's rule: this much or more in any 3 consecutive 
 TRACK_111_DATES = ["20260621", "20260703", "20260715", "20260727", "20260820", "20260901", "20260913", "20260925", "20261007", "20261019"]
 TRACK_104_PAIRS = [("20260913", "20260925"), ("20261007", "20261019")]
 
-# The fixed rules from docs/NIGHT_PLAN_4.md
+# The fixed rules from plans/NIGHT_PLAN_4.md
 FLAG_DB = 3.0
 SENSITIVITY_DB = (4.0, 5.0)
 MIN_QUARRY_PIXELS = 50
@@ -385,7 +385,7 @@ def count_at_least(rows, limit):
 
 
 def decide(quarry_ratios, channel_ratios, has_quarries):
-    """The fixed verdict rules from docs/NIGHT_PLAN_4.md."""
+    """The fixed verdict rules from plans/NIGHT_PLAN_4.md."""
     if not has_quarries:
         return "NOT TESTED"
     if count_at_least(quarry_ratios, GO_RATIO) >= PAIRS_NEEDED:

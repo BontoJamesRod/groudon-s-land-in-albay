@@ -20,7 +20,6 @@ NONE = 0
 LOW = 1
 HIGH = 2
 SQUARE_METRES_PER_KM2 = 1_000_000
-SMALLEST_AREA_KM2 = 0.01
 # How the two signals combine. A site config can choose one with thresholds.rule.
 EITHER_SIGNAL = "either_signal"
 BRIGHTNESS_LEADS = "brightness_leads"
@@ -54,19 +53,23 @@ def classify(change_db, loss, reasons, brightness_threshold_db, coherence_loss_t
     return classes
 
 
+def rounded_km2(cells, cell_km2, decimals=2):
+    """Turn a number of cells into km2 with this many decimals.
+
+    Any cell counts as at least the smallest number that can show (0.01 at 2 decimals), so a few
+    cells on the map can't be reported as "nothing detected".
+    """
+    return max(round(cells * cell_km2, decimals), 10 ** -decimals) if cells else 0.0
+
+
 def areas_km2(classes, spacing_x_m, spacing_y_m):
     """Add up the area of each class, in km2 rounded to 2 decimals.
 
     The total is the sum of the two rounded numbers, so that it always matches what
-    the legend shows (new_material_area_km2 = high + low). Any detection counts as at
-    least 0.01, so a few cells on the map can't be reported as "nothing detected".
+    the legend shows (new_material_area_km2 = high + low).
     """
     cell_km2 = spacing_x_m * spacing_y_m / SQUARE_METRES_PER_KM2
-
-    def rounded(cells):
-        return max(round(cells * cell_km2, 2), SMALLEST_AREA_KM2) if cells else 0.0
-
-    high = rounded(int(np.count_nonzero(classes == HIGH)))
-    low = rounded(int(np.count_nonzero(classes == LOW)))
+    high = rounded_km2(int(np.count_nonzero(classes == HIGH)), cell_km2)
+    low = rounded_km2(int(np.count_nonzero(classes == LOW)), cell_km2)
     return {"high_confidence_area_km2": high, "low_confidence_area_km2": low,
             "new_material_area_km2": round(high + low, 2)}

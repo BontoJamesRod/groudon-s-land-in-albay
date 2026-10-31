@@ -1,0 +1,8 @@
+# Settings for the axe Linter extension's static check of the source files.
+# The page's text is filled in from site/js/strings.js when it loads, so the static check
+# can't see it. These rules stay on at runtime: pipeline/tests/e2e/test_accessibility.py
+# runs axe-core on the rendered page and covers them.
+rules:
+  button-name: false
+  empty-heading: false
+  aria-input-field-name: false

@@ -24,14 +24,37 @@ def folders(tmp_path):
     out.mkdir()
     write_fake(out)
     (data / "sites" / "mayon").mkdir(parents=True)
+    shutil.copytree(DATA_FOLDER / "sites" / "panama", data / "sites" / "panama")  # the other published site
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
-    for name in ("towns.geojson", "land.geojson"):
+    for name in ("towns.geojson", "land.geojson", "channels.geojson"):
         shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)
     return out, data
 
 
 def run(out, data, pair=PAIR):
     return publish_pair("mayon", pair, out_folder=out, data_folder=data, sites_folder=SITES_FOLDER)
+
+
+def test_us026_publishing_adds_the_pairs_channel_rows(folders):
+    out, data = folders
+    run(out, data)
+    rows = read_data(data / "sites" / "mayon" / "channel_areas.json")
+    assert sorted(row["channel_id"] for row in rows) == ["mayon_basud", "mayon_lidong", "mayon_miisi", "mayon_padang"]
+    assert {row["pair_id"] for row in rows} == {PAIR}
+    assert check_data_dir(data) == []
+
+
+def test_a_failed_publish_puts_the_channel_rows_back(folders):
+    out, data = folders
+    run(out, data)
+    areas = data / "sites" / "mayon" / "channel_areas.json"
+    before = areas.read_bytes()
+    sources = json.loads((data / "sources.json").read_text(encoding="utf-8"))
+    sources["data"][0]["license"] = None
+    (data / "sources.json").write_text(json.dumps(sources), encoding="utf-8")
+    with pytest.raises(PublishError):
+        run(out, data)
+    assert areas.read_bytes() == before
 
 
 def test_publish_sets_status_and_lists_the_pair(folders):

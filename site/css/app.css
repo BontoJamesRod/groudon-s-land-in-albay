@@ -27,9 +27,17 @@ body {
 
 [hidden] { display: none !important; }
 
+/* An explicit minimum: otherwise a long channel list would make the map's row taller, not scroll. */
+.map-row {
+  flex: 1;
+  display: flex;
+  min-height: 300px;
+}
+
 .map-area {
   position: relative;
   flex: 1;
+  min-width: 0;
   min-height: 300px;
   display: flex;
 }
@@ -66,7 +74,20 @@ body {
 }
 
 .town-label::before,
-.zone-label::before { display: none; }
+.zone-label::before,
+.channel-label::before { display: none; }
+
+/* Water names are in italics on maps, which also tells them apart from towns without color. */
+.channel-label {
+  padding: 1px 4px;
+  border: 0;
+  box-shadow: none;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--paper);
+  background: rgba(8, 47, 73, 0.85);
+}
 
 .radar-image { image-rendering: pixelated; }
 
@@ -89,7 +110,8 @@ body {
 }
 
 .timeline,
-.legend {
+.legend,
+.channel-legend {
   flex: 1 1 280px;
   min-width: 0;
 }
@@ -121,11 +143,19 @@ button:disabled { color: #6e7781; }
 
 .pair-label,
 .pair-events,
+.pair-gap,
 .timeline-status,
 .legend-area,
 .summary { margin: 6px 0 0; }
 
 .pair-events { font-weight: 600; }
+
+/* A pair with an unequal gap: dimmed, and always with its note, so it never depends on color. */
+.pair-dim { color: #57606a; }
+
+.pair-gap { font-weight: 600; color: #57606a; }
+
+.pair-gap:empty { display: none; }
 
 .layer-toggle {
   display: flex;
@@ -160,6 +190,11 @@ button:disabled { color: #6e7781; }
   border-radius: 2px;
 }
 
+.channel-note {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
 .disclaimer {
   margin: 0;
   padding: 10px 16px;
@@ -184,6 +219,11 @@ button:disabled { color: #6e7781; }
 .topbar-actions {
   display: flex;
   gap: 8px;
+}
+
+.site-title {
+  margin: 0;
+  font: inherit;
 }
 
 .site-name {
@@ -415,11 +455,152 @@ button:disabled { color: #6e7781; }
   vertical-align: top;
 }
 
+.not-checked-label {
+  font-style: normal;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* The channel panel sits beside the map, so that the strip stays in view. On phones it goes under it. */
+.channel-panel {
+  flex: 0 0 380px;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+  border-left: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.channel-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  background: var(--paper);
+}
+
+.channel-header h2 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+.channel-header h2:focus { outline: none; }
+
+.channel-status-line:has(#channel-status:empty):has(#channel-retry[hidden]) { display: none; }
+
+.channel-status-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.channel-lead { margin: 0 0 8px; font-weight: 600; }
+
+.channel-rows {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.channel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+  text-align: left;
+}
+
+.channel-row-name { font-weight: 600; }
+
+.channel-bars {
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A row: the dates and the area, with the bar under them. The whole row is the tap target. */
+.channel-bar {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 13px;
+  text-align: left;
+  background: transparent;
+}
+
+.channel-bar:hover { background: #f6f8fa; }
+
+.channel-bar[aria-current] {
+  background: #f6f8fa;
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.channel-bar-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.channel-bar-value {
+  flex: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.channel-bar-dim { color: #57606a; }
+
+.channel-bar-dim .channel-bar-fill { opacity: 0.45; }
+
+.channel-bar-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+/* Bars grow from one baseline, and the rounded end is the end that shows the value. */
+.channel-bar-track {
+  display: block;
+  height: 10px;
+  margin-top: 4px;
+  border-left: 1px solid #8c959f;
+}
+
+.channel-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  background: #b45309;
+}
+
 /* T-034: on phones the map stays large and the disclaimer stays on screen (FR-037),
    so the pass controls and legend scroll inside their own area. */
 @media (max-width: 700px) {
   .topbar { padding: 4px 16px; gap: 4px; }
   .map-area, #map { min-height: 200px; }
+  .map-row { flex-direction: column; min-height: 200px; }
+  .channel-panel {
+    flex: 0 0 55%;
+    min-height: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  /* The channel panel takes over from the pass controls, so the map and the panel both get room. */
+  body.channels-open #panel { display: none; }
+  /* A long label wraps inside its button, not onto a new row, so the map keeps its height. */
+  .topbar-actions { flex-wrap: nowrap; }
+  .topbar-actions button { padding: 0 8px; font-size: 14px; }
   .panel { flex: none; max-height: 45vh; overflow-y: auto; padding-top: 0; gap: 4px 24px; }
   .drawer-toggle {
     display: block;
@@ -441,6 +622,7 @@ button:disabled { color: #6e7781; }
   }
   /* Closed: only the handle and the pass controls, so the map gets the room. */
   .drawer-closed .legend,
+  .drawer-closed .channel-legend,
   .drawer-closed .pair-label,
   .drawer-closed .pair-events { display: none; }
   .drawer-closed .timeline-status:has(#timeline-message:empty):has(#timeline-retry[hidden]) { display: none; }

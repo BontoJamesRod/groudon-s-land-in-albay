@@ -1,0 +1,11 @@
+[
+  {
+    "id": "panama_20261009_earthquake",
+    "site_id": "panama",
+    "name": "Earthquake",
+    "event_date": "2026-10-09",
+    "description": "USGS recorded a magnitude 7.7 earthquake at 17:56 UTC, 12 km west-southwest of Pitaloza Arriba.",
+    "source_name": "USGS",
+    "source_url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000u18k"
+  }
+]

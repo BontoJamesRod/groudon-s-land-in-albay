@@ -595,3 +595,221 @@ All 11 published pairs were redone. Areas are km² within 10 km. High confidence
 **Downloaded tonight:** 0 bytes of NISAR data. No threshold values were written into `docs/`.
 
 **Final evidence:** `pytest -q`: 360 passed, 6 skipped. Contract check: 0 errors on `site/data`. A second check at 16:28 UTC also found no new pass on either track.
+
+# Docs run (2026-11-01)
+
+**The docs now match what was decided and built, and the Nov 5–10 build can follow them once you decide items 1 and 2 below.** `night-1` is pushed and not merged into `main`, so the changes below aren't on the public site yet.
+
+## What changed
+
+| Commit | Task | What |
+| --- | --- | --- |
+| 8089a2c | T-067 | The 6 approved changes, including their code, test and data parts. Code 253 now reads "the radar product marked this spot as invalid", and the two study datasets are `analysis` sources |
+| e25fae5 | T-068 | Final rule, 10 km reach limit, lifted blind cutoff and held pair recorded |
+| 753cdcb | T-069 | Channel timeline added to all 9 docs. Brief is v0.4; the others are v0.2 |
+| 4820b4b | T-070 | Out-of-scope lines, the rule against legal labels, and Panama named for F-10 |
+| 35a9d77 | T-071 | Done work added to 07, ID errata in 07 §11, task-ID rule in `CLAUDE.md` |
+| Latest on `night-1` | T-072 | `PROGRESS.md`, README, `docs/reviews/consistency-03.md`, this section |
+
+History wasn't rewritten. The 21 mislabeled commits are in the errata table.
+
+## New IDs
+
+- **Feature and stories:** F-20, US-024 to US-026, plus new criteria on US-004, US-005, US-008 and US-012.
+- **Requirements:** FR-060 (reach), FR-061 to FR-067 (timeline), FR-068 (no legal labels), FR-069 (site with no summit).
+- **Design:** SCR-13, SCR-14, ADR-011, TBL-12 (`channel_areas.json`, a new file because it changes with every publish while the channel file doesn't), API-012.
+- **Tasks:** T-052 to T-066 (done work that was mislabeled or missing), T-067 to T-072 (this run), T-073 to T-078 (the build).
+- **Tests:** TC-061 to TC-076.
+
+The unequal-gap marking wasn't built, so it's a new task (T-077), not a done one.
+
+## Decisions for you
+
+I didn't guess at these.
+
+1. **Which channel lines do you confirm?** Nothing in F-20 can start until you do (T-073).
+2. **What strip width goes in the site config?** T-074 needs it.
+3. **Threshold values still in `docs/`:** your old plans `docs/NIGHT_PLAN.md` line 20 and `docs/NIGHT_PLAN_4.md` lines 26 and 57 contain them. I didn't edit your plans, and I left `NIGHT_PLAN_4.md` and `DOCS_PLAN_6.md` uncommitted. Should those lines be removed? `NIGHT_PLAN.md` is already in Git.
+4. **FR-031 and US-010/AC-1** hold a coherence display mask for the ground-movement layer, a Could feature. It's the same number as the final coherence threshold, though it's a different setting. Keep it, or move it to the config?
+5. **Panama:** the trial flagged 26% of the land, which isn't specific, and the boundary record's license detail still has to be read. T-036 also needs you to confirm that the final thresholds apply there.
+6. **Reach in the browser:** FR-060 says the site config sets the distance, but `site/js/readout.js` has its own constant. It matches today. I recorded this and didn't change the code, because the plan didn't ask for it.
+7. **Legend labels:** published pairs still say "(one signal)" and "(both signals)". That's still true, but less clear under the final rule. Changing them means editing `site/data/`, which this run couldn't do beyond change 6.
+8. **Still open from before:** the channel distance (01 OQ3), the event-date rule (consistency-02 #8), and where eruption results get reported.
+
+## A rule I had to interpret
+
+Hard rule 3 says not to change `site/data/`, while section A requires the data part of change 6. I followed section A, and only the `used_for` value of two rows in `site/data/sources.json` changed. I took "the 24-day pair" and "gap isn't 12 days" literally, so any gap other than 12 days is dimmed.
+
+## Evidence
+
+- **Tests:** `pytest -q`: 360 passed, 6 skipped, exit code 0. **Contract check:** 0 errors, exit code 0. Both were run again right before the push.
+- **IDs:** 0 dangling and 0 renumbered, by script. All 16 new acceptance criteria have a test, and all 10 new requirements have a task and a test.
+- **Diagrams:** 14 of 14 Mermaid diagrams rendered in headless Chromium.
+- **Not checked:** the new wording in a browser by eye, beyond the automated test. No NISAR or Earthdata searches or downloads were made, so the eruption passes' status is still from 16:28 UTC on Oct 31.
+
+# Owner's decisions on the docs run (2026-11-01)
+
+**Six of your seven decisions are done and pushed on `night-1`, not merged into `main`. T-073 hasn't started: it waits for your Google Earth check.**
+
+| Decision | Task | Result |
+| --- | --- | --- |
+| Strip width | T-080 | `channel_strip_half_width_m` is 200 in `pipeline/sites/mayon.json`, the same as `STRIP_M` in the channel test. Nothing uses it until T-074 |
+| Plan files | T-081 | All 5 are in `plans/`, with the same checksums as before the move. `NIGHT_PLAN_4.md` and `DOCS_PLAN_6.md` are now in Git for the first time |
+| Ground-movement number | T-082 | Now `ground_movement.min_coherence` in the site config. FR-031 and US-010/AC-1 describe it in words |
+| Panama | T-083 | Below |
+| Reach distance | T-084 | `sites.json` now has `detection_reach_km`, built from `filters.max_distance_km`. `map.js` and `readout.js` read it, and the constant is gone |
+| Legend labels | T-085 | 11 pairs republished. Every area and coherence flag is unchanged, the held pair is still off, and there are no post-eruption pairs. The help panel's color lines use the same words |
+
+## Panama under the final rule
+
+Mayon's rule and thresholds are read when the trial runs, with no tuning. Output is in `pipeline/out/` only (`reports/panama-trial-final-rule.json`). No NISAR data was downloaded, because the crops were cached. The earlier `pipeline/reports/panama-trial.json` stays as it was, so the old rule's numbers remain on record.
+
+| Pair | Land checked | Flagged share of land | Flagged area (final rule) | Low / high | Flagged area (old rule) |
+| --- | --- | --- | --- | --- | --- |
+| Quiet, 09-15 → 09-27 | 443.97 km² | **0.5%** | 2.40 km² | 2.31 / 0.09 | 4.72 km² |
+| Earthquake, 09-27 → 10-09 | 443.97 km² | **1.7%** | 7.73 km² | 3.06 / 4.66 | 117.30 km² (26%) |
+
+The earthquake pair now flags about 3 times the quiet pair, and the old 26% came almost entirely from coherence loss alone. Near the reported landslide cluster it flags 2.40 km² of 120.89 km² of land. This is still unchecked against the mapped landslides, and an earthquake can change the ground without a landslide.
+
+## Panama boundary license: your decision
+
+- **geoBoundaries' record** says CC BY 4.0, with the license detail "need to update". Its site asks for the name and a link in a product's credits.
+- **The upstream source it points to** (Smithsonian Tropical Research Institute data portal on ArcGIS) says **CC BY-SA 4.0**, which is stricter. The record is marked deprecated, is titled "Panama Districts Boundaries - 2016", and credits Panama's National Geographic Institute "Tommy Guardia" (2019). geoBoundaries calls the same data 2012.
+- **What it means:** treat the stricter terms as the real ones. Published borders made from this data would need credit and the same license. `pipeline/reports/panama_trial_land.geojson` still says CC BY 4.0, because it's a trial file I didn't change. This isn't legal advice.
+- **Decision:** accept CC BY-SA for Panama's `towns` and `land` files, or look for another boundary source. T-036 waits for this.
+
+## Evidence
+
+`pytest -q`: 370 passed, 6 skipped, exit code 0. Contract check: 0 errors on `site/data`, exit code 0. IDs: 0 dangling, by script. No threshold values were found in `docs/` by script. All 14 Mermaid diagrams render. The new labels and the reach were checked by the automated browser tests, not by eye on a phone.
+
+# Panama site files (2026-11-01)
+
+**T-036 is done and the Panama borders are credited under CC BY-SA 4.0, on `night-1`, not merged into `main`.** Panama isn't on the map or in the site list: its status stays `draft` until it has a pair (T-037).
+
+- **Credit:** `sources.json` has a new row, `pa_admin_boundaries`, and the Data sources panel shows it with geoBoundaries, its upstream sources, a link to geoboundaries.org and "License: CC BY-SA 4.0". A browser test checks the panel. This row is on the panel for every site, because the panel lists all context sources.
+- **Marking:** `towns.geojson` and `land.geojson` under `site/data/sites/panama/` both carry a top-level `license` member. Docs 05 and 06 describe it, and the contract check accepts it.
+- **Site config:** `pipeline/sites/panama.json` has the same rule and thresholds as Mayon, and a test keeps them equal. It has no summit, reach or channels.
+- **Districts:** Las Minas, Los Pozos and Mariato. The land matches the trial's land almost exactly.
+
+**Things to know:**
+
+- **One code change:** `context.py` had the Philippine source ID hardcoded, so a boundary file can now name its own source and license. The next site won't need this, but T-036's "no code changes" wasn't strictly met. TC-035 should be read with that in mind when T-037 runs it.
+- **Map credit (T-087, not built):** `map.js` always shows the Philippine boundary credit, which would be wrong on Panama. T-037 now depends on it.
+- **Public reachability:** the two Panama files will be reachable by direct URL once `night-1` is merged, even though the site isn't listed. They carry their license, so that's fine under the terms you accepted.
+- **Still true:** the upstream record is marked deprecated, and the Panama result hasn't been checked against mapped landslides.
+
+**Evidence:** `pytest -q`: 375 passed, 6 skipped, exit code 0. Contract check: 0 errors, exit code 0.
+
+# Accessibility, site credits and the Panama check (2026-11-01)
+
+**Stopped for your decision on T-037: read `pipeline/reports/panama-check.md`. Nothing was published, and `main` is untouched.**
+
+- **Accessibility:** already done as T-079. I confirmed the files are in Git and all 6 axe tests pass, and added no new task.
+- **T-087:** the map credit and the Data sources panel now follow the selected site. `sites.json` has `boundary_credit` and `boundary_credit_url`, and `sources.json` rows have an optional `site_id`, where no value means shared. WorldCover and the Copernicus elevation model count as Mayon's, because only Mayon's study used them. New: US-013/AC-3, TC-077.
+- **T-088:** the pair matches the University of Panama's landslide map at the scale of a few km, under a rule fixed before the comparison. It's not evidence for any single spot, and about a quarter of the flagged area isn't explained by the map. The report has three decisions for you.
+
+# Panama published on `night-1` (2026-11-01)
+
+**T-037 is done: both Panama pairs are published on `night-1`, the quiet pair first, then the earthquake pair. They aren't on the public site until `night-1` is merged.**
+
+| Pair | Title on the map | Flagged area | Check panel |
+| --- | --- | --- | --- |
+| 09-15 → 09-27 (quiet) | Radar change | 2.40 km² | "Not yet checked" |
+| 09-27 → 10-09 (earthquake) | Changed after the earthquake | 7.72 km² | Summary of `pipeline/reports/panama-check.md` |
+
+- **Wording (T-089):** Panama says "change" instead of "new material" in the legend, card, summary and help. Its disclaimer and help name SINAPROC instead of PHIVOLCS, and it has no summit limit on the phone handle. Mayon's text is unchanged, and tests cover both.
+- **"Landslide" appears on Panama in one place only:** the check panel, where it describes the University of Panama's map. The panel can't cite that map without the word. Tests keep it out of the pair files, legend, card and help.
+- **The map:** linked and cited, with no image copied.
+- **Timeline event:** a new `panama_events.json` marks the earthquake, citing USGS.
+
+**Things to know:**
+
+- **SINAPROC was my choice.** You didn't name a Panamanian authority, and PHIVOLCS would have been wrong there. It's Panama's civil protection agency, and its site loads. Please check the wording.
+- **The quiet pair has its own unpublished baseline** (09-03 → 09-15). Its record points to a pair that isn't on the site, and the contract check allows that. The earthquake pair's baseline is now published.
+- **TC-035 isn't met as written.** It expects a new site with no code changes, and Panama needed changes to `context.py`, the export step and the site wording. The next site with this wording needs only a config and its context files.
+- **A false coastline:** Panama's land stops at the site's east edge, so a straight blue line is drawn there. It's the same drawing as Mayon's, and I left it.
+- **Site size:** Panama adds 13 MB to `site/data`. Mayon still opens first, so its first view doesn't load these files.
+
+**Evidence:** `pytest -q`: 396 passed, 5 skipped, exit code 0, with TC-033 and TC-076 no longer skipped. Contract check: 0 errors, exit code 0. Checked by eye in screenshots at desktop and phone width, in the test browser, not on a real phone.
+
+# Coastline and quiet pair note (2026-11-01)
+
+**T-090 is done on `night-1`, not merged into `main`.**
+
+- **Coastline:** lines along the site's edge are no longer drawn, because the land file is only clipped there. This applies to every site, so Mayon loses its box outline too.
+- **Town borders (not asked for):** they had the same false line at the same place, so the same code now removes it. Otherwise a white line stayed where the blue one was.
+- **Quiet pair:** "How we checked this" now says "Used as the 'before' comparison for the earthquake pair". It's a new optional `check_note` on the pair, set in the site config. The quiet pair was republished with its areas unchanged. Pairs with no note still say "Not yet checked".
+- **Not changed:** Mayon's land stops at Albay's province border, where that falls inside the site, so a line can still appear there. It's inside the site, so this fix doesn't catch it.
+
+# Channel timeline (2026-11-01)
+
+**The Channel timeline is built on `night-1`, not merged into `main`, so it isn't on the public site yet.** It has your 4 confirmed channels: a list sorted by change since the last pass, one bar per pass, the strip on the map, and the unequal-gap marking. Done: T-073, T-010, T-028, T-074, T-075, T-076, T-091 (new) and T-077. T-078 wasn't on your list, so it's still open.
+
+| Channel | Towns along it | Ground checked in the strip | Latest pair (Oct 8 to Oct 20, track 111) | Across all 11 pairs | Line past 10 km |
+| --- | --- | --- | --- | --- | --- |
+| Mi-isi | Daraga, Legazpi City | 3.75 km² | 0.02 km² | 0.01 to 0.05 km² | 4.1 km |
+| Basud | Santo Domingo | 3.99 km² | 0.01 km² | 0.01 to 0.02 km² | 120 m |
+| Lidong | Santo Domingo | 3.55 km² | 0.01 km² | 0.01 to 0.02 km² | 26 m |
+| Padang | Santo Domingo, Legazpi City | 2.51 km² | 0.01 km² | 0.01 to 0.03 km² | 80 m |
+
+Your verdicts are in `pipeline/reports/owner-checks.md`, and the pipeline reads the same ones from `pipeline/context/mayon_channels.json`. Each published channel carries its name source, line source, `confirmed_by`, `confirmed_on` and `imagery_date`. A test checks that the published lines match the candidates file exactly.
+
+## Decisions for you
+
+None of these stopped the build.
+
+1. **Matanag has no verdict.** It's in the candidates file, but your message doesn't list it. I kept it off the site, the same as an unconfirmed channel. Is it confirmed or not?
+2. **OpenStreetMap's license (ODbL).** You told me to use these lines, so I did, and I read [OpenStreetMap's copyright page](https://www.openstreetmap.org/copyright), the [ODbL summary](https://opendatacommons.org/licenses/odbl/summary/) and the [license FAQ](https://osmfoundation.org/wiki/Licence/Licence_and_Legal_FAQ). This is my reading, not legal advice. If you don't want the two channel files under ODbL, don't merge `night-1`.
+   - **Credit:** the map says "© OpenStreetMap contributors (ODbL)" with a link while the lines are shown, and Data sources lists it.
+   - **Share-alike:** `channels.geojson` is built on OpenStreetMap lines, so it must be offered under ODbL. It's public and marked in the file and the README. The FAQ doesn't cover numbers calculated from the data, so I marked `channel_areas.json` too, to be safe.
+   - **Not affected:** the FAQ says share-alike doesn't reach independent data combined with OpenStreetMap data, so the radar layers keep their own terms.
+3. **The July check names Bonga.** The unpublished draft for the July pair (`pipeline/context/validation_sheets/mayon_A111F008_20260703_20260715.json`) has a "Bonga Gully" row, because its source names it. The contract check now fails if a name you didn't confirm reaches any published file, so publishing that draft will stop there. You'd then choose between dropping the row and allowing it as a cited place name.
+4. **Bars at 2 decimals are coarse.** 26 of the 44 rows read 0.01 km². The spec asks for 2 decimals, and any flagged cell counts as at least 0.01, the same as a pair's totals. So Lidong's real areas, from about 0.002 to 0.019 km², show only as 0.01 or 0.02. I followed the spec. Showing 3 decimals would keep more of the difference, and it's a small change if you want it.
+5. **On a short phone screen, the danger-zone label is hidden when the map opens.** This isn't new: the site behaved the same before the channel work. FR-001 and US-001 say the map opens centered at the site's default zoom, where the ring is 322 px across. At 360 px wide, the label clears the map credits only if the browser window is about 730 px tall or more. At 360 x 640 it's off the map, and phones often have about that much once the browser's own bars are counted. The ring still shows, and panning or zooming out shows the label. I measured this in the test browser, not on a real phone. I didn't change it, because the fix changes what FR-001 says. I recommend opening one zoom step further out on those screens only, so the whole ring and its label show. Yes or no?
+
+## What I decided, which you can change
+
+- **"In or near a channel" means inside its strip.** The docs left this distance open. Using the strip needs no second number, and the card then agrees with the bars.
+- **"Not in a named channel on this map".** The spec says "Not in a named channel". With only 4 channels drawn, that would be false for a flagged spot in a gully PHIVOLCS does name, such as Bonga. So I added "on this map", and the list and the help panel say that other channels also drain Mayon. I updated FR-057, US-023 and TC-046 to match.
+- **A tap on a channel line keeps the spot's reading.** The card shows the channel and its towns above the usual reading. Otherwise, at normal zoom, a tap on a flagged cell in a strip would lose its result.
+- **One bar scale for all channels,** so a short bar on one channel means the same as on another. The largest value anywhere sets the scale.
+- **The strip width is now in `sites.json`.** That's how the app knows a site has channels, and how the panel states the width. Panama has none, so it has no Channels button and never asks for the file.
+- **Channel lines are on by default,** with a checkbox in the legend.
+
+## Things to know
+
+- **The bars stop before the eruption.** The latest published pair ends on Oct 20. When T-038 publishes the eruption pairs, the publish step adds their channel rows by itself.
+- **The strips hold little of the flagged area: 2 to 9% per pair.** Most flagged cells are elsewhere, so the list only compares these 4 channels. It doesn't say where most of the change is.
+- **Two tracks share one list.** Track 104 sees the ground from the other side. Mi-isi shows 0.04 km² on track 104 and 0.02 km² on track 111 for almost the same dates. Each bar names its track.
+- **Padang's line is mostly in Santo Domingo.** By the boundary file, 6.1 km of its 6.3 km is in Santo Domingo, and about 220 m is in Legazpi City, the town PHIVOLCS gives. The panel lists both. You confirmed the line as it is, so I changed nothing.
+- **Channel names.** I read GMA's report of the PHIVOLCS advisory of 16 January 2026 directly. It names Mi-isi and Basud as channels, but Lidong and Padang only as barangays. For those two channels the source is the [PHIVOLCS bulletin of 24 March 2000](https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf), where each is part of a two-part channel name. I could read that bulletin only through a search summary, because the PDF wouldn't open from here. Please open it once to confirm.
+- **The imagery you checked is from May 2026,** before the July and October events, so a channel may have moved since.
+- **Very short dashed parts.** Basud, Lidong and Padang run only 26 to 120 m past 10 km, but they still get the dash and the "Not checked" label, because you asked for any part past 10 km.
+- **Lines stop at their town.** Each candidate line ends at the last point inside its town, so a channel can continue past the dashed part.
+- **Areas come from the published 20 m map grid,** as ADR-011 says, not the radar's own grid. Whole-grid totals match each pair's total within about 2%.
+- **First view grew a little,** from 0.78 to 0.96 MB on desktop and from 0.58 to 0.75 MB on a phone, at about 2.2 s on Fast 4G from a local server. That's under the suggested 5 MB and 5 s.
+
+## Evidence
+
+- **Tests:** `pytest -q`: 548 passed, 1 skipped (the eruption marker in TC-015), exit code 0. TC-044 to TC-047 were skipped before and now run. Contract check: 0 errors, exit code 0.
+- **CI found a problem that Windows didn't.** The CI run for `24237d4` failed one phone test on Linux, whose default font is wider. The Channels button pushed the top bar onto a third row, the map lost about 50 px, and the danger-zone label went behind the map credits. The bar now stays at two rows, and a long label wraps inside its button. A new test widens the text on any machine, so this fails here too if it comes back. At 360 x 740 the label still clears the credits by only 1 to 5 px, depending on the font. The [CI page for `night-1`](https://github.com/BontoJamesRod/groudon-s-land-in-albay/actions?query=branch%3Anight-1) shows the result for the latest commit.
+- **New rules in the contract check:** only confirmed channels, no unconfirmed name in any published file, strips inside the reach, what's past the reach outside it, and one area row per channel and pair.
+- **Accessibility:** axe-core finds no serious or critical problem on the list and the view, at 1280 and 360 px.
+- **Screens,** in `pipeline/reports/screens/` at 1280 and 360 px, with real map tiles: `channels-list`, `channel-view`, `channel-view-short`, `channel-gap`, `gap-pair`, `channels-loading`, `channels-error`, `channels-empty`, `channels-no-data`, `channel-no-data` and `channels-unavailable`. I checked them by eye, in the test browser, not on a real phone.
+- **Test data in some screens:** no real pair has a strip without radar data, and the site does have channels, so the loading, error, empty, no-data and unavailable screens use data made up in the test browser only. Nothing made up is published.
+
+# Owner's channel decisions (2026-11-01)
+
+Your five answers are in. T-092 to T-095 are the new tasks.
+
+- **Matanag:** recorded as not confirmed, and it stays off. You named no imagery date for it, so that field is empty.
+- **ODbL:** accepted for `channels.geojson` and `channel_areas.json`, and recorded in `pipeline/reports/owner-checks.md`.
+- **"Bonga Gully":** the contract check now looks for unconfirmed names only in the channel files, so a check can cite one as a place. The July check itself is still an unpublished draft: I didn't publish it.
+- **3 decimals:** areas are rebuilt from the published grids, and the smallest flagged area now reads 0.001 km². The latest pair ranks Mi-isi 0.024, Basud 0.015, Lidong 0.008, Padang 0.006 km². At 2 decimals, the last three all read 0.01.
+- **Short phones:** on the phone layout, if the label wouldn't clear the credits, the map opens one zoom step out, still centered. FR-001, US-001/AC-1, 05 and 08 say so, and TC-082 is new.
+- **Citation:** Lidong and Padang now cite the PHIVOLCS lahar advisory of 16 January 2026, as [reported by DZRH News](https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains), next to the 2000 bulletin. I read the DZRH page directly. It says "Sto. Domingo: Lidong and Basud rivers" and lists Padang under Legaspi City, without calling Padang a channel or a river, so the citation doesn't either. Channels with a second source carry it in a new optional field, `also_name_source_url`.
+
+## Things to know
+
+- **One step isn't always enough.** With wider fonts at 320 x 568, the label is still 14 px behind the credits. On this machine's fonts at that size, it clears by 1 px.
+- **Three town names give way on short phones.** At the opening view at 360 x 640, Daraga, Legazpi City and Camalig are hidden because they touch the danger-zone label, the existing rule when zoomed out. They return one zoom step in. The channel labels and Santo Domingo also sit close together at that zoom.

@@ -2,7 +2,7 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 00 v0.3 (Draft), 01 v0.1 (Draft), 02 v0.1 (Draft), 03 v0.1 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 00 v0.4 (Draft), 01 v0.2 (Draft), 02 v0.2 (Draft), 03 v0.2 (Draft) |
 
 ## 1. Architecture Overview
 
@@ -62,17 +62,19 @@ Hosting:
 | `download` | Download or stream products, cropped to the site bounds, cached in `raw/` | F-05 |
 | `gcov` | Read HH backscatter, crop, speckle-filter, convert to dB, compute brightness change, apply masks | F-04, F-05 |
 | `coherence` | Read GUNW coherence for the current and previous pair; compute coherence loss | F-05 |
-| `classify` | Apply thresholds; produce none, low and high confidence classes and areas in km² | F-05 |
-| `context` | Prepare towns, land, coastline, channels and events for a site | F-01, F-02, F-03, F-19 |
+| `classify` | Apply the final rule and thresholds; produce none, low and high confidence classes and areas in km² | F-05 |
+| `context` | Prepare towns, land, coastline and events for a site, and the shared sources file | F-01, F-02, F-03 |
+| `channel_areas` | Write the confirmed channels with their towns, strips and any part past the reach distance; compute the flagged area per channel per pair | F-19, F-20 |
 | `export` | Reproject to EPSG:4326, colorize, write images, value grids and JSON records to `pipeline/out/` | F-03, F-04, F-05, F-09 |
 | `publish` | Copy a checked pair from `pipeline/out/` to `site/data/`, set status "published", rebuild the pair list | F-03, F-11 |
 | `validation` | Turn a hand-filled validation sheet into a validation record | F-12 |
 | `contract_check` | Check every published file against 05 before deploy | F-09, F-11 |
 | Web: `data.js` | Fetch data files; turn failures into NOT_FOUND, NETWORK_ERROR or INVALID_DATA | F-01, F-03, F-10 |
 | Web: `map.js` | Map, zoom limits, background tiles with fallback, borders, coastline, danger-zone ring | F-01 |
-| Web: `timeline.js` | Pair list, latest-pair default, Previous and Next, event markers | F-03 |
+| Web: `timeline.js` | Pair list, latest-pair default, Previous and Next, event markers, unequal-gap note | F-03, F-20 |
 | Web: `layers.js` | New-material and channel layers, legend, summary line | F-05, F-19 |
 | Web: `readout.js` | Decode value grids and build the readout card for a tap, town or channel | F-02, F-19 |
+| Web: `channels.js` | Channel list, channel view, bars, strip on the map | F-20 |
 | Web: `search.js` | Town suggestions and no-match message | F-02 |
 | Web: `compare.js` | Before/after divider | F-04 |
 | Web: `panels.js` | "What am I looking at?", Data sources, "How we checked this", site picker | F-08, F-09, F-10, F-12 |
@@ -165,7 +167,7 @@ Leaflet is copied into `site/vendor/` instead of loaded from a CDN, so the app h
 | Staging | Not used in the MVP (02 §7 shortcut) | — | — |
 | Production | GitHub Pages (Suggestion) | Live visitors and judges | `main` branch via GitHub Actions |
 
-**CI/CD:** On every push to `main`, a GitHub Actions workflow runs `pytest` (pipeline unit tests, no downloads), the data-contract check on `site/data/`, and a secret scan. If all pass, it deploys the `site/` folder to GitHub Pages (verify the official Pages deploy actions). Any failure stops the deploy.
+**CI/CD:** On every push to any branch and on every pull request, a GitHub Actions workflow runs the secret scan, `pytest` (no downloads), the browser tests in Chromium, and the data-contract check on `site/data/`. On a push to `main`, the same checks run and, if all pass, the `site/` folder deploys to GitHub Pages. Any failure stops the deploy. A separate workflow scans the whole Git history weekly and on demand.
 **Secrets:** Earthdata credentials live only in the maintainer's `~/.netrc`, or are typed at the Colab login prompt. `.gitignore` excludes `.netrc`, `raw/`, `*.h5` and `pipeline/out/`. Automatic updates (F-17, v1.2) would use GitHub repository secrets (brief §8).
 
 ## 8. Security
@@ -199,8 +201,9 @@ Leaflet is copied into `site/vendor/` instead of loaded from a CDN, so the app h
 ```text
 mayon-radar-watch/
 ├── docs/                      # planning documents (this kit)
+├── plans/                     # the owner's run plans, kept as written
 ├── pipeline/
-│   ├── mrw/                   # Python package: config, search, pairs, download, gcov, coherence, classify, context, export, publish, validation, contract_check
+│   ├── mrw/                   # Python package: config, search, pairs, download, gcov, coherence, classify, context, channel_areas, export, publish, validation, contract_check
 │   ├── sites/                 # one config file per site, e.g. mayon.json
 │   ├── context/               # source files for boundaries, channels, events, validation sheets
 │   ├── notebooks/             # Colab notebooks, incl. nisar_albay_starter.ipynb
@@ -213,7 +216,7 @@ mayon-radar-watch/
 │   ├── index.html
 │   ├── 404.html
 │   ├── css/
-│   ├── js/                    # data, map, timeline, layers, readout, search, compare, panels, strings
+│   ├── js/                    # data, map, timeline, layers, readout, channels, search, compare, panels, strings
 │   ├── vendor/leaflet-1.9.4/
 │   └── data/                  # published data files (see 05 and 06)
 ├── .github/workflows/         # CI checks and deploy
@@ -259,12 +262,12 @@ mayon-radar-watch/
 - **Alternatives considered:** Netlify and Vercel (see §2 gate).
 - **Consequences:** Size and bandwidth limits apply (verify); no custom HTTP headers, so the CSP is a `<meta>` tag.
 
-### ADR-006: Detect new material where brightness change and coherence loss agree
+### ADR-006: Detect new material by brightness change; coherence loss raises confidence
 
 - **Context:** Fresh deposits change radar brightness and destroy coherence; rain-soaked soil also changes brightness (brief §10, PRD FR-021 to FR-023).
-- **Decision:** High confidence where both brightness change (GCOV HH, dB) and coherence loss pass their thresholds; low confidence where only one does. Coherence loss = coherence of the previous pair on the same track minus coherence of the current pair, both from GUNW `coherenceMagnitude`.
-- **Alternatives considered:** Brightness change alone (rain and wind create false changes); coherence from GSLC at full resolution (more accurate, but more processing: later).
-- **Consequences:** The first pair on a track has no coherence baseline, so it is low confidence at most. GUNW is posted at about 80 m versus 10–20 m for GCOV (progress notes), so coherence is upsampled and high-confidence edges are blocky at about 80 m. GUNW products are assumed to exist for consecutive 12-day pairs (verify).
+- **Decision (final rule, gate 2, locked 2026-11-01):** A pixel is flagged by its brightness change alone (GCOV HH, dB). Coherence loss only raises a flagged pixel to high confidence and never adds area. The thresholds are final, set on 2026-11-01 before the post-eruption passes were opened; their values live in the site config. Coherence loss = coherence of the previous pair on the same track minus coherence of the current pair, both from GUNW `coherenceMagnitude`.
+- **Alternatives considered:** Flagging on either signal (the first rule: coherence loss alone added area); coherence from GSLC at full resolution (more accurate, but more processing: later).
+- **Consequences:** The first pair on a track has no coherence baseline, so it is low confidence at most, and so is any pair whose baseline spans a different number of days (FR-022). The owner lifted the blind cutoff (`BLIND_CUTOFF` in `pipeline/mrw/search.py`) to open the Oct 31 passes only; NISAR products acquired on or after 2026-11-01 (UTC) stay closed unless the owner moves it again. Each site can set a reach distance from the summit in its config (`filters.max_distance_km`). Nothing is flagged beyond it, and `sites.json` carries it to the browser (FR-060). GUNW is posted at about 80 m versus 10–20 m for GCOV (progress notes), so coherence is upsampled and high-confidence edges are blocky at about 80 m. GUNW products are assumed to exist for consecutive 12-day pairs (verify).
 
 ### ADR-007: Web rasters as reprojected images plus value grids
 
@@ -276,9 +279,9 @@ mayon-radar-watch/
 ### ADR-008: Channels from the PHIVOLCS-named list; no flow routing
 
 - **Context:** The brief puts computing flow paths from elevation data out of scope.
-- **Decision:** Keep a fixed channel file: names from PHIVOLCS bulletins, lines from an open source [TBD], each linked to the towns it passes through.
+- **Decision:** Keep a fixed channel file: names from PHIVOLCS bulletins, lines from OpenStreetMap that the owner confirmed in Google Earth Pro, each linked to the towns it passes through.
 - **Alternatives considered:** Flow routing from a DEM (out of scope; new skill).
-- **Consequences:** The channel file must be checked by hand; "in or near a channel" uses a distance threshold [TBD].
+- **Consequences:** The channel file must be checked by hand. "In or near a channel" means inside its strip (ADR-011). OpenStreetMap's license (ODbL) means crediting it on the map and keeping the channel files public under the same license.
 
 ### ADR-009: Keep unpublished pairs out of the public folder
 
@@ -294,6 +297,13 @@ mayon-radar-watch/
 - **Alternatives considered:** No background tiles at all (less context for visitors).
 - **Consequences:** The map stays usable when tiles fail (FR-005); tile terms and attribution must be checked (verify).
 
+### ADR-011: Compute channel strips in the pipeline, with the width in the site config
+
+- **Context:** The channel timeline (F-20) needs the area flagged along each channel for every pair. A value grid is over a megabyte per pair, so reading every pair in the browser would break the NFR-001 target. Area must also match the final rule exactly.
+- **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_half_width_m`, measured on each side of the line), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
+- **Alternatives considered:** Computing in the browser from each pair's grid (many downloads, and results could differ from the pipeline's); flow routing from elevation data (out of scope, ADR-008).
+- **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part, and what lies past it is drawn as "Not checked" (FR-071).
+
 ## 12. Assumptions
 
 - The maintainer has write access to one public GitHub repository.
@@ -306,16 +316,17 @@ mayon-radar-watch/
 | --- | --- | --- |
 | 1 | Frontend: plain JavaScript (Suggestion), or a framework? | §2, ADR-004 |
 | 2 | Hosting: GitHub Pages (Suggestion), Netlify or Vercel? | §2, §7, ADR-005 |
-| 3 | Where do channel lines come from? | ADR-008, F-19 |
+| 3 | Closed on 2026-11-01: OpenStreetMap, with the lines the owner confirmed. | ADR-008, F-19 |
 | 4 | Do Esri's terms allow this use, and what attribution is required? (verify) | ADR-010, F-01 |
 | 5 | Is GUNW coherence at about 80 m fine enough, or should coherence come from GSLC later? | ADR-006 |
 
 ## 14. Conflicts with Earlier Documents
 
-None beyond the one raised in 01-prd.md §13 (brief F-05 wording); ADR-006 follows the proposed fix.
+None. The conflict raised in 01-prd.md §13 (brief F-05 wording) closed with the final rule on 2026-11-01.
 
 ## 15. Revision History
 
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | CI text updated. ADR-006 now states the final rule, the reach distance and the lifted blind cutoff. Added ADR-011 and the `channel_areas` and `channels.js` modules. `channel_areas` also writes the channels file. |

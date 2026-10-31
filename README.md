@@ -1,25 +1,28 @@
 # Mayon Radar Watch
 
-A web app that shows, after every NISAR radar satellite pass, where Mayon Volcano put new material and which river channels and towns are near it. Built for the NASA Space Apps Challenge 2026, "Dancing with the SARs".
+A web app that watches how Mayon Volcano's river channels change between NISAR radar satellite passes. It compares radar images from the same track, usually 12 days apart, and maps where fresh ash, rock and lava may have landed. A channel timeline ranks the channels that the owner has confirmed by how much changed since the last pass. The Oct 30, 2026 eruption is one chapter of that story, and two pairs in Panama show the same engine on another continent. Built for the NASA Space Apps Challenge 2026, "Dancing with the SARs".
 
 **This is not an official warning service. Follow PHIVOLCS and your LGU.**
 
 ## How it works
 
-A Python pipeline compares two NISAR passes from the same track, 12 days or more apart. It looks at two signals:
+A Python pipeline compares two NISAR passes from the same track, 12 days or more apart. It uses two signals:
 
 - **Brightness change:** how much the ground's radar reflection changed, in dB (from GCOV products).
 - **Coherence loss:** how much less alike the two passes are than the previous two (from GUNW products).
 
-Where both signals pass their thresholds, the app shows high confidence. Where only one does, it shows low confidence. The pipeline writes small files into `site/data/`, and the website reads them in the visitor's browser. There is no server.
+Brightness change alone flags a spot. Coherence loss only raises a flagged spot to high confidence, and it never adds area. The pipeline writes small files into `site/data/`, and the website reads them in the visitor's browser. There is no server.
 
-The detection thresholds are PROVISIONAL until they are reviewed, and channel lines aren't in the app yet.
+The detection thresholds are final, set on 2026-11-01 before the post-eruption passes were opened. The NISAR products are still PROVISIONAL.
+
+Channel lines come from OpenStreetMap, © OpenStreetMap contributors. The project owner checked them by eye, and only those lines are used (`pipeline/reports/owner-checks.md`). `channels.geojson` and `channel_areas.json` under `site/data/sites/mayon/` are available under the [ODbL](https://opendatacommons.org/licenses/odbl/).
 
 ## Folders
 
 | Folder | What's in it |
 | --- | --- |
 | `docs/` | Planning documents: brief, PRD, design, roadmap, tests |
+| `plans/` | The owner's run plans, kept as written |
 | `pipeline/mrw/` | Python code that downloads and processes NISAR data |
 | `pipeline/sites/` | One settings file per site |
 | `pipeline/context/` | Source files for boundaries, events and validation sheets |

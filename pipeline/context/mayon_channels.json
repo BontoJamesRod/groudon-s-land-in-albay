@@ -1,0 +1,59 @@
+{
+  "site_id": "mayon",
+  "candidates_file": "channel_name_candidates.geojson",
+  "line_source_id": "channel_lines",
+  "checks": [
+    {
+      "channel": "Basud",
+      "verdict": "confirmed",
+      "id": "mayon_basud",
+      "alt_names": [],
+      "name_source": "PHIVOLCS advisory of 16 January 2026, as reported by GMA News",
+      "name_source_url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
+      "checked_by": "project owner",
+      "checked_on": "2026-11-01",
+      "imagery_date": "2026-05-16"
+    },
+    {
+      "channel": "Lidong",
+      "verdict": "confirmed",
+      "id": "mayon_lidong",
+      "alt_names": [],
+      "name_source": "PHIVOLCS lahar advisory of 16 January 2026, as reported by DZRH News (Lidong river, Sto. Domingo), and PHIVOLCS Mayon Volcano Bulletin of 24 March 2000, where it's named together with Basud as one channel",
+      "name_source_url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+      "also_name_source_url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
+      "checked_by": "project owner",
+      "checked_on": "2026-11-01",
+      "imagery_date": "2026-05-16"
+    },
+    {
+      "channel": "Mi-isi",
+      "verdict": "confirmed",
+      "id": "mayon_miisi",
+      "alt_names": ["Miisi"],
+      "name_source": "PHIVOLCS advisory of 16 January 2026, as reported by GMA News",
+      "name_source_url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
+      "checked_by": "project owner",
+      "checked_on": "2026-11-01",
+      "imagery_date": "2026-05-16"
+    },
+    {
+      "channel": "Padang",
+      "verdict": "confirmed",
+      "id": "mayon_padang",
+      "alt_names": [],
+      "name_source": "PHIVOLCS lahar advisory of 16 January 2026, as reported by DZRH News (Padang, Legazpi City), and PHIVOLCS Mayon Volcano Bulletin of 24 March 2000, where it's part of a longer channel name",
+      "name_source_url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+      "also_name_source_url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
+      "checked_by": "project owner",
+      "checked_on": "2026-11-01",
+      "imagery_date": "2026-05-16"
+    },
+    {"channel": "Bonga", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
+    {"channel": "Buyuan", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
+    {"channel": "Mabinit", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
+    {"channel": "Maninila", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
+    {"channel": "Masarawag", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
+    {"channel": "Matanag", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": null}
+  ]
+}

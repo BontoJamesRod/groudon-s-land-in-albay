@@ -1,0 +1,55 @@
+{
+  "id": "panama",
+  "name": "Azuero Peninsula, Panama",
+  "country": "Panama",
+  "status": "published",
+  "time_zone": "America/Panama",
+  "center_lat": 7.477,
+  "center_lon": -80.865,
+  "bounds_west": -80.97,
+  "bounds_south": 7.38,
+  "bounds_east": -80.76,
+  "bounds_north": 7.58,
+  "default_zoom": 12,
+  "min_zoom": 10,
+  "max_zoom": 16,
+  "summit_lat": null,
+  "summit_lon": null,
+  "danger_zone_radius_km": null,
+  "danger_zone_label": null,
+  "boundary_credit": "Boundaries: geoBoundaries (CC BY-SA 4.0)",
+  "boundary_credit_url": "https://www.geoboundaries.org/",
+  "wording_set": "plain_change",
+  "layer_wording": {
+    "title": "Radar change",
+    "low_label": "Possible change (brightness only)",
+    "high_label": "Likely change (brightness and coherence agree)",
+    "pair_titles": {
+      "panama_D141F085_20260927_20261009": "Changed after the earthquake"
+    },
+    "pair_check_notes": {
+      "panama_D141F085_20260915_20260927": "Used as the 'before' comparison for the earthquake pair"
+    }
+  },
+  "change_types": [
+    "new_material"
+  ],
+  "provisional_fields": [
+    "default_zoom",
+    "min_zoom",
+    "max_zoom"
+  ],
+  "thresholds": {
+    "status": "FINAL",
+    "rule": "brightness_leads",
+    "brightness_threshold_db": 3.0,
+    "coherence_loss_threshold": 0.3
+  },
+  "tracks": [
+    {
+      "track": 141,
+      "frame": 85,
+      "orbit_direction": "descending"
+    }
+  ]
+}
