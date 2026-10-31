@@ -12,12 +12,12 @@
 
 | TBL-ID | Table | Purpose | FR-IDs | MVP |
 | --- | --- | --- | --- | --- |
-| TBL-01 | `sites` | Showcase sites: map settings, summit and danger zone | FR-001, FR-004, FR-006, FR-010, FR-012, FR-014, FR-041, FR-042, FR-043, FR-044 | Yes |
+| TBL-01 | `sites` | Showcase sites: map settings, summit and danger zone | FR-001, FR-004, FR-006, FR-010, FR-012, FR-014, FR-041, FR-042, FR-043, FR-044, FR-060 | Yes |
 | TBL-02 | `towns` | Town borders and names for each site | FR-002, FR-007, FR-008, FR-009, FR-010, FR-056 | Yes |
 | TBL-03 | `channels` | Named channels that drain the volcano, with their towns | FR-056, FR-057, FR-058 | Yes |
 | TBL-04 | `passes` | NISAR GCOV acquisitions used by pairs | FR-014, FR-027, FR-028, FR-039 | Yes |
 | TBL-05 | `pairs` | Two consecutive same-track passes and their results | FR-013, FR-014, FR-015, FR-017, FR-018, FR-022, FR-026, FR-029, FR-030, FR-059 | Yes |
-| TBL-06 | `layers` | Images and value grids made for a pair | FR-010, FR-011, FR-019, FR-020, FR-021, FR-023, FR-024, FR-025, FR-039 | Yes |
+| TBL-06 | `layers` | Images and value grids made for a pair | FR-010, FR-011, FR-019, FR-020, FR-021, FR-023, FR-024, FR-025, FR-039, FR-060 | Yes |
 | TBL-07 | `events` | Recorded events shown on the timeline | FR-016 | Yes |
 | TBL-08 | `validations` | A check of one pair against an independent source | FR-048 | Yes |
 | TBL-09 | `validation_items` | One place compared in a validation | FR-048 | Yes |
@@ -244,6 +244,8 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
 
+The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023) and `filters`, including the reach distance `max_distance_km` (FR-060).
+
 ### TBL-02: `towns`
 
 A row is one town (city or municipality) inside a site. Stored in `site/data/sites/<site_id>/towns.geojson`, one Feature per town. Per-row `created_at` and `updated_at` are not stored, because the whole file is rebuilt at once and its `generated_at` gives the time.
@@ -320,8 +322,8 @@ A row is two consecutive passes on the same track, frame and orbit direction, an
 | `gunw_granule_id` | string | No | `null` | — | GUNW product for this pair; `null` if unavailable |
 | `gunw_vertex_url` | string | No | `null` | URL | Link to the GUNW product in ASF Vertex |
 | `coherence_used` | boolean | Yes | `false` | `true` only if this pair and the previous pair both had coherence | Whether high confidence was possible (FR-030) |
-| `brightness_threshold_db` | number | Yes | — | > 0; value [TBD] | Minimum absolute brightness change in dB |
-| `coherence_loss_threshold` | number | No | `null` | 0–1; `null` when `coherence_used` is `false`; value [TBD] | Minimum coherence loss |
+| `brightness_threshold_db` | number | Yes | — | > 0; value in the site config | Minimum absolute brightness change in dB (final, FR-023) |
+| `coherence_loss_threshold` | number | No | `null` | 0–1; `null` when `coherence_used` is `false`; value in the site config | Minimum coherence loss (final, FR-023) |
 | `high_confidence_area_km2` | number | Yes | `0` | ≥ 0 | Area classed high confidence, km² |
 | `low_confidence_area_km2` | number | Yes | `0` | ≥ 0 | Area classed low confidence, km² |
 | `new_material_area_km2` | number | Yes | `0` | = high + low | Total detected area, km² (FR-025, FR-026) |
@@ -532,7 +534,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 | # | Question | Affects |
 | --- | --- | --- |
 | 1 | What zoom levels should Mayon use (default, minimum, maximum)? | `sites` seed |
-| 2 | What are the threshold values? | `pairs.brightness_threshold_db`, `pairs.coherence_loss_threshold` |
+| 2 | Closed on 2026-11-01: final values live in the site config, never in `docs/`. | `pairs.brightness_threshold_db`, `pairs.coherence_loss_threshold` |
 | 3 | What is the exact ASF Vertex URL format for linking one granule? (verify) | `passes.vertex_url`, `pairs.gunw_vertex_url` |
 | 4 | Which boundary and channel sources for the second site? | `towns`, `channels`, `sources` |
 | 5 | Should readouts also show the brightness change and coherence loss values at the tapped spot? That would need value grids for those layers too. | `layers` |

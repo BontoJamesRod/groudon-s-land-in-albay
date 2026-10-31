@@ -101,6 +101,7 @@ As a visitor, I want to tap a spot and see what the radar found there, so that I
 - **US-004/AC-1:** Given a pair is selected, when the visitor taps a point inside the site, then a card shows the town name, the distance to the summit in km with 1 decimal, whether the point is inside the danger zone, and the new-material result with its confidence (none, low or high).
 - **US-004/AC-2:** Given the tapped point has no radar value, when the card opens, then it says "No radar data here" and gives the reason: outside radar coverage, sea, or flagged invalid by the product.
 - **US-004/AC-3:** Given the tapped point is within the danger-zone radius, when the card opens, then it shows "Inside the Permanent Danger Zone. Entry is not allowed."
+- **US-004/AC-4:** Given a site whose config sets a reach distance and a tapped point beyond it, when the card opens, then it says "Not checked: this map only looks within 10 km of the summit" (with the site's distance) instead of a new-material result.
 
 ### F-03: Pass timeline
 
@@ -143,7 +144,7 @@ As a visitor, I want to swipe between the radar images of the two dates, so that
 ### F-05: New-material layer
 
 **Priority:** Must
-**Description:** Areas where NISAR GCOV brightness change and coherence loss agree, with legend, units and confidence (R2, R3, R5, R6).
+**Description:** Areas where NISAR GCOV brightness change shows new material. GUNW coherence loss only raises a flagged area to high confidence and never adds area. Shown with legend, units and confidence (R2, R3, R5, R6).
 
 #### US-008: See new material
 
@@ -153,7 +154,9 @@ As a visitor, I want to see where new material was detected between two passes, 
 
 - **US-008/AC-1:** Given a pair is selected and the new-material layer is on, when the map shows, then areas classed as new material show in the layer colors, and the legend names each class, its confidence level and units, plus the total detected area in km² with 2 decimals.
 - **US-008/AC-2:** Given the pair's detected area is 0 km², when the layer is on, then no shading shows and "No new material detected between <before date> and <after date>" appears.
-- **US-008/AC-3:** Given a pixel where only one of the two signals passes its threshold, or a pair with no coherence data, when the layer shows, then that pixel is shown as low confidence, never high.
+- **US-008/AC-3:** Given a pixel whose brightness change passes its threshold while its coherence loss doesn't, or a flagged pixel in a pair with no coherence data, when the layer shows, then that pixel is shown as low confidence, never high.
+- **US-008/AC-4:** Given a pixel where only coherence loss passes its threshold, when the layer shows, then that pixel isn't shaded and adds no area.
+- **US-008/AC-5:** Given a site whose config sets a reach distance, when the layer shows, then nothing is shaded beyond that distance from the summit, the limit is drawn as a ring, and the legend states it.
 
 #### US-009: Process a pair
 
@@ -390,7 +393,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | FR-020 | The system shall show "Before/after images not available for this pair" and leave the map unchanged when either image is missing. | F-04 | US-007 |
 | FR-021 | The pipeline shall compute brightness change in dB as 10 × log10(after / before) from speckle-filtered GCOV backscatter. | F-05 | US-009 |
 | FR-022 | The pipeline shall compute coherence loss as the coherence of the previous pair on the same track minus the coherence of the current pair, only when both pairs span the same number of days. Otherwise it shall treat the pair as having no coherence data (FR-030). | F-05 | US-009 |
-| FR-023 | The pipeline shall class a pixel as high confidence when brightness change and coherence loss both pass their thresholds, low confidence when only one passes or no coherence data exists, and none otherwise. | F-05 | US-008 |
+| FR-023 | The pipeline shall flag a pixel by its brightness change alone. A flagged pixel is high confidence when coherence loss also passes its threshold, and low confidence when it doesn't or no coherence data exists; every other pixel is none. Coherence loss never adds area. The thresholds are final, set on 2026-11-01 before the post-eruption passes were opened, and their values live in the site config. | F-05 | US-008 |
 | FR-024 | The pipeline shall mark sea pixels, pixels outside radar coverage, and pixels flagged invalid by the product as no data, each with its reason. | F-05 | US-008 |
 | FR-025 | The system shall show the new-material layer with a legend naming each class, its confidence and units, and the total detected area in km² with 2 decimals. | F-05 | US-008 |
 | FR-026 | The system shall show "No new material detected between <before date> and <after date>" when a pair's detected area is 0 km². | F-05 | US-008 |
@@ -427,6 +430,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | FR-057 | The system shall name the channel within the channel distance of a tapped new-material area, or say "Not in a named channel". | F-19 | US-023 |
 | FR-058 | The system shall show the source of the channel names and of the channel lines. | F-19 | US-023 |
 | FR-059 | The system shall show visitors only pairs whose status is "published". | F-03 | US-006 |
+| FR-060 | The site config shall set a reach distance from the summit. The pipeline shall not flag anything beyond it, the system shall draw and state the limit, and a tap beyond it shall say "Not checked: this map only looks within 10 km of the summit" (with the site's distance). | F-02, F-05 | US-004, US-008 |
 
 ## 7. Non-Functional Requirements
 
@@ -478,14 +482,14 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 - The maintainer is the only person who processes and publishes data.
 - Pairs are consecutive passes on the same track, usually 12 days apart. A missed pass makes the gap longer, as on track 111 from 2026-07-27 to 2026-08-20 (24 days).
 - The first pair on each track has no previous pair, so its coherence loss can't be computed and its detections are low confidence at most.
-- Thresholds for brightness change and coherence loss are fixed before the eruption data is examined (brief Open Question 7).
+- Thresholds for brightness change and coherence loss are final, set on 2026-11-01 before the post-eruption passes were opened (brief Open Question 7). NISAR products are still PROVISIONAL.
 
 ## 12. Open Questions
 
 | # | Question | Affects |
 | --- | --- | --- |
 | 1 | How comfortable with technology are residents, officials and judges, and which device does each mainly use? | §3 Personas |
-| 2 | What brightness-change and coherence-loss thresholds count as new material? | FR-023, US-008 |
+| 2 | Closed on 2026-11-01: the owner set the final thresholds and rule; the values live in the site config. | FR-023, US-008 |
 | 3 | What distance from a channel counts as "in or near" it? | US-023/AC-2, FR-057 |
 | 4 | Where do the channel lines come from (for example OpenStreetMap waterways, or traced by hand)? | F-19, §8 |
 | 5 | Which second site, and which boundary data for it? | F-10, §8 |
@@ -494,7 +498,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 
 ## 13. Conflicts with Earlier Documents
 
-- **Brief v0.3, §5, F-05:** says brightness change and coherence loss "agree between two passes". Measuring coherence loss needs the coherence of the previous pair as a baseline, which means three passes. Proposed fix: change F-05's description to "Areas where NISAR GCOV brightness change and GUNW coherence loss agree, with legend, units and confidence". FR-022 and FR-030 follow this.
+- **Brief v0.3, §5, F-05:** says brightness change and coherence loss "agree between two passes". Measuring coherence loss needs the coherence of the previous pair as a baseline, which means three passes. Closed on 2026-11-01: brief v0.4 and F-05 above now describe the final rule, so the two signals no longer need to agree.
 
 ## 14. Revision History
 

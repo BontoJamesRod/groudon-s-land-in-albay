@@ -53,7 +53,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-013 | Build the `download` module: download or stream, crop to the site bounds, cache in `raw/` (or Google Drive in Colab) | US-009 | M | T-012 | A second run uses the cache; cropped arrays cover the site bounds |
 | T-014 | Build the `gcov` module: HH backscatter in dB, 5 × 5 speckle filter, brightness change, sea, coverage and product masks with no-data reasons | US-008, TBL-06, TBL-11 | M | T-013, T-009 | Unit tests pass; the Oct 7 → Oct 19 track 111 pair gives a median land change near the +0.14 dB found in the progress notes |
 | T-015 | Build the `coherence` module: GUNW coherence for the current and previous pair, resampled to the GCOV grid; brightness-only fallback | US-008, ADR-006 | M | T-013 | Unit tests pass on small test arrays; a pair without GUNW sets `coherence_used` to `false` |
-| T-016 | Study thresholds on at least 3 quiet pairs and the July 14 pair; record the chosen values and the reasons in 01 FR-023 and 05 | US-008, TBL-05 | M | T-014, T-015 | Thresholds are written down and dated before any pair after 2026-10-30 is opened |
+| T-016 | Study thresholds on at least 3 quiet pairs and the July 14 pair; record the chosen values in the site config and the reasons in a report (never the values in `docs/`) | US-008, TBL-05 | M | T-014, T-015 | Thresholds are in the site config and dated before any pair after 2026-10-30 is opened |
 | T-017 | Build the `classify` module: none, low and high classes, areas in km², `new_material` grid with no-data codes | US-008, TBL-05, TBL-06 | S | T-016 | Tests cover every class and code; `new_material_area_km2` equals high + low |
 | T-018 | Build the `export` module: reproject to EPSG:4326, colorize, write the 5 layer images, `new_material.bin` and `pair.json` to `pipeline/out/`, print the summary | US-007, US-009, US-013, TBL-04, TBL-05, TBL-06, API-008, API-009, API-010, SCR-12 | M | T-017 | `pair.json` passes the contract check; images line up with town borders on localhost |
 | T-019 | Build the `publish` module: copy a pair to `site/data/`, set `published` and `published_at`, rebuild `pairs.json` and `sites.json` | US-009, US-015, TBL-01, TBL-05, API-001, API-007, SCR-12, ADR-009 | S | T-018 | Only published pairs appear in `pairs.json`; nothing from `pipeline/out/` reaches `site/` otherwise |
@@ -110,6 +110,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 | T-ID | Task | Related IDs | Size | Depends on | Done when |
 | --- | --- | --- | --- | --- | --- |
 | T-067 | Apply the 6 approved changes in `docs/notes/proposed-doc-changes.md`, with the code, test and data parts of changes 2 and 6 | FR-011, FR-022, FR-030, TC-011, TC-024, API-008, TBL-10, US-004 | S | — | Done on 2026-11-01 |
+| T-068 | Record the owner's decisions in the docs: the final rule, the reach limit, the lifted blind cutoff and the held pair | FR-023, FR-060, ADR-006, US-004, US-008, TC-022, TC-061, TC-062, TC-063 | S | — | Done on 2026-11-01 |
 
 ## 4. Build Order
 

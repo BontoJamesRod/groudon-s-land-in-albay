@@ -1,6 +1,15 @@
 # Proposed doc changes
 
-Written for the project owner. These are proposals only: none of the docs below was edited. Each one is a place where the docs and the built app disagree, or where a doc can't be followed as written. Threshold values are left out on purpose, as they don't belong in `docs/`.
+| Change | Status |
+| --- | --- |
+| 1 | Applied on 2026-11-01 by owner decision (8089a2c) |
+| 2 | Applied on 2026-11-01 by owner decision (8089a2c) |
+| 3 | Applied on 2026-11-01 by owner decision (8089a2c) |
+| 4 | Applied on 2026-11-01 by owner decision (8089a2c) |
+| 5 | Applied on 2026-11-01 by owner decision (8089a2c) |
+| 6 | Applied on 2026-11-01 by owner decision (8089a2c) |
+
+Written for the project owner. Each one is a place where the docs and the built app disagree, or where a doc can't be followed as written. Threshold values are left out on purpose, as they don't belong in `docs/`.
 
 ## 1. Unequal gaps between passes
 

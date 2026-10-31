@@ -32,7 +32,7 @@ This system has no backend (04, ADR-001). Its "API" is the set of static files t
 }
 ```
 
-All examples below use the real track 111 granules from Oct 7 and Oct 19, 2026 (progress notes). Every computed or not-yet-decided number in them (areas, thresholds, zoom levels, image sizes, colors) is illustrative only.
+All examples below use the real track 111 granules from Oct 7 and Oct 19, 2026 (progress notes). Every computed number in them (areas, zoom levels, image sizes, colors) is illustrative only. Threshold values never appear in `docs/`, so the examples show a placeholder where the real file has a number.
 
 ## 2. Errors
 
@@ -74,7 +74,7 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 | API-007 | GET | `/data/sites/{site_id}/pairs.json` | Published pairs, oldest first | Visitor, Maintainer | FR-013, FR-015, FR-017, FR-018, FR-059, US-005, US-006 | Yes |
 | API-008 | GET | `/data/sites/{site_id}/pairs/{pair_id}/pair.json` | One pair with its passes and layers | Visitor, Maintainer | FR-014, FR-019, FR-020, FR-025, FR-026, FR-039, US-005, US-007, US-008, US-013 | Yes |
 | API-009 | GET | `/data/sites/{site_id}/pairs/{pair_id}/{image_path}` | Layer image | Visitor, Maintainer | FR-019, FR-025, US-007, US-008 | Yes |
-| API-010 | GET | `/data/sites/{site_id}/pairs/{pair_id}/{grid_path}` | Layer value grid | Visitor, Maintainer | FR-010, FR-011, FR-057, US-004, US-023 | Yes |
+| API-010 | GET | `/data/sites/{site_id}/pairs/{pair_id}/{grid_path}` | Layer value grid | Visitor, Maintainer | FR-010, FR-011, FR-057, FR-060, US-004, US-023 | Yes |
 | API-011 | GET | `/data/sites/{site_id}/pairs/{pair_id}/validation.json` | Validation of one pair | Visitor, Maintainer | FR-048, US-017 | Yes |
 
 ## 4. Endpoint Details
@@ -428,8 +428,8 @@ None (`GET`).
       "gunw_granule_id": "NISAR_L2_PR_GUNW_032_111_A_008_033_4000_SH_20261007T211319_20261007T211354_20261019T211319_20261019T211354_P05023_N_F_J_001",
       "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_032_111_A_008_033_4000_SH_20261007T211319_20261007T211354_20261019T211319_20261019T211354_P05023_N_F_J_001",
       "coherence_used": true,
-      "brightness_threshold_db": 3.0,
-      "coherence_loss_threshold": 0.3,
+      "brightness_threshold_db": "<number from the site config>",
+      "coherence_loss_threshold": "<number from the site config>",
       "high_confidence_area_km2": 0.05,
       "low_confidence_area_km2": 0.21,
       "new_material_area_km2": 0.26,
@@ -491,8 +491,8 @@ None (`GET`).
     "gunw_granule_id": "NISAR_L2_PR_GUNW_032_111_A_008_033_4000_SH_20261007T211319_20261007T211354_20261019T211319_20261019T211354_P05023_N_F_J_001",
     "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_032_111_A_008_033_4000_SH_20261007T211319_20261007T211354_20261019T211319_20261019T211354_P05023_N_F_J_001",
     "coherence_used": true,
-    "brightness_threshold_db": 3.0,
-    "coherence_loss_threshold": 0.3,
+    "brightness_threshold_db": "<number from the site config>",
+    "coherence_loss_threshold": "<number from the site config>",
     "high_confidence_area_km2": 0.05,
     "low_confidence_area_km2": 0.21,
     "new_material_area_km2": 0.26,
@@ -527,7 +527,7 @@ None (`GET`).
         "id": "mayon_A111F008_20261007_20261019_new_material",
         "pair_id": "mayon_A111F008_20261007_20261019",
         "kind": "new_material",
-        "title": "New material",
+        "title": "New material, within 10 km of the summit",
         "units": "class",
         "image_path": "new_material.png",
         "image_format": "png",
@@ -611,7 +611,7 @@ None (`GET`).
 
 **Purpose:** One layer's value grid, read in the browser for readouts.
 **Roles:** Visitor, Maintainer
-**Supports:** FR-010, FR-011, FR-057, US-004, US-023
+**Supports:** FR-010, FR-011, FR-057, FR-060, US-004, US-023
 
 **Path and query parameters**
 

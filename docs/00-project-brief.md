@@ -43,7 +43,7 @@ Requirement IDs (R1–R8) refer to Section 1 of the challenge checklist. Feature
 | F-02 | Place readout | Search a town or tap the map to see distance to the crater, danger-zone status, new material nearby and how confident the result is (R1, R8) | Must |
 | F-03 | Pass timeline | Step through every same-track 12-day pair since June 2026, including the July 14 pyroclastic flow and the Oct 30 eruption (R4) | Must |
 | F-04 | Before/after view | Swipe between the radar images of two dates (R4, R5) | Must |
-| F-05 | New-material layer | Areas where NISAR GCOV brightness change and coherence loss agree between two passes, with legend, units and confidence (R2, R3, R5, R6) | Must |
+| F-05 | New-material layer | Areas where NISAR GCOV brightness change shows new material; GUNW coherence loss only raises confidence and never adds area. With legend, units and confidence (R2, R3, R5, R6) | Must |
 | F-06 | Ground-movement layer | Line-of-sight movement in cm from NISAR GUNW, labeled "within the noise" when no clear signal shows | Could |
 | F-07 | Flood layer | Open water in the Albay lowlands after typhoons, using the same change engine | Could |
 | F-08 | "What am I looking at?" panel | How radar sees, what the colors mean, confidence levels, limitations, and that official warnings come from PHIVOLCS and LGUs (R8) | Must |
@@ -120,7 +120,7 @@ Suggestion (not yet confirmed, see Open Question 3):
 
 ## 10. Assumptions
 
-- Fresh deposits on Mayon show up as both brightness change and coherence loss at NISAR's 10–20 m pixels. This is tested first, on the July 14 and Oct 30 events.
+- Fresh deposits on Mayon show up as brightness change at NISAR's 10–20 m pixels, often with coherence loss too. This is tested on the July 14 and Oct 30 events.
 - NISAR keeps passing every 12 days on tracks 104, 111 and 39, and products appear 36–72 hours after each pass.
 - Channel lines can be traced from open map data and matched to the channel names in PHIVOLCS bulletins.
 - All processing happens in Python before publishing, so the website itself is static.
@@ -137,7 +137,7 @@ Suggestion (not yet confirmed, see Open Question 3):
 | 4 | Which second site, on another continent? It should have a clear surface change in 2026 NISAR data (an eruption, landslide or flood), so the same engine applies. | F-10 |
 | 5 | Do the Space Apps and Legazpi local event rules allow code written before Nov 14? This decides how much existing work can be used, so check it first. | Section 7 |
 | 6 | What is the monthly budget? Suggestion: ₱0, using free tiers (Colab, GitHub Pages, NASA Earthdata). | Section 7 |
-| 7 | What brightness change and coherence drop count as "new material"? Decide before the eruption data arrives (around Nov 3). | F-05 |
+| 7 | Closed on 2026-11-01: the owner set the final thresholds and rule before the post-eruption passes were opened. The values live in the site config. | F-05 |
 | 8 | What do the official Objectives, Potential Considerations and Resources sections add? (Checklist Section 11) | Section 5 |
 | 9 | What are the team name and the presenter's name? | Section 7 |
 | 10 | Who will help test the app with residents or LGU staff? | G-03 |

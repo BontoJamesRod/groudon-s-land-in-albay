@@ -45,7 +45,7 @@ Fixtures used below are listed in §5.
 | TC-019 | US-007/AC-2 | FR-020, SCR-04, API-009 | Missing image | 1. On localhost, use the missing-image fixture. 2. Tap Compare. | "Before/after images not available for this pair"; the map stays as it was | Negative | Medium |
 | TC-020 | US-008/AC-1 | FR-025, SCR-01, API-008, API-009 | New-material layer and legend | 1. Select the eruption pair. 2. Check the map and legend. | Detected areas shaded; legend lists each class with its confidence and units; total area in km² with 2 decimals equals `new_material_area_km2` | Positive | High |
 | TC-021 | US-008/AC-2 | FR-026, SCR-01 | Pair with nothing detected | 1. On localhost, use the zero-area fixture. | No shading; "No new material detected between <before date> and <after date>" with the real dates | Edge | Medium |
-| TC-022 | US-008/AC-3 | FR-023 | Only one signal passes | 1. Run the `classify` unit tests with test arrays where only brightness, or only coherence loss, passes. | Those cells get class 1 (low), never 2 (high) | Negative | High |
+| TC-022 | US-008/AC-3 | FR-023 | Only brightness passes | 1. Run the `classify` unit tests with test arrays where only brightness passes. | Those cells get class 1 (low), never 2 (high) | Negative | High |
 | TC-023 | US-008/AC-3 | FR-030, TBL-05 | No coherence data | 1. Process a pair whose GUNW is unavailable (fixture). | `coherence_used` is `false`; the grid has no class 2 cells; `high_confidence_area_km2` is 0 | Edge | High |
 | TC-024 | US-009/AC-1 | FR-029, SCR-12, TBL-05, TBL-06 | Process a real pair | 1. Run the pipeline for track 111, 2026-10-07 → 2026-10-19. | Files written to `pipeline/out/`; summary shows status "ready", the granule IDs used (4 with coherence: 2 GCOV and 2 GUNW; 2 without) and areas in km² | Positive | High |
 | TC-025 | US-009/AC-2 | FR-027, SCR-12 | Mixed tracks | 1. Run with a track 111 pass and a track 104 pass. | Stops with "Passes are not from the same track, frame and direction"; no files written | Negative | High |
@@ -73,6 +73,9 @@ Fixtures used below are listed in §5.
 | TC-047 | US-023/AC-3 | FR-058, SCR-01, SCR-06, API-002 | Channel sources | 1. With channels on, open the legend and Data sources. | Sources of channel names and channel lines are shown | Positive | Medium |
 | TC-048 | US-009/AC-1 | TBL-01, TBL-11, API-001, API-011 | All published files match the contract | 1. Run `contract_check` on `site/data/`. | 0 errors: every field, type, enum and constraint in 05 holds; image and grid sizes match their records | Positive | High |
 | TC-049 | US-006/AC-1 | FR-059, API-007 | Unpublished pairs never shown | 1. Process a pair but don't publish it. 2. Deploy. 3. Check `pairs.json` and the timeline. | The pair isn't listed and its folder isn't under `site/data/` | Negative | High |
+| TC-061 | US-004/AC-4 | FR-060, SCR-02, API-010 | Tap beyond the reach limit | 1. Tap a land point in Oas, about 13.5 km from the summit. | Card says "Not checked: this map only looks within 10 km of the summit"; it doesn't say "No new material detected" | Edge | High |
+| TC-062 | US-008/AC-5 | FR-060, SCR-01, TBL-01, TBL-06 | Reach limit is drawn and stated | 1. Open the map and legend. 2. Run the contract check on published layers. | A dotted ring shows at the reach distance; every published `new_material` layer title states the limit | Positive | High |
+| TC-063 | US-008/AC-4 | FR-023, TBL-06 | Only coherence loss passes | 1. Run the `classify` unit tests with test arrays where only coherence loss passes. | Those cells get class 0 (none) and add no area | Negative | High |
 
 ## 4. Non-Functional Tests
 
@@ -115,11 +118,11 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-001 | AC-1, AC-2 | TC-001, TC-002 |
 | US-002 | AC-1, AC-2 | TC-003, TC-004 |
 | US-003 | AC-1, AC-2 | TC-005, TC-007, TC-006 |
-| US-004 | AC-1, AC-2, AC-3 | TC-008, TC-009, TC-010, TC-011, TC-012 |
+| US-004 | AC-1, AC-2, AC-3, AC-4 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061 |
 | US-005 | AC-1, AC-2, AC-3 | TC-013, TC-014, TC-015 |
 | US-006 | AC-1, AC-2 | TC-016, TC-049, TC-017 |
 | US-007 | AC-1, AC-2 | TC-018, TC-019 |
-| US-008 | AC-1, AC-2, AC-3 | TC-020, TC-021, TC-022, TC-023 |
+| US-008 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-020, TC-021, TC-022, TC-023, TC-063, TC-062 |
 | US-009 | AC-1, AC-2, AC-3 | TC-024, TC-027, TC-048, TC-025, TC-026 |
 | US-012 | AC-1, AC-2, AC-3 | TC-028, TC-029, TC-030 |
 | US-013 | AC-1, AC-2 | TC-031, TC-032 |

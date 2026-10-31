@@ -62,7 +62,7 @@ Hosting:
 | `download` | Download or stream products, cropped to the site bounds, cached in `raw/` | F-05 |
 | `gcov` | Read HH backscatter, crop, speckle-filter, convert to dB, compute brightness change, apply masks | F-04, F-05 |
 | `coherence` | Read GUNW coherence for the current and previous pair; compute coherence loss | F-05 |
-| `classify` | Apply thresholds; produce none, low and high confidence classes and areas in km² | F-05 |
+| `classify` | Apply the final rule and thresholds; produce none, low and high confidence classes and areas in km² | F-05 |
 | `context` | Prepare towns, land, coastline, channels and events for a site | F-01, F-02, F-03, F-19 |
 | `export` | Reproject to EPSG:4326, colorize, write images, value grids and JSON records to `pipeline/out/` | F-03, F-04, F-05, F-09 |
 | `publish` | Copy a checked pair from `pipeline/out/` to `site/data/`, set status "published", rebuild the pair list | F-03, F-11 |
@@ -259,12 +259,12 @@ mayon-radar-watch/
 - **Alternatives considered:** Netlify and Vercel (see §2 gate).
 - **Consequences:** Size and bandwidth limits apply (verify); no custom HTTP headers, so the CSP is a `<meta>` tag.
 
-### ADR-006: Detect new material where brightness change and coherence loss agree
+### ADR-006: Detect new material by brightness change; coherence loss raises confidence
 
 - **Context:** Fresh deposits change radar brightness and destroy coherence; rain-soaked soil also changes brightness (brief §10, PRD FR-021 to FR-023).
-- **Decision:** High confidence where both brightness change (GCOV HH, dB) and coherence loss pass their thresholds; low confidence where only one does. Coherence loss = coherence of the previous pair on the same track minus coherence of the current pair, both from GUNW `coherenceMagnitude`.
-- **Alternatives considered:** Brightness change alone (rain and wind create false changes); coherence from GSLC at full resolution (more accurate, but more processing: later).
-- **Consequences:** The first pair on a track has no coherence baseline, so it is low confidence at most. GUNW is posted at about 80 m versus 10–20 m for GCOV (progress notes), so coherence is upsampled and high-confidence edges are blocky at about 80 m. GUNW products are assumed to exist for consecutive 12-day pairs (verify).
+- **Decision (final rule, gate 2, locked 2026-11-01):** A pixel is flagged by its brightness change alone (GCOV HH, dB). Coherence loss only raises a flagged pixel to high confidence and never adds area. The thresholds are final, set on 2026-11-01 before the post-eruption passes were opened; their values live in the site config. Coherence loss = coherence of the previous pair on the same track minus coherence of the current pair, both from GUNW `coherenceMagnitude`.
+- **Alternatives considered:** Flagging on either signal (the first rule: coherence loss alone added area); coherence from GSLC at full resolution (more accurate, but more processing: later).
+- **Consequences:** The first pair on a track has no coherence baseline, so it is low confidence at most, and so is any pair whose baseline spans a different number of days (FR-022). The owner lifted the blind cutoff (`BLIND_CUTOFF` in `pipeline/mrw/search.py`) to open the Oct 31 passes only; NISAR products acquired on or after 2026-11-01 (UTC) stay closed unless the owner moves it again. Each site can set a reach distance from the summit in its config (`filters.max_distance_km`), and nothing is flagged beyond it (FR-060). GUNW is posted at about 80 m versus 10–20 m for GCOV (progress notes), so coherence is upsampled and high-confidence edges are blocky at about 80 m. GUNW products are assumed to exist for consecutive 12-day pairs (verify).
 
 ### ADR-007: Web rasters as reprojected images plus value grids
 
@@ -312,7 +312,7 @@ mayon-radar-watch/
 
 ## 14. Conflicts with Earlier Documents
 
-None beyond the one raised in 01-prd.md §13 (brief F-05 wording); ADR-006 follows the proposed fix.
+None. The conflict raised in 01-prd.md §13 (brief F-05 wording) closed with the final rule on 2026-11-01.
 
 ## 15. Revision History
 

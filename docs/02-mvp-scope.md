@@ -87,7 +87,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | The eruption pair shows no clear new material | Med | High | Keep the July 14, 2026 pyroclastic-flow pair as the backup showcase |
 | Post-eruption products arrive later than 36–72 h | Med | Med | Prepare the pipeline on older pairs first so the eruption pair takes hours, not days |
 | No suitable second site is found in time | Med | High | Choose the second site in the first days; prefer an event with an obvious surface change |
-| Thresholds are tuned to make the eruption look good | Med | High | Fix thresholds on quiet pairs before looking at the eruption pair (PRD Open Question 2) |
+| Thresholds are tuned to make the eruption look good | Med | High | Done: the thresholds were set on 2026-11-01, before the post-eruption passes were opened (FR-023) |
 | Text reads like a lahar forecast | Med | High | Review all text against FR-038 before release |
 | Large downloads on slow internet; Colab resets | High | Med | Crop early, cache downloads, save outputs to Google Drive |
 | Solo beginner builder runs out of time | Med | High | Build the thin slice first (one pair end to end), then widen; deferred items stay deferred |

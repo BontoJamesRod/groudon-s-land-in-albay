@@ -38,6 +38,10 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-10-31 | One core question: where new material landed, and which channels and towns are near it | 00 §1 (v0.2) |
 | 2026-10-31 | Past-years water comparison (F-15) removed; water-shortage users dropped | 00 §5, §13 (v0.2) |
 | 2026-10-31 | All documents drafted in one pass at the owner's request, instead of one at a time with approval between | This file |
+| 2026-10-31 | Detections are limited by a reach distance from the summit set in the site config (live since Oct 31) | 01 FR-060, 04 ADR-006 |
+| 2026-11-01 | Gate 2: final classification rule and thresholds locked before any post-eruption data was opened. Brightness change flags a pixel; coherence loss only raises it to high confidence. Values live in the site config | 01 FR-023, 04 ADR-006 |
+| 2026-11-01 | Blind cutoff lifted for the Oct 31 passes only | 04 ADR-006, `CLAUDE.md` |
+| 2026-11-01 | Pair D104 2026-09-25 → 2026-10-07 stays off the map by owner decision, because its baseline's coherence is unusually high | This file |
 
 ## Open Questions Carried Forward
 

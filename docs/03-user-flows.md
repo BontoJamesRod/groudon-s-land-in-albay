@@ -88,11 +88,13 @@ flowchart TD
     A(["Tap the map"]) --> B{"Radar value here?"}
     B -- No --> C["Card: No radar data here, with reason"]
     B -- Yes --> D{"New material class?"}
+    D -- "None, beyond reach" --> R["Card: Not checked, beyond the reach limit"]
     D -- None --> E["Card: no new material"]
     D -- "Low or high" --> F{"Within channel distance?"}
     F -- Yes --> G["Card: detected in or near channel"]
     F -- No --> H["Card: Not in a named channel"]
     C --> I{"Inside danger zone?"}
+    R --> I
     E --> I
     G --> I
     H --> I
@@ -207,7 +209,8 @@ Nothing is written when a check fails; only published pairs reach visitors (FR-0
 | Background imagery | Map layer | On failure, shows "Background map unavailable" and keeps borders, coastline and the danger-zone ring (US-001/AC-2) |
 | Town borders and names | Map layer | Always on (US-001/AC-1) |
 | Danger-zone ring | Map layer | 6 km ring labeled "Permanent Danger Zone (6 km)" for Mayon (US-001/AC-1) |
-| New-material layer | Map layer and toggle | On by default; classes by confidence (US-008/AC-1, US-008/AC-3) |
+| New-material layer | Map layer and toggle | On by default; classes by confidence (US-008/AC-1, US-008/AC-3, US-008/AC-4) |
+| Reach ring | Map layer | Dotted ring at the site's reach distance; the legend title states the limit (US-008/AC-5) |
 | Channels layer | Map layer and toggle | Named channel lines with names (US-023/AC-1) |
 | Legend | Panel | Class names, confidence, units, total detected area in km² with 2 decimals, channel sources (US-008/AC-1, US-023/AC-3) |
 | Summary line | Text | "No new material detected between <before date> and <after date>" when the area is 0 km² (US-008/AC-2) |
@@ -250,6 +253,7 @@ Nothing is written when a check fails; only published pairs reach visitors (FR-0
 | Distance to summit | Text | In km with 1 decimal (US-004/AC-1) |
 | Danger-zone notice | Text | "Inside the Permanent Danger Zone. Entry is not allowed." when within the radius (US-004/AC-3) |
 | New-material result | Text | None, low confidence or high confidence (US-004/AC-1) |
+| Beyond-reach message | Text | "Not checked: this map only looks within 10 km of the summit" with the site's distance (US-004/AC-4) |
 | No-data message | Text | "No radar data here" plus one reason: outside radar coverage, sea, or "the radar product marked this spot as invalid" (US-004/AC-2) |
 | Channel line | Text | "New material detected in or near <channel name>" or "Not in a named channel" (US-023/AC-2) |
 | Towns along the channel | List | Shown when a channel was tapped (US-023/AC-1) |
