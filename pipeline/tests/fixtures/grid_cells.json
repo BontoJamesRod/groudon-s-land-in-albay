@@ -1,0 +1,35 @@
+{
+ "note": "Grid cells with known values, for the browser tests (docs/08 section 5). Localhost only. Cells 0, 1 and 2 are inside the 10 km reach.",
+ "cells": [
+  {
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "value": 0,
+   "lat": 13.257039,
+   "lon": 123.697768
+  },
+  {
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "value": 1,
+   "lat": 13.262776,
+   "lon": 123.636887
+  },
+  {
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "value": 2,
+   "lat": 13.200046,
+   "lon": 123.689996
+  },
+  {
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "value": 253,
+   "lat": 13.307186,
+   "lon": 123.585999
+  },
+  {
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "value": 254,
+   "lat": 13.301449,
+   "lon": 123.794734
+  }
+ ]
+}

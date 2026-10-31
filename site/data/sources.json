@@ -1,0 +1,63 @@
+{
+ "data": [
+  {
+   "id": "ph_admin_boundaries",
+   "name": "Philippine municipal and city boundaries",
+   "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
+   "used_for": "boundaries",
+   "url": "https://github.com/faeldon/philippines-json-maps",
+   "license": "CC BY-IGO",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-30T23:14:16Z",
+   "updated_at": "2026-10-30T23:14:16Z"
+  },
+  {
+   "id": "ph_coastline",
+   "name": "Coastline, from the union of the Philippine municipal and city boundaries",
+   "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
+   "used_for": "coastline",
+   "url": "https://github.com/faeldon/philippines-json-maps",
+   "license": "CC BY-IGO",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-30T23:14:16Z",
+   "updated_at": "2026-10-30T23:14:16Z"
+  },
+  {
+   "id": "esri_world_imagery",
+   "name": "World Imagery background map",
+   "provider": "Esri",
+   "used_for": "basemap",
+   "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+   "license": "Esri terms of use, with attribution",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-30T23:14:16Z",
+   "updated_at": "2026-10-30T23:14:16Z"
+  },
+  {
+   "id": "esa_worldcover_2021",
+   "name": "ESA WorldCover 2021 land cover, used only as context in the false-alarm study",
+   "provider": "European Space Agency",
+   "used_for": "validation",
+   "url": "https://esa-worldcover.org/",
+   "license": "CC BY 4.0",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-31T00:00:00Z",
+   "updated_at": "2026-10-31T00:00:00Z"
+  },
+  {
+   "id": "copernicus_dem_glo30",
+   "name": "Copernicus DEM GLO-30 elevation, used only as context in the false-alarm study",
+   "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
+   "used_for": "validation",
+   "url": "https://registry.opendata.aws/copernicus-dem/",
+   "license": "Copernicus DEM GLO-30 licence, free with attribution",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-31T00:00:00Z",
+   "updated_at": "2026-10-31T00:00:00Z"
+  }
+ ],
+ "meta": {
+  "generated_at": "2026-10-31T00:00:00Z",
+  "schema_version": "1.0"
+ }
+}

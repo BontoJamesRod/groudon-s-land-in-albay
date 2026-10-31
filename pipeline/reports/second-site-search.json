@@ -1,0 +1,338 @@
+{
+ "Azuero Peninsula landslides, Panama": {
+  "event_date": "2026-10-09",
+  "bounds": [
+   -81.05,
+   7.3,
+   -80.65,
+   7.7
+  ],
+  "gcov_passes": 57,
+  "tracks": [
+   [
+    4,
+    5,
+    "ascending"
+   ],
+   [
+    40,
+    85,
+    "descending"
+   ],
+   [
+    76,
+    5,
+    "ascending"
+   ],
+   [
+    76,
+    6,
+    "ascending"
+   ],
+   [
+    141,
+    84,
+    "descending"
+   ],
+   [
+    141,
+    85,
+    "descending"
+   ]
+  ],
+  "pairs_spanning_event": [
+   {
+    "id": "D141F084_20260927_20261009",
+    "track": 141,
+    "frame": 84,
+    "direction": "descending",
+    "before": "2026-09-27T23:53:07Z",
+    "after": "2026-10-09T23:53:08Z",
+    "gap_days": 12,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_031_141_D_084_4005_DHDH_A_20260927T235307_20260927T235336_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_032_141_D_084_4005_DHDH_A_20261009T235308_20261009T235336_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_031_141_D_084_032_4000_SH_20260927T235307_20260927T235336_20261009T235308_20261009T235336_P05023_N_F_J_001"
+   },
+   {
+    "id": "D141F085_20260927_20261009",
+    "track": 141,
+    "frame": 85,
+    "direction": "descending",
+    "before": "2026-09-27T23:53:35Z",
+    "after": "2026-10-09T23:53:35Z",
+    "gap_days": 12,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_031_141_D_085_4005_DHDH_A_20260927T235335_20260927T235344_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_032_141_D_085_4005_DHDH_A_20261009T235335_20261009T235345_P05023_N_P_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_031_141_D_085_032_4000_SH_20260927T235335_20260927T235344_20261009T235335_20261009T235345_P05023_N_P_J_001"
+   },
+   {
+    "id": "A004F005_20260930_20261012",
+    "track": 4,
+    "frame": 5,
+    "direction": "ascending",
+    "before": "2026-09-30T11:04:20Z",
+    "after": "2026-10-12T11:04:20Z",
+    "gap_days": 12,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_032_004_A_005_4005_DHDH_A_20260930T110420_20260930T110435_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_033_004_A_005_4005_DHDH_A_20261012T110420_20261012T110436_P05023_N_P_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_032_004_A_005_033_4000_SH_20260930T110420_20260930T110435_20261012T110420_20261012T110436_P05023_N_P_J_001"
+   },
+   {
+    "id": "D040F085_20261002_20261014",
+    "track": 40,
+    "frame": 85,
+    "direction": "descending",
+    "before": "2026-10-02T23:45:16Z",
+    "after": "2026-10-14T23:45:16Z",
+    "gap_days": 12,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_032_040_D_085_4005_DHDH_A_20261002T234516_20261002T234533_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_033_040_D_085_4005_DHDH_A_20261014T234516_20261014T234533_P05023_N_P_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_032_040_D_085_033_4000_SH_20261002T234516_20261002T234533_20261014T234516_20261014T234533_P05023_N_P_J_001"
+   },
+   {
+    "id": "A076F005_20261005_20261017",
+    "track": 76,
+    "frame": 5,
+    "direction": "ascending",
+    "before": "2026-10-05T10:56:04Z",
+    "after": "2026-10-17T10:56:04Z",
+    "gap_days": 12,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_032_076_A_005_4005_DHDH_A_20261005T105604_20261005T105616_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_033_076_A_005_4005_DHDH_A_20261017T105604_20261017T105616_P05023_N_P_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_032_076_A_005_033_4000_SH_20261005T105604_20261005T105616_20261017T105604_20261017T105616_P05023_N_P_J_001"
+   },
+   {
+    "id": "A076F006_20261005_20261017",
+    "track": 76,
+    "frame": 6,
+    "direction": "ascending",
+    "before": "2026-10-05T10:56:15Z",
+    "after": "2026-10-17T10:56:15Z",
+    "gap_days": 12,
+    "gunw": false,
+    "previous_gunw": false,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_032_076_A_006_4005_DHDH_A_20261005T105615_20261005T105626_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_033_076_A_006_4005_DHDH_A_20261017T105615_20261017T105627_P05023_N_P_J_001",
+    "gunw_granule": null
+   }
+  ]
+ },
+ "Fuego, Guatemala": {
+  "event_date": "2026-08-03",
+  "bounds": [
+   -90.98,
+   14.38,
+   -90.78,
+   14.56
+  ],
+  "gcov_passes": 29,
+  "tracks": [
+   [
+    62,
+    9,
+    "ascending"
+   ],
+   [
+    127,
+    81,
+    "descending"
+   ],
+   [
+    134,
+    9,
+    "ascending"
+   ]
+  ],
+  "pairs_spanning_event": [
+   {
+    "id": "A134F009_20260717_20260810",
+    "track": 134,
+    "frame": 9,
+    "direction": "ascending",
+    "before": "2026-07-17T11:31:15Z",
+    "after": "2026-08-10T11:31:14Z",
+    "gap_days": 24,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_025_134_A_009_4005_DHDH_A_20260717T113115_20260717T113150_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_027_134_A_009_4005_DHDH_A_20260810T113114_20260810T113148_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_025_134_A_009_027_4000_SH_20260717T113115_20260717T113150_20260810T113114_20260810T113148_P05023_N_F_J_001"
+   },
+   {
+    "id": "A062F009_20260724_20260817",
+    "track": 62,
+    "frame": 9,
+    "direction": "ascending",
+    "before": "2026-07-24T11:39:34Z",
+    "after": "2026-08-17T11:39:33Z",
+    "gap_days": 24,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_026_062_A_009_4005_DHDH_A_20260724T113934_20260724T114008_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_062_A_009_4005_DHDH_A_20260817T113933_20260817T114007_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_026_062_A_009_028_4000_SH_20260724T113934_20260724T114008_20260817T113933_20260817T114007_P05023_N_F_J_001"
+   },
+   {
+    "id": "D127F081_20260717_20260822",
+    "track": 127,
+    "frame": 81,
+    "direction": "descending",
+    "before": "2026-07-17T00:33:01Z",
+    "after": "2026-08-22T00:32:59Z",
+    "gap_days": 36,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_025_127_D_081_4005_DHDH_A_20260717T003301_20260717T003338_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_127_D_081_4005_DHDH_A_20260822T003259_20260822T003337_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_025_127_D_081_028_4000_SH_20260717T003301_20260717T003338_20260822T003259_20260822T003337_P05023_N_F_J_001"
+   }
+  ]
+ },
+ "Nyamulagira, DR Congo": {
+  "event_date": "2026-08-09",
+  "bounds": [
+   29.05,
+   -1.55,
+   29.35,
+   -1.3
+  ],
+  "gcov_passes": 27,
+  "tracks": [
+   [
+    14,
+    1,
+    "ascending"
+   ],
+   [
+    50,
+    89,
+    "descending"
+   ],
+   [
+    115,
+    1,
+    "ascending"
+   ]
+  ],
+  "pairs_spanning_event": [
+   {
+    "id": "A014F001_20260721_20260814",
+    "track": 14,
+    "frame": 1,
+    "direction": "ascending",
+    "before": "2026-07-21T03:40:37Z",
+    "after": "2026-08-14T03:40:36Z",
+    "gap_days": 24,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_026_014_A_001_4005_DHDH_A_20260721T034037_20260721T034114_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_014_A_001_4005_DHDH_A_20260814T034036_20260814T034113_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_026_014_A_001_028_4000_SH_20260721T034037_20260721T034114_20260814T034036_20260814T034113_P05023_N_F_J_001"
+   },
+   {
+    "id": "D050F089_20260723_20260816",
+    "track": 50,
+    "frame": 89,
+    "direction": "descending",
+    "before": "2026-07-23T16:26:22Z",
+    "after": "2026-08-16T16:26:21Z",
+    "gap_days": 24,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_026_050_D_089_4005_DHDH_A_20260723T162622_20260723T162656_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_050_D_089_4005_DHDH_A_20260816T162621_20260816T162655_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_026_050_D_089_028_4000_SH_20260723T162622_20260723T162656_20260816T162621_20260816T162655_P05023_N_F_J_001"
+   },
+   {
+    "id": "A115F001_20260716_20260821",
+    "track": 115,
+    "frame": 1,
+    "direction": "ascending",
+    "before": "2026-07-16T03:49:00Z",
+    "after": "2026-08-21T03:48:58Z",
+    "gap_days": 36,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_025_115_A_001_4005_DHDH_A_20260716T034900_20260716T034938_P05023_N_F_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_115_A_001_4005_DHDH_A_20260821T034858_20260821T034932_P05023_N_F_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_025_115_A_001_028_4000_SH_20260716T034900_20260716T034938_20260821T034858_20260821T034932_P05023_N_F_J_001"
+   }
+  ]
+ },
+ "Kilauea, Hawaii, USA": {
+  "event_date": "2026-08-12",
+  "bounds": [
+   -155.35,
+   19.35,
+   -155.2,
+   19.47
+  ],
+  "gcov_passes": 20,
+  "tracks": [
+   [
+    72,
+    79,
+    "descending"
+   ],
+   [
+    151,
+    11,
+    "ascending"
+   ]
+  ],
+  "pairs_spanning_event": [
+   {
+    "id": "D072F079_20260713_20260818",
+    "track": 72,
+    "frame": 79,
+    "direction": "descending",
+    "before": "2026-07-13T04:58:15Z",
+    "after": "2026-08-18T04:58:13Z",
+    "gap_days": 36,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_025_072_D_079_4005_DHDH_A_20260713T045815_20260713T045834_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_072_D_079_4005_DHDH_A_20260818T045813_20260818T045833_P05023_N_P_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_025_072_D_079_028_4000_SH_20260713T045815_20260713T045834_20260818T045813_20260818T045833_P05023_N_P_J_001"
+   },
+   {
+    "id": "A151F011_20260811_20260823",
+    "track": 151,
+    "frame": 11,
+    "direction": "ascending",
+    "before": "2026-08-11T15:50:40Z",
+    "after": "2026-08-23T15:50:40Z",
+    "gap_days": 12,
+    "gunw": true,
+    "previous_gunw": true,
+    "maturity": "PROVISIONAL",
+    "before_granule": "NISAR_L2_PR_GCOV_027_151_A_011_4005_DHDH_A_20260811T155040_20260811T155058_P05023_N_P_J_001",
+    "after_granule": "NISAR_L2_PR_GCOV_028_151_A_011_4005_DHDH_A_20260823T155040_20260823T155057_P05023_N_P_J_001",
+    "gunw_granule": "NISAR_L2_PR_GUNW_027_151_A_011_028_4000_SH_20260811T155040_20260811T155058_20260823T155040_20260823T155057_P05023_N_P_J_001"
+   }
+  ]
+ }
+}

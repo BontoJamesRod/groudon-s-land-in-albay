@@ -1,0 +1,30 @@
+{
+  "id": "panama",
+  "name": "Azuero Peninsula, Panama (trial)",
+  "country": "Panama",
+  "status": "draft",
+  "time_zone": "America/Panama",
+  "center_lat": 7.477,
+  "center_lon": -80.865,
+  "bounds_west": -80.97,
+  "bounds_south": 7.38,
+  "bounds_east": -80.76,
+  "bounds_north": 7.58,
+  "default_zoom": 12,
+  "min_zoom": 10,
+  "max_zoom": 16,
+  "summit_lat": null,
+  "summit_lon": null,
+  "danger_zone_radius_km": null,
+  "danger_zone_label": null,
+  "change_types": ["new_material"],
+  "provisional_fields": ["default_zoom", "min_zoom", "max_zoom", "thresholds"],
+  "thresholds": {
+    "status": "PROVISIONAL",
+    "brightness_threshold_db": 3.0,
+    "coherence_loss_threshold": 0.3
+  },
+  "tracks": [
+    {"track": 141, "frame": 85, "orbit_direction": "descending"}
+  ]
+}

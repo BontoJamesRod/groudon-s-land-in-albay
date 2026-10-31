@@ -1,0 +1,44 @@
+# Task T-006: run the tests and the data contract check.
+# Runs on every pull request and on every push. Pushes to main run these same
+# checks through deploy.yml, which is why main is left out of the push list here:
+# that way a push to main is checked once, and deploy only starts if the checks pass.
+name: CI
+
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth 0 lets the scan below read the commits in this push or pull request.
+      # It only scans those commits: secret-scan-history.yml scans the whole history.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      # Task T-007: stop if a password or key is in the code. No license is
+      # needed for a repository on a personal account (gitleaks-action README).
+      - name: Scan for secrets
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install the pipeline libraries
+        run: pip install -r pipeline/requirements.txt
+      - name: Run the tests
+        run: pytest -m "not e2e"
+      - name: Install the Chromium browser for the browser tests
+        run: playwright install --with-deps chromium
+      - name: Run the browser tests
+        run: pytest -m e2e
+      - name: Check published data against docs/05
+        run: python pipeline/mrw/contract_check.py

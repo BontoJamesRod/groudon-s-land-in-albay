@@ -1,6 +1,6 @@
 # Task T-005: publish the site/ folder to GitHub Pages on every push to main.
 # One-time setup on GitHub: Settings > Pages > Source: "GitHub Actions".
-# Action versions below: check the latest on GitHub before use (verify).
+# Action versions checked against their GitHub releases on 2026-10-31.
 name: Deploy site
 
 on:
@@ -18,16 +18,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Task T-006: the same checks as ci.yml. Any failure stops the deploy.
+  checks:
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: ./.github/workflows/ci.yml
+
   deploy:
+    needs: checks
+    # 04 section 4: the site only deploys from main, even when started by hand.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

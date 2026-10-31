@@ -1,0 +1,195 @@
+{
+ "Azuero Peninsula, Panama, track 4": {
+  "bounds": [
+   -80.92,
+   7.43,
+   -80.81,
+   7.53
+  ],
+  "event_pair": {
+   "pair": "A004F005_20260930_20261012",
+   "valid_share": 0.0,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 0.0,
+   "median_change_db": null,
+   "flagged_km2": {
+    "3.0": 0.0,
+    "4.0": 0.0,
+    "5.0": 0.0
+   }
+  },
+  "pair_before": {
+   "pair": "A004F005_20260918_20260930",
+   "valid_share": 0.0,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 0.0,
+   "median_change_db": null,
+   "flagged_km2": {
+    "3.0": 0.0,
+    "4.0": 0.0,
+    "5.0": 0.0
+   }
+  }
+ },
+ "Azuero Peninsula, Panama, track 40": {
+  "bounds": [
+   -80.92,
+   7.43,
+   -80.81,
+   7.53
+  ],
+  "event_pair": {
+   "pair": "D040F085_20261002_20261014",
+   "valid_share": 0.001,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 0.2,
+   "median_change_db": 1.08,
+   "flagged_km2": {
+    "3.0": 0.01,
+    "4.0": 0.0,
+    "5.0": 0.0
+   }
+  },
+  "pair_before": {
+   "pair": "D040F085_20260920_20261002",
+   "valid_share": 0.001,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 0.2,
+   "median_change_db": -1.41,
+   "flagged_km2": {
+    "3.0": 0.03,
+    "4.0": 0.01,
+    "5.0": 0.0
+   }
+  }
+ },
+ "Azuero Peninsula, Panama, track 76": {
+  "bounds": [
+   -80.92,
+   7.43,
+   -80.81,
+   7.53
+  ],
+  "event_pair": {
+   "pair": "A076F005_20261005_20261017",
+   "valid_share": 0.038,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 5.2,
+   "median_change_db": 0.56,
+   "flagged_km2": {
+    "3.0": 0.25,
+    "4.0": 0.15,
+    "5.0": 0.1
+   }
+  },
+  "pair_before": {
+   "pair": "A076F005_20260911_20261005",
+   "valid_share": 0.02,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 2.7,
+   "median_change_db": -0.19,
+   "flagged_km2": {
+    "3.0": 0.0,
+    "4.0": 0.0,
+    "5.0": 0.0
+   }
+  }
+ },
+ "Azuero Peninsula, Panama, track 141": {
+  "bounds": [
+   -80.92,
+   7.43,
+   -80.81,
+   7.53
+  ],
+  "event_pair": {
+   "pair": "D141F085_20260927_20261009",
+   "valid_share": 0.982,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 134.0,
+   "median_change_db": 0.07,
+   "flagged_km2": {
+    "3.0": 2.51,
+    "4.0": 1.16,
+    "5.0": 0.65
+   }
+  },
+  "pair_before": {
+   "pair": "D141F085_20260915_20260927",
+   "valid_share": 0.982,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 134.0,
+   "median_change_db": 0.11,
+   "flagged_km2": {
+    "3.0": 0.51,
+    "4.0": 0.13,
+    "5.0": 0.04
+   }
+  }
+ },
+ "Fuego, Guatemala": {
+  "bounds": [
+   -90.94,
+   14.42,
+   -90.82,
+   14.52
+  ],
+  "event_pair": {
+   "pair": "A134F009_20260717_20260810",
+   "valid_share": 0.948,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 143.2,
+   "median_change_db": 0.12,
+   "flagged_km2": {
+    "3.0": 1.46,
+    "4.0": 0.7,
+    "5.0": 0.37
+   }
+  },
+  "pair_before": {
+   "pair": "A134F009_20260705_20260717",
+   "valid_share": 0.948,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 143.2,
+   "median_change_db": 0.18,
+   "flagged_km2": {
+    "3.0": 0.89,
+    "4.0": 0.31,
+    "5.0": 0.14
+   }
+  }
+ },
+ "Nyamulagira, DR Congo": {
+  "bounds": [
+   29.12,
+   -1.48,
+   29.27,
+   -1.35
+  ],
+  "event_pair": {
+   "pair": "A014F001_20260721_20260814",
+   "valid_share": 0.891,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 218.3,
+   "median_change_db": -0.22,
+   "flagged_km2": {
+    "3.0": 0.97,
+    "4.0": 0.3,
+    "5.0": 0.09
+   }
+  },
+  "pair_before": {
+   "pair": "A014F001_20260709_20260721",
+   "valid_share": 0.892,
+   "pixel_spacing_m": 10.0,
+   "valid_km2": 218.5,
+   "median_change_db": 0.72,
+   "flagged_km2": {
+    "3.0": 3.79,
+    "4.0": 0.8,
+    "5.0": 0.1
+   }
+  }
+ },
+ "bytes_fetched": 532676608
+}

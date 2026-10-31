@@ -7,10 +7,16 @@ The first time, it asks for your Earthdata username and password (the password
 is hidden while you type) and saves them in your home folder, never in this project.
 """
 import re
+import sys
 from collections import defaultdict
+from datetime import timedelta
+from pathlib import Path
 
 import asf_search as asf
 import earthaccess
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from mrw.search import BLIND_CUTOFF
 
 # Mayon area (west, south, east, north) from the progress notes
 MAYON_AOI = "POLYGON((123.56 13.14, 123.81 13.14, 123.81 13.38, 123.56 13.38, 123.56 13.14))"
@@ -30,6 +36,8 @@ def main():
         dataMaturity="PROVISIONAL",
         intersectsWith=MAYON_AOI,
         start="2026-06-17",
+        # Stay blind to the eruption until the final thresholds are set.
+        end=BLIND_CUTOFF - timedelta(seconds=1),
     )
     print(f"GCOV products found: {len(results)}")
 
