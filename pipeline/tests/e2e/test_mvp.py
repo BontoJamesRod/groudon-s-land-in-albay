@@ -388,15 +388,14 @@ def test_tc042_phone_layout(page, site_url):
         return page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
 
     assert no_sideways_scroll()
-    too_small = [row for row in controls_too_small(page) if "Leaflet" not in row["name"]]
-    assert too_small == []
+    assert controls_too_small(page) == []
     # Every control can be reached and used.
     open_drawer_if_closed(page)
-    assert [row for row in controls_too_small(page) if "Leaflet" not in row["name"]] == []
+    assert controls_too_small(page) == []
     page.click("#compare-button")
     expect(page.locator("#compare-view")).to_be_visible()
     assert no_sideways_scroll()
-    assert [row for row in controls_too_small(page) if "Leaflet" not in row["name"]] == []
+    assert controls_too_small(page) == []
     box = page.locator("#map").bounding_box()
     page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
     page.mouse.down()
@@ -410,13 +409,30 @@ def test_tc042_phone_layout(page, site_url):
         page.click(button)
         expect(page.locator(panel)).to_be_visible()
         assert no_sideways_scroll()
+        page.wait_for_timeout(300)  # the panels' links load a moment after they open
+        assert controls_too_small(page) == []
         page.click(f"{panel} [data-close]" if panel != "#search-panel" else "#search-close")
     expect_disclaimer_on_screen(page)
 
 
-@pytest.mark.xfail(reason="Known gap for the owner: Leaflet's small credit link in the map's corner is under 44 px.", strict=True)
-def test_tc042_attribution_link_is_big_enough(app):
-    assert [row for row in controls_too_small(app) if "Leaflet" in row["name"]] == []
+def test_tc042_credit_link_is_a_real_44_px_target_and_still_shows(page, site_url):
+    prepare_page(page, width=360, height=740)
+    page.goto(site_url)
+    wait_until_ready(page)
+    link = page.locator(".leaflet-control-attribution a")
+    expect(link).to_be_visible()
+    expect(link).to_contain_text("Leaflet")
+    box = link.bounding_box()
+    assert box["width"] >= 43.5 and box["height"] >= 43.5
+    # A tap anywhere in the 44 px, including its top edge above the credit line, reaches the link.
+    for share in (0.05, 0.5):
+        reached = page.evaluate(f"""(() => {{
+          const target = document.elementFromPoint({box["x"] + box["width"] / 2}, {box["y"] + box["height"] * share});
+          return target.closest('a') !== null;
+        }})()""")
+        assert reached
+    # The growth is invisible: the credit bar stays small, so it doesn't cover more map.
+    assert page.locator(".leaflet-control-attribution").bounding_box()["height"] < 40
 
 
 def swatch_colors(page):
