@@ -3,12 +3,11 @@
 // Both images sit on the map, one over the other. Each shows only its own side of
 // the divider, using a clip that is worked out again whenever the map moves.
 
-import { COMPARE_PANE } from "./map.js";
+import { COMPARE_LINE_PANE, COMPARE_PANE } from "./map.js";
 import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 const KEY_STEP_PX = 20;
-const LABEL_GAP_PX = 6; // the space kept between the divider's line and a map label
 
 function preload(url) {
   return new Promise((resolve, reject) => {
@@ -27,23 +26,15 @@ export function createCompare(map, elements, site, hideRadar) {
   let request = 0; // closing, or opening again, cancels a load that is still running
   let wanted = false; // the visitor asked for compare and hasn't closed it
 
-  function mapLabels() {
-    return map.getContainer().querySelectorAll(".town-label, .zone-label");
-  }
+  // The visible line sits in the map's own layers, under the labels, so that labels stay
+  // still and readable while it passes behind them. The invisible grip above it takes the drag.
+  const line = L.DomUtil.create("div", "compare-line", map.getPane(COMPARE_LINE_PANE));
+  line.hidden = true;
 
-  // A label that the divider's line would cut moves to whichever side is closer. CSS
-  // `translate` adds to the position Leaflet sets, so Leaflet's own placing isn't touched.
-  function moveLabelsOffDivider(dividerX) {
-    const lineX = map.getContainer().getBoundingClientRect().left + dividerX;
-    for (const label of mapLabels()) {
-      label.style.translate = "";
-      const box = label.getBoundingClientRect();
-      if (box.left - LABEL_GAP_PX < lineX && box.right + LABEL_GAP_PX > lineX) {
-        const toRight = lineX + LABEL_GAP_PX - box.left;
-        const toLeft = lineX - LABEL_GAP_PX - box.right;
-        label.style.translate = `${Math.abs(toLeft) < toRight ? toLeft : toRight}px 0`;
-      }
-    }
+  function placeLine(dividerX) {
+    L.DomUtil.setPosition(line, map.containerPointToLayerPoint([dividerX, 0]));
+    line.style.height = `${map.getSize().y}px`;
+    line.hidden = false;
   }
 
   function applyClip() {
@@ -58,7 +49,7 @@ export function createCompare(map, elements, site, hideRadar) {
     const split = Math.min(Math.max(dividerX - left, 0), right - left);
     overlays.before.getElement().style.clipPath = `inset(0 ${right - left - split}px 0 0)`;
     overlays.after.getElement().style.clipPath = `inset(0 0 0 ${split}px)`;
-    moveLabelsOffDivider(dividerX);
+    placeLine(dividerX);
   }
 
   function hide() {
@@ -68,7 +59,7 @@ export function createCompare(map, elements, site, hideRadar) {
     overlays.after.remove();
     overlays = null;
     map.off("move zoom zoomend resize", applyClip);
-    for (const label of mapLabels()) label.style.translate = "";
+    line.hidden = true;
     elements.view.hidden = true;
     hideRadar(false);
   }

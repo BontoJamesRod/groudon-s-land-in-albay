@@ -290,7 +290,7 @@ button:disabled { color: #6e7781; }
   pointer-events: auto;
 }
 
-/* The grip is wide enough to touch; the visible line is its middle. */
+/* An invisible grip, wide enough to touch. The visible line is .compare-line, under the labels. */
 .compare-divider {
   position: absolute;
   top: 0;
@@ -302,12 +302,13 @@ button:disabled { color: #6e7781; }
   pointer-events: auto;
 }
 
-.compare-divider span {
+.compare-line {
   position: absolute;
   top: 0;
-  bottom: 0;
-  left: 20px;
+  left: 0;
   width: 4px;
+  margin-left: -2px;
+  pointer-events: none;
   background: var(--paper);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
 }

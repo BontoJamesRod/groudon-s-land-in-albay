@@ -18,6 +18,7 @@ export const DETECTION_REACH_KM = { mayon: 10 };
 // Radar images go in their own layer, under the borders so that towns stay readable.
 export const RADAR_PANE = "radar";
 export const COMPARE_PANE = "compare";
+export const COMPARE_LINE_PANE = "compareLine";
 
 function addBackground(map, notice) {
   const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
@@ -89,6 +90,8 @@ export function createMap(site, siteData, notice) {
   map.attributionControl.addAttribution(STRINGS.boundaryAttribution);
   map.createPane(RADAR_PANE).style.zIndex = 350;
   map.createPane(COMPARE_PANE).style.zIndex = 340;
+  // Above town borders and below the labels (Leaflet's label layer is 650).
+  map.createPane(COMPARE_LINE_PANE).style.zIndex = 630;
   addBackground(map, notice);
   L.geoJSON(siteData.land, { style: COAST_STYLE, interactive: false }).addTo(map);
   const townLabels = addTowns(map, siteData.towns);

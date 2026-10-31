@@ -18,16 +18,10 @@ OVERLAPS = """(() => {
     })
     .map((label) => label.textContent);
 })()"""
-# Lists the labels that the divider's visible line runs through.
-UNDER_LINE = """(() => {
-  const line = document.querySelector('#compare-divider span').getBoundingClientRect();
-  return [...document.querySelectorAll('.town-label, .zone-label')]
-    .filter((label) => {
-      const box = label.getBoundingClientRect();
-      return box.left < line.right && box.right > line.left;
-    })
-    .map((label) => label.textContent);
-})()"""
+LABEL_POSITIONS = """[...document.querySelectorAll('.town-label, .zone-label')].map((label) => {
+  const box = label.getBoundingClientRect();
+  return [label.textContent, Math.round(box.left), Math.round(box.top)];
+})"""
 
 
 @pytest.mark.parametrize("width", [1280, 360])
@@ -49,17 +43,54 @@ def test_every_town_label_shows_at_the_default_zoom(app):
     expect(app.locator(".zone-label")).to_be_in_viewport()
 
 
-@pytest.mark.parametrize("share", [0.2, 0.35, 0.5, 0.65, 0.8])
-def test_no_label_sits_under_the_divider(app, share):
+def drag_to(page, share):
+    box = page.locator("#map").bounding_box()
+    middle_y = box["y"] + box["height"] / 2
+    x = box["x"] + float(page.evaluate("parseFloat(document.getElementById('compare-divider').style.left)"))
+    page.mouse.move(x, middle_y)
+    page.mouse.down()
+    page.mouse.move(box["x"] + box["width"] * share, middle_y, steps=6)
+    page.mouse.up()
+
+
+def test_labels_stay_still_while_the_divider_moves(app):
+    start = app.evaluate(LABEL_POSITIONS)
     app.click("#compare-button")
     expect(app.locator("#compare-view")).to_be_visible()
+    assert app.evaluate(LABEL_POSITIONS) == start
+    for share in (0.2, 0.35, 0.5, 0.65, 0.8):
+        drag_to(app, share)
+        assert app.evaluate(LABEL_POSITIONS) == start
+
+
+def test_the_line_follows_the_divider_and_runs_behind_the_labels(app):
+    app.click("#compare-button")
+    expect(app.locator(".compare-line")).to_be_visible()
+    drag_to(app, 0.3)
     box = app.locator("#map").bounding_box()
-    middle_y = box["y"] + box["height"] / 2
-    app.mouse.move(box["x"] + box["width"] / 2, middle_y)
-    app.mouse.down()
-    app.mouse.move(box["x"] + box["width"] * share, middle_y, steps=6)
-    app.mouse.up()
-    assert app.evaluate(UNDER_LINE) == []
+    line = app.locator(".compare-line").bounding_box()
+    assert line["x"] + line["width"] / 2 == pytest.approx(box["x"] + box["width"] * 0.3, abs=2)
+    assert line["height"] == pytest.approx(box["height"], abs=1)
+    # Line and labels share the map's layers, where a higher z-index is in front.
+    line_z, label_z = app.evaluate("""[getComputedStyle(document.querySelector('.compare-line').parentElement).zIndex,
+      getComputedStyle(document.querySelector('.leaflet-tooltip-pane')).zIndex].map(Number)""")
+    assert line_z < label_z
+
+
+def test_the_line_stays_on_the_divider_when_the_map_pans(app):
+    app.click("#compare-button")
+    expect(app.locator(".compare-line")).to_be_visible()
+    before = app.locator(".compare-line").bounding_box()
+    app.evaluate("testMap.panBy([120, 40], { animate: false })")
+    after = app.locator(".compare-line").bounding_box()
+    assert after["x"] == pytest.approx(before["x"], abs=1) and after["y"] == pytest.approx(before["y"], abs=1)
+
+
+def test_the_line_goes_when_compare_closes(app):
+    app.click("#compare-button")
+    expect(app.locator(".compare-line")).to_be_visible()
+    app.click("#compare-close")
+    expect(app.locator(".compare-line")).to_be_hidden()
 
 
 def test_labels_return_when_compare_closes(app):
