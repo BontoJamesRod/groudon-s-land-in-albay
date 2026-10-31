@@ -1,0 +1,24 @@
+{
+  "draft": false,
+  "review_note": "Content approved by the owner on 2026-11-01 (T-037), summarizing pipeline/reports/panama-check.md. The published map is linked and cited, and its image isn't copied.",
+  "source_name": "Institute of Geosciences, University of Panama: landslide map, in La Estrella de Panamá",
+  "source_url": "https://www.laestrella.com.pa/panama/nacional/azuero-registra-9553-deslizamientos-tras-sismo-de-magnitud-75-AF26896879",
+  "source_date": "2026-10-28",
+  "method": "We compared where this pair shows change with the University of Panama's published map of landslides after the earthquake, in cells 2 km across. We read the map's dots from its image, and open the source to see the map itself. Compared with the quiet pair before, change rose about 17 times where the map shows the most landslides, and stayed about the same where it shows none. This supports the pair at a scale of a few km. It doesn't show that any one colored spot is a landslide. Limits: 27% of the area with change is in cells with no mapped landslides; each dot on the map is wider than a landslide, so this gives no detection rate; and the map uses images up to Oct 23, two weeks after this pair ends, so it can include landslides this pair couldn't see.",
+  "items": [
+    {
+      "place_name": "The quarter of cells with the most mapped landslides",
+      "channel_id": null,
+      "reported_in_source": true,
+      "detected": "yes",
+      "note": "Change on 3.6% of the land, against 0.21% in the quiet pair before."
+    },
+    {
+      "place_name": "Cells with no mapped landslides",
+      "channel_id": null,
+      "reported_in_source": false,
+      "detected": "yes",
+      "note": "Change on 0.85% of the land, about the same as 0.94% in the quiet pair before. The map doesn't explain this part."
+    }
+  ]
+}
