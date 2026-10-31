@@ -311,3 +311,167 @@ def test_axe_on_the_list_on_a_phone(page, site_url):
     page.click("#channels-button")
     expect(page.locator("#channel-body .channel-row")).to_have_count(4)
     assert problems_on(page) == []
+
+
+def open_channel(page, name):
+    page.click("#channels-button")
+    page.click(f"#channel-body .channel-row:has-text('{name}')")
+    expect(page.locator("#channel-title")).to_have_text(name)
+
+
+def bar_rows(page):
+    return [" ".join(text.split()) for text in page.locator("#channel-body .channel-bar").all_inner_texts()]
+
+
+def bar_widths(page):
+    """Each bar's width as a share of its row's full width. None where there's no bar."""
+    return page.evaluate("""[...document.querySelectorAll('#channel-body .channel-bar')].map((bar) => {
+      const fill = bar.querySelector('.channel-bar-fill');
+      return fill ? fill.getBoundingClientRect().width / bar.querySelector('.channel-bar-track').getBoundingClientRect().width : null;
+    })""")
+
+
+def strip_paths(page):
+    return page.locator(".leaflet-channelStrip-pane path")
+
+
+def test_tc067_one_bar_per_pair_in_order_with_its_dates_and_value(app):
+    open_channel(app, "Mi-isi")
+    pairs = read_data("sites/mayon/pairs.json")
+    rows = {row["pair_id"]: row for row in read_data("sites/mayon/channel_areas.json") if row["channel_id"] == "mayon_miisi"}
+    expect(app.locator("#channel-body .channel-bar")).to_have_count(len(pairs))
+    texts = bar_rows(app)
+    assert [bar.get_attribute("data-pair") for bar in app.locator("#channel-body .channel-bar").all()] == [pair["id"] for pair in pairs]
+    for text, pair in zip(texts, pairs):
+        assert text.endswith(f"{rows[pair['id']]['flagged_area_km2']:.2f} km²")
+        assert f"track {pair['track']}" in text
+    assert texts[-1].startswith("Oct 8, 2026 to Oct 20, 2026, track 111")
+
+
+def test_tc067_every_bar_uses_the_same_scale(app):
+    open_channel(app, "Basud")
+    rows = read_data("sites/mayon/channel_areas.json")
+    largest = max(row["flagged_area_km2"] for row in rows)
+    mine = {row["pair_id"]: row["flagged_area_km2"] for row in rows if row["channel_id"] == "mayon_basud"}
+    wanted = [mine[pair["id"]] / largest for pair in read_data("sites/mayon/pairs.json")]
+    assert bar_widths(app) == pytest.approx(wanted, abs=0.01)
+
+
+def test_tc068_the_strip_shows_the_map_fits_it_and_back_removes_it(app):
+    expect(strip_paths(app)).to_have_count(0)
+    open_channel(app, "Mi-isi")
+    expect(strip_paths(app)).to_have_count(1)
+    lats_lons = shape(channel("Mi-isi")["properties"]["strip_geometry"]).bounds
+    inside = app.evaluate(f"testMap.getBounds().contains(L.latLngBounds([{lats_lons[1]}, {lats_lons[0]}], [{lats_lons[3]}, {lats_lons[2]}]))")
+    assert inside
+    # The map moved to the strip: its center is now the middle of the strip, not the site's.
+    center = map_center(app)
+    assert center == pytest.approx(((lats_lons[1] + lats_lons[3]) / 2, (lats_lons[0] + lats_lons[2]) / 2), abs=0.002)
+    app.click("#channel-back")
+    expect(strip_paths(app)).to_have_count(0)
+    expect(app.locator("#channel-title")).to_have_text("Channels")
+    expect(app.locator("#channel-body .channel-row")).to_have_count(4)
+    expect(app.locator("#channel-back")).to_be_hidden()
+
+
+def test_tc068_closing_the_view_removes_the_strip(app):
+    open_channel(app, "Padang")
+    expect(strip_paths(app)).to_have_count(1)
+    app.click("#channel-close")
+    expect(strip_paths(app)).to_have_count(0)
+    expect(app.locator("#channel-panel")).to_be_hidden()
+
+
+def test_tc068_switching_site_closes_the_view(app):
+    open_channel(app, "Lidong")
+    app.click("#site-name")
+    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
+    expect(app.locator("#channel-panel")).to_be_hidden()
+    expect(strip_paths(app)).to_have_count(0)
+    expect(app.locator("body")).not_to_have_class("channels-open")
+
+
+def test_a_strip_is_drawn_under_the_radar_image(app):
+    open_channel(app, "Basud")
+    order = app.evaluate("""[
+      getComputedStyle(document.querySelector('.leaflet-channelStrip-pane')).zIndex,
+      getComputedStyle(document.querySelector('.leaflet-radar-pane')).zIndex,
+    ].map(Number)""")
+    assert order[0] < order[1]
+
+
+def test_tapping_a_bar_selects_that_pair_on_the_map(app):
+    july = "mayon_A111F008_20260703_20260715"
+    open_channel(app, "Mi-isi")
+    selected = app.locator('#channel-body .channel-bar[aria-current="true"]')
+    expect(selected).to_have_attribute("data-pair", LATEST_PAIR)
+    app.click(f'#channel-body .channel-bar[data-pair="{july}"]')
+    expect(app.locator(f'.leaflet-radar-pane img[src*="{july}"]')).to_have_count(1)
+    expect(app.locator("#pair-list")).to_have_value(july)
+    expect(selected).to_have_attribute("data-pair", july)
+    expect(strip_paths(app)).to_have_count(1)
+
+
+def test_picking_a_pair_in_the_timeline_moves_the_selected_bar(app):
+    july = "mayon_A111F008_20260703_20260715"
+    open_channel(app, "Mi-isi")
+    app.select_option("#pair-list", july)
+    expect(app.locator('#channel-body .channel-bar[aria-current="true"]')).to_have_attribute("data-pair", july)
+
+
+def test_a_bar_whose_pair_fails_to_load_says_so_in_the_panel(app):
+    july = "mayon_A111F008_20260703_20260715"
+    open_channel(app, "Mi-isi")
+    app.route(f"**/{july}/pair.json", lambda route: route.abort())
+    app.click(f'#channel-body .channel-bar[data-pair="{july}"]')
+    expect(app.locator("#channel-status")).to_have_text("Couldn't load this pass. Try again.")
+    expect(app.locator("#channel-body .channel-bar")).not_to_have_count(0)
+    expect(app.locator('#channel-body .channel-bar[aria-current="true"]')).to_have_attribute("data-pair", LATEST_PAIR)
+    app.unroute(f"**/{july}/pair.json")
+    app.click(f'#channel-body .channel-bar[data-pair="{july}"]')
+    expect(app.locator('#channel-body .channel-bar[aria-current="true"]')).to_have_attribute("data-pair", july)
+    expect(app.locator("#channel-status")).to_have_text("")
+
+
+def test_tc069_no_radar_data_replaces_the_bar(app):
+    serve_areas(app, area_rows({"mayon_miisi": None}))
+    open_channel(app, "Mi-isi")
+    last = app.locator("#channel-body .channel-bar").last
+    expect(last).to_contain_text("No radar data")
+    expect(last).not_to_contain_text("km²")
+    assert last.locator(".channel-bar-fill").count() == 0
+
+
+def test_tc069_a_real_zero_still_shows_as_zero(app):
+    serve_areas(app, area_rows({"mayon_miisi": 0}))
+    open_channel(app, "Mi-isi")
+    last = app.locator("#channel-body .channel-bar").last
+    expect(last).to_contain_text("0.00 km²")
+    expect(last).not_to_contain_text("No radar data")
+
+
+def test_the_view_lists_the_channels_towns(app):
+    open_channel(app, "Padang")
+    expect(app.locator("#channel-body")).to_contain_text("Towns along this channel: Santo Domingo, Legazpi City")
+
+
+def test_the_view_fits_a_phone(page, site_url):
+    open_phone(page, site_url)
+    open_channel(page, "Mi-isi")
+    assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
+    assert controls_too_small(page) == []
+    assert page.locator("#map").bounding_box()["height"] >= 200
+    expect(strip_paths(page)).to_have_count(1)
+    expect(page.locator(".disclaimer")).to_be_in_viewport()
+
+
+def test_axe_on_the_view(app):
+    open_channel(app, "Mi-isi")
+    assert problems_on(app) == []
+
+
+def test_axe_on_the_view_on_a_phone(page, site_url):
+    open_phone(page, site_url)
+    open_channel(page, "Mi-isi")
+    assert problems_on(page) == []

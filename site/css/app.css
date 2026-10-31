@@ -507,6 +507,59 @@ button:disabled { color: #6e7781; }
 
 .channel-row-name { font-weight: 600; }
 
+.channel-bars {
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A row: the dates and the area, with the bar under them. The whole row is the tap target. */
+.channel-bar {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  font-size: 13px;
+  text-align: left;
+  background: transparent;
+}
+
+.channel-bar:hover { background: #f6f8fa; }
+
+.channel-bar[aria-current] {
+  background: #f6f8fa;
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.channel-bar-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.channel-bar-value {
+  flex: none;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bars grow from one baseline, and the rounded end is the end that shows the value. */
+.channel-bar-track {
+  display: block;
+  height: 10px;
+  margin-top: 4px;
+  border-left: 1px solid #8c959f;
+}
+
+.channel-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  background: #b45309;
+}
+
 /* T-034: on phones the map stays large and the disclaimer stays on screen (FR-037),
    so the pass controls and legend scroll inside their own area. */
 @media (max-width: 700px) {

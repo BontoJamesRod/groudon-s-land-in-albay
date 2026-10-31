@@ -142,6 +142,10 @@ export const STRINGS = {
   channelNoData: "No radar data",
   channelsHow: (halfWidth, reach) => `This is the area flagged as possible or likely new material in a strip ${halfWidth} m on each side of the line${reach ? `, within ${reach} km of the summit` : ""}.`,
   channelsOnlyConfirmed: "Only channels the project owner has checked are listed. Other channels also drain Mayon.",
+  channelBack: "Back",
+  channelBarsLead: "Area flagged in each radar pass. Tap one to show that pass on the map.",
+  channelBarLabel: (range, track) => `${range}, track ${track}`,
+  channelBarsScale: "All channels use the same scale, so their bars can be compared.",
   channelCredit: 'Channel lines: <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> (ODbL)',
 
   // Site picker (SCR-08)

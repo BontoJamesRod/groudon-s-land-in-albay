@@ -82,15 +82,20 @@ function setUpChannelLayer(map, siteData, readout) {
 function setUpChannels(map, site, siteData) {
   const button = byId("channels-button");
   button.hidden = site.channel_strip_half_width_m == null;
-  app.channels = button.hidden ? null : createChannels({
+  app.channels = button.hidden ? null : createChannels(map, {
     panel: byId("channel-panel"),
     title: byId("channel-title"),
+    back: byId("channel-back"),
     close: byId("channel-close"),
     status: byId("channel-status"),
     retry: byId("channel-retry"),
     body: byId("channel-body"),
     opener: button,
-  }, site, siteData, () => map.invalidateSize({ animate: false }));
+  }, site, siteData, () => map.invalidateSize({ animate: false }), (pairId) => {
+    const list = byId("pair-list");
+    list.value = pairId;
+    list.dispatchEvent(new Event("change"));
+  });
   button.onclick = () => app.channels.open();
 }
 
@@ -129,17 +134,23 @@ function setUpPairs(map, site, siteData, readout) {
     message: byId("timeline-message"),
     retry: byId("timeline-retry"),
   }, site, siteData.pairs, siteData.events, siteIsShown, async (summary, isCurrent) => {
-    const pair = await loadPair(site.id, summary.id);
-    if (!isCurrent()) return;
-    await showPair(pair, isCurrent);
-    if (!isCurrent()) return;
-    app.pair = pair;
-    app.compare.pairChanged(pair);
-    byId("compare-button").disabled = false;
-    readout.setPair(pair);
-    // The legend has just filled in, so the panel may have grown and the map shrunk. Leaflet
-    // only notices when told, and otherwise the map jumps at some later moment.
-    map.invalidateSize({ animate: false });
+    try {
+      const pair = await loadPair(site.id, summary.id);
+      if (!isCurrent()) return;
+      await showPair(pair, isCurrent);
+      if (!isCurrent()) return;
+      app.pair = pair;
+      app.compare.pairChanged(pair);
+      if (app.channels) app.channels.pairChanged(pair);
+      byId("compare-button").disabled = false;
+      readout.setPair(pair);
+      // The legend has just filled in, so the panel may have grown and the map shrunk. Leaflet
+      // only notices when told, and otherwise the map jumps at some later moment.
+      map.invalidateSize({ animate: false });
+    } catch (problem) {
+      if (app.channels && isCurrent()) app.channels.pairFailed();
+      throw problem;
+    }
   });
 }
 

@@ -15,6 +15,7 @@ const REACH_STYLE = { color: "#ffffff", weight: 2, opacity: 0.9, fill: false, da
 export const RADAR_PANE = "radar";
 export const COMPARE_PANE = "compare";
 export const COMPARE_LINE_PANE = "compareLine";
+export const STRIP_PANE = "channelStrip";
 
 function addBackground(map, notice) {
   const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
@@ -121,6 +122,7 @@ export function createMap(site, siteData, notice) {
   if (site.boundary_credit) map.attributionControl.addAttribution(boundaryCredit(site));
   map.createPane(RADAR_PANE).style.zIndex = 350;
   map.createPane(COMPARE_PANE).style.zIndex = 340;
+  map.createPane(STRIP_PANE).style.zIndex = 345;
   // Above town borders and below the labels (Leaflet's label layer is 650).
   map.createPane(COMPARE_LINE_PANE).style.zIndex = 630;
   addBackground(map, notice);
