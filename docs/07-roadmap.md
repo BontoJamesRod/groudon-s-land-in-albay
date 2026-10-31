@@ -132,6 +132,8 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 
 | T-089 | Give a site its own wording: change instead of new material, its own official source and limits, with the earthquake pair titled "Changed after the earthquake" and never called landslides | F-10, FR-070, US-014, SCR-01, SCR-02, SCR-05, TBL-01, TBL-06, API-001, TC-078 | S | T-088 | TC-078 passes; Mayon's text is unchanged |
 
+| T-090 | Draw only real coastline, not the land's edge where it's clipped to the site; show the quiet Panama pair's role in "How we checked this" | FR-003, FR-048, US-001, US-017, SCR-01, SCR-07, TBL-05, API-008, TC-079, TC-080 | S | T-037 | TC-079 and TC-080 pass |
+
 T-073 waits for the owner's Google Earth check, and T-010 and T-074 to T-078 wait for T-073.
 
 ### Done work added on 2026-11-01
@@ -167,7 +169,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 
 ## 4. Build Order
 
-Done work from T-050 to T-072, and T-079 to T-089, is listed in §3 and isn't repeated here.
+Done work from T-050 to T-072, and T-079 to T-090, is listed in §3 and isn't repeated here.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.
