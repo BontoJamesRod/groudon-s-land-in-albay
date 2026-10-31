@@ -76,6 +76,9 @@ body {
   border-top: 1px solid var(--line);
 }
 
+/* The drawer's handle only shows on phones (see the end of this file). */
+.drawer-toggle { display: none; }
+
 .panel {
   display: flex;
   flex-wrap: wrap;
@@ -416,6 +419,31 @@ button:disabled { color: #6e7781; }
 @media (max-width: 700px) {
   .topbar { padding: 4px 16px; gap: 4px; }
   .map-area, #map { min-height: 200px; }
-  .panel { flex: none; max-height: 36vh; overflow-y: auto; }
+  .panel { flex: none; max-height: 45vh; overflow-y: auto; padding-top: 0; gap: 4px 24px; }
+  .drawer-toggle {
+    display: block;
+    flex: 1 1 100%;
+    border: 0;
+    border-radius: 0;
+    font-size: 13px;
+    font-weight: 600;
+    touch-action: none; /* a swipe here moves the drawer, not the page */
+  }
+  .drawer-toggle::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 4px;
+    margin: 0 auto 4px;
+    border-radius: 2px;
+    background: var(--line);
+  }
+  /* Closed: only the handle and the pass controls, so the map gets the room. */
+  .drawer-closed .legend,
+  .drawer-closed .pair-label,
+  .drawer-closed .pair-events { display: none; }
+  .drawer-closed .timeline-status:has(#timeline-message:empty):has(#timeline-retry[hidden]) { display: none; }
+  .timeline-controls select { padding: 0 4px; }
+  .leaflet-control-attribution { font-size: 9px; line-height: 1.2; }
   .footer { flex: none; font-size: 13px; }
 }

@@ -12,7 +12,7 @@ from playwright.sync_api import expect
 
 from mrw.validation import build_record, load_sheet
 
-from .conftest import envelope, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -391,7 +391,8 @@ def test_tc042_phone_layout(page, site_url):
     too_small = [row for row in controls_too_small(page) if "Leaflet" not in row["name"]]
     assert too_small == []
     # Every control can be reached and used.
-    page.locator("#compare-button").scroll_into_view_if_needed()
+    open_drawer_if_closed(page)
+    assert [row for row in controls_too_small(page) if "Leaflet" not in row["name"]] == []
     page.click("#compare-button")
     expect(page.locator("#compare-view")).to_be_visible()
     assert no_sideways_scroll()

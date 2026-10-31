@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from .conftest import ROOT, prepare_page, read_fixture, wait_until_ready
+from .conftest import ROOT, open_drawer_if_closed, prepare_page, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -40,7 +40,7 @@ def open_search(page):
 
 
 def open_compare(page):
-    page.locator("#compare-button").scroll_into_view_if_needed()
+    open_drawer_if_closed(page)
     page.click("#compare-button")
     page.locator("#compare-view").wait_for()
 
@@ -54,6 +54,7 @@ def opener(button, panel):
 
 SCREENS = {
     "main": open_nothing,
+    "drawer-open": open_drawer_if_closed,
     "readout": open_readout,
     "search": open_search,
     "compare": open_compare,

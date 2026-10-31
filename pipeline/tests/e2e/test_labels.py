@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import prepare_page, wait_until_ready
+from .conftest import open_drawer_if_closed, prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -85,7 +85,7 @@ def test_date_labels_stay_in_front_of_the_divider(page, site_url, width, height)
     prepare_page(page, width=width, height=height)
     page.goto(site_url)
     wait_until_ready(page)
-    page.locator("#compare-button").scroll_into_view_if_needed()
+    open_drawer_if_closed(page)
     page.click("#compare-button")
     expect(page.locator("#compare-view")).to_be_visible()
     box = page.locator("#compare-before").bounding_box()

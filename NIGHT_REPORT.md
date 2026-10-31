@@ -348,3 +348,17 @@ Your own observations mostly hold. Ligao and Guinobatan: 41–80% of detections 
 - 05 `context_use` has no value for analysis data, so WorldCover and the elevation model are listed as `validation`, and they now appear in the Data sources panel.
 - 08 TC-020 and TC-031 need an eruption pair, which the blind rule forbids for now.
 - 08 §5 asks for fixture files for the missing-image and zero-area pairs. The tests make those in the browser instead, so no large copies are stored. `grid_cells.json` and `empty_pairs.json` are real files.
+
+## After the Day 3 report
+
+These replace the matching lines above where they differ.
+
+- **Pushed:** you asked for `night-1` to be pushed, and commit 3caa367 went up. `main` wasn't touched, and nothing deployed.
+- **CI ran for the first time and passed** on 3caa367: secret scan, tests, browser tests and contract check. The fake-secret test still hasn't been done.
+- **Real phone check passed.** You ran it in Brave on your phone over Wi-Fi and reported that every step worked, including the finger drag of the divider. It used a local server, not the live site.
+- **404 page:** you set Pages to GitHub Actions. The live address still shows GitHub's own 404, because nothing is deployed. It needs your yes to merge into `main`.
+- **Phone drawer, at your request:** you found the lower panel bigger than the map. On phones it's now a drawer, closed by default, opened by tapping or swiping its handle. `site/js/drawer.js`, tests in `pipeline/tests/e2e/test_drawer.py`.
+  - Closed, it keeps the pass controls and says the results are PROVISIONAL. The legend and total area are one tap away, which is a trade-off, since a first-time visitor won't see them straight away.
+  - The map at 360 px went from about 270 px to about 435 px tall, so the whole ring and its label now show. That settles decision 4, the phone map zoom.
+  - The drawer tests against the old site code: 9 failed, 3 passed. Full run now: `pytest -q`: 310 passed, 6 skipped, 1 expected failure. Contract check on `site/data`: 0 errors.
+  - The drawer hasn't been checked on a real phone yet. A swipe is emulated with a mouse in the tests.

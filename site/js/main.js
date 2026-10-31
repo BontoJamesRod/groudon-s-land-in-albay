@@ -4,6 +4,7 @@
 
 import { createCompare } from "./compare.js";
 import { loadPair, loadSiteData, loadSites } from "./data.js";
+import { createDrawer } from "./drawer.js";
 import { createNewMaterialLayer } from "./layers.js";
 import { createMap, RADAR_PANE } from "./map.js";
 import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
@@ -15,7 +16,7 @@ import { createTimeline } from "./timeline.js";
 const byId = (id) => document.getElementById(id);
 
 // What is on screen now.
-const app = { sites: [], site: null, map: null, pair: null, compare: null, openRequest: 0 };
+const app = { sites: [], site: null, map: null, pair: null, compare: null, drawer: null, openRequest: 0 };
 
 function showError(text, retry) {
   byId("app-message").textContent = text;
@@ -78,7 +79,11 @@ function setUpPairs(map, site, siteData, readout) {
   }, site);
   // There is nothing to compare until the first pair has loaded.
   byId("compare-button").disabled = true;
-  byId("compare-button").onclick = () => app.compare.open(app.pair);
+  byId("compare-button").onclick = async () => {
+    await app.compare.open(app.pair);
+    // On a phone the images need the room. An error stays readable in the open drawer.
+    if (!byId("compare-view").hidden) app.drawer.close();
+  };
   const siteIsShown = () => app.site === site;
   return createTimeline({
     list: byId("pair-list"),
@@ -152,6 +157,9 @@ async function openSite(site) {
 }
 
 function setUpPanels() {
+  app.drawer = createDrawer(byId("panel"), byId("drawer-toggle"), () => {
+    if (app.map) app.map.invalidateSize({ animate: false });
+  });
   const help = createPanel(byId("help-panel"), (body) => fillHelp(body, () => app.pair));
   const sources = createPanel(byId("sources-panel"), (body) => fillSources(body, () => app.pair, app.site.time_zone));
   const picker = createPanel(byId("picker-panel"), (body) => fillPicker(body, app.sites, (site) => {

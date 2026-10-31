@@ -94,6 +94,13 @@ def prepare_page(page, width=1280, height=800, tiles="fake"):
         page.route(TILE_HOST, lambda route: route.abort())
 
 
+def open_drawer_if_closed(page):
+    """On a phone the Compare button is inside the drawer. On a desktop this does nothing."""
+    toggle = page.locator("#drawer-toggle")
+    if toggle.is_visible() and toggle.get_attribute("aria-expanded") == "false":
+        toggle.click()
+
+
 @pytest.fixture
 def app(page, site_url):
     """The app, open at 1280 px with its latest pair on screen."""
