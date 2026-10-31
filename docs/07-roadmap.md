@@ -144,10 +144,11 @@ These tasks are done. They're listed so that every piece of finished work has an
 | T-070 | Add the out-of-scope lines and the legal-label rule, and name Panama as the second site | F-10, US-004, US-012, FR-068, FR-069, TC-075, TC-076 | S | — | Done on 2026-11-01 |
 | T-071 | Repair the task IDs: add the done work to this roadmap, the ID errata and the rule in `CLAUDE.md` | §11 | S | — | Done on 2026-11-01 |
 | T-072 | Update `PROGRESS.md` and the README, write `reviews/consistency-03.md` and the docs run report | §3 | S | T-071 | Done on 2026-11-01 |
+| T-079 | Check the rendered page with a vendored axe-core in a browser test, fix what it finds, and set up the axe Linter config and the cSpell word | NFR-004, F-13, US-018, SCR-01, SCR-04, SCR-05 | S | T-052 | Done on 2026-11-01 |
 
 ## 4. Build Order
 
-Done work from T-050 to T-072 is listed in §3 and isn't repeated here.
+Done work from T-050 to T-072, and T-079, is listed in §3 and isn't repeated here.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.
