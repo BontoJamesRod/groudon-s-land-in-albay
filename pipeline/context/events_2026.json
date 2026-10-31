@@ -1,0 +1,178 @@
+[
+  {
+    "date_start": "2026-10-31",
+    "date_end": "2026-10-31",
+    "type": "activity",
+    "title": "Ash emission at 5:17 a.m., plume 200 m above the crater drifting west-southwest; Alert Level 3 stays",
+    "channels": [],
+    "towns": [],
+    "source_name": "The Philippine Star",
+    "source_url": "https://www.philstar.com/nation/2026/10/31/2566922/mayon-volcano-emits-ash-plume-alert-level-3-remains",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-10-30",
+    "date_end": "2026-10-30",
+    "type": "eruption",
+    "title": "Moderately explosive eruption, 11:53 to 11:59 a.m., ash column 3 km above the crater; PHIVOLCS calls it a new phase of magmatic eruption; no gully named",
+    "channels": [],
+    "towns": ["Daraga", "Camalig", "Guinobatan"],
+    "source_name": "The Philippine Star",
+    "source_url": "https://www.philstar.com/nation/2026/10/30/2566738/mayon-volcano-back-under-alert-level-3-after-moderately-explosive-eruption-",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-10-30",
+    "date_end": "2026-10-30",
+    "type": "activity",
+    "title": "Alert Level raised from 2 to 3; mandatory evacuation of the 6-km danger zone begins",
+    "channels": [],
+    "towns": ["Camalig", "Malilipot", "Tabaco City"],
+    "source_name": "Daily Tribune",
+    "source_url": "https://tribune.net.ph/2026/10/30/mayon-eruption-triggers-mandatory-evacuations-in-albay",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-10-20",
+    "date_end": "2026-10-21",
+    "type": "storm",
+    "title": "Super Typhoon Rosal (Champi): gale warning over Albay, no wind signal reported for Albay; Signal No. 1 reached northeastern Catanduanes",
+    "channels": [],
+    "towns": [],
+    "source_name": "Daily Tribune",
+    "source_url": "https://tribune.net.ph/2026/10/21/sea-travel-suspended-in-5-bicol-provinces-due-to-gale-warning",
+    "confidence": "unconfirmed"
+  },
+  {
+    "date_start": "2026-08-17",
+    "date_end": "2026-08-17",
+    "type": "activity",
+    "title": "Sulfur dioxide jumps to 8,393 tonnes/day at Alert Level 2; PHIVOLCS says it may forewarn renewed eruption",
+    "channels": [],
+    "towns": [],
+    "source_name": "GMA News",
+    "source_url": "https://www.gmanetwork.com/news/topstories/regions/998876/phivolcs-observes-increased-so2-emission-from-mayon-volcano-may-be-sign-of-renewed-eruptive-activity/story/",
+    "confidence": "unconfirmed"
+  },
+  {
+    "date_start": "2026-08-05",
+    "date_end": "2026-08-05",
+    "type": "activity",
+    "title": "Alert Level lowered from 3 to 2; lahar warning for channels draining the Mi-isi, Bonga and Basud gullies",
+    "channels": ["Mi-isi", "Bonga", "Basud"],
+    "towns": [],
+    "source_name": "GMA News",
+    "source_url": "https://www.gmanetwork.com/news/topstories/regions/998876/phivolcs-observes-increased-so2-emission-from-mayon-volcano-may-be-sign-of-renewed-eruptive-activity/story/",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-08-04",
+    "date_end": "2026-08-06",
+    "type": "storm",
+    "title": "Tropical Storm Maymay: signals stayed north of Bicol on PAGASA's map (the map stops short of Albay); Legazpi peak gust 15 m/s",
+    "channels": [],
+    "towns": ["Legazpi City"],
+    "source_name": "PAGASA preliminary report",
+    "source_url": "https://pubfiles.pagasa.dost.gov.ph/pagasaweb/files/tamss/weather/tcprelimsummary/PAGASA_Prelim_2026_MAYMAY.pdf",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-08-01",
+    "date_end": "2026-08-03",
+    "type": "storm",
+    "title": "Tropical Depression Luis: Signal No. 1 over parts of Bicol, not Albay (Camarines Norte, northern Camarines Sur, Catanduanes)",
+    "channels": [],
+    "towns": [],
+    "source_name": "PAGASA preliminary report",
+    "source_url": "https://pubfiles.pagasa.dost.gov.ph/pagasaweb/files/tamss/weather/tcprelimsummary/PAGASA_Prelim_2026_LUIS.pdf",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-07-22",
+    "date_end": "2026-07-22",
+    "type": "activity",
+    "title": "Lava flows stop advancing; final lengths later given as Basud 3.8 km, Bonga 3.2 km, Mi-isi 2.7 km",
+    "channels": ["Basud", "Bonga", "Mi-isi"],
+    "towns": [],
+    "source_name": "DZRH",
+    "source_url": "https://www.dzrh.com.ph/post/mayon-volcano-alert-lowered-to-level-2-as-activity-declines-phivolcs",
+    "confidence": "unconfirmed"
+  },
+  {
+    "date_start": "2026-07-19",
+    "date_end": "2026-07-19",
+    "type": "activity",
+    "title": "Lava effusion with collapse-fed pyroclastic density currents, 7:52 to 8:25 p.m.; no gully named",
+    "channels": [],
+    "towns": [],
+    "source_name": "DZRH",
+    "source_url": "https://www.dzrh.com.ph/post/lava-effusion-with-pdcs-observed-at-mt-mayon-sunday-night-phivolcs",
+    "confidence": "unconfirmed"
+  },
+  {
+    "date_start": "2026-07-16",
+    "date_end": "2026-07-16",
+    "type": "lahar",
+    "title": "Lahar flow in Barangay Salvacion, Daraga, based on a resident's photo; the page names no channel for the flow",
+    "channels": [],
+    "towns": ["Daraga"],
+    "source_name": "Abante",
+    "source_url": "https://www.abante.com.ph/2026/07/17/mayon-walang-puknat-sa-pagbuga-ng-lahar/",
+    "confidence": "unconfirmed"
+  },
+  {
+    "date_start": "2026-07-14",
+    "date_end": "2026-07-16",
+    "type": "activity",
+    "title": "Repeated Strombolian activity and collapse-fed pyroclastic density currents (10 signals on the Jul 15 bulletin, 15 on Jul 16); no gully named for them",
+    "channels": [],
+    "towns": [],
+    "source_name": "Daily Tribune",
+    "source_url": "https://tribune.net.ph/2026/07/16/collapsed-lava-fuels-uson-at-mayon-alert-level-3-stays",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-07-13",
+    "date_end": "2026-07-13",
+    "type": "activity",
+    "title": "The July event: collapse-fed pyroclastic density current 6:31 to 6:46 a.m., lava fountain 9:36 a.m.; channels listed are the lava-flow gullies, since no source names the current's gully",
+    "channels": ["Basud", "Bonga", "Mi-isi"],
+    "towns": ["Bacacay", "Malilipot"],
+    "source_name": "Daily Tribune",
+    "source_url": "https://tribune.net.ph/2026/07/13/mayon-generates-lava-fountaining-effusion-with-pyroclastic-flow",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-07-11",
+    "date_end": "2026-07-18",
+    "type": "activity",
+    "title": "Peak of the eruption: sulfur dioxide record of 13,128 tonnes/day on Jul 11, lava in the Basud, Bonga and Mi-isi gullies",
+    "channels": ["Basud", "Bonga", "Mi-isi"],
+    "towns": [],
+    "source_name": "The Philippine Star",
+    "source_url": "https://www.philstar.com/headlines/2026/07/13/2541836/phivolcs-mayon-unrest-could-turn-explosive-after-record-sulfur-dioxide-spike",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-07-07",
+    "date_end": "2026-07-11",
+    "type": "storm",
+    "title": "Super Typhoon Inday (Bavi): Albay not under a signal on PAGASA's map, Catanduanes was; Legazpi peak gust 16 m/s",
+    "channels": [],
+    "towns": ["Legazpi City"],
+    "source_name": "PAGASA preliminary report",
+    "source_url": "https://pubfiles.pagasa.dost.gov.ph/pagasaweb/files/tamss/weather/tcprelimsummary/PAGASA_Prelim_2026_INDAY.pdf",
+    "confidence": "confirmed"
+  },
+  {
+    "date_start": "2026-06-22",
+    "date_end": "2026-06-25",
+    "type": "storm",
+    "title": "Super Typhoon Francisco (Mekkhala): signals only in the far north (the map stops short of Albay); Legazpi peak gust 14 m/s",
+    "channels": [],
+    "towns": ["Legazpi City"],
+    "source_name": "PAGASA preliminary report",
+    "source_url": "https://pubfiles.pagasa.dost.gov.ph/pagasaweb/files/tamss/weather/tcprelimsummary/PAGASA_Prelim_2026_FRANCISCO.pdf",
+    "confidence": "confirmed"
+  }
+]
