@@ -35,6 +35,15 @@ def run(out, data, pair=PAIR):
     return publish_pair("mayon", pair, out_folder=out, data_folder=data, sites_folder=SITES_FOLDER)
 
 
+def test_us026_publishing_adds_the_pairs_channel_rows(folders):
+    out, data = folders
+    run(out, data)
+    rows = read_data(data / "sites" / "mayon" / "channel_areas.json")
+    assert sorted(row["channel_id"] for row in rows) == ["mayon_basud", "mayon_lidong", "mayon_miisi", "mayon_padang"]
+    assert {row["pair_id"] for row in rows} == {PAIR}
+    assert check_data_dir(data) == []
+
+
 def test_publish_sets_status_and_lists_the_pair(folders):
     out, data = folders
     pair = run(out, data)

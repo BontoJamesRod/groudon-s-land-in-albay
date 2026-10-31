@@ -1,28 +1,37 @@
-"""Task T-010: write the channels the owner confirmed, with their towns, sources and strips.
+"""Tasks T-010 and T-074: the channels the owner confirmed, and the flagged area along each one.
 
 Run from the project folder:
     python pipeline/mrw/channel_areas.py mayon
 
-It writes site/data/sites/<id>/channels.geojson. A candidate line gets in only if the owner's check
-in pipeline/context/<id>_channels.json says "confirmed", and its line is copied exactly as it is.
+It writes two files under site/data/sites/<id>/:
+- channels.geojson: a candidate line gets in only if the owner's check in
+  pipeline/context/<id>_channels.json says "confirmed", and its line is copied exactly as it is.
+- channel_areas.json: the flagged area in each channel's strip, for each published pair.
 
 A strip is the ground within a set distance of a channel's line. Strips stop at the site's reach
 distance, because the radar map doesn't look further from the summit than that.
+
+No radar download is needed. A pair's published value grid already holds the final rule's result:
+each cell says none, low, high, or why it has no value (docs/04, ADR-011).
 """
 import json
+import math
 import sys
 from pathlib import Path
 
 import numpy as np
 from pyproj import Transformer
+from rasterio.features import rasterize
+from rasterio.transform import from_bounds
 from shapely import set_precision, transform as transform_points
 from shapely.geometry import Point, mapping, shape
 
 # Lets this file run as a script from the project folder.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from mrw.classify import HIGH, LOW, NONE, rounded_km2
 from mrw.config import SITES_FOLDER, load_site_config, utc_now_text
-from mrw.context import CONTEXT_FOLDER, COORDINATE_GRID_DEG, DATA_FOLDER, write_geojson, write_sources
+from mrw.context import CONTEXT_FOLDER, COORDINATE_GRID_DEG, DATA_FOLDER, write_geojson, write_json, write_sources
 
 # ODbL asks for the license to be clear on the data itself, and the channel lines come from OpenStreetMap.
 LINE_LICENSE = "ODbL 1.0, (c) OpenStreetMap contributors"
@@ -154,17 +163,90 @@ def build_channels(site_id, data_folder=DATA_FOLDER, context_folder=CONTEXT_FOLD
     return features
 
 
+def strip_cells(strip_geometry, layer):
+    """Mark the cells of a value grid whose centre is inside a strip. Row 0 is the northern edge."""
+    corners = from_bounds(layer["bounds_west"], layer["bounds_south"], layer["bounds_east"], layer["bounds_north"],
+                          layer["grid_width"], layer["grid_height"])
+    burned = rasterize([(strip_geometry, 1)], out_shape=(layer["grid_height"], layer["grid_width"]),
+                       transform=corners, fill=0, dtype="uint8")
+    return burned.astype(bool)
+
+
+def cell_area_km2(layer):
+    """The area of one grid cell, measured in metres at the middle of the grid.
+
+    Cells are the same size in degrees, and across a site their size in metres barely changes.
+    """
+    west, east, south, north = (layer[name] for name in ("bounds_west", "bounds_east", "bounds_south", "bounds_north"))
+    lon, lat = (west + east) / 2, (south + north) / 2
+    to_metres = Transformer.from_crs(4326, utm_epsg(lon, lat), always_xy=True)
+    x0, y0 = to_metres.transform(lon, lat)
+    x_east, y_east = to_metres.transform(lon + (east - west) / layer["grid_width"], lat)
+    x_north, y_north = to_metres.transform(lon, lat + (north - south) / layer["grid_height"])
+    return math.hypot(x_east - x0, y_east - y0) * math.hypot(x_north - x0, y_north - y0) / 1_000_000
+
+
+def channel_row(channel, pair_id, cells, layer, now):
+    """Build one `channel_areas` row (docs/05 TBL-12).
+
+    Sea and cells with no radar value can't be flagged, so they aren't checked ground. With no
+    checked ground at all, the area is unknown, not zero.
+    """
+    props = channel["properties"]
+    inside = strip_cells(props["strip_geometry"], layer)
+    checked = int(np.count_nonzero(inside & np.isin(cells, (NONE, LOW, HIGH))))
+    flagged = int(np.count_nonzero(inside & np.isin(cells, (LOW, HIGH))))
+    cell_km2 = cell_area_km2(layer)
+    return {
+        "id": f"{props['id']}__{pair_id}", "site_id": props["site_id"], "channel_id": props["id"], "pair_id": pair_id,
+        "flagged_area_km2": rounded_km2(flagged, cell_km2) if checked else None,
+        "checked_area_km2": rounded_km2(checked, cell_km2),
+        "created_at": now, "updated_at": now,
+    }
+
+
+def read_grid(pair_folder, layer):
+    """Read a pair's value grid as rows and columns."""
+    cells = np.fromfile(pair_folder / layer["grid_path"], dtype="uint8")
+    return cells.reshape(layer["grid_height"], layer["grid_width"])
+
+
+def rebuild_channel_areas(site_id, data_folder=DATA_FOLDER, sites_folder=SITES_FOLDER, now=None):
+    """Rewrite channel_areas.json from the published grids. A site with no channels has nothing to do."""
+    site_folder = Path(data_folder) / "sites" / site_id
+    channels_path = site_folder / "channels.geojson"
+    if not channels_path.is_file():
+        return []
+    config_path = Path(sites_folder) / f"{site_id}.json"
+    strip_half_width(load_site_config(config_path), config_path)
+    now = now or utc_now_text()
+    path = site_folder / "channel_areas.json"
+    first_written = {row["id"]: row["created_at"] for row in read_json(path)["data"]} if path.is_file() else {}
+    rows = []
+    for summary in read_json(site_folder / "pairs.json")["data"]:
+        pair_folder = site_folder / "pairs" / summary["id"]
+        pair = read_json(pair_folder / "pair.json")["data"]
+        layer = next(item for item in pair["layers"] if item["kind"] == "new_material")
+        cells = read_grid(pair_folder, layer)
+        for channel in read_json(channels_path)["features"]:
+            row = channel_row(channel, summary["id"], cells, layer, now)
+            rows.append({**row, "created_at": first_written.get(row["id"], now)})
+    write_json(path, rows, now, LINE_LICENSE)
+    return rows
+
+
 def main(argv):
     """Command-line entry point. Prints the stop message and returns 1 on failure."""
     site_id = argv[0]
     try:
-        features = build_channels(site_id)
+        build_channels(site_id)
+        rows = rebuild_channel_areas(site_id)
     except ChannelError as problem:
         print(problem)
         return 1
     write_sources(DATA_FOLDER, CONTEXT_FOLDER, utc_now_text())
-    for feature in features:
-        print(feature["properties"]["name"], feature["properties"]["town_ids"])
+    for row in rows:
+        print(row["id"], row["flagged_area_km2"], row["checked_area_km2"])
     return 0
 
 

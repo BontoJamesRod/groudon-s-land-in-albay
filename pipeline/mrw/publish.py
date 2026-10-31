@@ -15,6 +15,7 @@ from pathlib import Path
 # Lets this file run as a script from the project folder.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from mrw.channel_areas import rebuild_channel_areas
 from mrw.config import SITES_FOLDER, build_sites_row, load_site_config, utc_now_text
 from mrw.context import DATA_FOLDER, write_json
 from mrw.contract_check import check_data_dir
@@ -100,8 +101,8 @@ def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLD
     target = site_folder / "pairs" / pair_key
     # The backup sits outside the data folder, so it can't be mistaken for a pair.
     backup = Path(tempfile.mkdtemp()) / pair_key
-    pairs_path, sites_path = site_folder / "pairs.json", data_folder / "sites.json"
-    lists = {p: p.read_bytes() if p.is_file() else None for p in (pairs_path, sites_path)}
+    pairs_path, sites_path, areas_path = site_folder / "pairs.json", data_folder / "sites.json", site_folder / "channel_areas.json"
+    lists = {p: p.read_bytes() if p.is_file() else None for p in (pairs_path, sites_path, areas_path)}
     if target.is_dir():
         shutil.move(str(target), str(backup))
     now = utc_now_text()
@@ -116,6 +117,8 @@ def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLD
         write_json(target / "pair.json", pair, now)
         rebuild_pairs_list(site_folder, now)
         rebuild_sites_list(data_folder, now, sites_folder)
+        # The channels' bars need a row for this pair (US-026/AC-1).
+        rebuild_channel_areas(site_id, data_folder, sites_folder, now)
         errors = [] if more_to_come else check_data_dir(data_folder)
     except Exception:
         _restore(target, backup, lists)

@@ -119,6 +119,16 @@ CHANNELS = {
     "checked_geometry": field("object"),
     "not_checked_geometry": field("object", required=False),
 }
+CHANNEL_AREAS = {
+    "id": field("string"),
+    "site_id": field("string"),
+    "channel_id": field("string"),
+    "pair_id": field("string", pattern=PAIR_ID),
+    "flagged_area_km2": field("number", required=False, low=0),
+    "checked_area_km2": field("number", low=0),
+    "created_at": field("date-time"),
+    "updated_at": field("date-time"),
+}
 LAND = {
     "id": field("string"),
     "site_id": field("string"),
@@ -921,10 +931,44 @@ def check_pairs_list(path, site_id, site_folder, errors):
     return {row.get("id") for row in rows if isinstance(row, dict)}
 
 
+def check_channel_areas(path, site_id, channel_ids, pair_ids, errors):
+    """Check channel_areas.json: one row per channel and pair, with the rules that link its columns."""
+    rows = _check_data_array(load_json_file(path, errors), path, errors)
+    _unique_ids(rows, path, errors)
+    seen = set()
+    for number, row in enumerate(rows):
+        where = f"{path} row {number}"
+        check_row(row, CHANNEL_AREAS, where, errors)
+        if not isinstance(row, dict):
+            continue
+        channel_id, pair_id = row.get("channel_id"), row.get("pair_id")
+        seen.add((channel_id, pair_id))
+        if row.get("site_id") != site_id:
+            errors.append(f"{where}: site_id should be {site_id!r}")
+        if channel_id not in channel_ids:
+            errors.append(f"{where}: channel_id {channel_id!r} is not in channels.geojson")
+        if pair_id not in pair_ids:
+            errors.append(f"{where}: pair_id {pair_id!r} is not a published pair")
+        if row.get("id") != f"{channel_id}__{pair_id}":
+            errors.append(f"{where}: id should be <channel_id>__<pair_id>")
+        flagged, checked = row.get("flagged_area_km2"), row.get("checked_area_km2")
+        if not isinstance(checked, (int, float)):
+            continue
+        if (flagged is None) != (checked == 0):
+            errors.append(f"{where}: flagged_area_km2 must be null when checked_area_km2 is 0, and only then")
+        if isinstance(flagged, (int, float)) and flagged > checked:
+            errors.append(f"{where}: flagged_area_km2 is above checked_area_km2")
+    for channel_id in sorted(channel_ids):
+        for pair_id in sorted(pair_ids):
+            if (channel_id, pair_id) not in seen:
+                errors.append(f"{path}: no row for channel {channel_id!r} in pair {pair_id!r} (US-026/AC-1)")
+
+
 def check_site_folder(folder, source_ids, errors, published=True, site_row=None):
     """Check the files of one site. Which ones must exist is decided in check_data_dir."""
     site_id = folder.name
     town_ids = set()
+    channel_ids = set()
     if (folder / "towns.geojson").is_file():
         town_ids = check_towns(folder / "towns.geojson", site_id, source_ids, errors)
     if (folder / "land.geojson").is_file():
@@ -932,12 +976,14 @@ def check_site_folder(folder, source_ids, errors, published=True, site_row=None)
     if (folder / "channels.geojson").is_file():
         if site_row and site_row.get("channel_strip_half_width_m") is None:
             errors.append(f"{folder / 'channels.geojson'}: a site with channels needs channel_strip_half_width_m (FR-064)")
-        check_channels(folder / "channels.geojson", site_id, source_ids, town_ids, errors, site_row)
+        channel_ids = check_channels(folder / "channels.geojson", site_id, source_ids, town_ids, errors, site_row)
     if (folder / "events.json").is_file():
         check_events(folder / "events.json", site_id, errors)
     listed = set()
     if (folder / "pairs.json").is_file():
         listed = check_pairs_list(folder / "pairs.json", site_id, folder, errors)
+    if (folder / "channel_areas.json").is_file():
+        check_channel_areas(folder / "channel_areas.json", site_id, channel_ids, listed, errors)
     for pair_folder in sorted((folder / "pairs").glob("*")):
         if not pair_folder.is_dir():
             continue
@@ -951,7 +997,7 @@ def check_site_folder(folder, source_ids, errors, published=True, site_row=None)
 
 def _known_files(folder):
     """List the JSON and GeoJSON files that this check knows how to read."""
-    names = ["towns.geojson", "land.geojson", "channels.geojson", "events.json", "pairs.json"]
+    names = ["towns.geojson", "land.geojson", "channels.geojson", "channel_areas.json", "events.json", "pairs.json"]
     known = {folder / name for name in names}
     for pair_folder in (folder / "pairs").glob("*"):
         known |= {pair_folder / "pair.json", pair_folder / "validation.json"}
@@ -970,7 +1016,7 @@ def _check_required_site_files(folder, errors, site_row):
     but a site that says it has channels must have them, or its Channels button would lead nowhere."""
     names = ["towns.geojson", "land.geojson", "pairs.json"]
     if site_row.get("channel_strip_half_width_m") is not None:
-        names.append("channels.geojson")
+        names += ["channels.geojson", "channel_areas.json"]
     for name in names:
         if not (folder / name).is_file():
             errors.append(f"{folder / name}: this required file is missing")

@@ -33,9 +33,12 @@ COORDINATE_GRID_DEG = 0.00001
 MIN_TOWN_AREA_DEG2 = 1e-6
 
 
-def write_json(path, data, now):
-    """Save data inside the standard file envelope from docs/05."""
-    save_text(path, {"data": data, "meta": {"generated_at": now, "schema_version": SCHEMA_VERSION}})
+def write_json(path, data, now, license_name=None):
+    """Save data inside the standard file envelope from docs/05, and its license if it must carry one."""
+    meta = {"generated_at": now, "schema_version": SCHEMA_VERSION}
+    if license_name:
+        meta["license"] = license_name
+    save_text(path, {"data": data, "meta": meta})
 
 
 def write_geojson(path, features, now, license_name=None):

@@ -408,10 +408,56 @@ def channel_feature(**changes):
             "geometry": {"type": "LineString", "coordinates": line}}
 
 
-def add_channels(root, *features):
+def area_row(**changes):
+    row = {"id": f"mayon_miisi__{PAIR_ID}", "site_id": "mayon", "channel_id": "mayon_miisi", "pair_id": PAIR_ID,
+           "flagged_area_km2": 0.04, "checked_area_km2": 1.12, "created_at": STAMP, "updated_at": STAMP}
+    row.update(changes)
+    return row
+
+
+def add_channels(root, *features, areas=None):
     """Make the fixture a site with channels."""
     edit_json(root / "sites.json", lambda c: c["data"][0].update(channel_strip_half_width_m=200, detection_reach_km=10))
     write(root / "sites" / "mayon" / "channels.geojson", collection(list(features)))
+    rows = [area_row(id=f"{item['id']}__{PAIR_ID}", channel_id=item["id"]) for item in features] if areas is None else areas
+    write(root / "sites" / "mayon" / "channel_areas.json", envelope(rows))
+
+
+def test_a_site_with_a_strip_width_needs_its_areas_file(data_dir):
+    add_channels(data_dir, channel_feature())
+    (data_dir / "sites" / "mayon" / "channel_areas.json").unlink()
+    assert any("channel_areas.json: this required file is missing" in e for e in check_data_dir(data_dir))
+
+
+def test_every_channel_needs_a_row_for_every_pair(data_dir):
+    add_channels(data_dir, channel_feature(), areas=[])
+    assert any("no row for channel 'mayon_miisi'" in e for e in check_data_dir(data_dir))
+
+
+@pytest.mark.parametrize("changes, message", [
+    ({"id": "wrong"}, "id should be"),
+    ({"site_id": "other"}, "site_id should be"),
+    ({"channel_id": "mayon_nowhere", "id": f"mayon_nowhere__{PAIR_ID}"}, "is not in channels.geojson"),
+    ({"pair_id": "mayon_D104F082_20261007_20261019", "id": "mayon_miisi__mayon_D104F082_20261007_20261019"}, "is not a published pair"),
+    ({"flagged_area_km2": None}, "must be null when checked_area_km2 is 0"),
+    ({"checked_area_km2": 0}, "must be null when checked_area_km2 is 0"),
+    ({"flagged_area_km2": 2.0}, "is above checked_area_km2"),
+    ({"flagged_area_km2": -0.01}, "is below 0"),
+    ({"checked_area_km2": -1}, "is below 0"),
+])
+def test_tbl12_rules(data_dir, changes, message):
+    add_channels(data_dir, channel_feature(), areas=[area_row(**changes)])
+    assert any(message in e for e in check_data_dir(data_dir))
+
+
+def test_no_radar_data_in_a_strip_is_allowed(data_dir):
+    add_channels(data_dir, channel_feature(), areas=[area_row(flagged_area_km2=None, checked_area_km2=0)])
+    assert check_data_dir(data_dir) == []
+
+
+def test_two_rows_for_one_channel_and_pair_fail(data_dir):
+    add_channels(data_dir, channel_feature(), areas=[area_row(), area_row()])
+    assert any("duplicate id" in e for e in check_data_dir(data_dir))
 
 
 def test_a_confirmed_channel_passes(data_dir):
