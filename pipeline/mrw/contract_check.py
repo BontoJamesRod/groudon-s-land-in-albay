@@ -608,7 +608,8 @@ def check_no_unconfirmed_names(root, errors, context_folder=CONTEXT_FOLDER):
     pattern = re.compile(r"\b(" + "|".join(re.escape(name) for name in sorted(names)) + r")\b", re.IGNORECASE)
     for suffix in ("*.json", "*.geojson"):
         for path in sorted(Path(root).rglob(suffix)):
-            found = pattern.search(path.read_text(encoding="utf-8"))
+            # A file that isn't valid UTF-8 is reported where its contents are checked, so it can't stop this.
+            found = pattern.search(path.read_text(encoding="utf-8", errors="replace"))
             if found:
                 errors.append(f"{path}: names {found.group(0)!r}, a channel the owner hasn't confirmed (FR-065)")
 

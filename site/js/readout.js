@@ -58,7 +58,7 @@ export function findTown(towns, lat, lon) {
 }
 
 // "In or near" a channel means inside its strip: the same ground its bars count.
-export function channelsAt(channels, lat, lon) {
+function channelsAt(channels, lat, lon) {
   return channels.features.filter((channel) => insideShape(channel.properties.strip_geometry, lat, lon));
 }
 

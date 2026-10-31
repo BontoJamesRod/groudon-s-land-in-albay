@@ -498,6 +498,11 @@ def test_a_longer_word_holding_an_unconfirmed_name_is_fine(data_dir):
     assert check_data_dir(data_dir) == []
 
 
+def test_a_file_that_is_not_utf8_is_reported_not_a_crash(data_dir):
+    (data_dir / "sites" / "mayon" / "events.json").write_bytes(b"\xff\xfe not text")
+    assert any("events.json" in e for e in check_data_dir(data_dir))
+
+
 def test_a_channel_needs_a_town(data_dir):
     add_channels(data_dir, channel_feature(town_ids=[]))
     assert any("at least 1 town" in e for e in check_data_dir(data_dir))

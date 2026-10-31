@@ -81,6 +81,11 @@ def test_tc073_the_pipeline_stops_without_a_strip_width(tmp_path):
         build_channels("mayon", sites_folder=tmp_path)
 
 
+def test_a_site_with_no_record_of_the_owners_check_stops():
+    with pytest.raises(ChannelError, match="No record of the owner's channel check: .*panama_channels.json"):
+        build_channels("panama")
+
+
 def test_the_site_config_sets_the_owners_strip_width():
     assert strip_half_width(load_site("mayon"), "mayon.json") == 200
 

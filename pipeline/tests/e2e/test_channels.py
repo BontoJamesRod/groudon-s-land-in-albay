@@ -71,6 +71,10 @@ def test_tc044_tapping_a_line_lists_its_towns(app):
     tap_at(app, lat, lon)
     expect(card(app).locator(".readout-place")).to_have_text("Mi-isi")
     expect(card(app)).to_contain_text("Towns along this channel: Daraga, Legazpi City")
+    # The tap reads the spot too, and the line's click doesn't also count as a tap on the map.
+    expect(card(app)).to_contain_text("Distance to summit:")
+    expect(card(app)).to_contain_text("Radar passes:")
+    expect(card(app).locator(".readout-place")).to_have_text("Mi-isi")
 
 
 def test_tc044_the_layer_can_be_turned_off(app):
@@ -219,6 +223,17 @@ def test_tc065_no_confirmed_channels(page, site_url):
     expect(page.locator("#pair-list")).to_have_value("mayon_A111F008_20260703_20260715")
     expect(page.locator(".leaflet-radar-pane img[src*='20260703_20260715']")).to_have_count(1)
     expect(page.locator("#channel-status")).to_have_text("No confirmed channels yet for this site")
+
+
+def test_the_list_says_so_when_a_site_has_no_pairs(page, site_url):
+    prepare_page(page)
+    empty = json.dumps({"data": [], "meta": {"generated_at": "2026-11-01T00:00:00Z", "schema_version": "1.0"}})
+    page.route("**/sites/mayon/pairs.json", lambda route: route.fulfill(body=empty, content_type="application/json"))
+    page.goto(site_url)
+    expect(page.locator("#app-message")).to_have_text("No radar passes processed yet for this site")
+    page.click("#channels-button")
+    expect(page.locator("#channel-status")).to_have_text("No radar passes processed yet for this site")
+    expect(page.locator("#channel-retry")).to_be_hidden()
 
 
 def test_tc065_a_site_with_no_channel_data_has_no_button(app):

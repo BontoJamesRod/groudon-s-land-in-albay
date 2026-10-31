@@ -22,7 +22,7 @@ function notCheckedLabel({ type, coordinates }) {
 }
 
 // Largest first, ties by name, and channels with no radar data for that pair last (FR-061).
-export function sortChannels(channels, areaOf) {
+function sortChannels(channels, areaOf) {
   return [...channels].sort((a, b) => {
     const [areaA, areaB] = [areaOf(a), areaOf(b)];
     if ((areaA === null) !== (areaB === null)) return areaA === null ? 1 : -1;
@@ -195,7 +195,8 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     showStatus(STRINGS.channelsLoading, false);
     try {
       const loaded = channels || await loadChannels(site.id);
-      const loadedRows = loaded.features.length ? await loadChannelAreas(site.id, loaded, pairs) : [];
+      // With no channels or no pairs there's nothing to look up, and the list says so.
+      const loadedRows = loaded.features.length && pairs.length ? await loadChannelAreas(site.id, loaded, pairs) : [];
       if (thisRequest !== request) return;
       channels = loaded;
       rows = loadedRows;

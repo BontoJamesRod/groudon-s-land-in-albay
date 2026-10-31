@@ -6,9 +6,9 @@ import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 // A dark edge keeps a channel line readable on bright imagery, and a dash marks what isn't checked.
-export const CHANNEL_EDGE_STYLE = { color: "#0f172a", weight: 5, opacity: 0.55, interactive: false };
-export const CHANNEL_STYLE = { color: "#22d3ee", weight: 3, opacity: 1, interactive: false };
-export const NOT_CHECKED_STYLE = { color: "#ffffff", weight: 2.5, opacity: 1, dashArray: "6 7", interactive: false };
+const CHANNEL_EDGE_STYLE = { color: "#0f172a", weight: 5, opacity: 0.55, interactive: false };
+const CHANNEL_STYLE = { color: "#22d3ee", weight: 3, opacity: 1, interactive: false };
+const NOT_CHECKED_STYLE = { color: "#ffffff", weight: 2.5, opacity: 1, dashArray: "6 7", interactive: false };
 // An invisible, wider line makes a channel easier to tap. Tapping it must not also tap the map.
 const CHANNEL_TAP_STYLE = { opacity: 0, weight: 18, bubblingMouseEvents: false };
 
@@ -108,10 +108,7 @@ export function createChannelLayer(map, elements, channels, onTap) {
     group.addLayer(channelLines(channel));
     group.addLayer(channelLabel(channel));
     const tapLine = L.geoJSON(channel.geometry, { style: CHANNEL_TAP_STYLE });
-    tapLine.on("click", (event) => {
-      L.DomEvent.stopPropagation(event);
-      onTap(channel, event.latlng);
-    });
+    tapLine.on("click", (event) => onTap(channel, event.latlng));
     group.addLayer(tapLine);
   }
   showChannelLegend(elements, "layer");

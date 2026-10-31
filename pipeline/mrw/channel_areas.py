@@ -144,7 +144,10 @@ def build_channels(site_id, data_folder=DATA_FOLDER, context_folder=CONTEXT_FOLD
     """Write channels.geojson for a site. Returns its Features."""
     config_path = Path(sites_folder) / f"{site_id}.json"
     config = load_site_config(config_path)
-    record = read_json(Path(context_folder) / f"{site_id}_channels.json")
+    record_path = Path(context_folder) / f"{site_id}_channels.json"
+    if not record_path.is_file():
+        raise ChannelError(f"No record of the owner's channel check: {record_path}")
+    record = read_json(record_path)
     half_width_m = strip_half_width(config, config_path)
     epsg = utm_epsg(config["center_lon"], config["center_lat"])
     to_metres = Transformer.from_crs(4326, epsg, always_xy=True)

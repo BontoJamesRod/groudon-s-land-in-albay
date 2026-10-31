@@ -790,7 +790,7 @@ None of these stopped the build.
 
 ## Evidence
 
-- **Tests:** `pytest -q`: 543 passed, 1 skipped (the eruption marker in TC-015), exit code 0. TC-044 to TC-047 were skipped before and now run. Contract check: 0 errors, exit code 0.
+- **Tests:** `pytest -q`: 546 passed, 1 skipped (the eruption marker in TC-015), exit code 0. TC-044 to TC-047 were skipped before and now run. Contract check: 0 errors, exit code 0.
 - **New rules in the contract check:** only confirmed channels, no unconfirmed name in any published file, strips inside the reach, what's past the reach outside it, and one area row per channel and pair.
 - **Accessibility:** axe-core finds no serious or critical problem on the list and the view, at 1280 and 360 px.
 - **Screens,** in `pipeline/reports/screens/` at 1280 and 360 px, with real map tiles: `channels-list`, `channel-view`, `channel-view-short`, `channel-gap`, `gap-pair`, `channels-loading`, `channels-error`, `channels-empty`, `channels-no-data`, `channel-no-data` and `channels-unavailable`. I checked them by eye, in the test browser, not on a real phone.
