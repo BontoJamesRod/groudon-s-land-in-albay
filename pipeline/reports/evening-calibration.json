@@ -1,0 +1,1253 @@
+{
+ "status": "analysis only; no thresholds chosen, no defaults changed",
+ "rule": "brightness leads, coherence confirms",
+ "confirming_coherence_loss": 0.4,
+ "reach_km": 10,
+ "pairs": [
+  {
+   "id": "mayon_A111F008_20260621_20260703",
+   "kind": "other",
+   "track": 111,
+   "coherence_used": false,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 2.375,
+     "high_km2": 0.0,
+     "total_km2": 2.375,
+     "zone_low_km2": 0.316,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.316,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.014,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.058,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.825,
+     "high_km2": 0.0,
+     "total_km2": 0.825,
+     "zone_low_km2": 0.096,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.096,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.005,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.028,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.387,
+     "high_km2": 0.0,
+     "total_km2": 0.387,
+     "zone_low_km2": 0.042,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.042,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.015,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_D104F082_20260703_20260715",
+   "kind": "july",
+   "track": 104,
+   "coherence_used": false,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 2.239,
+     "high_km2": 0.0,
+     "total_km2": 2.239,
+     "zone_low_km2": 0.275,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.275,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.027,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.019,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.068,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.816,
+     "high_km2": 0.0,
+     "total_km2": 0.816,
+     "zone_low_km2": 0.06,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.06,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.011,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.009,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.032,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.354,
+     "high_km2": 0.0,
+     "total_km2": 0.354,
+     "zone_low_km2": 0.024,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.024,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.005,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.006,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.014,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260703_20260715",
+   "kind": "july",
+   "track": 111,
+   "coherence_used": false,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.804,
+     "high_km2": 0.0,
+     "total_km2": 1.804,
+     "zone_low_km2": 0.205,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.205,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.011,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.04,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.061,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.742,
+     "high_km2": 0.0,
+     "total_km2": 0.742,
+     "zone_low_km2": 0.067,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.067,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.011,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.029,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.375,
+     "high_km2": 0.0,
+     "total_km2": 0.375,
+     "zone_low_km2": 0.032,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.032,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.017,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A039F008_20260710_20260722",
+   "kind": "july",
+   "track": 39,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.951,
+     "high_km2": 0.005,
+     "total_km2": 1.955,
+     "zone_low_km2": 0.429,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.429,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.114,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.099,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.098,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.745,
+     "high_km2": 0.003,
+     "total_km2": 0.749,
+     "zone_low_km2": 0.139,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.139,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.043,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.04,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.043,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.337,
+     "high_km2": 0.003,
+     "total_km2": 0.339,
+     "zone_low_km2": 0.058,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.058,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.019,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.021,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.019,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260715_20260727",
+   "kind": "other",
+   "track": 111,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.753,
+     "high_km2": 0.009,
+     "total_km2": 1.762,
+     "zone_low_km2": 0.222,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.222,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.007,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.059,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.069,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.643,
+     "high_km2": 0.006,
+     "total_km2": 0.649,
+     "zone_low_km2": 0.077,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.077,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.02,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.027,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.295,
+     "high_km2": 0.003,
+     "total_km2": 0.298,
+     "zone_low_km2": 0.036,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.036,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.008,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.01,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260727_20260820",
+   "kind": "other",
+   "track": 111,
+   "coherence_used": false,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 4.087,
+     "high_km2": 0.0,
+     "total_km2": 4.087,
+     "zone_low_km2": 0.131,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.131,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.011,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.019,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 1.942,
+     "high_km2": 0.0,
+     "total_km2": 1.942,
+     "zone_low_km2": 0.033,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.033,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.884,
+     "high_km2": 0.0,
+     "total_km2": 0.884,
+     "zone_low_km2": 0.013,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.013,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260820_20260901",
+   "kind": "quiet",
+   "track": 111,
+   "coherence_used": false,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.148,
+     "high_km2": 0.0,
+     "total_km2": 1.148,
+     "zone_low_km2": 0.068,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.068,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.006,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.009,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.007,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.412,
+     "high_km2": 0.0,
+     "total_km2": 0.412,
+     "zone_low_km2": 0.014,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.014,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.219,
+     "high_km2": 0.0,
+     "total_km2": 0.219,
+     "zone_low_km2": 0.007,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.007,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260901_20260913",
+   "kind": "quiet",
+   "track": 111,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.255,
+     "high_km2": 0.001,
+     "total_km2": 1.256,
+     "zone_low_km2": 0.069,
+     "zone_high_km2": 0.001,
+     "zone_total_km2": 0.069,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.376,
+     "high_km2": 0.001,
+     "total_km2": 0.376,
+     "zone_low_km2": 0.015,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.015,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.203,
+     "high_km2": 0.0,
+     "total_km2": 0.203,
+     "zone_low_km2": 0.007,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.007,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A039F008_20260908_20260920",
+   "kind": "quiet",
+   "track": 39,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.208,
+     "high_km2": 0.018,
+     "total_km2": 1.227,
+     "zone_low_km2": 0.225,
+     "zone_high_km2": 0.001,
+     "zone_total_km2": 0.226,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.077,
+       "high_km2": 0.001
+      },
+      "Bonga": {
+       "total_km2": 0.026,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.321,
+     "high_km2": 0.013,
+     "total_km2": 0.334,
+     "zone_low_km2": 0.041,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.041,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.016,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.116,
+     "high_km2": 0.01,
+     "total_km2": 0.126,
+     "zone_low_km2": 0.013,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.013,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_D104F082_20260913_20260925",
+   "kind": "quiet",
+   "track": 104,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 0.81,
+     "high_km2": 0.0,
+     "total_km2": 0.81,
+     "zone_low_km2": 0.051,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.051,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.007,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.286,
+     "high_km2": 0.0,
+     "total_km2": 0.286,
+     "zone_low_km2": 0.011,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.011,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.165,
+     "high_km2": 0.0,
+     "total_km2": 0.165,
+     "zone_low_km2": 0.003,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.003,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260913_20260925",
+   "kind": "quiet",
+   "track": 111,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 0.743,
+     "high_km2": 0.02,
+     "total_km2": 0.763,
+     "zone_low_km2": 0.063,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.063,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.321,
+     "high_km2": 0.007,
+     "total_km2": 0.328,
+     "zone_low_km2": 0.017,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.017,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.195,
+     "high_km2": 0.004,
+     "total_km2": 0.198,
+     "zone_low_km2": 0.008,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.008,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A039F008_20260920_20261002",
+   "kind": "quiet",
+   "track": 39,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.596,
+     "high_km2": 0.033,
+     "total_km2": 1.629,
+     "zone_low_km2": 0.246,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.246,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.056,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.055,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.453,
+     "high_km2": 0.021,
+     "total_km2": 0.474,
+     "zone_low_km2": 0.035,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.035,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.011,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.01,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.18,
+     "high_km2": 0.013,
+     "total_km2": 0.194,
+     "zone_low_km2": 0.012,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.012,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_D104F082_20260925_20261007",
+   "kind": "quiet",
+   "track": 104,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.453,
+     "high_km2": 0.484,
+     "total_km2": 1.937,
+     "zone_low_km2": 0.367,
+     "zone_high_km2": 0.073,
+     "zone_total_km2": 0.44,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.038,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.056,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.025,
+       "high_km2": 0.004
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.44,
+     "high_km2": 0.147,
+     "total_km2": 0.586,
+     "zone_low_km2": 0.088,
+     "zone_high_km2": 0.013,
+     "zone_total_km2": 0.1,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.011,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.027,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.006,
+       "high_km2": 0.001
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.184,
+     "high_km2": 0.042,
+     "total_km2": 0.226,
+     "zone_low_km2": 0.019,
+     "zone_high_km2": 0.003,
+     "zone_total_km2": 0.022,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.005,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.009,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20260925_20261007",
+   "kind": "quiet",
+   "track": 111,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 0.828,
+     "high_km2": 0.031,
+     "total_km2": 0.858,
+     "zone_low_km2": 0.043,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.043,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.005,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.314,
+     "high_km2": 0.015,
+     "total_km2": 0.329,
+     "zone_low_km2": 0.009,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.009,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.167,
+     "high_km2": 0.006,
+     "total_km2": 0.173,
+     "zone_low_km2": 0.003,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.003,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_D104F082_20261007_20261019",
+   "kind": "quiet",
+   "track": 104,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 1.647,
+     "high_km2": 0.002,
+     "total_km2": 1.649,
+     "zone_low_km2": 0.454,
+     "zone_high_km2": 0.001,
+     "zone_total_km2": 0.455,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.032,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.067,
+       "high_km2": 0.001
+      },
+      "Mi-isi": {
+       "total_km2": 0.039,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.507,
+     "high_km2": 0.001,
+     "total_km2": 0.507,
+     "zone_low_km2": 0.081,
+     "zone_high_km2": 0.001,
+     "zone_total_km2": 0.082,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.008,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.02,
+       "high_km2": 0.001
+      },
+      "Mi-isi": {
+       "total_km2": 0.007,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.222,
+     "high_km2": 0.0,
+     "total_km2": 0.222,
+     "zone_low_km2": 0.018,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.018,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.003,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.005,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.001,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "mayon_A111F008_20261007_20261019",
+   "kind": "quiet",
+   "track": 111,
+   "coherence_used": true,
+   "by_threshold": [
+    {
+     "threshold_db": 3.0,
+     "low_km2": 0.731,
+     "high_km2": 0.024,
+     "total_km2": 0.755,
+     "zone_low_km2": 0.06,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.06,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.002,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.004,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 4.0,
+     "low_km2": 0.313,
+     "high_km2": 0.011,
+     "total_km2": 0.324,
+     "zone_low_km2": 0.013,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.013,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    },
+    {
+     "threshold_db": 5.0,
+     "low_km2": 0.182,
+     "high_km2": 0.005,
+     "total_km2": 0.187,
+     "zone_low_km2": 0.006,
+     "zone_high_km2": 0.0,
+     "zone_total_km2": 0.006,
+     "wedges": {
+      "Basud": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Bonga": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      },
+      "Mi-isi": {
+       "total_km2": 0.0,
+       "high_km2": 0.0
+      }
+     }
+    }
+   ]
+  }
+ ],
+ "left_out_not_cached": [
+  "mayon_D104F082_20260621_20260703",
+  "mayon_A039F008_20260628_20260710",
+  "mayon_D104F082_20260715_20260727",
+  "mayon_A039F008_20260722_20260815",
+  "mayon_D104F082_20260727_20260820",
+  "mayon_A039F008_20260815_20260827",
+  "mayon_D104F082_20260820_20260901",
+  "mayon_A039F008_20260827_20260908",
+  "mayon_D104F082_20260901_20260913",
+  "mayon_A039F008_20261002_20261014"
+ ],
+ "differences_from_night_2": []
+}

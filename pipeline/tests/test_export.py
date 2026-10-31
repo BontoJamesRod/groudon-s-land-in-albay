@@ -9,7 +9,7 @@ from pyproj import Transformer
 from mrw.classify import HIGH, LOW
 from mrw.config import load_site
 from mrw.contract_check import check_data_dir
-from mrw.export import OUT_FOLDER, run_pair, site_bounds, web_grid_size, write_pair
+from mrw.export import OUT_FOLDER, new_material_title, run_pair, site_bounds, web_grid_size, write_pair
 from mrw.gcov import HAS_VALUE, SEA
 from mrw.pairs import PairError
 from mrw.search import parse_gcov, parse_gunw
@@ -75,7 +75,12 @@ def test_areas_match_the_fake_square(tmp_path):
 def test_thresholds_are_marked_provisional_in_the_output(tmp_path):
     pair, _root = write_fake(tmp_path)
     layer = next(item for item in pair["layers"] if item["kind"] == "new_material")
-    assert "PROVISIONAL" in layer["title"]
+    assert layer["title"] == new_material_title(load_site("mayon"))
+    config = load_site("mayon")
+    config["thresholds"]["status"] = "PROVISIONAL"
+    assert "PROVISIONAL" in new_material_title(config)
+    config["thresholds"]["status"] = "FINAL"
+    assert "PROVISIONAL" not in new_material_title(config)
 
 
 def test_tc023_no_gunw_still_processes_with_low_confidence_only(tmp_path):

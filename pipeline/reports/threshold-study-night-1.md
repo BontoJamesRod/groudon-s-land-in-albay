@@ -267,3 +267,143 @@ None of these tells real change from false alarms inside the zone. They limit wh
 ## Note on rerunning these studies
 
 **Published grids changed after this study.** Mayon now uses the 10 km reach, so `false_alarm_study.py` and `reach_zone_study.py` read masked grids if rerun today. Their numbers above came from the grids before the mask. To reproduce them, check out commit 5768d19.
+
+## Evening run: "brightness leads, coherence confirms"
+
+**No threshold was chosen and no default changed.** The site still uses the PROVISIONAL values and its current rule. This rule exists only in `evening_calibration.py`. No product acquired on or after 2026-10-30 was searched for or opened. To reproduce: `python pipeline/reports/evening_calibration.py`, which reads cached crops only. Full numbers are in `evening-calibration.json`.
+
+**The rule tested, within 10 km of the summit:** brightness change ≥ T counts as new material, it is high confidence only if coherence loss ≥ 0.4 also holds, and coherence loss alone counts as nothing.
+
+**Check on the method:** at 3.0 dB, the wedge numbers match the night 2 table for every pair the two share.
+
+### What it says
+
+1. **Dropping coherence-alone removes most of the area.** Oct 7 → 19 on track 111 falls to 0.755 km², with 0.060 km² in the danger zone, because almost all of its danger-zone area was coherence only.
+2. **4 and 5 dB separate the July pairs from the pairs labelled quiet; 3 dB doesn't.** The separation doesn't hold against every other pair:
+
+   | T | Quiet pairs, total (km²) | July pairs, total (km²) | A111 06-21 → 07-03, before the event (km²) | A111 07-27 → 08-20, 24-day gap (km²) |
+   | --- | --- | --- | --- | --- |
+   | 3.0 dB | 0.755–1.937 | 1.804–2.239 | 2.375 | 4.087 |
+   | 4.0 dB | 0.286–0.586 | 0.742–0.816 | 0.825 | 1.942 |
+   | 5.0 dB | 0.165–0.226 | 0.339–0.375 | 0.387 | 0.884 |
+
+3. **Coherence at 0.4 doesn't confirm July.** The only July pair with a baseline (track 39) has 0.003–0.005 km² of high confidence, below most of the quiet pairs that have a baseline. High confidence here rests on no event evidence.
+4. **Mi-isi is the steadiest flank signal.** July is above the quiet range on Mi-isi on all three tracks at all three values of T.
+5. **The night 2 claim needs narrowing.** It said July was above quiet on every track and flank. With two more quiet pairs on track 104, that no longer holds there: Basud and Bonga aren't above the quiet range at any T. Tracks 111 and 39 still hold, though at 5 dB some of those differences are only a few cells (0.001 km² is 10 cells).
+6. **The Mi-isi signal isn't only in the event pair.** On track 111, the pairs before and after July have about the same area at each T (3 dB: 0.058 and 0.069 against 0.061; 5 dB: 0.015 and 0.010 against 0.017). This may be the lava activity running through that period, so it may show activity more than this one current.
+7. **The October track 104 pairs aren't obviously quiet.** They have 0.44–0.455 km² of brightness change in the danger zone at 3 dB, more than any July pair (0.205–0.429). Nothing here says why.
+
+### Oct 7 → 19 on a second track
+
+The earlier section asked whether another track would show the October patch. It mostly doesn't, on the same dates, using coherence loss ≥ 0.3 with brightness below 3 dB:
+
+| Track | Coherence only, in the danger zone (km²) | Of that, NW of the summit (km²) |
+| --- | --- | --- |
+| 111 | 2.434 | 1.167 |
+| 104 | 0.304 | 0.000 |
+
+This leans toward something particular to the track 111 pair rather than change on the ground, but different viewing angles and pass times mean it doesn't settle it. Rain records and PHIVOLCS bulletins are still unchecked.
+
+### A coherence baseline problem
+
+D104 09-25 → 10-07 shows 102.26 km² of new material under the site's current rule, and only 1.94 km² of it reaches the brightness threshold. Its baseline, 09-13 → 09-25, has unusually high coherence (median 0.495, against 0.27–0.30 for the neighbouring pairs), so coherence "falls" across the whole scene (median loss 0.179). It also inflates this rule's high-confidence area for that pair (0.484 km² at 3 dB, against 0.033 km² or less elsewhere). Treat that row's high and danger-zone-high numbers as an artifact. **Any pair's coherence loss can be affected the same way,** including an eruption pair, if its baseline happens to be unusually high or low.
+
+### Each pair
+
+Areas are km² on the 10 m radar grid, so they differ slightly from published totals. "Other" pairs weren't in the night 2 groups and aren't in the ranges above or the flank tables below. The wedges are the same as night 2's.
+
+#### T = 3.0 dB
+
+| Pair | Group | Coherence | High | Low | Total | In danger zone (high) | Basud | Bonga | Mi-isi |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A111 06-21 → 07-03 | other | No | 0.000 | 2.375 | 2.375 | 0.316 (0.000) | 0.001 | 0.014 | 0.058 |
+| A111 07-03 → 07-15 | july | No | 0.000 | 1.804 | 1.804 | 0.205 (0.000) | 0.011 | 0.040 | 0.061 |
+| A111 07-15 → 07-27 | other | Yes | 0.009 | 1.753 | 1.762 | 0.222 (0.000) | 0.007 | 0.059 | 0.069 |
+| A111 07-27 → 08-20 | other | No | 0.000 | 4.087 | 4.087 | 0.131 (0.000) | 0.011 | 0.019 | 0.003 |
+| A111 08-20 → 09-01 | quiet | No | 0.000 | 1.148 | 1.148 | 0.068 (0.000) | 0.006 | 0.009 | 0.007 |
+| A111 09-01 → 09-13 | quiet | Yes | 0.001 | 1.255 | 1.256 | 0.069 (0.001) | 0.002 | 0.002 | 0.001 |
+| A111 09-13 → 09-25 | quiet | Yes | 0.020 | 0.743 | 0.763 | 0.063 (0.000) | 0.002 | 0.004 | 0.000 |
+| A111 09-25 → 10-07 | quiet | Yes | 0.031 | 0.828 | 0.858 | 0.043 (0.000) | 0.003 | 0.005 | 0.000 |
+| A111 10-07 → 10-19 | quiet | Yes | 0.024 | 0.731 | 0.755 | 0.060 (0.000) | 0.002 | 0.002 | 0.004 |
+| D104 07-03 → 07-15 | july | No | 0.000 | 2.239 | 2.239 | 0.275 (0.000) | 0.027 | 0.019 | 0.068 |
+| D104 09-13 → 09-25 | quiet | Yes | 0.000 | 0.810 | 0.810 | 0.051 (0.000) | 0.007 | 0.004 | 0.002 |
+| D104 09-25 → 10-07 | quiet | Yes | 0.484 | 1.453 | 1.937 | 0.440 (0.073) | 0.038 | 0.056 | 0.025 |
+| D104 10-07 → 10-19 | quiet | Yes | 0.002 | 1.647 | 1.649 | 0.455 (0.001) | 0.032 | 0.067 | 0.039 |
+| A039 07-10 → 07-22 | july | Yes | 0.005 | 1.951 | 1.955 | 0.429 (0.000) | 0.114 | 0.099 | 0.098 |
+| A039 09-08 → 09-20 | quiet | Yes | 0.018 | 1.208 | 1.227 | 0.226 (0.001) | 0.077 | 0.026 | 0.003 |
+| A039 09-20 → 10-02 | quiet | Yes | 0.033 | 1.596 | 1.629 | 0.246 (0.000) | 0.056 | 0.055 | 0.001 |
+
+#### T = 4.0 dB
+
+| Pair | Group | Coherence | High | Low | Total | In danger zone (high) | Basud | Bonga | Mi-isi |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A111 06-21 → 07-03 | other | No | 0.000 | 0.825 | 0.825 | 0.096 (0.000) | 0.000 | 0.005 | 0.028 |
+| A111 07-03 → 07-15 | july | No | 0.000 | 0.742 | 0.742 | 0.067 (0.000) | 0.004 | 0.011 | 0.029 |
+| A111 07-15 → 07-27 | other | Yes | 0.006 | 0.643 | 0.649 | 0.077 (0.000) | 0.000 | 0.020 | 0.027 |
+| A111 07-27 → 08-20 | other | No | 0.000 | 1.942 | 1.942 | 0.033 (0.000) | 0.003 | 0.004 | 0.002 |
+| A111 08-20 → 09-01 | quiet | No | 0.000 | 0.412 | 0.412 | 0.014 (0.000) | 0.001 | 0.002 | 0.003 |
+| A111 09-01 → 09-13 | quiet | Yes | 0.001 | 0.376 | 0.376 | 0.015 (0.000) | 0.000 | 0.000 | 0.000 |
+| A111 09-13 → 09-25 | quiet | Yes | 0.007 | 0.321 | 0.328 | 0.017 (0.000) | 0.000 | 0.000 | 0.000 |
+| A111 09-25 → 10-07 | quiet | Yes | 0.015 | 0.314 | 0.329 | 0.009 (0.000) | 0.000 | 0.000 | 0.000 |
+| A111 10-07 → 10-19 | quiet | Yes | 0.011 | 0.313 | 0.324 | 0.013 (0.000) | 0.000 | 0.000 | 0.000 |
+| D104 07-03 → 07-15 | july | No | 0.000 | 0.816 | 0.816 | 0.060 (0.000) | 0.011 | 0.009 | 0.032 |
+| D104 09-13 → 09-25 | quiet | Yes | 0.000 | 0.286 | 0.286 | 0.011 (0.000) | 0.003 | 0.001 | 0.000 |
+| D104 09-25 → 10-07 | quiet | Yes | 0.147 | 0.440 | 0.586 | 0.100 (0.013) | 0.011 | 0.027 | 0.006 |
+| D104 10-07 → 10-19 | quiet | Yes | 0.001 | 0.507 | 0.507 | 0.082 (0.001) | 0.008 | 0.020 | 0.007 |
+| A039 07-10 → 07-22 | july | Yes | 0.003 | 0.745 | 0.749 | 0.139 (0.000) | 0.043 | 0.040 | 0.043 |
+| A039 09-08 → 09-20 | quiet | Yes | 0.013 | 0.321 | 0.334 | 0.041 (0.000) | 0.016 | 0.004 | 0.001 |
+| A039 09-20 → 10-02 | quiet | Yes | 0.021 | 0.453 | 0.474 | 0.035 (0.000) | 0.011 | 0.010 | 0.000 |
+
+#### T = 5.0 dB
+
+| Pair | Group | Coherence | High | Low | Total | In danger zone (high) | Basud | Bonga | Mi-isi |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A111 06-21 → 07-03 | other | No | 0.000 | 0.387 | 0.387 | 0.042 (0.000) | 0.000 | 0.003 | 0.015 |
+| A111 07-03 → 07-15 | july | No | 0.000 | 0.375 | 0.375 | 0.032 (0.000) | 0.001 | 0.003 | 0.017 |
+| A111 07-15 → 07-27 | other | Yes | 0.003 | 0.295 | 0.298 | 0.036 (0.000) | 0.000 | 0.008 | 0.010 |
+| A111 07-27 → 08-20 | other | No | 0.000 | 0.884 | 0.884 | 0.013 (0.000) | 0.001 | 0.001 | 0.002 |
+| A111 08-20 → 09-01 | quiet | No | 0.000 | 0.219 | 0.219 | 0.007 (0.000) | 0.000 | 0.000 | 0.002 |
+| A111 09-01 → 09-13 | quiet | Yes | 0.000 | 0.203 | 0.203 | 0.007 (0.000) | 0.000 | 0.000 | 0.000 |
+| A111 09-13 → 09-25 | quiet | Yes | 0.004 | 0.195 | 0.198 | 0.008 (0.000) | 0.000 | 0.000 | 0.000 |
+| A111 09-25 → 10-07 | quiet | Yes | 0.006 | 0.167 | 0.173 | 0.003 (0.000) | 0.000 | 0.000 | 0.000 |
+| A111 10-07 → 10-19 | quiet | Yes | 0.005 | 0.182 | 0.187 | 0.006 (0.000) | 0.000 | 0.000 | 0.000 |
+| D104 07-03 → 07-15 | july | No | 0.000 | 0.354 | 0.354 | 0.024 (0.000) | 0.005 | 0.006 | 0.014 |
+| D104 09-13 → 09-25 | quiet | Yes | 0.000 | 0.165 | 0.165 | 0.003 (0.000) | 0.001 | 0.000 | 0.000 |
+| D104 09-25 → 10-07 | quiet | Yes | 0.042 | 0.184 | 0.226 | 0.022 (0.003) | 0.005 | 0.009 | 0.001 |
+| D104 10-07 → 10-19 | quiet | Yes | 0.000 | 0.222 | 0.222 | 0.018 (0.000) | 0.003 | 0.005 | 0.001 |
+| A039 07-10 → 07-22 | july | Yes | 0.003 | 0.337 | 0.339 | 0.058 (0.000) | 0.019 | 0.021 | 0.019 |
+| A039 09-08 → 09-20 | quiet | Yes | 0.010 | 0.116 | 0.126 | 0.013 (0.000) | 0.004 | 0.001 | 0.000 |
+| A039 09-20 → 10-02 | quiet | Yes | 0.013 | 0.180 | 0.194 | 0.012 (0.000) | 0.004 | 0.002 | 0.000 |
+
+### Flank wedges, in the night 2 form (km²)
+
+Track 104 now has 3 quiet pairs, where night 2 had 1.
+
+| T | Track | Group | Basud (E) | Bonga (SE) | Mi-isi (S) |
+| --- | --- | --- | --- | --- | --- |
+| 3.0 dB | 111 | 5 quiet pairs | 0.002–0.006 | 0.002–0.009 | 0.000–0.007 |
+| 3.0 dB | 111 | **Spans the event** | 0.011 | 0.040 | 0.061 |
+| 3.0 dB | 39 | 2 quiet pairs | 0.056–0.077 | 0.026–0.055 | 0.001–0.003 |
+| 3.0 dB | 39 | **Spans the event** | 0.114 | 0.099 | 0.098 |
+| 3.0 dB | 104 | 3 quiet pairs | 0.007–0.038 | 0.004–0.067 | 0.002–0.039 |
+| 3.0 dB | 104 | **Spans the event** | 0.027 | 0.019 | 0.068 |
+| 4.0 dB | 111 | 5 quiet pairs | 0.000–0.001 | 0.000–0.002 | 0.000–0.003 |
+| 4.0 dB | 111 | **Spans the event** | 0.004 | 0.011 | 0.029 |
+| 4.0 dB | 39 | 2 quiet pairs | 0.011–0.016 | 0.004–0.010 | 0.000–0.001 |
+| 4.0 dB | 39 | **Spans the event** | 0.043 | 0.040 | 0.043 |
+| 4.0 dB | 104 | 3 quiet pairs | 0.003–0.011 | 0.001–0.027 | 0.000–0.007 |
+| 4.0 dB | 104 | **Spans the event** | 0.011 | 0.009 | 0.032 |
+| 5.0 dB | 111 | 5 quiet pairs | 0.000 | 0.000 | 0.000–0.002 |
+| 5.0 dB | 111 | **Spans the event** | 0.001 | 0.003 | 0.017 |
+| 5.0 dB | 39 | 2 quiet pairs | 0.004 | 0.001–0.002 | 0.000 |
+| 5.0 dB | 39 | **Spans the event** | 0.019 | 0.021 | 0.019 |
+| 5.0 dB | 104 | 3 quiet pairs | 0.001–0.005 | 0.000–0.009 | 0.000–0.001 |
+| 5.0 dB | 104 | **Spans the event** | 0.005 | 0.006 | 0.014 |
+
+### Limits
+
+- **Left out, because their crops aren't cached and this task had no download allowance:** D104 06-21 → 07-03, 07-15 → 07-27, 07-27 → 08-20, 08-20 → 09-01 and 09-01 → 09-13; A039 06-28 → 07-10, 07-22 → 08-15, 08-15 → 08-27, 08-27 → 09-08 and 10-02 → 10-14.
+- **One event, and the 0.4 test rests on one pair.** Two of the three July pairs have no coherence baseline, so they can't reach high confidence.
+- **Pairs without a baseline:** A111 08-20 → 09-01 has unequal gaps, and its table row uses brightness only, like the published pipeline.
+- **"Quiet" is an assumption,** as in the earlier sections, and October is the last stretch before the eruption.
+- **The wedges are coarse and overlap.** They measure change on a flank, not a deposit in a gully.

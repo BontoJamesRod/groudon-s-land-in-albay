@@ -67,8 +67,9 @@ def test_bytes_are_logged(tmp_path):
 
 def test_a_product_from_the_eruption_is_refused_before_opening(tmp_path):
     calls = []
+    # A far-off year, so this still tests the refusal after the cutoff has been lifted.
     with pytest.raises(BlindnessError):
-        read_crop(ERUPTION, "url", GROUP, ["HHHH"], BOUNDS, raw_folder=tmp_path,
+        read_crop(ERUPTION.replace("2026", "2099"), "url", GROUP, ["HHHH"], BOUNDS, raw_folder=tmp_path,
                   opener=local_opener(b"", calls))
     assert calls == []
 

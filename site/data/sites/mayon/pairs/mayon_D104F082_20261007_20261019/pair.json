@@ -1,0 +1,304 @@
+{
+ "data": {
+  "id": "mayon_D104F082_20261007_20261019",
+  "site_id": "mayon",
+  "status": "published",
+  "track": 104,
+  "frame": 82,
+  "orbit_direction": "descending",
+  "before_pass_id": "D104F082_20261007T101611",
+  "after_pass_id": "D104F082_20261019T101612",
+  "before_acquired_start": "2026-10-07T10:16:11Z",
+  "after_acquired_start": "2026-10-19T10:16:12Z",
+  "previous_pair_id": "mayon_D104F082_20260925_20261007",
+  "gunw_granule_id": "NISAR_L2_PR_GUNW_032_104_D_082_033_4000_SH_20261007T101611_20261007T101646_20261019T101612_20261019T101646_P05023_N_F_J_001",
+  "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_032_104_D_082_033_4000_SH_20261007T101611_20261007T101646_20261019T101612_20261019T101646_P05023_N_F_J_001",
+  "coherence_used": true,
+  "brightness_threshold_db": 3.0,
+  "coherence_loss_threshold": 0.3,
+  "high_confidence_area_km2": 0.02,
+  "low_confidence_area_km2": 2.11,
+  "new_material_area_km2": 2.13,
+  "pipeline_version": "0.1.0",
+  "error_message": null,
+  "published_at": "2026-10-31T12:38:49Z",
+  "created_at": "2026-10-31T12:38:45Z",
+  "updated_at": "2026-10-31T12:38:49Z",
+  "passes": [
+   {
+    "id": "D104F082_20261007T101611",
+    "site_id": "mayon",
+    "mission": "NISAR",
+    "product_type": "GCOV",
+    "granule_id": "NISAR_L2_PR_GCOV_032_104_D_082_4005_DHDH_A_20261007T101611_20261007T101646_P05023_N_F_J_001",
+    "track": 104,
+    "frame": 82,
+    "orbit_direction": "descending",
+    "cycle": 32,
+    "acquired_start": "2026-10-07T10:16:11Z",
+    "acquired_end": "2026-10-07T10:16:46Z",
+    "polarizations": [
+     "HHHH",
+     "HVHV"
+    ],
+    "pixel_spacing_m": 10.0,
+    "maturity": "PROVISIONAL",
+    "vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GCOV_032_104_D_082_4005_DHDH_A_20261007T101611_20261007T101646_P05023_N_F_J_001",
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   },
+   {
+    "id": "D104F082_20261019T101612",
+    "site_id": "mayon",
+    "mission": "NISAR",
+    "product_type": "GCOV",
+    "granule_id": "NISAR_L2_PR_GCOV_033_104_D_082_4005_DHDH_A_20261019T101612_20261019T101646_P05023_N_F_J_001",
+    "track": 104,
+    "frame": 82,
+    "orbit_direction": "descending",
+    "cycle": 33,
+    "acquired_start": "2026-10-19T10:16:12Z",
+    "acquired_end": "2026-10-19T10:16:46Z",
+    "polarizations": [
+     "HHHH",
+     "HVHV"
+    ],
+    "pixel_spacing_m": 10.0,
+    "maturity": "PROVISIONAL",
+    "vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GCOV_033_104_D_082_4005_DHDH_A_20261019T101612_20261019T101646_P05023_N_F_J_001",
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   }
+  ],
+  "layers": [
+   {
+    "id": "mayon_D104F082_20261007_20261019_before_db",
+    "pair_id": "mayon_D104F082_20261007_20261019",
+    "kind": "before_db",
+    "title": "Radar brightness before",
+    "units": "dB",
+    "image_path": "before_db.png",
+    "image_format": "png",
+    "bounds_west": 123.56,
+    "bounds_south": 13.14,
+    "bounds_east": 123.81,
+    "bounds_north": 13.38,
+    "image_width": 1351,
+    "image_height": 1297,
+    "grid_path": null,
+    "grid_dtype": null,
+    "grid_scale": null,
+    "grid_nodata": null,
+    "no_data_codes": null,
+    "grid_width": null,
+    "grid_height": null,
+    "color_scale_min": -25.0,
+    "color_scale_max": 5.0,
+    "legend": [
+     {
+      "value": -25.0,
+      "label": "-25 dB",
+      "color": "#000000",
+      "confidence": null
+     },
+     {
+      "value": 5.0,
+      "label": "5 dB",
+      "color": "#FFFFFF",
+      "confidence": null
+     }
+    ],
+    "source_granule_ids": [
+     "NISAR_L2_PR_GCOV_032_104_D_082_4005_DHDH_A_20261007T101611_20261007T101646_P05023_N_F_J_001"
+    ],
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   },
+   {
+    "id": "mayon_D104F082_20261007_20261019_after_db",
+    "pair_id": "mayon_D104F082_20261007_20261019",
+    "kind": "after_db",
+    "title": "Radar brightness after",
+    "units": "dB",
+    "image_path": "after_db.png",
+    "image_format": "png",
+    "bounds_west": 123.56,
+    "bounds_south": 13.14,
+    "bounds_east": 123.81,
+    "bounds_north": 13.38,
+    "image_width": 1351,
+    "image_height": 1297,
+    "grid_path": null,
+    "grid_dtype": null,
+    "grid_scale": null,
+    "grid_nodata": null,
+    "no_data_codes": null,
+    "grid_width": null,
+    "grid_height": null,
+    "color_scale_min": -25.0,
+    "color_scale_max": 5.0,
+    "legend": [
+     {
+      "value": -25.0,
+      "label": "-25 dB",
+      "color": "#000000",
+      "confidence": null
+     },
+     {
+      "value": 5.0,
+      "label": "5 dB",
+      "color": "#FFFFFF",
+      "confidence": null
+     }
+    ],
+    "source_granule_ids": [
+     "NISAR_L2_PR_GCOV_033_104_D_082_4005_DHDH_A_20261019T101612_20261019T101646_P05023_N_F_J_001"
+    ],
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   },
+   {
+    "id": "mayon_D104F082_20261007_20261019_change_db",
+    "pair_id": "mayon_D104F082_20261007_20261019",
+    "kind": "change_db",
+    "title": "Brightness change",
+    "units": "dB",
+    "image_path": "change_db.png",
+    "image_format": "png",
+    "bounds_west": 123.56,
+    "bounds_south": 13.14,
+    "bounds_east": 123.81,
+    "bounds_north": 13.38,
+    "image_width": 1351,
+    "image_height": 1297,
+    "grid_path": null,
+    "grid_dtype": null,
+    "grid_scale": null,
+    "grid_nodata": null,
+    "no_data_codes": null,
+    "grid_width": null,
+    "grid_height": null,
+    "color_scale_min": -6.0,
+    "color_scale_max": 6.0,
+    "legend": [
+     {
+      "value": -6.0,
+      "label": "-6 dB",
+      "color": "#053061",
+      "confidence": null
+     },
+     {
+      "value": 6.0,
+      "label": "6 dB",
+      "color": "#67001F",
+      "confidence": null
+     }
+    ],
+    "source_granule_ids": [
+     "NISAR_L2_PR_GCOV_032_104_D_082_4005_DHDH_A_20261007T101611_20261007T101646_P05023_N_F_J_001",
+     "NISAR_L2_PR_GCOV_033_104_D_082_4005_DHDH_A_20261019T101612_20261019T101646_P05023_N_F_J_001"
+    ],
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   },
+   {
+    "id": "mayon_D104F082_20261007_20261019_coherence_loss",
+    "pair_id": "mayon_D104F082_20261007_20261019",
+    "kind": "coherence_loss",
+    "title": "Coherence loss",
+    "units": "coherence loss (0–1)",
+    "image_path": "coherence_loss.png",
+    "image_format": "png",
+    "bounds_west": 123.56,
+    "bounds_south": 13.14,
+    "bounds_east": 123.81,
+    "bounds_north": 13.38,
+    "image_width": 1351,
+    "image_height": 1297,
+    "grid_path": null,
+    "grid_dtype": null,
+    "grid_scale": null,
+    "grid_nodata": null,
+    "no_data_codes": null,
+    "grid_width": null,
+    "grid_height": null,
+    "color_scale_min": 0.0,
+    "color_scale_max": 1.0,
+    "legend": [
+     {
+      "value": 0.0,
+      "label": "0 coherence loss (0–1)",
+      "color": "#440154",
+      "confidence": null
+     },
+     {
+      "value": 1.0,
+      "label": "1 coherence loss (0–1)",
+      "color": "#FDE724",
+      "confidence": null
+     }
+    ],
+    "source_granule_ids": [
+     "NISAR_L2_PR_GUNW_032_104_D_082_033_4000_SH_20261007T101611_20261007T101646_20261019T101612_20261019T101646_P05023_N_F_J_001",
+     "NISAR_L2_PR_GUNW_031_104_D_082_032_4000_SH_20260925T101611_20260925T101646_20261007T101611_20261007T101646_P05023_N_F_J_001"
+    ],
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   },
+   {
+    "id": "mayon_D104F082_20261007_20261019_new_material",
+    "pair_id": "mayon_D104F082_20261007_20261019",
+    "kind": "new_material",
+    "title": "New material (PROVISIONAL thresholds), within 10 km of the summit",
+    "units": "class",
+    "image_path": "new_material.png",
+    "image_format": "png",
+    "bounds_west": 123.56,
+    "bounds_south": 13.14,
+    "bounds_east": 123.81,
+    "bounds_north": 13.38,
+    "image_width": 1351,
+    "image_height": 1297,
+    "grid_path": "new_material.bin",
+    "grid_dtype": "uint8",
+    "grid_scale": 1,
+    "grid_nodata": null,
+    "no_data_codes": {
+     "253": "masked_by_product",
+     "254": "sea",
+     "255": "outside_coverage"
+    },
+    "grid_width": 1351,
+    "grid_height": 1297,
+    "color_scale_min": null,
+    "color_scale_max": null,
+    "legend": [
+     {
+      "value": 1,
+      "label": "Possible new material (one signal)",
+      "color": "#E69F00",
+      "confidence": "low"
+     },
+     {
+      "value": 2,
+      "label": "New material (both signals)",
+      "color": "#D55E00",
+      "confidence": "high"
+     }
+    ],
+    "source_granule_ids": [
+     "NISAR_L2_PR_GCOV_032_104_D_082_4005_DHDH_A_20261007T101611_20261007T101646_P05023_N_F_J_001",
+     "NISAR_L2_PR_GCOV_033_104_D_082_4005_DHDH_A_20261019T101612_20261019T101646_P05023_N_F_J_001",
+     "NISAR_L2_PR_GUNW_032_104_D_082_033_4000_SH_20261007T101611_20261007T101646_20261019T101612_20261019T101646_P05023_N_F_J_001",
+     "NISAR_L2_PR_GUNW_031_104_D_082_032_4000_SH_20260925T101611_20260925T101646_20261007T101611_20261007T101646_P05023_N_F_J_001"
+    ],
+    "created_at": "2026-10-31T12:38:45Z",
+    "updated_at": "2026-10-31T12:38:45Z"
+   }
+  ]
+ },
+ "meta": {
+  "generated_at": "2026-10-31T12:38:49Z",
+  "schema_version": "1.0"
+ }
+}

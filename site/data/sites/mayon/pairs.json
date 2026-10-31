@@ -157,6 +157,32 @@
    "updated_at": "2026-10-31T09:18:28Z"
   },
   {
+   "id": "mayon_D104F082_20260913_20260925",
+   "site_id": "mayon",
+   "status": "published",
+   "track": 104,
+   "frame": 82,
+   "orbit_direction": "descending",
+   "before_pass_id": "D104F082_20260913T101611",
+   "after_pass_id": "D104F082_20260925T101611",
+   "before_acquired_start": "2026-09-13T10:16:11Z",
+   "after_acquired_start": "2026-09-25T10:16:11Z",
+   "previous_pair_id": "mayon_D104F082_20260901_20260913",
+   "gunw_granule_id": "NISAR_L2_PR_GUNW_030_104_D_082_031_4000_SH_20260913T101611_20260913T101646_20260925T101611_20260925T101646_P05023_N_F_J_001",
+   "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_030_104_D_082_031_4000_SH_20260913T101611_20260913T101646_20260925T101611_20260925T101646_P05023_N_F_J_001",
+   "coherence_used": true,
+   "brightness_threshold_db": 3.0,
+   "coherence_loss_threshold": 0.3,
+   "high_confidence_area_km2": 0.01,
+   "low_confidence_area_km2": 0.92,
+   "new_material_area_km2": 0.93,
+   "pipeline_version": "0.1.0",
+   "error_message": null,
+   "published_at": "2026-10-31T12:38:48Z",
+   "created_at": "2026-10-31T12:36:32Z",
+   "updated_at": "2026-10-31T12:38:48Z"
+  },
+  {
    "id": "mayon_A111F008_20260913_20260925",
    "site_id": "mayon",
    "status": "published",
@@ -209,6 +235,32 @@
    "updated_at": "2026-10-31T09:18:44Z"
   },
   {
+   "id": "mayon_D104F082_20261007_20261019",
+   "site_id": "mayon",
+   "status": "published",
+   "track": 104,
+   "frame": 82,
+   "orbit_direction": "descending",
+   "before_pass_id": "D104F082_20261007T101611",
+   "after_pass_id": "D104F082_20261019T101612",
+   "before_acquired_start": "2026-10-07T10:16:11Z",
+   "after_acquired_start": "2026-10-19T10:16:12Z",
+   "previous_pair_id": "mayon_D104F082_20260925_20261007",
+   "gunw_granule_id": "NISAR_L2_PR_GUNW_032_104_D_082_033_4000_SH_20261007T101611_20261007T101646_20261019T101612_20261019T101646_P05023_N_F_J_001",
+   "gunw_vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GUNW_032_104_D_082_033_4000_SH_20261007T101611_20261007T101646_20261019T101612_20261019T101646_P05023_N_F_J_001",
+   "coherence_used": true,
+   "brightness_threshold_db": 3.0,
+   "coherence_loss_threshold": 0.3,
+   "high_confidence_area_km2": 0.02,
+   "low_confidence_area_km2": 2.11,
+   "new_material_area_km2": 2.13,
+   "pipeline_version": "0.1.0",
+   "error_message": null,
+   "published_at": "2026-10-31T12:38:49Z",
+   "created_at": "2026-10-31T12:38:45Z",
+   "updated_at": "2026-10-31T12:38:49Z"
+  },
+  {
    "id": "mayon_A111F008_20261007_20261019",
    "site_id": "mayon",
    "status": "published",
@@ -236,7 +288,7 @@
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T09:18:52Z",
+  "generated_at": "2026-10-31T12:39:52Z",
   "schema_version": "1.0"
  }
 }
