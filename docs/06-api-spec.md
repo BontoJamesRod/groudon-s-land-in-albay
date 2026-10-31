@@ -96,7 +96,7 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 
 None (`GET`).
 
-**Success response:** `200 OK`
+**Success response:** `200 OK` (the strip width is illustrative: the real value is in the site config)
 
 ```json
 {
@@ -121,6 +121,7 @@ None (`GET`).
       "danger_zone_radius_km": 6,
       "danger_zone_label": "Permanent Danger Zone (6 km)",
       "detection_reach_km": 10,
+      "channel_strip_half_width_m": 100,
       "wording_set": null,
       "boundary_credit": "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)",
       "boundary_credit_url": null,
@@ -319,6 +320,7 @@ None (`GET`).
   "type": "FeatureCollection",
   "generated_at": "2026-11-04T09:00:00Z",
   "schema_version": "1.0",
+  "license": "ODbL 1.0, (c) OpenStreetMap contributors",
   "features": [
     {
       "type": "Feature",
@@ -328,15 +330,26 @@ None (`GET`).
         "site_id": "mayon",
         "name": "Mi-isi",
         "alt_names": ["Miisi"],
-        "town_ids": ["mayon_daraga"],
+        "town_ids": ["mayon_daraga", "mayon_legazpi_city"],
         "name_source": "PHIVOLCS Mayon Volcano Bulletin",
         "name_source_url": null,
         "line_source_id": "channel_lines",
         "confirmed_by": "project owner",
-        "confirmed_on": "2026-11-05",
+        "confirmed_on": "2026-11-01",
+        "imagery_date": "2026-05-16",
+        "label_lat": 13.2,
+        "label_lon": 123.7,
         "strip_geometry": {
           "type": "Polygon",
           "coordinates": [[[123.679, 13.250], [123.681, 13.250], [123.701, 13.200], [123.699, 13.200], [123.679, 13.250]]]
+        },
+        "checked_geometry": {
+          "type": "LineString",
+          "coordinates": [[123.680, 13.250], [123.700, 13.200]]
+        },
+        "not_checked_geometry": {
+          "type": "LineString",
+          "coordinates": [[123.700, 13.200], [123.710, 13.160]]
         }
       },
       "geometry": {
@@ -352,7 +365,7 @@ None (`GET`).
 
 | Status | Code | When |
 | --- | --- | --- |
-| 404 | `NOT_FOUND` | Unknown `site_id` or file missing; Suggestion: the channel layer is hidden and the legend says "Channels unavailable" (03 §5) |
+| 404 | `NOT_FOUND` | Unknown `site_id` or file missing; the channel layer is hidden and the legend says "Channels unavailable" (03 §5). A site with no `channel_strip_half_width_m` has no channel data, and the app doesn't ask for this file |
 | — | `NETWORK_ERROR` | No connection |
 | 200 | `INVALID_DATA` | A `town_ids` item doesn't exist in `towns.geojson`, or a channel has no `confirmed_on` (FR-065) |
 
@@ -724,7 +737,7 @@ None (`GET`).
 
 None (`GET`).
 
-**Success response:** `200 OK` (illustrative values; the file doesn't exist yet)
+**Success response:** `200 OK` (illustrative values)
 
 ```json
 {
@@ -742,7 +755,8 @@ None (`GET`).
   ],
   "meta": {
     "generated_at": "2026-11-05T09:00:00Z",
-    "schema_version": "1.0"
+    "schema_version": "1.0",
+    "license": "ODbL 1.0, (c) OpenStreetMap contributors"
   }
 }
 ```
@@ -751,7 +765,7 @@ None (`GET`).
 
 | Status | Code | When |
 | --- | --- | --- |
-| 404 | `NOT_FOUND` | Site has no channels; no Channels button shows (US-024/AC-2) |
+| 404 | `NOT_FOUND` | File missing; "Couldn't load channel changes. Try again." with Retry. A site with no channel data has no Channels button, so it never asks for this file (US-024/AC-2) |
 | — | `NETWORK_ERROR` | No connection; "Couldn't load channel changes. Try again." with Retry (US-024/AC-3) |
 | 200 | `INVALID_DATA` | A row's `channel_id` or `pair_id` doesn't exist, or `flagged_area_km2` is `null` while `checked_area_km2` is above 0 |
 
@@ -776,7 +790,7 @@ None (`GET`).
 | 1 | What are the GitHub username and repository name for the base URL? | §1 |
 | 2 | How long should the app wait before treating a request as a network error? | §2 |
 | 3 | Is the ASF Vertex list-search link format used in the examples correct? (verify) | API-007, API-008 |
-| 4 | What channel buffer should validation use? (500 m in the example is illustrative; same question as the channel distance in 01 Open Question 3) | API-011 |
+| 4 | What channel buffer should validation use? (500 m in the example is illustrative. The channel's strip, 01 Open Question 3, is the natural answer.) | API-011 |
 
 ## 8. Conflicts with Earlier Documents
 
@@ -787,4 +801,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | Layer count note. Removed threshold numbers from the examples. Added API-012 and the new API-005 fields. |
+| 0.2 | 2026-11-01 | Layer count note. Removed threshold numbers from the examples. Added API-012 and the new API-005 and API-001 fields. |

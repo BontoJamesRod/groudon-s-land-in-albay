@@ -68,8 +68,8 @@ Fixtures used below are listed in §5.
 | TC-042 | US-018/AC-1 | FR-049, SCR-01 | Phone layout | 1. DevTools device mode at 360 px wide. 2. Use every control. 3. Measure tap targets. | No horizontal scrolling; every control reachable; every tap target at least 44 × 44 px | Positive | High |
 | TC-043 | US-018/AC-2 | FR-050, SCR-01 | Color-blind check | 1. DevTools "Emulate vision deficiencies": deuteranopia, then protanopia. 2. Check map and legend. | Every class still distinguishable; each class has a text label | Positive | Medium |
 | TC-044 | US-023/AC-1 | FR-056, SCR-01, SCR-02, API-005 | Channels and towns | 1. Turn the channel layer on. 2. Tap the Mi-isi line. | Each channel drawn with its name; the card lists the towns Mi-isi passes through | Positive | High |
-| TC-045 | US-023/AC-2 | FR-057, SCR-02, API-010 | New material in a channel | 1. Tap a detected cell within the channel distance of a named channel. | "New material detected in or near <channel name>" | Positive | High |
-| TC-046 | US-023/AC-2 | FR-057, SCR-02 | New material away from channels | 1. Tap a detected cell farther than the channel distance from every channel. | "Not in a named channel" | Negative | Medium |
+| TC-045 | US-023/AC-2 | FR-057, SCR-02, API-010 | New material in a channel | 1. Tap a detected cell inside a named channel's strip. | "New material detected in or near <channel name>" | Positive | High |
+| TC-046 | US-023/AC-2 | FR-057, SCR-02 | New material away from channels | 1. Tap a detected cell outside every channel's strip. | "Not in a named channel on this map" | Negative | Medium |
 | TC-047 | US-023/AC-3 | FR-058, SCR-01, SCR-06, API-002 | Channel sources | 1. With channels on, open the legend and Data sources. | Sources of channel names and channel lines are shown | Positive | Medium |
 | TC-048 | US-009/AC-1 | TBL-01, TBL-11, API-001, API-011 | All published files match the contract | 1. Run `contract_check` on `site/data/`. | 0 errors: every field, type, enum and constraint in 05 holds; image and grid sizes match their records | Positive | High |
 | TC-049 | US-006/AC-1 | FR-059, API-007 | Unpublished pairs never shown | 1. Process a pair but don't publish it. 2. Deploy. 3. Check `pairs.json` and the timeline. | The pair isn't listed and its folder isn't under `site/data/` | Negative | High |
@@ -93,6 +93,7 @@ Fixtures used below are listed in §5.
 | TC-078 | US-014/AC-3 | FR-070, SCR-01, SCR-02, SCR-05, TBL-01, TBL-06, API-001 | A site's own wording | 1. Switch to Panama. 2. Read the legend, a card, the disclaimer, the help panel and the phone handle. 3. Switch back. | Panama says "change", names SINAPROC, titles the earthquake pair "Changed after the earthquake", and never says landslides there; Mayon's text comes back unchanged | Positive | High |
 | TC-079 | US-001/AC-3 | FR-003, SCR-01, API-004 | No line along a clipped edge | 1. Build the coast and town lines for each site. | The real lines are there; no segment runs along the site's edge | Negative | Medium |
 | TC-080 | US-017/AC-3 | FR-048, SCR-07, TBL-05, API-008 | A pair's check note | 1. Switch to Panama. 2. Select the quiet pair. 3. Open "How we checked this". | "Used as the 'before' comparison for the earthquake pair", not "Not yet checked" | Positive | Medium |
+| TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
 
@@ -150,7 +151,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-018 | AC-1, AC-2 | TC-042, TC-043 |
 | US-023 | AC-1, AC-2, AC-3 | TC-044, TC-045, TC-046, TC-047 |
 | US-024 | AC-1, AC-2, AC-3 | TC-064, TC-065, TC-066 |
-| US-025 | AC-1, AC-2, AC-3, AC-4 | TC-067, TC-068, TC-069, TC-070 |
+| US-025 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-067, TC-068, TC-069, TC-070, TC-081 |
 | US-026 | AC-1, AC-2, AC-3 | TC-072, TC-073, TC-074 |
 
 ## 8. Exit Criteria
@@ -197,4 +198,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-080. |
+| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-081. |

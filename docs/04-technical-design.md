@@ -63,15 +63,15 @@ Hosting:
 | `gcov` | Read HH backscatter, crop, speckle-filter, convert to dB, compute brightness change, apply masks | F-04, F-05 |
 | `coherence` | Read GUNW coherence for the current and previous pair; compute coherence loss | F-05 |
 | `classify` | Apply the final rule and thresholds; produce none, low and high confidence classes and areas in km² | F-05 |
-| `context` | Prepare towns, land, coastline, channels and events for a site | F-01, F-02, F-03, F-19 |
-| `channel_areas` | Build channel strips from the confirmed lines and the configured width; compute the flagged area per channel per pair | F-20 |
+| `context` | Prepare towns, land, coastline and events for a site, and the shared sources file | F-01, F-02, F-03 |
+| `channel_areas` | Write the confirmed channels with their towns, strips and any part past the reach distance; compute the flagged area per channel per pair | F-19, F-20 |
 | `export` | Reproject to EPSG:4326, colorize, write images, value grids and JSON records to `pipeline/out/` | F-03, F-04, F-05, F-09 |
 | `publish` | Copy a checked pair from `pipeline/out/` to `site/data/`, set status "published", rebuild the pair list | F-03, F-11 |
 | `validation` | Turn a hand-filled validation sheet into a validation record | F-12 |
 | `contract_check` | Check every published file against 05 before deploy | F-09, F-11 |
 | Web: `data.js` | Fetch data files; turn failures into NOT_FOUND, NETWORK_ERROR or INVALID_DATA | F-01, F-03, F-10 |
 | Web: `map.js` | Map, zoom limits, background tiles with fallback, borders, coastline, danger-zone ring | F-01 |
-| Web: `timeline.js` | Pair list, latest-pair default, Previous and Next, event markers | F-03 |
+| Web: `timeline.js` | Pair list, latest-pair default, Previous and Next, event markers, unequal-gap note | F-03, F-20 |
 | Web: `layers.js` | New-material and channel layers, legend, summary line | F-05, F-19 |
 | Web: `readout.js` | Decode value grids and build the readout card for a tap, town or channel | F-02, F-19 |
 | Web: `channels.js` | Channel list, channel view, bars, strip on the map | F-20 |
@@ -279,9 +279,9 @@ mayon-radar-watch/
 ### ADR-008: Channels from the PHIVOLCS-named list; no flow routing
 
 - **Context:** The brief puts computing flow paths from elevation data out of scope.
-- **Decision:** Keep a fixed channel file: names from PHIVOLCS bulletins, lines from an open source [TBD], each linked to the towns it passes through.
+- **Decision:** Keep a fixed channel file: names from PHIVOLCS bulletins, lines from OpenStreetMap that the owner confirmed in Google Earth Pro, each linked to the towns it passes through.
 - **Alternatives considered:** Flow routing from a DEM (out of scope; new skill).
-- **Consequences:** The channel file must be checked by hand; "in or near a channel" uses a distance threshold [TBD].
+- **Consequences:** The channel file must be checked by hand. "In or near a channel" means inside its strip (ADR-011). OpenStreetMap's license (ODbL) means crediting it on the map and keeping the channel files public under the same license.
 
 ### ADR-009: Keep unpublished pairs out of the public folder
 
@@ -302,7 +302,7 @@ mayon-radar-watch/
 - **Context:** The channel timeline (F-20) needs the area flagged along each channel for every pair. A value grid is over a megabyte per pair, so reading every pair in the browser would break the NFR-001 target. Area must also match the final rule exactly.
 - **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_half_width_m`, measured on each side of the line), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
 - **Alternatives considered:** Computing in the browser from each pair's grid (many downloads, and results could differ from the pipeline's); flow routing from elevation data (out of scope, ADR-008).
-- **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part.
+- **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part, and what lies past it is drawn as "Not checked" (FR-071).
 
 ## 12. Assumptions
 
@@ -316,7 +316,7 @@ mayon-radar-watch/
 | --- | --- | --- |
 | 1 | Frontend: plain JavaScript (Suggestion), or a framework? | §2, ADR-004 |
 | 2 | Hosting: GitHub Pages (Suggestion), Netlify or Vercel? | §2, §7, ADR-005 |
-| 3 | Where do channel lines come from? | ADR-008, F-19 |
+| 3 | Closed on 2026-11-01: OpenStreetMap, with the lines the owner confirmed. | ADR-008, F-19 |
 | 4 | Do Esri's terms allow this use, and what attribution is required? (verify) | ADR-010, F-01 |
 | 5 | Is GUNW coherence at about 80 m fine enough, or should coherence come from GSLC later? | ADR-006 |
 
@@ -329,4 +329,4 @@ None. The conflict raised in 01-prd.md §13 (brief F-05 wording) closed with the
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | CI text updated. ADR-006 now states the final rule, the reach distance and the lifted blind cutoff. Added ADR-011 and the `channel_areas` and `channels.js` modules. |
+| 0.2 | 2026-11-01 | CI text updated. ADR-006 now states the final rule, the reach distance and the lifted blind cutoff. Added ADR-011 and the `channel_areas` and `channels.js` modules. `channel_areas` also writes the channels file. |

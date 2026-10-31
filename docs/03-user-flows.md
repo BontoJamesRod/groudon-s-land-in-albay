@@ -95,9 +95,9 @@ flowchart TD
     B -- Yes --> D{"New material class?"}
     D -- "None, beyond reach" --> R["Card: Not checked, beyond the reach limit"]
     D -- None --> E["Card: no new material"]
-    D -- "Low or high" --> F{"Within channel distance?"}
+    D -- "Low or high" --> F{"Inside a channel's strip?"}
     F -- Yes --> G["Card: detected in or near channel"]
-    F -- No --> H["Card: Not in a named channel"]
+    F -- No --> H["Card: Not in a named channel on this map"]
     C --> I{"Inside danger zone?"}
     R --> I
     E --> I
@@ -236,7 +236,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Danger-zone ring | Map layer | 6 km ring labeled "Permanent Danger Zone (6 km)" for Mayon (US-001/AC-1) |
 | New-material layer | Map layer and toggle | On by default; classes by confidence (US-008/AC-1, US-008/AC-3, US-008/AC-4) |
 | Reach ring | Map layer | Dotted ring at the site's reach distance; the legend title states the limit (US-008/AC-5) |
-| Channels layer | Map layer and toggle | Named channel lines with names (US-023/AC-1) |
+| Channels layer | Map layer and toggle | Named channel lines with names (US-023/AC-1); the part past the reach distance is dashed (US-025/AC-5); not shown for a site with no channels |
 | Legend | Panel | Class names, confidence, units, total detected area in km² with 2 decimals, channel sources (US-008/AC-1, US-023/AC-3) |
 | Summary line | Text | "No new material detected between <before date> and <after date>" when the area is 0 km² (US-008/AC-2) |
 | Compare button | Button | Opens SCR-04 (US-007) |
@@ -282,8 +282,8 @@ Sites with no channel data, such as Panama, show no Channels button.
 | New-material result | Text | None, low confidence or high confidence (US-004/AC-1) |
 | Beyond-reach message | Text | "Not checked: this map only looks within 10 km of the summit" with the site's distance (US-004/AC-4) |
 | No-data message | Text | "No radar data here" plus one reason: outside radar coverage, sea, or "the radar product marked this spot as invalid" (US-004/AC-2) |
-| Channel line | Text | "New material detected in or near <channel name>" or "Not in a named channel" (US-023/AC-2) |
-| Towns along the channel | List | Shown when a channel was tapped (US-023/AC-1) |
+| Channel line | Text | For a flagged spot: "New material detected in or near <channel name>" or "Not in a named channel on this map" (US-023/AC-2) |
+| Towns along the channel | List | Shown when a channel was tapped, above the reading for that spot (US-023/AC-1) |
 | Pair dates | Text | Before and after dates of the selected pair |
 | Close | Button | Closes the card |
 
@@ -551,7 +551,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 
 ### SCR-13: Channel list
 
-**Purpose:** See which confirmed channels changed most since the last pass.
+**Purpose:** See which confirmed channels changed most since the last pass. The panel sits beside the map on a large screen and under it on a phone, where it takes the place of the pass controls.
 **Roles:** Visitor
 **Stories:** US-024
 
@@ -561,6 +561,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | --- | --- | --- |
 | Channel rows | List | Name and flagged area in km² with 2 decimals for the latest pair, largest first (US-024/AC-1) |
 | Latest pair line | Text | The dates the areas refer to, with the gap note if its gap isn't 12 days (US-025/AC-4) |
+| Notes | Text | How the area is counted, with the strip width and the reach distance, and that only confirmed channels are listed |
 | Close | Button | Returns to the map |
 
 **Actions**
@@ -590,9 +591,11 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Element | Type | Behavior and validation |
 | --- | --- | --- |
 | Channel name | Text | Name as written by PHIVOLCS |
-| Bars | Chart | One bar per published pair, in order of after date, flagged area in km², each labeled with its dates (US-025/AC-1) |
+| Towns | Text | The towns the channel passes through (US-023/AC-1) |
+| Bars | Chart | One bar per published pair, in order of after date, flagged area in km², each labeled with its dates and track (US-025/AC-1); all channels use one scale; the selected pair is marked |
 | Gap note | Text | Dimmed bar with a note such as "24-day gap, not comparable" (US-025/AC-4) |
-| Channel strip | Map layer | The strip for this channel; the map fits it (US-025/AC-2) |
+| Channel strip | Map layer | The strip for this channel; the map fits it and any part past the reach distance (US-025/AC-2) |
+| Not-checked part | Map layer and text | Dashed line past the reach distance, labeled "Not checked", with a note in the panel (US-025/AC-5) |
 | Back | Button | Returns to SCR-13 and removes the strip |
 
 **Actions**
@@ -623,7 +626,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Tap where there is no radar value | "No radar data here" with its reason (US-004/AC-2) | SCR-02 |
 | Next pressed on the latest pair | "This is the latest pass" (US-005/AC-2) | SCR-01 |
 | One pair's files fail to load | Suggestion: "Couldn't load this pass. Try again." with Retry; the previous pair stays shown | SCR-01 |
-| The channel file fails to load | Suggestion: the channel layer is hidden and the legend says "Channels unavailable"; the readout leaves out the channel line | SCR-01, SCR-02 |
+| The channel file fails to load | The channel layer is hidden and the legend says "Channels unavailable"; the readout leaves out the channel line; the Channels button tries again | SCR-01, SCR-02, SCR-13 |
 | The events file fails to load | Suggestion: the timeline shows no event markers; everything else works | SCR-01 |
 | New data published while the page is open | The page keeps the data it loaded; a reload shows the new pairs | SCR-01 |
 | Unknown path | "Page not found" with a link to the map (US-016/AC-2) | SCR-09 |
@@ -651,4 +654,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | Added SCR-13, SCR-14 and Flow 9. The channel card from T-028 stays as it is. Added the reach ring and message, and the new no-data wording. |
+| 0.2 | 2026-11-01 | Added SCR-13, SCR-14 and Flow 9. The channel card from T-028 stays as it is. Added the reach ring and message, and the new no-data wording. Channels: "in or near" means inside the strip, and the part past the reach is drawn as not checked. |

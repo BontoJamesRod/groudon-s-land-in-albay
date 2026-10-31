@@ -68,6 +68,7 @@ erDiagram
         number danger_zone_radius_km
         string danger_zone_label
         number detection_reach_km
+        number channel_strip_half_width_m
         string wording_set
         array change_types
         string created_at
@@ -95,7 +96,12 @@ erDiagram
         string line_source_id FK
         string confirmed_by
         string confirmed_on
+        string imagery_date
+        number label_lat
+        number label_lon
         object strip_geometry
+        object checked_geometry
+        object not_checked_geometry
         object geometry
     }
     channel_areas {
@@ -264,11 +270,12 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `boundary_credit` | string | No | `null` | — | Map credit for the site's borders (FR-040) |
 | `boundary_credit_url` | string | No | `null` | URL | Link for that credit, when the source asks for one |
 | `detection_reach_km` | number | No | `null` | > 0; built from `filters.max_distance_km` in the site config | How far from the summit detections go (FR-060) |
+| `channel_strip_half_width_m` | number | No | `null` | > 0 | How far a channel's strip goes on each side of its line, in metres (FR-064). Set only for a site with channels, and a site with it shows the Channels button (US-024/AC-2) |
 | `change_types` | array of string | Yes | `["new_material"]` | ≥ 1 item; enum `change_type` | Change types published for this site |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
 
-The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, for sites with channels, the strip width on each side of the line `channel_strip_half_width_m` (FR-064), the ground-movement mask `ground_movement.min_coherence` (FR-031), and `layer_wording`, the layer title, legend labels and check notes for a site with its own wording (FR-048, FR-070).
+The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, the ground-movement mask `ground_movement.min_coherence` (FR-031), and `layer_wording`, the layer title, legend labels and check notes for a site with its own wording (FR-048, FR-070).
 
 ### TBL-02: `towns`
 
@@ -288,7 +295,7 @@ A row is one town (city or municipality) inside a site. Stored in `site/data/sit
 
 ### TBL-03: `channels`
 
-A row is one named channel that drains the volcano. Stored in `site/data/sites/<site_id>/channels.geojson`, one Feature per channel. Per-row timestamps are not stored, for the same reason as `towns`. Only owner-confirmed channels are in this file (FR-065); candidates stay in `pipeline/context/`.
+A row is one named channel that drains the volcano. Stored in `site/data/sites/<site_id>/channels.geojson`, one Feature per channel. Per-row timestamps are not stored, for the same reason as `towns`. Only owner-confirmed channels are in this file (FR-065); candidates stay in `pipeline/context/`, and the owner's verdicts are in `pipeline/reports/owner-checks.md` and `pipeline/context/mayon_channels.json`. Because its lines come from OpenStreetMap, the file carries a `license` member saying ODbL.
 
 | Column | Type | Required | Default | Constraints | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -296,14 +303,19 @@ A row is one named channel that drains the volcano. Stored in `site/data/sites/<
 | `site_id` | string | Yes | — | FK `sites.id` | Site the channel belongs to |
 | `name` | string | Yes | — | — | Name as written in PHIVOLCS bulletins, e.g. "Mi-isi" |
 | `alt_names` | array of string | No | `[]` | — | Other spellings, e.g. "Miisi" |
-| `town_ids` | array of string | Yes | `[]` | Each item FK `towns.id` | Towns the channel passes through |
+| `town_ids` | array of string | Yes | — | At least 1 item; each item FK `towns.id` | Towns the channel passes through |
 | `name_source` | string | Yes | — | — | Where the name comes from, e.g. "PHIVOLCS Mayon Volcano Bulletin" |
 | `name_source_url` | string | No | `null` | URL | Link to that source |
 | `line_source_id` | string | Yes | — | FK `sources.id` | Where the line comes from |
 | `confirmed_by` | string | Yes | — | — | Who confirmed the line (FR-065), e.g. "project owner" |
-| `confirmed_on` | string (date) | Yes | — | — | When the line was confirmed (FR-065) |
-| `strip_geometry` | object (GeoJSON Polygon or MultiPolygon) | Yes | — | Valid geometry, EPSG:4326 | The channel strip, clipped to the reach distance (FR-063, FR-064) |
-| `geometry` | object (GeoJSON LineString or MultiLineString) | Yes | — | Valid geometry, EPSG:4326 | Channel line |
+| `confirmed_on` | string (date) | Yes | — | Equals the owner's record | When the line was confirmed (FR-065) |
+| `imagery_date` | string (date) | Yes | — | — | The date of the imagery the owner checked the line on |
+| `label_lat` | number | Yes | — | −90 to 90 | Where the name is drawn |
+| `label_lon` | number | Yes | — | −180 to 180 | Where the name is drawn |
+| `strip_geometry` | object (GeoJSON Polygon or MultiPolygon) | Yes | — | Valid geometry, EPSG:4326; inside the reach distance | The channel strip, clipped to the reach distance (FR-063, FR-064) |
+| `checked_geometry` | object (GeoJSON LineString or MultiLineString) | Yes | — | Valid geometry, EPSG:4326; inside the reach distance | The part of the line the map checks |
+| `not_checked_geometry` | object (GeoJSON LineString or MultiLineString) | No | `null` | Valid geometry, EPSG:4326; past the reach distance | The part of the line past the reach distance, drawn as "Not checked" (FR-071) |
+| `geometry` | object (GeoJSON LineString or MultiLineString) | Yes | — | Valid geometry, EPSG:4326 | Channel line, exactly as the owner confirmed it |
 
 ### TBL-04: `passes`
 
@@ -471,7 +483,7 @@ A row is the land of one site, as one polygon. Stored in `site/data/sites/<site_
 
 ### TBL-12: `channel_areas`
 
-A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_areas.json` (`data` array). It's a new file rather than new fields on `channels.geojson` because that's simpler: the channel file stays small and changes only when a line changes, this file changes with every publish, and the contract check can treat it as one flat table. A site with no channels has no such file.
+A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_areas.json` (`data` array). It's a new file rather than new fields on `channels.geojson` because that's simpler: the channel file stays small and changes only when a line changes, this file changes with every publish, and the contract check can treat it as one flat table. A site with no channels has no such file. Because its strips come from OpenStreetMap lines, its `meta` carries a `license` member saying ODbL.
 
 | Column | Type | Required | Default | Constraints | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -479,7 +491,7 @@ A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_a
 | `site_id` | string | Yes | — | FK `sites.id` | Site |
 | `channel_id` | string | Yes | — | FK `channels.id` | Channel |
 | `pair_id` | string | Yes | — | FK `pairs.id`; published pairs only; one row per channel and pair | Pair |
-| `flagged_area_km2` | number | No | `null` | ≥ 0; `null` when `checked_area_km2` is 0 | Area of class 1 or 2 cells in the strip, km² (FR-062, FR-064) |
+| `flagged_area_km2` | number | No | `null` | ≥ 0; `null` when `checked_area_km2` is 0 | Area of class 1 or 2 cells in the strip, km² with 2 decimals (FR-062, FR-064). Any flagged cell counts as at least 0.01, the same as a pair's areas |
 | `checked_area_km2` | number | Yes | `0` | ≥ `flagged_area_km2` | Area of strip cells with a valid radar value, km² (FR-067) |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
@@ -559,10 +571,10 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 | --- | --- | --- |
 | `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels are in the site config. Second site: `panama`, the Azuero Peninsula, two pairs, no summit and no channels. | The two showcase sites (F-10) |
 | `towns` | Albay towns inside the Mayon bounds, from `municities-provdist-500500000.0.1.json` (progress notes) | Borders, names, search (F-01, F-02) |
-| `channels` | Channels named in PHIVOLCS bulletins. A starting list from a PHIVOLCS update quoted on ReliefWeb (2000): Mabinit and Buyuan-Padang (Legazpi), Miisi (Daraga), Tumpa, Anoling and Quirangay (Camalig), Maninila (Guinobatan), Basud-Lidong (Santo Domingo), Bulawan (Malilipot), San Vicente and Buang (Tabaco), Upper Nasisi and Upper Nabonton (Ligao). 2026 reports also name the Mi-isi, Bonga and Basud gullies. Check against current bulletins before use. | Channels and towns (F-19) |
+| `channels` | Channels named in PHIVOLCS bulletins. A starting list from a PHIVOLCS update quoted on ReliefWeb (2000): Mabinit and Buyuan-Padang (Legazpi), Miisi (Daraga), Tumpa, Anoling and Quirangay (Camalig), Maninila (Guinobatan), Basud-Lidong (Santo Domingo), Bulawan (Malilipot), San Vicente and Buang (Tabaco), Upper Nasisi and Upper Nabonton (Ligao). 2026 reports also name the Mi-isi, Bonga and Basud gullies. Check against current bulletins before use. The owner confirmed Basud, Lidong, Mi-isi and Padang on 2026-11-01, and only those are published. | Channels and towns (F-19) |
 | `channel_areas` | Computed for every confirmed channel and published pair | Channel timeline (F-20) |
 | `events` | Mayon pyroclastic density current, 2026-07-14; Mayon moderately explosive eruption, 2026-10-30 (source: PHIVOLCS via news reports) | Timeline markers (F-03) |
-| `sources` | Philippine admin boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through `faeldon/philippines-json-maps`); Panama district boundaries (geoBoundaries gbOpen, CC BY-SA 4.0); background tiles (Esri, terms: verify); channel lines [TBD] | Context data list (F-09) |
+| `sources` | Philippine admin boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through `faeldon/philippines-json-maps`); Panama district boundaries (geoBoundaries gbOpen, CC BY-SA 4.0); background tiles (Esri, terms: verify); channel names (PHIVOLCS) and channel lines (OpenStreetMap contributors, ODbL) | Context data list (F-09) |
 | `land_areas` | One land polygon for Mayon, from the union of the Albay town borders | Coastline and sea mask |
 
 ## 9. Data Privacy and Retention
@@ -596,4 +608,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | Added `analysis` to `context_use`. Thresholds are final and live in the site config. Added TBL-12 and three columns on TBL-03. Second site is Panama. |
+| 0.2 | 2026-11-01 | Added `analysis` to `context_use`. Thresholds are final and live in the site config. Added TBL-12 and new columns on TBL-03 and TBL-01. Second site is Panama. |

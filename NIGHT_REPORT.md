@@ -740,3 +740,58 @@ The earthquake pair now flags about 3 times the quiet pair, and the old 26% came
 - **Town borders (not asked for):** they had the same false line at the same place, so the same code now removes it. Otherwise a white line stayed where the blue one was.
 - **Quiet pair:** "How we checked this" now says "Used as the 'before' comparison for the earthquake pair". It's a new optional `check_note` on the pair, set in the site config. The quiet pair was republished with its areas unchanged. Pairs with no note still say "Not yet checked".
 - **Not changed:** Mayon's land stops at Albay's province border, where that falls inside the site, so a line can still appear there. It's inside the site, so this fix doesn't catch it.
+
+# Channel timeline (2026-11-01)
+
+**The Channel timeline is built on `night-1`, not merged into `main`, so it isn't on the public site yet.** It has your 4 confirmed channels: a list sorted by change since the last pass, one bar per pass, the strip on the map, and the unequal-gap marking. Done: T-073, T-010, T-028, T-074, T-075, T-076, T-091 (new) and T-077. T-078 wasn't on your list, so it's still open.
+
+| Channel | Towns along it | Ground checked in the strip | Latest pair (Oct 8 to Oct 20, track 111) | Across all 11 pairs | Line past 10 km |
+| --- | --- | --- | --- | --- | --- |
+| Mi-isi | Daraga, Legazpi City | 3.75 km² | 0.02 km² | 0.01 to 0.05 km² | 4.1 km |
+| Basud | Santo Domingo | 3.99 km² | 0.01 km² | 0.01 to 0.02 km² | 120 m |
+| Lidong | Santo Domingo | 3.55 km² | 0.01 km² | 0.01 to 0.02 km² | 26 m |
+| Padang | Santo Domingo, Legazpi City | 2.51 km² | 0.01 km² | 0.01 to 0.03 km² | 80 m |
+
+Your verdicts are in `pipeline/reports/owner-checks.md`, and the pipeline reads the same ones from `pipeline/context/mayon_channels.json`. Each published channel carries its name source, line source, `confirmed_by`, `confirmed_on` and `imagery_date`. A test checks that the published lines match the candidates file exactly.
+
+## Decisions for you
+
+None of these stopped the build.
+
+1. **Matanag has no verdict.** It's in the candidates file, but your message doesn't list it. I kept it off the site, the same as an unconfirmed channel. Is it confirmed or not?
+2. **OpenStreetMap's license (ODbL).** You told me to use these lines, so I did, and I read [OpenStreetMap's copyright page](https://www.openstreetmap.org/copyright), the [ODbL summary](https://opendatacommons.org/licenses/odbl/summary/) and the [license FAQ](https://osmfoundation.org/wiki/Licence/Licence_and_Legal_FAQ). This is my reading, not legal advice. If you don't want the two channel files under ODbL, don't merge `night-1`.
+   - **Credit:** the map says "© OpenStreetMap contributors (ODbL)" with a link while the lines are shown, and Data sources lists it.
+   - **Share-alike:** `channels.geojson` is built on OpenStreetMap lines, so it must be offered under ODbL. It's public and marked in the file and the README. The FAQ doesn't cover numbers calculated from the data, so I marked `channel_areas.json` too, to be safe.
+   - **Not affected:** the FAQ says share-alike doesn't reach independent data combined with OpenStreetMap data, so the radar layers keep their own terms.
+3. **The July check names Bonga.** The unpublished draft for the July pair (`pipeline/context/validation_sheets/mayon_A111F008_20260703_20260715.json`) has a "Bonga Gully" row, because its source names it. The contract check now fails if a name you didn't confirm reaches any published file, so publishing that draft will stop there. You'd then choose between dropping the row and allowing it as a cited place name.
+4. **Bars at 2 decimals are coarse.** 26 of the 44 rows read 0.01 km². The spec asks for 2 decimals, and any flagged cell counts as at least 0.01, the same as a pair's totals. So Lidong's real areas, from about 0.002 to 0.019 km², show only as 0.01 or 0.02. I followed the spec. Showing 3 decimals would keep more of the difference, and it's a small change if you want it.
+
+## What I decided, which you can change
+
+- **"In or near a channel" means inside its strip.** The docs left this distance open. Using the strip needs no second number, and the card then agrees with the bars.
+- **"Not in a named channel on this map".** The spec says "Not in a named channel". With only 4 channels drawn, that would be false for a flagged spot in a gully PHIVOLCS does name, such as Bonga. So I added "on this map", and the list and the help panel say that other channels also drain Mayon. I updated FR-057, US-023 and TC-046 to match.
+- **A tap on a channel line keeps the spot's reading.** The card shows the channel and its towns above the usual reading. Otherwise, at normal zoom, a tap on a flagged cell in a strip would lose its result.
+- **One bar scale for all channels,** so a short bar on one channel means the same as on another. The largest value anywhere sets the scale.
+- **The strip width is now in `sites.json`.** That's how the app knows a site has channels, and how the panel states the width. Panama has none, so it has no Channels button and never asks for the file.
+- **Channel lines are on by default,** with a checkbox in the legend.
+
+## Things to know
+
+- **The bars stop before the eruption.** The latest published pair ends on Oct 20. When T-038 publishes the eruption pairs, the publish step adds their channel rows by itself.
+- **The strips hold little of the flagged area: 2 to 9% per pair.** Most flagged cells are elsewhere, so the list only compares these 4 channels. It doesn't say where most of the change is.
+- **Two tracks share one list.** Track 104 sees the ground from the other side. Mi-isi shows 0.04 km² on track 104 and 0.02 km² on track 111 for almost the same dates. Each bar names its track.
+- **Padang's line is mostly in Santo Domingo.** By the boundary file, 6.1 km of its 6.3 km is in Santo Domingo, and about 220 m is in Legazpi City, the town PHIVOLCS gives. The panel lists both. You confirmed the line as it is, so I changed nothing.
+- **Channel names.** I read GMA's report of the PHIVOLCS advisory of 16 January 2026 directly. It names Mi-isi and Basud as channels, but Lidong and Padang only as barangays. For those two channels the source is the [PHIVOLCS bulletin of 24 March 2000](https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf), where each is part of a two-part channel name. I could read that bulletin only through a search summary, because the PDF wouldn't open from here. Please open it once to confirm.
+- **The imagery you checked is from May 2026,** before the July and October events, so a channel may have moved since.
+- **Very short dashed parts.** Basud, Lidong and Padang run only 26 to 120 m past 10 km, but they still get the dash and the "Not checked" label, because you asked for any part past 10 km.
+- **Lines stop at their town.** Each candidate line ends at the last point inside its town, so a channel can continue past the dashed part.
+- **Areas come from the published 20 m map grid,** as ADR-011 says, not the radar's own grid. Whole-grid totals match each pair's total within about 2%.
+- **First view grew a little,** from 0.78 to 0.96 MB on desktop and from 0.58 to 0.75 MB on a phone, at about 2.2 s on Fast 4G from a local server. That's under the suggested 5 MB and 5 s.
+
+## Evidence
+
+- **Tests:** `pytest -q`: 543 passed, 1 skipped (the eruption marker in TC-015), exit code 0. TC-044 to TC-047 were skipped before and now run. Contract check: 0 errors, exit code 0.
+- **New rules in the contract check:** only confirmed channels, no unconfirmed name in any published file, strips inside the reach, what's past the reach outside it, and one area row per channel and pair.
+- **Accessibility:** axe-core finds no serious or critical problem on the list and the view, at 1280 and 360 px.
+- **Screens,** in `pipeline/reports/screens/` at 1280 and 360 px, with real map tiles: `channels-list`, `channel-view`, `channel-view-short`, `channel-gap`, `gap-pair`, `channels-loading`, `channels-error`, `channels-empty`, `channels-no-data`, `channel-no-data` and `channels-unavailable`. I checked them by eye, in the test browser, not on a real phone.
+- **Test data in some screens:** no real pair has a strip without radar data, and the site does have channels, so the loading, error, empty, no-data and unavailable screens use data made up in the test browser only. Nothing made up is published.

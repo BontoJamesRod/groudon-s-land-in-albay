@@ -371,7 +371,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 **Acceptance criteria**
 
 - **US-023/AC-1:** Given the channel layer is on, when the map shows, then each named channel shows as a line with its name, and tapping a channel lists the towns it passes through.
-- **US-023/AC-2:** Given the visitor taps a new-material area, when it lies within the channel distance [TBD] of a named channel, then the card says "New material detected in or near <channel name>"; otherwise it says "Not in a named channel".
+- **US-023/AC-2:** Given the visitor taps a new-material area, when it lies inside a named channel's strip, then the card says "New material detected in or near <channel name>"; otherwise it says "Not in a named channel on this map".
 - **US-023/AC-3:** Given the channel layer is on, when the visitor checks the legend or Data sources, then the source of the channel names and of the channel lines is shown.
 
 ### F-20: Channel timeline
@@ -399,6 +399,7 @@ As a visitor, I want to open a channel and see its change across every pass, so 
 - **US-025/AC-2:** Given a channel is open, when the map shows, then that channel's strip is drawn on the map and the map fits it.
 - **US-025/AC-3:** Given a pair with no valid radar value inside the channel's strip, when its bar would show, then the bar's place says "No radar data" instead of 0 km².
 - **US-025/AC-4:** Given a pair whose gap isn't 12 days, when its bar shows, then the bar is dimmed and has a short note such as "24-day gap, not comparable".
+- **US-025/AC-5:** Given a channel that continues past the reach distance, when it shows on the map, then that part is dashed and labeled "Not checked", and no bar counts it as zero change.
 
 #### US-026: Compute channel areas
 
@@ -470,8 +471,8 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-054 | The pipeline shall publish nothing and notify the maintainer when a scheduled run fails. | F-17 | US-021 |
 | FR-055 | The system shall show each additional change-type layer configured for a site with its own legend and units, and list only configured types. | F-18 | US-022 |
 | FR-056 | The system shall draw each named channel as a labeled line and list the towns it passes through when the channel is tapped. | F-19 | US-023 |
-| FR-057 | The system shall name the channel within the channel distance of a tapped new-material area, or say "Not in a named channel". | F-19 | US-023 |
-| FR-058 | The system shall show the source of the channel names and of the channel lines. | F-19 | US-023 |
+| FR-057 | The system shall name the channel whose strip holds a tapped new-material area, or say "Not in a named channel on this map". | F-19 | US-023 |
+| FR-058 | The system shall show the source of the channel names and of the channel lines, and credit OpenStreetMap on the map while its lines are shown. | F-19 | US-023 |
 | FR-059 | The system shall show visitors only pairs whose status is "published". | F-03 | US-006 |
 | FR-060 | The site config shall set a reach distance from the summit. The pipeline shall not flag anything beyond it, the system shall draw and state the limit, and a tap beyond it shall say "Not checked: this map only looks within 10 km of the summit" (with the site's distance). | F-02, F-05 | US-004, US-008 |
 | FR-061 | The system shall list a site's confirmed channels with the flagged area of the latest pair in km² with 2 decimals, largest first, ties by name, with channels that have no radar data for that pair last. | F-20 | US-024 |
@@ -484,6 +485,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-068 | The system shall never label any change as illegal or unpermitted. | F-08 | US-012 |
 | FR-069 | The system shall leave the distance and danger-zone lines out of the readout for a site with no summit. | F-02, F-10 | US-004 |
 | FR-070 | The system shall show a site's own wording for its change layer, limits and official source when its config sets one, and shall title the Panama earthquake pair "Changed after the earthquake", never landslides. | F-10 | US-014 |
+| FR-071 | The system shall draw the part of a channel past the reach distance (FR-060) as "Not checked", and shall never count that part or show it as zero change. | F-20 | US-025 |
 
 ## 7. Non-Functional Requirements
 
@@ -543,8 +545,8 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | --- | --- | --- |
 | 1 | How comfortable with technology are residents, officials and judges, and which device does each mainly use? | §3 Personas |
 | 2 | Closed on 2026-11-01: the owner set the final thresholds and rule; the values live in the site config. | FR-023, US-008 |
-| 3 | What distance from a channel counts as "in or near" it? | US-023/AC-2, FR-057 |
-| 4 | Partly closed on 2026-11-01: candidates come from OpenStreetMap, and only lines the owner confirms are used. Which lines are confirmed? | F-19, F-20, §8 |
+| 3 | Answered on 2026-11-01 for now, and the owner can change it: "in or near" means inside the channel's strip, the same ground its bars count, so there's no second distance. | US-023/AC-2, FR-057 |
+| 4 | Closed on 2026-11-01: lines come from OpenStreetMap, and the owner confirmed Basud, Lidong, Mi-isi and Padang (`pipeline/reports/owner-checks.md`). | F-19, F-20, §8 |
 | 5 | Partly closed on 2026-11-01: Panama, same final rule, no per-site tuning. The owner accepted CC BY-SA 4.0 for the borders. | F-10, §8 |
 | 6 | What are the performance, availability, compatibility and scalability targets? (Suggestions given in §7.) | NFR-001, NFR-003, NFR-005, NFR-006 |
 | 7 | What is the data-freshness target? | NFR-009 |
@@ -559,4 +561,4 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | Applied changes 1 and 2 of `docs/notes/proposed-doc-changes.md`. Final rule in FR-023 and US-008. Added FR-060 to FR-070, US-024 to US-026, and new acceptance criteria on US-004, US-005, US-008 and US-012. |
+| 0.2 | 2026-11-01 | Applied changes 1 and 2 of `docs/notes/proposed-doc-changes.md`. Final rule in FR-023 and US-008. Added FR-060 to FR-071, US-024 to US-026, and new acceptance criteria on US-004, US-005, US-008 and US-012. |

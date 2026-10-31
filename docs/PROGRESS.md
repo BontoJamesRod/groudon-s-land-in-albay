@@ -1,7 +1,7 @@
 # Progress
 
 **Project:** Mayon Radar Watch
-**Current step:** Waiting for the owner's Google Earth check of the channel lines. T-073 hasn't started, and the Channel timeline build (T-010, T-074 to T-078, Nov 5–10) follows it.
+**Current step:** The Channel timeline (T-073, T-010, T-028, T-074 to T-077, T-091) is built on `night-1`, with 4 confirmed channels. It isn't on the public site until `night-1` is merged.
 **Last updated:** 2026-11-01
 
 Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · `Skipped` · `Reopened`
@@ -18,8 +18,8 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 90 tasks; ID errata in §11 |
-| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 80 test cases |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 91 tasks; ID errata in §11 |
+| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 81 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
 
@@ -33,7 +33,8 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
 | Second site | Panama, two pairs, same final rule with no per-site tuning, published on `night-1` with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088). Not on the public site until `night-1` is merged |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
-| Next | The owner's Google Earth check, then T-073, T-010, T-074 to T-078; T-038 as soon as the eruption passes are on ASF |
+| Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag has no verdict and stays off (`pipeline/reports/owner-checks.md`) |
+| Next | T-078, which wasn't in the owner's request; T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
 
 ## After Launch
 
@@ -61,6 +62,7 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-11-01 | Gate 2: final classification rule and thresholds locked before any post-eruption data was opened. Brightness change flags a pixel; coherence loss only raises it to high confidence. Values live in the site config | 01 FR-023, 04 ADR-006 |
 | 2026-11-01 | Blind cutoff lifted for the Oct 31 passes only | 04 ADR-006, `CLAUDE.md` |
 | 2026-11-01 | Pair D104 2026-09-25 → 2026-10-07 stays off the map by owner decision, because its baseline's coherence is unusually high | This file |
+| 2026-11-01 | Channel lines confirmed by the owner in Google Earth Pro; only those are published. Change is counted within the reach distance, and what lies past it is drawn as not checked | `pipeline/reports/owner-checks.md`, 01 FR-065, FR-071 |
 
 ## Open Questions Carried Forward
 
@@ -68,9 +70,9 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | --- | --- | --- | --- |
 | 1 | Do the Space Apps and Legazpi local-event rules allow code written before 2026-11-14? | 00 OQ5 | All of Phase 1 in 07 |
 | 2 | Closed on 2026-11-01: the owner accepted CC BY-SA 4.0 for the Panama borders. | 01 OQ5 | Nothing now |
-| 3 | Which channel lines does the owner confirm? Waiting for the owner's Google Earth check. | 01 OQ4 | T-073, T-010, F-20 |
+| 3 | Closed on 2026-11-01: the owner confirmed Basud, Lidong, Mi-isi and Padang. | 01 OQ4 | Nothing now |
 | 4 | Closed on 2026-11-01: strip width is in the site config. | 01 OQ8 | Nothing now |
-| 5 | What distance from a channel counts as "in or near" it? | 01 OQ3 | US-023/AC-2, TC-045, TC-046 |
+| 5 | Answered for now, and the owner can change it: "in or near" means inside the channel's strip. | 01 OQ3 | Nothing now |
 | 6 | Frontend approach and hosting: accept the Suggestions (plain JavaScript, GitHub Pages)? They're what was built. | 04 OQ1, OQ2 | Nothing now |
 | 7 | How many hours per week can the builder spend? | 02 OQ1 | Dates in 07 |
 | 8 | How do people near Mayon find out today what changed, and what goes wrong with that? | 00 OQ1, OQ2 | 00 §2 |
