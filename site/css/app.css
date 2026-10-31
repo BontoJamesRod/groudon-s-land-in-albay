@@ -186,6 +186,11 @@ button:disabled { color: #6e7781; }
   gap: 8px;
 }
 
+.site-title {
+  margin: 0;
+  font: inherit;
+}
+
 .site-name {
   font-weight: 700;
   border-color: transparent;
