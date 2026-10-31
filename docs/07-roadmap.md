@@ -115,6 +115,19 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-077 | Dim pairs with an unequal gap, with a short note, on the pass timeline and the channel timeline. Not built yet | US-005, US-025, FR-066, SCR-01, SCR-14, API-007 | S | T-024, T-076 | TC-070 and TC-071 pass |
 | T-078 | Add the rule against legal labels to the wording test | US-012, FR-068 | S | T-030 | TC-075 passes |
 
+### Owner's decisions on the docs run (2026-11-01)
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-080 | Put the channel strip width in the site config, measured on each side of the line, the same as the channel test | FR-064, ADR-011, TBL-01, T-074 | S | T-061 | The config holds it and is checked on load |
+| T-081 | Move the plan files out of `docs/` into `plans/` at the repo root, unedited | §11 | S | — | Files are in `plans/`, byte for byte; no threshold value is left in `docs/` |
+| T-082 | Move the ground-movement coherence mask to the site config; the docs describe it in words | FR-031, US-010, F-06, T-044, TBL-01 | S | — | The config holds it and is checked on load; the number is gone from `docs/` |
+| T-083 | Rerun the Panama trial under the final rule with no per-site tuning, into `pipeline/out/` only; read the boundary license. Don't publish | F-10, FR-023, T-036, T-037 | S | T-066 | Flagged share and license findings are in the report; nothing new under `site/data/` |
+| T-084 | Make the map and the readout read the reach distance from the site config, through `sites.json` | FR-060, US-004, US-008, TBL-01, API-001, SCR-01, SCR-02, TC-061, TC-062 | S | T-057 | `DETECTION_REACH_KM` is gone; TC-061 and TC-062 pass |
+| T-085 | Rename the legend labels to say which signals agree, and republish the pairs | FR-025, US-008, TBL-06, API-008, SCR-05 | S | T-050 | All published pairs carry the new labels with unchanged areas; the held pair stays off |
+
+T-073 waits for the owner's Google Earth check, and T-010 and T-074 to T-078 wait for T-073.
+
 ### Done work added on 2026-11-01
 
 These tasks are done. They're listed so that every piece of finished work has an ID (see the ID errata in §11).
@@ -148,7 +161,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 
 ## 4. Build Order
 
-Done work from T-050 to T-072, and T-079, is listed in §3 and isn't repeated here.
+Done work from T-050 to T-072, and T-079 to T-085, is listed in §3 and isn't repeated here.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.
