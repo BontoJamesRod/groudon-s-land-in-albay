@@ -15,7 +15,7 @@
 | --- | --- | --- | --- |
 | Unit | Pipeline math and rules: dB conversion, change, coherence loss, classes, masks, pair checks, config checks, grid encoding | Suggestion: `pytest` | Maintainer, and CI on every push |
 | Integration | Pipeline output against the 05 and 06 contract: every published file, field and value range | `contract_check` (04 §3) | Maintainer, and CI on every push |
-| End-to-end | The core journey (02 §5) on the live site | Manual, following the steps below; Suggestion: automate later with a browser-testing tool | Maintainer, then the presenter |
+| End-to-end | The core journey (02 §5) | Automated browser tests in Chromium (`pipeline/tests/e2e/`, T-052), plus a manual run on the live site following the steps below | CI on every push and pull request; maintainer, then the presenter, on the live site |
 | Manual | Visual checks, wording review, phone layout, color-blind simulation, performance | Chrome DevTools (device mode, network throttling, request blocking, "Emulate vision deficiencies"), Lighthouse | Maintainer and presenter |
 
 ## 3. Test Cases
@@ -34,7 +34,7 @@ Fixtures used below are listed in §5.
 | TC-008 | US-004/AC-1 | FR-010, SCR-02, API-010 | Tap a land point with a radar value | 1. Select the published Oct 7 → Oct 19 pair. 2. Tap a point in Daraga outside the danger zone. | Card shows "Daraga", a distance in km with 1 decimal, outside the danger zone, and a class (none, low or high) | Positive | High |
 | TC-009 | US-004/AC-2 | FR-011, SCR-02, API-004, API-010 | Tap the sea | 1. Tap a sea point inside the site bounds. | "No radar data here" with the reason "sea" | Negative | High |
 | TC-010 | US-004/AC-2 | FR-011, SCR-02, API-010 | Tap outside radar coverage | 1. Tap a point inside the site bounds but outside the radar frame (grid value 255). | "No radar data here" with the reason "outside radar coverage" | Edge | Medium |
-| TC-011 | US-004/AC-2 | FR-011, FR-024, SCR-02, API-010 | Tap a masked slope | 1. Tap a cell with grid value 253 (find one with the fixture list). | "No radar data here" with the reason "a slope the radar can't see" | Edge | Medium |
+| TC-011 | US-004/AC-2 | FR-011, FR-024, SCR-02, API-010 | Tap a cell the product flagged invalid | 1. Tap a cell with grid value 253 (find one with the fixture list). | "No radar data here" with the reason "the radar product marked this spot as invalid" | Edge | Medium |
 | TC-012 | US-004/AC-3 | FR-012, SCR-02 | Tap inside the danger zone | 1. Tap a point 3 km from the summit. | Card shows "Inside the Permanent Danger Zone. Entry is not allowed." | Positive | High |
 | TC-013 | US-005/AC-1 | FR-013, FR-014, SCR-01, API-007, API-008 | Pick an earlier pair | 1. Open the pair list. 2. Pick the pair spanning 2026-07-14. | Layers change; label shows both dates in Philippine time, the track, the frame and the direction | Positive | High |
 | TC-014 | US-005/AC-2 | FR-015, SCR-01 | Next on the latest pair | 1. With the latest pair selected, press Next. | Selection doesn't change; "This is the latest pass" appears | Edge | Medium |
@@ -47,7 +47,7 @@ Fixtures used below are listed in §5.
 | TC-021 | US-008/AC-2 | FR-026, SCR-01 | Pair with nothing detected | 1. On localhost, use the zero-area fixture. | No shading; "No new material detected between <before date> and <after date>" with the real dates | Edge | Medium |
 | TC-022 | US-008/AC-3 | FR-023 | Only one signal passes | 1. Run the `classify` unit tests with test arrays where only brightness, or only coherence loss, passes. | Those cells get class 1 (low), never 2 (high) | Negative | High |
 | TC-023 | US-008/AC-3 | FR-030, TBL-05 | No coherence data | 1. Process a pair whose GUNW is unavailable (fixture). | `coherence_used` is `false`; the grid has no class 2 cells; `high_confidence_area_km2` is 0 | Edge | High |
-| TC-024 | US-009/AC-1 | FR-029, SCR-12, TBL-05, TBL-06 | Process a real pair | 1. Run the pipeline for track 111, 2026-10-07 → 2026-10-19. | Files written to `pipeline/out/`; summary shows status "ready", the 3 granule IDs and areas in km² | Positive | High |
+| TC-024 | US-009/AC-1 | FR-029, SCR-12, TBL-05, TBL-06 | Process a real pair | 1. Run the pipeline for track 111, 2026-10-07 → 2026-10-19. | Files written to `pipeline/out/`; summary shows status "ready", the granule IDs used (4 with coherence: 2 GCOV and 2 GUNW; 2 without) and areas in km² | Positive | High |
 | TC-025 | US-009/AC-2 | FR-027, SCR-12 | Mixed tracks | 1. Run with a track 111 pass and a track 104 pass. | Stops with "Passes are not from the same track, frame and direction"; no files written | Negative | High |
 | TC-026 | US-009/AC-3 | FR-028, SCR-12 | Product not on ASF | 1. Run with the fake granule ID fixture. | Stops with "Product not available yet: <granule_id>" naming that granule; no files written | Negative | High |
 | TC-027 | US-009/AC-1 | FR-021 | Brightness change math | 1. Run the `gcov` unit tests: before 0.01, after 0.1 (linear power). | Change is +10.0 dB; NaN and zero inputs become no data, never ±infinity | Positive | High |
@@ -162,7 +162,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | # | Question | Affects |
 | --- | --- | --- |
 | 1 | Is an iPhone available for testing Safari? | §6, TC-057 |
-| 2 | Automate end-to-end tests later, or keep them manual? | §2 |
+| 2 | Closed on 2026-11-01: end-to-end tests are automated in Chromium and run in CI (§2). | §2 |
 | 3 | What are the NFR-001, NFR-003 and NFR-009 targets? | TC-050, TC-051, TC-054, TC-060 |
 
 ## 12. Conflicts with Earlier Documents

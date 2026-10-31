@@ -472,7 +472,7 @@ None (`GET`).
 
 None (`GET`).
 
-**Success response:** `200 OK` (one pass and one layer shown in full; the real file has 2 passes and 5 layers)
+**Success response:** `200 OK` (one pass and one layer shown in full; the real file has 2 passes and 5 layers, or 4 when the pair has no coherence data, because `coherence_loss` is then left out)
 
 ```json
 {

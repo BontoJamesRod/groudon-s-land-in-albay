@@ -182,11 +182,11 @@ def test_tc010_outside_radar_coverage(app):
     expect(card(app)).to_contain_text("outside radar coverage")
 
 
-def test_tc011_masked_slope(app):
+def test_tc011_flagged_invalid_by_the_product(app):
     row = cell(253)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text("No radar data here")
-    expect(card(app)).to_contain_text("a slope the radar can't see")
+    expect(card(app)).to_contain_text("the radar product marked this spot as invalid")
 
 
 def test_tc012_inside_danger_zone(app):

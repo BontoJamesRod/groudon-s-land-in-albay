@@ -103,6 +103,14 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | --- | --- | --- | --- | --- | --- |
 | T-049 | Add the first additional change type at a new site | US-022, F-18 | M | T-042 | US-022 acceptance criteria pass |
 
+### Done work added on 2026-11-01
+
+These tasks are done. They're listed so that every piece of finished work has an ID (see the ID errata in §11).
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-067 | Apply the 6 approved changes in `docs/notes/proposed-doc-changes.md`, with the code, test and data parts of changes 2 and 6 | FR-011, FR-022, FR-030, TC-011, TC-024, API-008, TBL-10, US-004 | S | — | Done on 2026-11-01 |
+
 ## 4. Build Order
 
 1. T-001: everything else lives in the repository.

@@ -165,7 +165,7 @@ Leaflet is copied into `site/vendor/` instead of loaded from a CDN, so the app h
 | Staging | Not used in the MVP (02 §7 shortcut) | — | — |
 | Production | GitHub Pages (Suggestion) | Live visitors and judges | `main` branch via GitHub Actions |
 
-**CI/CD:** On every push to `main`, a GitHub Actions workflow runs `pytest` (pipeline unit tests, no downloads), the data-contract check on `site/data/`, and a secret scan. If all pass, it deploys the `site/` folder to GitHub Pages (verify the official Pages deploy actions). Any failure stops the deploy.
+**CI/CD:** On every push to any branch and on every pull request, a GitHub Actions workflow runs the secret scan, `pytest` (no downloads), the browser tests in Chromium, and the data-contract check on `site/data/`. On a push to `main`, the same checks run and, if all pass, the `site/` folder deploys to GitHub Pages. Any failure stops the deploy. A separate workflow scans the whole Git history weekly and on demand.
 **Secrets:** Earthdata credentials live only in the maintainer's `~/.netrc`, or are typed at the Colab login prompt. `.gitignore` excludes `.netrc`, `raw/`, `*.h5` and `pipeline/out/`. Automatic updates (F-17, v1.2) would use GitHub repository secrets (brief §8).
 
 ## 8. Security

@@ -38,7 +38,7 @@ export const STRINGS = {
   readoutGridError: "Couldn't load radar values. Try again.",
   noRadarData: "No radar data here",
   noDataReasons: {
-    253: "a slope the radar can't see",
+    253: "the radar product marked this spot as invalid",
     254: "sea",
     255: "outside radar coverage",
   },

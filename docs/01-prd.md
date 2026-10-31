@@ -99,7 +99,7 @@ As a visitor, I want to tap a spot and see what the radar found there, so that I
 **Acceptance criteria**
 
 - **US-004/AC-1:** Given a pair is selected, when the visitor taps a point inside the site, then a card shows the town name, the distance to the summit in km with 1 decimal, whether the point is inside the danger zone, and the new-material result with its confidence (none, low or high).
-- **US-004/AC-2:** Given the tapped point has no radar value, when the card opens, then it says "No radar data here" and gives the reason: outside radar coverage, sea, or a slope the radar can't see.
+- **US-004/AC-2:** Given the tapped point has no radar value, when the card opens, then it says "No radar data here" and gives the reason: outside radar coverage, sea, or flagged invalid by the product.
 - **US-004/AC-3:** Given the tapped point is within the danger-zone radius, when the card opens, then it shows "Inside the Permanent Danger Zone. Entry is not allowed."
 
 ### F-03: Pass timeline
@@ -378,7 +378,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | FR-008 | The system shall center the map on a chosen town and open that town's readout. | F-02 | US-003 |
 | FR-009 | The system shall show "No town found. Try another name or tap the map." when a submitted name matches no town. | F-02 | US-003 |
 | FR-010 | The system shall show, for a tapped point, the town name, distance to the summit in km with 1 decimal, danger-zone status, and the new-material class with its confidence. | F-02 | US-004 |
-| FR-011 | The system shall show "No radar data here" with one of three reasons (outside radar coverage, sea, slope the radar can't see) when the tapped point has no valid value. | F-02 | US-004 |
+| FR-011 | The system shall show "No radar data here" with one of three reasons (outside radar coverage, sea, flagged invalid by the product) when the tapped point has no valid value. | F-02 | US-004 |
 | FR-012 | The system shall show "Inside the Permanent Danger Zone. Entry is not allowed." when a tapped point is within the danger-zone radius. | F-02 | US-004 |
 | FR-013 | The system shall list every published pair of the selected site on the timeline, in order of after date. | F-03 | US-005 |
 | FR-014 | The system shall label the selected pair with its before and after dates in the site's local time zone, its track, its frame and its orbit direction. | F-03 | US-005 |
@@ -389,7 +389,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | FR-019 | The system shall show the before and after radar brightness images on either side of a draggable divider, each labeled with its date. | F-04 | US-007 |
 | FR-020 | The system shall show "Before/after images not available for this pair" and leave the map unchanged when either image is missing. | F-04 | US-007 |
 | FR-021 | The pipeline shall compute brightness change in dB as 10 × log10(after / before) from speckle-filtered GCOV backscatter. | F-05 | US-009 |
-| FR-022 | The pipeline shall compute coherence loss as the coherence of the previous pair on the same track minus the coherence of the current pair. | F-05 | US-009 |
+| FR-022 | The pipeline shall compute coherence loss as the coherence of the previous pair on the same track minus the coherence of the current pair, only when both pairs span the same number of days. Otherwise it shall treat the pair as having no coherence data (FR-030). | F-05 | US-009 |
 | FR-023 | The pipeline shall class a pixel as high confidence when brightness change and coherence loss both pass their thresholds, low confidence when only one passes or no coherence data exists, and none otherwise. | F-05 | US-008 |
 | FR-024 | The pipeline shall mark sea pixels, pixels outside radar coverage, and pixels flagged invalid by the product as no data, each with its reason. | F-05 | US-008 |
 | FR-025 | The system shall show the new-material layer with a legend naming each class, its confidence and units, and the total detected area in km² with 2 decimals. | F-05 | US-008 |
@@ -397,7 +397,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | FR-027 | The pipeline shall stop with "Passes are not from the same track, frame and direction" and write no files when two passes differ in track, frame or orbit direction. | F-05 | US-009 |
 | FR-028 | The pipeline shall stop with "Product not available yet: <granule_id>" and write no files when a needed GCOV product can't be found on ASF. | F-05 | US-009 |
 | FR-029 | The pipeline shall write, for each processed pair, a pair record with status "ready", the granule IDs used and the detected areas in km². | F-05 | US-009 |
-| FR-030 | The pipeline shall still process a pair when its GUNW product is unavailable, classing every detection as low confidence and recording that no coherence data was used. | F-05 | US-008 |
+| FR-030 | The pipeline shall still process a pair when its GUNW product is unavailable, or when FR-022 excludes its baseline, classing every detection as low confidence and recording that no coherence data was used. | F-05 | US-008 |
 | FR-031 | The system shall show line-of-sight movement in cm on a two-color scale, hiding pixels with coherence below 0.3. | F-06 | US-010 |
 | FR-032 | The pipeline shall remove a best-fit plane from movement using valid land more than 6 km from the summit and record the remaining noise in cm. | F-06 | US-010 |
 | FR-033 | The system shall show "Within the noise: no clear movement" when movement at a tapped point is smaller than the pair's noise level. | F-06 | US-010 |
@@ -476,7 +476,7 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 
 - Visitors don't need accounts; every visitor has the same read-only permissions.
 - The maintainer is the only person who processes and publishes data.
-- Pairs are consecutive passes on the same track, 12 days apart, because coherence comes from the mission's GUNW products for those dates.
+- Pairs are consecutive passes on the same track, usually 12 days apart. A missed pass makes the gap longer, as on track 111 from 2026-07-27 to 2026-08-20 (24 days).
 - The first pair on each track has no previous pair, so its coherence loss can't be computed and its detections are low confidence at most.
 - Thresholds for brightness change and coherence loss are fixed before the eruption data is examined (brief Open Question 7).
 

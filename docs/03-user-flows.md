@@ -250,7 +250,7 @@ Nothing is written when a check fails; only published pairs reach visitors (FR-0
 | Distance to summit | Text | In km with 1 decimal (US-004/AC-1) |
 | Danger-zone notice | Text | "Inside the Permanent Danger Zone. Entry is not allowed." when within the radius (US-004/AC-3) |
 | New-material result | Text | None, low confidence or high confidence (US-004/AC-1) |
-| No-data message | Text | "No radar data here" plus one reason: outside radar coverage, sea, or a slope the radar can't see (US-004/AC-2) |
+| No-data message | Text | "No radar data here" plus one reason: outside radar coverage, sea, or "the radar product marked this spot as invalid" (US-004/AC-2) |
 | Channel line | Text | "New material detected in or near <channel name>" or "Not in a named channel" (US-023/AC-2) |
 | Towns along the channel | List | Shown when a channel was tapped (US-023/AC-1) |
 | Pair dates | Text | Before and after dates of the selected pair |

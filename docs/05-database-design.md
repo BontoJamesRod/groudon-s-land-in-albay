@@ -480,7 +480,7 @@ A row is the land of one site, as one polygon. Stored in `site/data/sites/<site_
 | `no_data_reason` | `masked_by_product` (stored as 253), `sea` (254), `outside_coverage` (255) | `layers.no_data_codes`; cell values of the `new_material` grid |
 | `confidence_level` | `none`, `low`, `high` | `layers.legend[].confidence` |
 | `detection_result` | `yes`, `no`, `not_visible` | `validation_items.detected` |
-| `context_use` | `basemap`, `boundaries`, `coastline`, `channels`, `events`, `validation` | `sources.used_for` |
+| `context_use` | `basemap`, `boundaries`, `coastline`, `channels`, `events`, `validation`, `analysis` | `sources.used_for` |
 
 In the MVP, only the `new_material` layer has a value grid; `before_db` and `after_db` feed the Compare view (FR-019); `change_db` and `coherence_loss` are written for the maintainer's checks and are not shown to visitors.
 
