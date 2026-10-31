@@ -38,10 +38,12 @@ def write_json(path, data, now):
     save_text(path, {"data": data, "meta": {"generated_at": now, "schema_version": SCHEMA_VERSION}})
 
 
-def write_geojson(path, features, now):
-    """Save Features as a FeatureCollection with the docs/05 members."""
-    save_text(path, {"type": "FeatureCollection", "generated_at": now,
-                     "schema_version": SCHEMA_VERSION, "features": features})
+def write_geojson(path, features, now, license_name=None):
+    """Save Features as a FeatureCollection with the docs/05 members, and its license if it must carry one."""
+    content = {"type": "FeatureCollection", "generated_at": now, "schema_version": SCHEMA_VERSION}
+    if license_name:
+        content["license"] = license_name
+    save_text(path, {**content, "features": features})
 
 
 def save_text(path, content):
@@ -90,7 +92,7 @@ def label_point(geom):
     return rounded if geom.covers(rounded) else Point(point.x, point.y)
 
 
-def build_towns(source_features, config):
+def build_towns(source_features, config, source_id=BOUNDARY_SOURCE_ID):
     """Clip each town to the site bounds and return its GeoJSON Features."""
     site_box = box(config["bounds_west"], config["bounds_south"],
                    config["bounds_east"], config["bounds_north"])
@@ -114,21 +116,21 @@ def build_towns(source_features, config):
                 "label_lat": label.y,
                 "label_lon": label.x,
                 "source_code": str(props["adm3_psgc"]),
-                "source_id": BOUNDARY_SOURCE_ID,
+                "source_id": source_id,
             },
             "geometry": mapping(clipped),
         })
     return sorted(towns, key=lambda town: town["properties"]["name"])
 
 
-def build_land(towns, config):
+def build_land(towns, config, source_id=BOUNDARY_SOURCE_ID):
     """Make one land shape from the union of the towns (docs/05, land_areas seed)."""
     land = clean_polygons(unary_union([shape(town["geometry"]) for town in towns]))
     identifier = f"{config['id']}_land"
     return [{
         "type": "Feature",
         "id": identifier,
-        "properties": {"id": identifier, "site_id": config["id"], "source_id": BOUNDARY_SOURCE_ID},
+        "properties": {"id": identifier, "site_id": config["id"], "source_id": source_id},
         "geometry": mapping(land),
     }]
 
@@ -147,9 +149,12 @@ def build_context(site_id, data_folder=DATA_FOLDER, context_folder=CONTEXT_FOLDE
     write_json(Path(data_folder) / "sources.json", _stamped(sources, now), now)
     boundary_file = context_folder / f"{site_id}_boundaries.json"
     source = json.loads(boundary_file.read_text(encoding="utf-8"))
-    towns = build_towns(source["features"], config)
-    write_geojson(site_folder / "towns.geojson", towns, now)
-    write_geojson(site_folder / "land.geojson", build_land(towns, config), now)
+    # A boundary file can name its own source and license. Without them it's the Philippine source.
+    source_id = source.get("source_id", BOUNDARY_SOURCE_ID)
+    license_name = source.get("license")
+    towns = build_towns(source["features"], config, source_id)
+    write_geojson(site_folder / "towns.geojson", towns, now, license_name)
+    write_geojson(site_folder / "land.geojson", build_land(towns, config, source_id), now, license_name)
     events_file = context_folder / f"{site_id}_events.json"
     if events_file.is_file():
         events = json.loads(events_file.read_text(encoding="utf-8"))

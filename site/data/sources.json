@@ -1,6 +1,17 @@
 {
  "data": [
   {
+   "id": "pa_admin_boundaries",
+   "name": "Panama district boundaries, clipped to the site",
+   "provider": "geoBoundaries gbOpen (Panama ADM2), from the Smithsonian Tropical Research Institute data portal and the National Geographic Institute Tommy Guardia",
+   "used_for": "boundaries",
+   "url": "https://www.geoboundaries.org/",
+   "license": "CC BY-SA 4.0",
+   "retrieved_on": "2026-10-31",
+   "created_at": "2026-10-31T19:47:44Z",
+   "updated_at": "2026-10-31T19:47:44Z"
+  },
+  {
    "id": "ph_admin_boundaries",
    "name": "Philippine municipal and city boundaries",
    "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
@@ -8,8 +19,8 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T23:14:16Z",
-   "updated_at": "2026-10-30T23:14:16Z"
+   "created_at": "2026-10-31T19:47:44Z",
+   "updated_at": "2026-10-31T19:47:44Z"
   },
   {
    "id": "ph_coastline",
@@ -19,8 +30,8 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T23:14:16Z",
-   "updated_at": "2026-10-30T23:14:16Z"
+   "created_at": "2026-10-31T19:47:44Z",
+   "updated_at": "2026-10-31T19:47:44Z"
   },
   {
    "id": "esri_world_imagery",
@@ -30,8 +41,8 @@
    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
    "license": "Esri terms of use, with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-30T23:14:16Z",
-   "updated_at": "2026-10-30T23:14:16Z"
+   "created_at": "2026-10-31T19:47:44Z",
+   "updated_at": "2026-10-31T19:47:44Z"
   },
   {
    "id": "esa_worldcover_2021",
@@ -41,8 +52,8 @@
    "url": "https://esa-worldcover.org/",
    "license": "CC BY 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T00:00:00Z",
-   "updated_at": "2026-10-31T00:00:00Z"
+   "created_at": "2026-10-31T19:47:44Z",
+   "updated_at": "2026-10-31T19:47:44Z"
   },
   {
    "id": "copernicus_dem_glo30",
@@ -52,12 +63,12 @@
    "url": "https://registry.opendata.aws/copernicus-dem/",
    "license": "Copernicus DEM GLO-30 licence, free with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T00:00:00Z",
-   "updated_at": "2026-10-31T00:00:00Z"
+   "created_at": "2026-10-31T19:47:44Z",
+   "updated_at": "2026-10-31T19:47:44Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T00:00:00Z",
+  "generated_at": "2026-10-31T19:47:44Z",
   "schema_version": "1.0"
  }
 }

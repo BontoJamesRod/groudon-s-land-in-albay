@@ -54,7 +54,7 @@ def make_land(bounds):
     land = unary_union([make_valid(shape(f["geometry"])).intersection(site) for f in features])
     LAND_PATH.write_text(json.dumps({"type": "Feature", "properties": {
         "source": "geoBoundaries gbOpen PAN ADM2 (Smithsonian Tropical Research Institute, 2012)",
-        "license": "CC BY 4.0"}, "geometry": mapping(land)}) + "\n", encoding="utf-8")
+        "license": "CC BY-SA 4.0"}, "geometry": mapping(land)}) + "\n", encoding="utf-8")
     return land
 
 

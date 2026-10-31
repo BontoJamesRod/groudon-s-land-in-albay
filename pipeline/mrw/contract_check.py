@@ -340,6 +340,8 @@ def load_geojson_file(path, errors):
         errors.append(f"{path}: must be a FeatureCollection")
         return None
     _check_stamp(content, path, errors)
+    if "license" in content and not (isinstance(content["license"], str) and content["license"]):
+        errors.append(f"{path}: 'license' must be a non-empty string")
     features = content.get("features")
     if not isinstance(features, list):
         errors.append(f"{path}: 'features' must be an array")

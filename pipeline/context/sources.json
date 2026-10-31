@@ -1,5 +1,14 @@
 [
   {
+    "id": "pa_admin_boundaries",
+    "name": "Panama district boundaries, clipped to the site",
+    "provider": "geoBoundaries gbOpen (Panama ADM2), from the Smithsonian Tropical Research Institute data portal and the National Geographic Institute Tommy Guardia",
+    "used_for": "boundaries",
+    "url": "https://www.geoboundaries.org/",
+    "license": "CC BY-SA 4.0",
+    "retrieved_on": "2026-10-31"
+  },
+  {
     "id": "ph_admin_boundaries",
     "name": "Philippine municipal and city boundaries",
     "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
