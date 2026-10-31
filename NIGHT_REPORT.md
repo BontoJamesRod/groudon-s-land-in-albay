@@ -595,3 +595,54 @@ All 11 published pairs were redone. Areas are km² within 10 km. High confidence
 **Downloaded tonight:** 0 bytes of NISAR data. No threshold values were written into `docs/`.
 
 **Final evidence:** `pytest -q`: 360 passed, 6 skipped. Contract check: 0 errors on `site/data`. A second check at 16:28 UTC also found no new pass on either track.
+
+# Docs run (2026-11-01)
+
+**The docs now match what was decided and built, and the Nov 5–10 build can follow them once you decide items 1 and 2 below.** `night-1` is pushed and not merged into `main`, so the changes below aren't on the public site yet.
+
+## What changed
+
+| Commit | Task | What |
+| --- | --- | --- |
+| 8089a2c | T-067 | The 6 approved changes, including their code, test and data parts. Code 253 now reads "the radar product marked this spot as invalid", and the two study datasets are `analysis` sources |
+| e25fae5 | T-068 | Final rule, 10 km reach limit, lifted blind cutoff and held pair recorded |
+| 753cdcb | T-069 | Channel timeline added to all 9 docs. Brief is v0.4; the others are v0.2 |
+| 4820b4b | T-070 | Out-of-scope lines, the rule against legal labels, and Panama named for F-10 |
+| 35a9d77 | T-071 | Done work added to 07, ID errata in 07 §11, task-ID rule in `CLAUDE.md` |
+| Latest on `night-1` | T-072 | `PROGRESS.md`, README, `docs/reviews/consistency-03.md`, this section |
+
+History wasn't rewritten. The 21 mislabeled commits are in the errata table.
+
+## New IDs
+
+- **Feature and stories:** F-20, US-024 to US-026, plus new criteria on US-004, US-005, US-008 and US-012.
+- **Requirements:** FR-060 (reach), FR-061 to FR-067 (timeline), FR-068 (no legal labels), FR-069 (site with no summit).
+- **Design:** SCR-13, SCR-14, ADR-011, TBL-12 (`channel_areas.json`, a new file because it changes with every publish while the channel file doesn't), API-012.
+- **Tasks:** T-052 to T-066 (done work that was mislabeled or missing), T-067 to T-072 (this run), T-073 to T-078 (the build).
+- **Tests:** TC-061 to TC-076.
+
+The unequal-gap marking wasn't built, so it's a new task (T-077), not a done one.
+
+## Decisions for you
+
+I didn't guess at these.
+
+1. **Which channel lines do you confirm?** Nothing in F-20 can start until you do (T-073).
+2. **What strip width goes in the site config?** T-074 needs it.
+3. **Threshold values still in `docs/`:** your old plans `docs/NIGHT_PLAN.md` line 20 and `docs/NIGHT_PLAN_4.md` lines 26 and 57 contain them. I didn't edit your plans, and I left `NIGHT_PLAN_4.md` and `DOCS_PLAN_6.md` uncommitted. Should those lines be removed? `NIGHT_PLAN.md` is already in Git.
+4. **FR-031 and US-010/AC-1** hold a coherence display mask for the ground-movement layer, a Could feature. It's the same number as the final coherence threshold, though it's a different setting. Keep it, or move it to the config?
+5. **Panama:** the trial flagged 26% of the land, which isn't specific, and the boundary record's license detail still has to be read. T-036 also needs you to confirm that the final thresholds apply there.
+6. **Reach in the browser:** FR-060 says the site config sets the distance, but `site/js/readout.js` has its own constant. It matches today. I recorded this and didn't change the code, because the plan didn't ask for it.
+7. **Legend labels:** published pairs still say "(one signal)" and "(both signals)". That's still true, but less clear under the final rule. Changing them means editing `site/data/`, which this run couldn't do beyond change 6.
+8. **Still open from before:** the channel distance (01 OQ3), the event-date rule (consistency-02 #8), and where eruption results get reported.
+
+## A rule I had to interpret
+
+Hard rule 3 says not to change `site/data/`, while section A requires the data part of change 6. I followed section A, and only the `used_for` value of two rows in `site/data/sources.json` changed. I took "the 24-day pair" and "gap isn't 12 days" literally, so any gap other than 12 days is dimmed.
+
+## Evidence
+
+- **Tests:** `pytest -q`: 360 passed, 6 skipped, exit code 0. **Contract check:** 0 errors, exit code 0. Both were run again right before the push.
+- **IDs:** 0 dangling and 0 renumbered, by script. All 16 new acceptance criteria have a test, and all 10 new requirements have a task and a test.
+- **Diagrams:** 14 of 14 Mermaid diagrams rendered in headless Chromium.
+- **Not checked:** the new wording in a browser by eye, beyond the automated test. No NISAR or Earthdata searches or downloads were made, so the eruption passes' status is still from 16:28 UTC on Oct 31.

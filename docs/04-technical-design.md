@@ -298,7 +298,7 @@ mayon-radar-watch/
 
 ### ADR-011: Compute channel strips in the pipeline, with the width in the site config
 
-- **Context:** The channel timeline (F-20) needs the area flagged along each channel for every pair. A value grid is about a megabyte per pair, so reading every pair in the browser would break the NFR-001 target. Area must also match the final rule exactly.
+- **Context:** The channel timeline (F-20) needs the area flagged along each channel for every pair. A value grid is over a megabyte per pair, so reading every pair in the browser would break the NFR-001 target. Area must also match the final rule exactly.
 - **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_width_m`), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
 - **Alternatives considered:** Computing in the browser from each pair's grid (many downloads, and results could differ from the pipeline's); flow routing from elevation data (out of scope, ADR-008).
 - **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part.

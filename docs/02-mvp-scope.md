@@ -68,8 +68,8 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | 2 | Eruption shown in real NISAR data (G-02) | ≥ 1 post-eruption pair published by 2026-11-07 | Count published pairs after 2026-10-30 in the Mayon pair list |
 | 3 | Second site live (R7) | 1 site on another continent with ≥ 1 published pair by 2026-11-13 | Site list on the live app |
 | 4 | Result checked against an independent source | ≥ 1 pair with a validation record by 2026-11-13 | "How we checked this" panel on the live app |
-| 6 | Channel timeline live (F-20) | At least 1 confirmed channel with its bars on the live app, by 2026-11-10 | Open the channel list on the live app |
 | 5 | Readable for non-experts (G-03) | ≥ 7 of 10 testers correctly say where new material is and which channel it's in, by 2026-11-30 | Short test session with a written answer sheet |
+| 6 | Channel timeline live (F-20) | At least 1 confirmed channel with its bars on the live app, by 2026-11-10 | Open the channel list on the live app |
 
 ## 7. Allowed Shortcuts
 
