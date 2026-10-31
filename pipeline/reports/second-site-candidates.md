@@ -92,3 +92,25 @@ All of these are partial frames on ASF (`_P_` in the name, `frameCoverage: Parti
 1. Boundary data for the chosen site (`docs/05` Open Question 4). None was checked for any candidate.
 2. Process one full pair, with coherence, and look at the result. Each costs about 0.3 GB.
 3. Does the Space Apps challenge want a volcano, or any surface change?
+
+## Added in the afternoon run: full-method trial on Panama
+
+No site is chosen by this. The trial ran the same method and the same PROVISIONAL thresholds as Mayon, on track 141 frame 85, and wrote to `pipeline/out/` only. To reproduce: `python pipeline/reports/panama_trial.py`. Numbers are in `panama-trial.json`.
+
+| Measure (km²) | Quiet pair, 09-15 → 09-27 | Earthquake pair, 09-27 → 10-09 | Ratio |
+| --- | --- | --- | --- |
+| Total detected | 4.72 | 117.30 | 25× |
+| High confidence | 0.09 | 4.66 | 51× |
+| Low confidence | 4.63 | 112.64 | 24× |
+| Brightness change alone | 2.40 | 7.73 | 3.2× |
+| Total, in the 11 × 11 km box on the cluster | 0.77 | 40.25 | 52× |
+| High confidence, in the box | 0.006 | 1.75 | about 290× |
+| Brightness alone, in the box | 0.73 | 2.40 | 3.3× |
+
+Site: 444 km² of land.
+
+- **The method responds strongly, but not specifically.** 26% of the land is flagged, far more than landslides could cover, so the low class is mostly a region-wide fall in coherence. The earthquake itself may cause that, along with ground shift or rain.
+- **High confidence looks like the useful part here,** since it needs both signals. It hasn't been checked against the mapped landslides, so this isn't validation.
+- **Timing still isn't confirmed.** The after pass began at 23:53:35 UTC on 2026-10-09, and the jump suggests the earthquake came first, but I didn't confirm the earthquake's time.
+
+**Boundary data:** geoBoundaries gbOpen, Panama ADM2 (source: Smithsonian Tropical Research Institute GIS Laboratory, 2012). Stated license: CC BY 4.0. The record's license detail reads "need to update", so read its [license source](https://www.arcgis.com/home/item.html?id=8f1c5499d3a8423888454cfee5b45586) before any public use. It's used only as the land shape in `panama_trial_land.geojson`.

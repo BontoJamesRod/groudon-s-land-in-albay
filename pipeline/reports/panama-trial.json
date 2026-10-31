@@ -1,0 +1,55 @@
+{
+ "quiet_pair_before": {
+  "id": "panama_D141F085_20260915_20260927",
+  "granules": [
+   "NISAR_L2_PR_GCOV_030_141_D_085_4005_DHDH_A_20260915T235335_20260915T235344_P05023_N_P_J_001",
+   "NISAR_L2_PR_GCOV_031_141_D_085_4005_DHDH_A_20260927T235335_20260927T235344_P05023_N_P_J_001"
+  ],
+  "gunw": "NISAR_L2_PR_GUNW_030_141_D_085_031_4000_SH_20260915T235335_20260915T235344_20260927T235335_20260927T235344_P05023_N_P_J_001",
+  "coherence_used": true,
+  "land_km2": 443.967,
+  "valid_share": 0.859,
+  "low_km2": 4.631,
+  "high_km2": 0.091,
+  "total_km2": 4.722,
+  "brightness_km2": 2.396,
+  "cluster_land_km2": 120.885,
+  "cluster_total_km2": 0.772,
+  "cluster_high_km2": 0.006,
+  "cluster_brightness_km2": 0.732,
+  "median_change_db": 0.05,
+  "published_style_areas": {
+   "high_confidence_area_km2": 0.09,
+   "low_confidence_area_km2": 4.63,
+   "new_material_area_km2": 4.72
+  }
+ },
+ "earthquake_pair": {
+  "id": "panama_D141F085_20260927_20261009",
+  "granules": [
+   "NISAR_L2_PR_GCOV_031_141_D_085_4005_DHDH_A_20260927T235335_20260927T235344_P05023_N_P_J_001",
+   "NISAR_L2_PR_GCOV_032_141_D_085_4005_DHDH_A_20261009T235335_20261009T235345_P05023_N_P_J_001"
+  ],
+  "gunw": "NISAR_L2_PR_GUNW_031_141_D_085_032_4000_SH_20260927T235335_20260927T235344_20261009T235335_20261009T235345_P05023_N_P_J_001",
+  "coherence_used": true,
+  "land_km2": 443.967,
+  "valid_share": 0.859,
+  "low_km2": 112.64,
+  "high_km2": 4.664,
+  "total_km2": 117.304,
+  "brightness_km2": 7.725,
+  "cluster_land_km2": 120.885,
+  "cluster_total_km2": 40.248,
+  "cluster_high_km2": 1.75,
+  "cluster_brightness_km2": 2.4,
+  "median_change_db": 0.03,
+  "published_style_areas": {
+   "high_confidence_area_km2": 4.66,
+   "low_confidence_area_km2": 112.64,
+   "new_material_area_km2": 117.3
+  }
+ },
+ "after_pass_start_utc": "2026-10-09T23:53:35Z",
+ "gb_fetched": 0.315,
+ "contract_errors_pipeline_out": 0
+}
