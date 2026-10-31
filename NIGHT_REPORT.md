@@ -236,3 +236,16 @@ Panama and Fuego are on the same continent, and Nyamulagira is the only one in A
 
 **Also corrects night 1 above:** the 360 px, TC-013 and TC-015 checks listed as not done were done tonight in emulation. The July date concern is now backed by GMA's report.
 
+# Day 3
+
+Branch `night-1`. Nothing pushed, nothing merged. `docs/DAY_PLAN_3.md` is your file, and I left it untracked. Results are being added as each task finishes.
+
+## Compare bug: root cause
+
+**Cause:** when a pair finished loading, `main.js` always called `compare.close()`. If you picked another pair and clicked Compare before that pair had finished loading, the view opened on the old pair, then closed when the new pair arrived. With a slow file it opened at 0.06 s and closed at 1.4 s.
+
+**How sure I am:** this is the only path I could make fail, and it matches what you saw, but I can't watch your session. A single click on a settled page never failed, at 1280 px, at 360 px by touch, or as a double click, and it stayed open in real Chrome too. None of the plan's three guesses was the cause: there is one handler, nothing on the map closes the view, and the divider's handlers don't either.
+
+**Fix:** a visitor who is comparing keeps comparing, and the view moves to the new pair's images. Close is what ends it. Compare is also disabled until the first pair has loaded, because clicking early falsely said the images were missing.
+
+**Tests:** `pipeline/tests/e2e/test_compare.py`. Before the fix: 3 failed, 6 passed, including the snap-back test. After: 9 passed. The mouse drag of the divider, blocked on night 2, is now tested in Chromium. It is still not tested on a real phone.

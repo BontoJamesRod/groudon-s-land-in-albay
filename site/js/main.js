@@ -76,6 +76,8 @@ function setUpPairs(map, site, siteData, readout) {
     area: byId("legend-area"),
     summary: byId("summary"),
   }, site);
+  // There is nothing to compare until the first pair has loaded.
+  byId("compare-button").disabled = true;
   byId("compare-button").onclick = () => app.compare.open(app.pair);
   const siteIsShown = () => app.site === site;
   return createTimeline({
@@ -91,9 +93,9 @@ function setUpPairs(map, site, siteData, readout) {
     if (!isCurrent()) return;
     await showPair(pair, isCurrent);
     if (!isCurrent()) return;
-    app.compare.close();
-    app.compare.clearMessage();
     app.pair = pair;
+    app.compare.pairChanged(pair);
+    byId("compare-button").disabled = false;
     readout.setPair(pair);
   });
 }

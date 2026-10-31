@@ -21,4 +21,5 @@ matplotlib
 
 # Testing and notebooks in VS Code
 pytest
+pytest-playwright
 ipykernel

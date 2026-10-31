@@ -24,6 +24,7 @@ export function createCompare(map, elements, site, hideRadar) {
   let overlays = null;
   let fraction = 0.5; // where the divider is, as a share of the map's width
   let request = 0; // closing, or opening again, cancels a load that is still running
+  let wanted = false; // the visitor asked for compare and hasn't closed it
 
   function applyClip() {
     if (!overlays) return;
@@ -39,7 +40,7 @@ export function createCompare(map, elements, site, hideRadar) {
     overlays.after.getElement().style.clipPath = `inset(0 0 0 ${split}px)`;
   }
 
-  function close() {
+  function hide() {
     request += 1;
     if (!overlays) return;
     overlays.before.remove();
@@ -48,6 +49,11 @@ export function createCompare(map, elements, site, hideRadar) {
     map.off("move zoom zoomend resize", applyClip);
     elements.view.hidden = true;
     hideRadar(false);
+  }
+
+  function close() {
+    wanted = false;
+    hide();
   }
 
   function moveDivider(clientX) {
@@ -66,6 +72,8 @@ export function createCompare(map, elements, site, hideRadar) {
   elements.divider.onpointerup = () => {
     elements.divider.onpointermove = null;
   };
+  // A phone can take a touch away, for example for a system gesture.
+  elements.divider.onpointercancel = elements.divider.onpointerup;
   elements.divider.onkeydown = (event) => {
     const step = { ArrowLeft: -KEY_STEP_PX, ArrowRight: KEY_STEP_PX }[event.key];
     if (!step) return;
@@ -87,7 +95,8 @@ export function createCompare(map, elements, site, hideRadar) {
 
   // Load both images first. If either fails, the map stays exactly as it was (FR-020).
   async function open(pair) {
-    close();
+    wanted = true;
+    hide();
     const thisRequest = request;
     elements.message.textContent = STRINGS.compareLoading;
     const before = pair && imageUrl(pair, "before_db");
@@ -97,7 +106,10 @@ export function createCompare(map, elements, site, hideRadar) {
       await Promise.all([preload(before.url), preload(after.url)]);
     } catch (problem) {
       console.error(problem.message);
-      if (thisRequest === request) elements.message.textContent = STRINGS.compareMissing;
+      if (thisRequest === request) {
+        wanted = false;
+        elements.message.textContent = STRINGS.compareMissing;
+      }
       return;
     }
     if (thisRequest !== request) return;
@@ -111,5 +123,14 @@ export function createCompare(map, elements, site, hideRadar) {
     applyClip();
   }
 
-  return { open, close, clearMessage: () => { elements.message.textContent = ""; } };
+  // A different pair is now selected. A visitor who is comparing keeps comparing, with the
+  // new pair's images. Closing here is what used to make the view snap back: a pair that was
+  // still loading when Compare was clicked closed the view as soon as it arrived.
+  function pairChanged(pair) {
+    elements.message.textContent = "";
+    if (wanted) open(pair);
+    else hide();
+  }
+
+  return { open, close, pairChanged };
 }

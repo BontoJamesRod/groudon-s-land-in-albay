@@ -35,6 +35,10 @@ jobs:
       - name: Install the pipeline libraries
         run: pip install -r pipeline/requirements.txt
       - name: Run the tests
-        run: pytest
+        run: pytest -m "not e2e"
+      - name: Install the Chromium browser for the browser tests
+        run: playwright install --with-deps chromium
+      - name: Run the browser tests
+        run: pytest -m e2e
       - name: Check published data against docs/05
         run: python pipeline/mrw/contract_check.py
