@@ -20,7 +20,7 @@ from shapely.geometry import shape
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from mrw import __version__
-from mrw.classify import HIGH, LOW, areas_km2, classify
+from mrw.classify import EITHER_SIGNAL, HIGH, LOW, areas_km2, classify
 from mrw.coherence import GUNW_DATASETS, GUNW_GROUP, compute_coherence_loss
 from mrw.config import load_site, thresholds_are_provisional, utc_now_text
 from mrw.contract_check import check_data_dir
@@ -223,7 +223,8 @@ def write_pair(gcov_result, loss, before, after, gunw, previous_gunw, previous_i
     """Classify a processed pair and write all its files. Returns the pair record."""
     thresholds = config["thresholds"]
     classes = classify(gcov_result["change_db"], loss, gcov_result["reasons"],
-                       thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"])
+                       thresholds["brightness_threshold_db"], thresholds["coherence_loss_threshold"],
+                       rule=thresholds.get("rule", EITHER_SIGNAL))
     # Filters are off unless the owner turns them on in the site config.
     classes = apply_filters(classes, config.get("filters"), gcov_result["spacing_x_m"] * gcov_result["spacing_y_m"],
                             distance_km=distance_from_summit(gcov_result, config))
