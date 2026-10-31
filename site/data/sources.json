@@ -2,36 +2,39 @@
  "data": [
   {
    "id": "pa_admin_boundaries",
+   "site_id": "panama",
    "name": "Panama district boundaries, clipped to the site",
    "provider": "geoBoundaries gbOpen (Panama ADM2), from the Smithsonian Tropical Research Institute data portal and the National Geographic Institute Tommy Guardia",
    "used_for": "boundaries",
    "url": "https://www.geoboundaries.org/",
    "license": "CC BY-SA 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T19:47:44Z",
-   "updated_at": "2026-10-31T19:47:44Z"
+   "created_at": "2026-10-31T20:02:10Z",
+   "updated_at": "2026-10-31T20:02:10Z"
   },
   {
    "id": "ph_admin_boundaries",
+   "site_id": "mayon",
    "name": "Philippine municipal and city boundaries",
    "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
    "used_for": "boundaries",
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T19:47:44Z",
-   "updated_at": "2026-10-31T19:47:44Z"
+   "created_at": "2026-10-31T20:02:10Z",
+   "updated_at": "2026-10-31T20:02:10Z"
   },
   {
    "id": "ph_coastline",
+   "site_id": "mayon",
    "name": "Coastline, from the union of the Philippine municipal and city boundaries",
    "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
    "used_for": "coastline",
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T19:47:44Z",
-   "updated_at": "2026-10-31T19:47:44Z"
+   "created_at": "2026-10-31T20:02:10Z",
+   "updated_at": "2026-10-31T20:02:10Z"
   },
   {
    "id": "esri_world_imagery",
@@ -41,34 +44,36 @@
    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
    "license": "Esri terms of use, with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T19:47:44Z",
-   "updated_at": "2026-10-31T19:47:44Z"
+   "created_at": "2026-10-31T20:02:10Z",
+   "updated_at": "2026-10-31T20:02:10Z"
   },
   {
    "id": "esa_worldcover_2021",
+   "site_id": "mayon",
    "name": "ESA WorldCover 2021 land cover, used only as context in the false-alarm study",
    "provider": "European Space Agency",
    "used_for": "analysis",
    "url": "https://esa-worldcover.org/",
    "license": "CC BY 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T19:47:44Z",
-   "updated_at": "2026-10-31T19:47:44Z"
+   "created_at": "2026-10-31T20:02:10Z",
+   "updated_at": "2026-10-31T20:02:10Z"
   },
   {
    "id": "copernicus_dem_glo30",
+   "site_id": "mayon",
    "name": "Copernicus DEM GLO-30 elevation, used only as context in the false-alarm study",
    "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
    "used_for": "analysis",
    "url": "https://registry.opendata.aws/copernicus-dem/",
    "license": "Copernicus DEM GLO-30 licence, free with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T19:47:44Z",
-   "updated_at": "2026-10-31T19:47:44Z"
+   "created_at": "2026-10-31T20:02:10Z",
+   "updated_at": "2026-10-31T20:02:10Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T19:47:44Z",
+  "generated_at": "2026-10-31T20:02:10Z",
   "schema_version": "1.0"
  }
 }

@@ -313,6 +313,8 @@ def test_tc032_context_sources(app):
     context = app.locator("#sources-panel h3:has-text('Context data') + ul")
     expect(context).to_be_visible()
     for row in read_data("sources.json"):
+        if row.get("site_id") not in (None, "mayon"):
+            continue  # another site's source (TC-077)
         expect(context).to_contain_text(row["name"])
         expect(context).to_contain_text(row["license"])
 

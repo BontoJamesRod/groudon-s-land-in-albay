@@ -220,6 +220,7 @@ erDiagram
         string url
         string license
         string retrieved_on
+        string site_id FK
         string created_at
         string updated_at
     }
@@ -257,6 +258,8 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `summit_lon` | number | No | `null` | −180 to 180 | Reference point for distance and the danger zone |
 | `danger_zone_radius_km` | number | No | `null` | > 0; needs `summit_lat` and `summit_lon` | Danger-zone ring radius in km, e.g. 6 for Mayon |
 | `danger_zone_label` | string | No | `null` | Required when `danger_zone_radius_km` is set | e.g. "Permanent Danger Zone (6 km)" |
+| `boundary_credit` | string | No | `null` | — | Map credit for the site's borders (FR-040) |
+| `boundary_credit_url` | string | No | `null` | URL | Link for that credit, when the source asks for one |
 | `detection_reach_km` | number | No | `null` | > 0; built from `filters.max_distance_km` in the site config | How far from the summit detections go (FR-060) |
 | `change_types` | array of string | Yes | `["new_material"]` | ≥ 1 item; enum `change_type` | Change types published for this site |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
@@ -447,6 +450,7 @@ A row is one context data source. Stored in `site/data/sources.json` (`data` arr
 | `url` | string | Yes | — | URL | Where it was obtained |
 | `license` | string | Yes | — | — | e.g. "CC BY-IGO" |
 | `retrieved_on` | string (date) | Yes | — | — | When it was downloaded |
+| `site_id` | string | No | `null` | FK `sites.id`, or a site folder while the site is a draft | The site this source belongs to; `null` means shared by all sites (FR-040) |
 | `created_at` | string (date-time) | Yes | — | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | — | UTC | When the row was last changed |
 

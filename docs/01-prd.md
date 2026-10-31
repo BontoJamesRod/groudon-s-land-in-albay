@@ -227,6 +227,7 @@ As a visitor or judge, I want to see exactly which NISAR products made each laye
 
 - **US-013/AC-1:** Given a pair is selected, when the visitor opens "Data sources", then each radar layer lists its product type, granule IDs, acquisition dates, maturity (for example PROVISIONAL) and a link to the product on ASF.
 - **US-013/AC-2:** Given context data is used (background map, borders, coastline, channels), when the panel shows, then it is listed separately under "Context data" with its source and license.
+- **US-013/AC-3:** Given a site is selected, when the visitor opens "Data sources" or reads the map credit, then only that site's sources and the shared ones are listed, and the map credit names that site's boundary source.
 
 ### F-10: Second showcase site
 
@@ -449,7 +450,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-037 | The system shall show "This is not an official warning. Follow PHIVOLCS and your LGU." on the main screen whenever a radar layer is shown. | F-08 | US-012 |
 | FR-038 | The system shall not display any text stating that a lahar, eruption or flood will happen. | F-08 | US-012 |
 | FR-039 | The system shall list, for each radar layer of the selected pair, its product type, granule IDs, acquisition dates, maturity and a link to ASF. | F-09 | US-013 |
-| FR-040 | The system shall list context data separately under "Context data", each with its source and license. | F-09 | US-013 |
+| FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
 | FR-041 | The system shall let the visitor switch between published sites. | F-10 | US-014 |
 | FR-042 | The system shall show "Couldn't load <site name>. Try again." with a Retry button, keeping the previous site shown, when a site's data fails to load. | F-10 | US-014 |
 | FR-043 | The pipeline shall read each site's settings from one config file per site, with no code changes per site. | F-10 | US-015 |

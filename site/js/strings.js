@@ -30,7 +30,6 @@ export const STRINGS = {
   layerUnits: (units) => `Units: ${units}`,
   totalArea: (km2) => `Total detected area: ${km2.toFixed(2)} km²`,
   nothingDetected: (before, after) => `No new material detected between ${before} and ${after}`,
-  boundaryAttribution: "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)",
   tileAttribution: "Tiles &copy; Esri",
 
   // Readout card (SCR-02)

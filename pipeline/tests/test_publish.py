@@ -24,6 +24,7 @@ def folders(tmp_path):
     out.mkdir()
     write_fake(out)
     (data / "sites" / "mayon").mkdir(parents=True)
+    (data / "sites" / "panama").mkdir()  # sources.json has a row for this draft site
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
     for name in ("towns.geojson", "land.geojson"):
         shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)

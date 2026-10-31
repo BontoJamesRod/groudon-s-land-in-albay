@@ -17,6 +17,7 @@
   "summit_lon": 123.6856,
   "danger_zone_radius_km": 6,
   "danger_zone_label": "Permanent Danger Zone (6 km)",
+  "boundary_credit": "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)",
   "change_types": ["new_material"],
   "provisional_fields": ["default_zoom", "min_zoom", "max_zoom"],
   "thresholds": {

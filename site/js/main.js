@@ -164,7 +164,7 @@ function setUpPanels() {
     if (app.map) app.map.invalidateSize({ animate: false });
   });
   const help = createPanel(byId("help-panel"), (body) => fillHelp(body, () => app.pair));
-  const sources = createPanel(byId("sources-panel"), (body) => fillSources(body, () => app.pair, app.site.time_zone));
+  const sources = createPanel(byId("sources-panel"), (body) => fillSources(body, () => app.pair, app.site));
   const picker = createPanel(byId("picker-panel"), (body) => fillPicker(body, app.sites, (site) => {
     byId("picker-panel").close();
     if (site.id !== app.site.id) openSite(site);

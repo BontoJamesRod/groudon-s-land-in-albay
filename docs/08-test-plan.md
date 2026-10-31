@@ -89,6 +89,7 @@ Fixtures used below are listed in §5.
 | TC-074 | US-026/AC-3 | FR-065, TBL-03, API-005 | Confirmed channels only | 1. Run `contract_check` on a fixture with a channel without `confirmed_on`. 2. Check that no candidate from `channel_name_candidates.geojson` is under `site/data/`. | The check fails on the fixture; no candidate is published | Negative | High |
 | TC-075 | US-012/AC-4 | FR-068 | No legal labels | 1. Search `strings.js`, every page and `site/data/` for "illegal", "unpermitted" and "violation". | No hits | Negative | High |
 | TC-076 | US-004/AC-5 | FR-069, SCR-02, TBL-01 | Site with no summit | 1. Switch to Panama. 2. Tap a land point. | Card shows the town and the result, with no distance or danger-zone line | Edge | High |
+| TC-077 | US-013/AC-3 | FR-040, SCR-01, SCR-06, TBL-10, API-001, API-002 | Credit and sources follow the site | 1. On Mayon, read the map credit and open Data sources. 2. Switch to a second site and do the same. | Each site shows its own boundary credit and sources plus the shared ones, never the other site's | Positive | High |
 
 ## 4. Non-Functional Tests
 
@@ -138,7 +139,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-008 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-020, TC-021, TC-022, TC-023, TC-063, TC-062 |
 | US-009 | AC-1, AC-2, AC-3 | TC-024, TC-027, TC-048, TC-025, TC-026 |
 | US-012 | AC-1, AC-2, AC-3, AC-4 | TC-028, TC-029, TC-030, TC-075 |
-| US-013 | AC-1, AC-2 | TC-031, TC-032 |
+| US-013 | AC-1, AC-2, AC-3 | TC-031, TC-032, TC-077 |
 | US-014 | AC-1, AC-2 | TC-033, TC-034 |
 | US-015 | AC-1, AC-2 | TC-035, TC-036 |
 | US-016 | AC-1, AC-2, AC-3 | TC-037, TC-038, TC-039 |
@@ -193,4 +194,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-076. |
+| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-077. |

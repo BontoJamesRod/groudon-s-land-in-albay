@@ -18,6 +18,13 @@ def test_panama_uses_the_same_final_rule_with_no_tuning():
     assert load_site("panama")["thresholds"]["status"] == "FINAL"
 
 
+def test_each_site_only_has_its_own_boundary_source():
+    rows = {row["id"]: row for row in read(DATA / "sources.json")["data"]}
+    assert rows["pa_admin_boundaries"]["site_id"] == "panama"
+    assert rows["ph_admin_boundaries"]["site_id"] == "mayon"
+    assert "site_id" not in rows["esri_world_imagery"]
+
+
 def test_panama_has_no_channels_summit_or_reach():
     config = load_site("panama")
     assert config["summit_lat"] is None and "filters" not in config and "channel_strip_half_width_m" not in config

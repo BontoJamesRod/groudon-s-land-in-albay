@@ -77,6 +77,8 @@ SITES = {
     "danger_zone_radius_km": field("number", required=False),
     "danger_zone_label": field("string", required=False),
     "detection_reach_km": field("number", required=False),
+    "boundary_credit": field("string", required=False),
+    "boundary_credit_url": field("url", required=False),
     "change_types": field("array"),
     "created_at": field("date-time"),
     "updated_at": field("date-time"),
@@ -220,6 +222,7 @@ SOURCES = {
     "url": field("url"),
     "license": field("string"),
     "retrieved_on": field("date"),
+    "site_id": field("string", required=False),
     "created_at": field("date-time"),
     "updated_at": field("date-time"),
 }
@@ -426,6 +429,10 @@ def check_sources(path, errors):
     rows = _check_data_array(load_json_file(path, errors), path, errors)
     for number, row in enumerate(rows):
         check_row(row, SOURCES, f"{path} row {number}", errors)
+        # A row with a site_id belongs to that site only. Without one it's shared by all sites.
+        site_id = row.get("site_id") if isinstance(row, dict) else None
+        if site_id and not (Path(path).parent / "sites" / str(site_id)).is_dir():
+            errors.append(f"{path} row {number}: site_id {site_id!r} has no data folder")
     return _unique_ids(rows, path, errors)
 
 

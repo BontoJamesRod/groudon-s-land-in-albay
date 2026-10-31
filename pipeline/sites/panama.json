@@ -17,6 +17,8 @@
   "summit_lon": null,
   "danger_zone_radius_km": null,
   "danger_zone_label": null,
+  "boundary_credit": "Boundaries: geoBoundaries (CC BY-SA 4.0)",
+  "boundary_credit_url": "https://www.geoboundaries.org/",
   "change_types": [
     "new_material"
   ],

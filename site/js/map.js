@@ -79,11 +79,17 @@ function keepZoneLabelClear(map, zoneLabel, townLabels) {
   update();
 }
 
+// The credit for this site's borders, as a link when the source asks for one.
+function boundaryCredit(site) {
+  const text = escapeText(site.boundary_credit);
+  return site.boundary_credit_url ? `<a href="${site.boundary_credit_url}">${text}</a>` : text;
+}
+
 // Build the map for a site. `notice` is the "Background map unavailable" element.
 export function createMap(site, siteData, notice) {
   const map = L.map("map", { minZoom: site.min_zoom, maxZoom: site.max_zoom })
     .setView([site.center_lat, site.center_lon], site.default_zoom);
-  map.attributionControl.addAttribution(STRINGS.boundaryAttribution);
+  if (site.boundary_credit) map.attributionControl.addAttribution(boundaryCredit(site));
   map.createPane(RADAR_PANE).style.zIndex = 350;
   map.createPane(COMPARE_PANE).style.zIndex = 340;
   // Above town borders and below the labels (Leaflet's label layer is 650).

@@ -121,6 +121,8 @@ None (`GET`).
       "danger_zone_radius_km": 6,
       "danger_zone_label": "Permanent Danger Zone (6 km)",
       "detection_reach_km": 10,
+      "boundary_credit": "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)",
+      "boundary_credit_url": null,
       "change_types": ["new_material"],
       "created_at": "2026-11-04T09:00:00Z",
       "updated_at": "2026-11-04T09:00:00Z"
@@ -170,6 +172,7 @@ None (`GET`).
       "url": "https://github.com/faeldon/philippines-json-maps",
       "license": "CC BY-IGO",
       "retrieved_on": "2026-10-30",
+      "site_id": "mayon",
       "created_at": "2026-11-04T09:00:00Z",
       "updated_at": "2026-11-04T09:00:00Z"
     }

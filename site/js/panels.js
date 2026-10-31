@@ -121,19 +121,21 @@ function contextSources(rows) {
   }));
 }
 
-// SCR-06: radar data for the selected pair, and context data from sources.json.
-export async function fillSources(body, getPair, timeZone) {
+// SCR-06: radar data for the selected pair, and context data from sources.json: this site's
+// sources and the shared ones, which have no site_id.
+export async function fillSources(body, getPair, site) {
   const pair = getPair();
-  const radar = pair ? radarSources(pair, timeZone) : [element("p", STRINGS.sourcesEmpty)];
+  const radar = pair ? radarSources(pair, site.time_zone) : [element("p", STRINGS.sourcesEmpty)];
   body.replaceChildren(element("h3", STRINGS.sourcesRadarTitle), ...radar,
     element("h3", STRINGS.sourcesContextTitle), element("p", STRINGS.sourcesLoading));
   const contextHolder = body.lastChild;
   try {
-    contextHolder.replaceWith(contextSources(await loadJson("data/sources.json")));
+    const rows = await loadJson("data/sources.json");
+    contextHolder.replaceWith(contextSources(rows.filter((row) => !row.site_id || row.site_id === site.id)));
   } catch (problem) {
     console.error(problem.message);
     const failed = element("p", `${STRINGS.sourcesError} `);
-    failed.append(retryButton(() => fillSources(body, getPair, timeZone)));
+    failed.append(retryButton(() => fillSources(body, getPair, site)));
     contextHolder.replaceWith(failed);
   }
 }

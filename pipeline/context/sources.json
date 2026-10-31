@@ -1,6 +1,7 @@
 [
   {
     "id": "pa_admin_boundaries",
+    "site_id": "panama",
     "name": "Panama district boundaries, clipped to the site",
     "provider": "geoBoundaries gbOpen (Panama ADM2), from the Smithsonian Tropical Research Institute data portal and the National Geographic Institute Tommy Guardia",
     "used_for": "boundaries",
@@ -10,6 +11,7 @@
   },
   {
     "id": "ph_admin_boundaries",
+    "site_id": "mayon",
     "name": "Philippine municipal and city boundaries",
     "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
     "used_for": "boundaries",
@@ -19,6 +21,7 @@
   },
   {
     "id": "ph_coastline",
+    "site_id": "mayon",
     "name": "Coastline, from the union of the Philippine municipal and city boundaries",
     "provider": "NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps",
     "used_for": "coastline",
@@ -37,6 +40,7 @@
   },
   {
     "id": "esa_worldcover_2021",
+    "site_id": "mayon",
     "name": "ESA WorldCover 2021 land cover, used only as context in the false-alarm study",
     "provider": "European Space Agency",
     "used_for": "analysis",
@@ -46,6 +50,7 @@
   },
   {
     "id": "copernicus_dem_glo30",
+    "site_id": "mayon",
     "name": "Copernicus DEM GLO-30 elevation, used only as context in the false-alarm study",
     "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
     "used_for": "analysis",
