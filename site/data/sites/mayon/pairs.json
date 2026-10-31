@@ -22,9 +22,9 @@
    "new_material_area_km2": 2.38,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:17:52Z",
-   "created_at": "2026-10-31T09:17:50Z",
-   "updated_at": "2026-10-31T09:17:52Z"
+   "published_at": "2026-10-31T16:24:13Z",
+   "created_at": "2026-10-31T16:22:57Z",
+   "updated_at": "2026-10-31T16:24:13Z"
   },
   {
    "id": "mayon_A111F008_20260703_20260715",
@@ -48,9 +48,9 @@
    "new_material_area_km2": 1.8,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:17:59Z",
-   "created_at": "2026-10-31T09:17:57Z",
-   "updated_at": "2026-10-31T09:17:59Z"
+   "published_at": "2026-10-31T16:24:14Z",
+   "created_at": "2026-10-31T16:23:03Z",
+   "updated_at": "2026-10-31T16:24:14Z"
   },
   {
    "id": "mayon_A111F008_20260715_20260727",
@@ -70,13 +70,13 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.03,
-   "low_confidence_area_km2": 2.28,
-   "new_material_area_km2": 2.31,
+   "low_confidence_area_km2": 1.73,
+   "new_material_area_km2": 1.76,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:06Z",
-   "created_at": "2026-10-31T09:18:04Z",
-   "updated_at": "2026-10-31T09:18:06Z"
+   "published_at": "2026-10-31T16:24:14Z",
+   "created_at": "2026-10-31T16:23:12Z",
+   "updated_at": "2026-10-31T16:24:14Z"
   },
   {
    "id": "mayon_A111F008_20260727_20260820",
@@ -100,9 +100,9 @@
    "new_material_area_km2": 4.09,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:13Z",
-   "created_at": "2026-10-31T09:18:11Z",
-   "updated_at": "2026-10-31T09:18:13Z"
+   "published_at": "2026-10-31T16:24:14Z",
+   "created_at": "2026-10-31T16:23:19Z",
+   "updated_at": "2026-10-31T16:24:14Z"
   },
   {
    "id": "mayon_A111F008_20260820_20260901",
@@ -126,9 +126,9 @@
    "new_material_area_km2": 1.15,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:21Z",
-   "created_at": "2026-10-31T09:18:19Z",
-   "updated_at": "2026-10-31T09:18:21Z"
+   "published_at": "2026-10-31T16:24:14Z",
+   "created_at": "2026-10-31T16:23:27Z",
+   "updated_at": "2026-10-31T16:24:14Z"
   },
   {
    "id": "mayon_A111F008_20260901_20260913",
@@ -148,13 +148,13 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.02,
-   "low_confidence_area_km2": 1.72,
-   "new_material_area_km2": 1.74,
+   "low_confidence_area_km2": 1.24,
+   "new_material_area_km2": 1.26,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:28Z",
-   "created_at": "2026-10-31T09:18:26Z",
-   "updated_at": "2026-10-31T09:18:28Z"
+   "published_at": "2026-10-31T16:24:15Z",
+   "created_at": "2026-10-31T16:23:34Z",
+   "updated_at": "2026-10-31T16:24:15Z"
   },
   {
    "id": "mayon_D104F082_20260913_20260925",
@@ -174,13 +174,13 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.01,
-   "low_confidence_area_km2": 0.92,
-   "new_material_area_km2": 0.93,
+   "low_confidence_area_km2": 0.8,
+   "new_material_area_km2": 0.81,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T12:38:48Z",
-   "created_at": "2026-10-31T12:36:32Z",
-   "updated_at": "2026-10-31T12:38:48Z"
+   "published_at": "2026-10-31T16:24:15Z",
+   "created_at": "2026-10-31T16:23:41Z",
+   "updated_at": "2026-10-31T16:24:15Z"
   },
   {
    "id": "mayon_A111F008_20260913_20260925",
@@ -200,13 +200,13 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.05,
-   "low_confidence_area_km2": 1.19,
-   "new_material_area_km2": 1.24,
+   "low_confidence_area_km2": 0.72,
+   "new_material_area_km2": 0.77,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:36Z",
-   "created_at": "2026-10-31T09:18:34Z",
-   "updated_at": "2026-10-31T09:18:36Z"
+   "published_at": "2026-10-31T16:24:15Z",
+   "created_at": "2026-10-31T16:23:49Z",
+   "updated_at": "2026-10-31T16:24:15Z"
   },
   {
    "id": "mayon_A111F008_20260925_20261007",
@@ -226,13 +226,13 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.08,
-   "low_confidence_area_km2": 1.28,
-   "new_material_area_km2": 1.36,
+   "low_confidence_area_km2": 0.78,
+   "new_material_area_km2": 0.86,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:44Z",
-   "created_at": "2026-10-31T09:18:42Z",
-   "updated_at": "2026-10-31T09:18:44Z"
+   "published_at": "2026-10-31T16:24:15Z",
+   "created_at": "2026-10-31T16:23:56Z",
+   "updated_at": "2026-10-31T16:24:15Z"
   },
   {
    "id": "mayon_D104F082_20261007_20261019",
@@ -252,13 +252,13 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.02,
-   "low_confidence_area_km2": 2.11,
-   "new_material_area_km2": 2.13,
+   "low_confidence_area_km2": 1.63,
+   "new_material_area_km2": 1.65,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T12:38:49Z",
-   "created_at": "2026-10-31T12:38:45Z",
-   "updated_at": "2026-10-31T12:38:49Z"
+   "published_at": "2026-10-31T16:24:16Z",
+   "created_at": "2026-10-31T16:24:03Z",
+   "updated_at": "2026-10-31T16:24:16Z"
   },
   {
    "id": "mayon_A111F008_20261007_20261019",
@@ -278,17 +278,17 @@
    "brightness_threshold_db": 3.0,
    "coherence_loss_threshold": 0.3,
    "high_confidence_area_km2": 0.05,
-   "low_confidence_area_km2": 4.02,
-   "new_material_area_km2": 4.07,
+   "low_confidence_area_km2": 0.7,
+   "new_material_area_km2": 0.75,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T09:18:52Z",
-   "created_at": "2026-10-31T09:18:50Z",
-   "updated_at": "2026-10-31T09:18:52Z"
+   "published_at": "2026-10-31T16:24:16Z",
+   "created_at": "2026-10-31T16:24:11Z",
+   "updated_at": "2026-10-31T16:24:16Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T12:39:52Z",
+  "generated_at": "2026-10-31T16:24:16Z",
   "schema_version": "1.0"
  }
 }
