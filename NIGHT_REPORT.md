@@ -362,3 +362,105 @@ These replace the matching lines above where they differ.
   - The map at 360 px went from about 270 px to about 435 px tall, so the whole ring and its label now show. That settles decision 4, the phone map zoom.
   - The drawer tests against the old site code: 9 failed, 3 passed. Full run now: `pytest -q`: 310 passed, 6 skipped, 1 expected failure. Contract check on `site/data`: 0 errors.
   - The drawer hasn't been checked on a real phone yet. A swipe is emulated with a mouse in the tests.
+
+# Afternoon run
+
+Branch `night-1`. `main` wasn't touched. `site/data` wasn't changed. This section also covers the earlier "After Day 3 analysis" request, whose tasks are inside this plan.
+
+**Final evidence:** `pytest -q`: 317 passed, 6 skipped, no expected failures left. Contract check: 0 errors on `site/data`, and 0 on `pipeline/out` under its unpublished rules. **Downloaded: about 0.33 GB** of 10 GB: 0.315 GB of NISAR crops for Panama plus the boundary file. Nothing from on or after 2026-10-30 was opened.
+
+## Read this first
+
+1. **Oct 8 → Oct 20 is 98% coherence only, and neither radar geometry nor noise explains it.** It's still unknown whether it's real. Check rain records and PHIVOLCS bulletins.
+2. **A reach zone removes far more than any filter**, mostly by removing farmland, but it also stops the map looking beyond its edge. It's your call.
+3. **On Panama the method responds strongly but not specifically:** 117.3 km² against 4.72 km², with 26% of the land flagged.
+4. **Site speed is fine:** 0.78 MB and 2.0 s, so overlays stay as PNG.
+
+## Tasks
+
+| # | Task | Status | Commit | Result |
+| --- | --- | --- | --- | --- |
+| 1 | Housekeeping | Done | 2170070 | `CLAUDE.md` is at the root. `.dodsrc` is untracked and ignored, and it's still on your computer. I didn't open it. **It stays in old commits on GitHub**, since history isn't rewritten, so if it holds anything private, change that |
+| 2 | Oct 8 → Oct 20 split | Done | 650f679 | Below, with `pipeline/reports/october-signal-split.png` |
+| 3 | Masks | Done | 650f679 | Below, with full tables in `pipeline/reports/threshold-study-night-1.md` |
+| 4 | Panama trial | Done | a88c1ee | Below, with `pipeline/reports/second-site-candidates.md` |
+| 5 | Performance and version strings | Done; WebP not needed | 06f0fb5 | Below |
+| 6 | Credit link tap size | Done | 9a0d2a2 | TC-042 passes, with no expected failure left. Checked in emulation, not yet on a real phone |
+| 7 | Proposed doc edits | Done | bdde5b7 | `docs/notes/proposed-doc-changes.md`, all six items. No other doc was edited |
+| 8 | This section | Done | this commit | |
+| Earlier request | Fake-secret CI test | Done | none on `night-1` | The scan failed as it should, and later steps were skipped: [the run](https://github.com/BontoJamesRod/groudon-s-land-in-albay/actions/runs/41182890528) |
+
+Nothing is blocked.
+
+**Left for you to clear:** the fake-secret branch was deleted locally as asked, but `throwaway/fake-secret-test` is still on GitHub. Its value is made up and unlocks nothing. To remove it: `git push origin --delete throwaway/fake-secret-test`. Its commit may also trip "Scan history for secrets" if that scan reaches it, so remove the branch before relying on that scan.
+
+## Oct 8 → Oct 20 inside the danger zone
+
+![Which signal flagged each cell](pipeline/reports/october-signal-split.png)
+
+| Signal | km² | Share | NW of summit | On steep away-facing slopes | Near the noise floor |
+| --- | --- | --- | --- | --- | --- |
+| Coherence only | 2.433 | 98% | 1.180 | 0.447 | 0.000 |
+| Brightness only | 0.054 | 2% | 0.021 | 0.019 | 0.000 |
+| Both | 0.004 | 0.2% | 0.002 | 0.000 | 0.000 |
+
+- Away-facing slopes are 10% of the zone's land and hold 18% of the coherence-only area, so geometry explains only a little.
+- Noise explains none of it, at any test level from -25 to -18 dB. The noise level and beam angle are assumed, not read from the product.
+- Other pairs with coherence in use have 0.02–0.37 km², so this is about 7 to 120 times as much.
+- Coherence falling without brightness changing could be wet ground or vegetation, and could be thin disturbance. A thick fresh deposit would usually change brightness too, which leans against one, but that's general reasoning and this study didn't test it.
+
+## Masks
+
+Quiet set: 7 pairs, leaving out July and Oct 8 → Oct 20.
+
+| Option | Quiet removed | July flanks kept | Oct 8 → Oct 20 kept |
+| --- | --- | --- | --- |
+| Within 8 km | 92% | 100% | 33% |
+| Within 8 km + clusters from 2,000 m² | 94% | 69% | 32% |
+| Within 10 km | 70% | 100% | 47% |
+| Within 10 km + clusters | 77% | 69% | 43% |
+| Within 12 km | 41% | 100% | 65% |
+| Within 12 km + clusters | 53% | 69% | 59% |
+| Noise floor and away-facing slopes | 2% | 94% | 93% |
+| Noise and away-facing + clusters | 19% | 64% | 84% |
+
+**Read the 100% with care:** the flank wedges only reach 3.8 km, so these masks can't touch them. It shows they're safe for those flanks, not that they find the event better. July's flanks (0.120 km²) are still below the worst quiet pair's (0.374 km²).
+
+**My pick, if you want a mask now: within 10 km alone.** It removes 70% with no loss in the flanks. The map would have to say it only looks within 10 km, and it cuts off Guinobatan's label point (10.3 km). Skip the noise and away-facing mask, because it removes 2% and costs 6% of the flank signal.
+
+## Panama trial
+
+| Measure (km²) | Quiet, 09-15 → 09-27 | Earthquake, 09-27 → 10-09 |
+| --- | --- | --- |
+| Total | 4.72 | 117.30 |
+| High confidence | 0.09 | 4.66 |
+| Brightness alone | 2.40 | 7.73 |
+| High confidence, in the box on the cluster | 0.006 | 1.75 |
+
+- 26% of the land is flagged, far more than landslides could cover, so low confidence is mostly a region-wide fall in coherence. High confidence looks more useful.
+- It hasn't been checked against the mapped landslides, and the earthquake's time against the 23:53 UTC pass isn't confirmed.
+- **Boundaries:** geoBoundaries gbOpen Panama ADM2, from the Smithsonian Tropical Research Institute (2012), CC BY 4.0. The record's license detail says "need to update", so read its source before any public use.
+- Output is in `pipeline/out/sites/panama/` only. The config isn't in `pipeline/sites/`, so publishing can't list it.
+
+## Performance (TC-050)
+
+Fast 4G, cold cache, real tiles, median of 3 loads, from a local server. A real host adds distance but also compresses files.
+
+| Screen | First view | Until the first pair shows |
+| --- | --- | --- |
+| 1280 px | 0.78 MB | 2.0 s |
+| 360 px | 0.58 MB | 2.0 s |
+
+- That's under the suggested 5 MB and 5 s, so **no WebP switch or republish**, as your condition said. The final NFR-001 target is still `[TBD]`. `test_performance.py` keeps checking the budget in CI, with fake tiles.
+- **Later loads are bigger:** Compare fetches about 3.2 MB (about 3 s at this speed, calculated) and the first map tap fetches a 1.75 MB grid (about 1.6 s, calculated). So TC-051's suggested 200 ms can't hold for a first tap. WebP could shrink the Compare images if that matters.
+- **Stale code:** JS and CSS links now carry a version made from each file's contents, including modules, through an import map in `index.html`. After changing `site/js` or `site/css`, run `python pipeline/mrw/stamp_assets.py`. A test fails if you forget. Leaflet isn't stamped, because its folder name already carries its version. It's checked in tests, and it can't help visitors holding the old `index.html` until that page refreshes.
+
+## Decisions waiting for you
+
+1. **Go live?** Merging `night-1` into `main` makes the map public. The 404 check at the real address waits on this too.
+2. **Mask or filter:** none, within 10 km (my pick), within 12 km, or a filter from the day 3 list.
+3. **Oct 8 → Oct 20:** check rain records and PHIVOLCS bulletins. Do you want a pass from another track compared too?
+4. **Thresholds:** still PROVISIONAL, and they must be set before eruption data is opened.
+5. **Second site:** Panama now has a full-method result, but it's unvalidated. Compare it with the mapped landslides, or try Fuego?
+6. **Doc edits:** accept or change the six items in `docs/notes/proposed-doc-changes.md`. Item 1 is also the 24-day decision. Item 2 changes visitor wording.
+7. **Still open from earlier:** event date (July 13 or 14), July validation draft, channel source, cropland.
