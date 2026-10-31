@@ -75,7 +75,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-034 | Phone and color-blind pass: 360 px layout, 44 × 44 px tap targets, palette check, text labels for every class | US-018, SCR-01, NFR-004 | M | T-028, T-029, T-030, T-031, T-032 | TC-042, TC-043 and TC-055 pass |
 | T-035 | Build the "How we checked this" panel and the `validation` module; create the validation record for the July 14 pair from a PHIVOLCS bulletin | US-017, SCR-07, TBL-08, TBL-09, API-011 | M | T-020, T-025 | TC-040 and TC-041 pass |
 | T-036 | Second site is Panama (`pipeline/reports/second-site-candidates.md` and the Panama trial); write its config and build its towns, land and sources files | US-004, US-015, F-10, FR-069, TBL-01, TBL-02, TBL-10, TBL-11 | M | T-008, T-009 | Its files pass the contract check with no code changes |
-| T-037 | Process and publish 1 Panama pair, with the plain change map and no channels | US-014, US-015, F-10 | M | T-036, T-019, T-032 | TC-033, TC-035 and TC-076 pass |
+| T-037 | Process and publish 1 Panama pair, with the plain change map and no channels | US-014, US-015, F-10 | M | T-036, T-019, T-032, T-087 | TC-033, TC-035 and TC-076 pass |
 | T-038 | Process and publish the eruption pairs (tracks 104 and 111, 2026-10-19 → 2026-10-31 UTC) as soon as they are on ASF, including each track's previous pair if not yet done | US-005, US-008, F-05 | M | T-016, T-019 | At least 1 post-eruption pair is live (G-02) |
 | T-039 | Create the validation record for an eruption pair | US-017, TBL-08, TBL-09 | S | T-038, T-035 | The panel shows it on the live site |
 | T-040 | Run the whole test plan (08) on the live site; fix every Critical and Major bug | All MVP stories (US-001 to US-026), NFR-001 to NFR-009 | M | T-034, T-037, T-039, T-076, T-077, T-078 | 08 exit criteria met |
@@ -126,6 +126,9 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-084 | Make the map and the readout read the reach distance from the site config, through `sites.json` | FR-060, US-004, US-008, TBL-01, API-001, SCR-01, SCR-02, TC-061, TC-062 | S | T-057 | `DETECTION_REACH_KM` is gone; TC-061 and TC-062 pass |
 | T-085 | Rename the legend labels to say which signals agree, and republish the pairs | FR-025, US-008, TBL-06, API-008, SCR-05 | S | T-050 | All published pairs carry the new labels with unchanged areas; the held pair stays off |
 
+| T-086 | Accept CC BY-SA 4.0 for the Panama borders: credit geoBoundaries with its license in `sources.json` and the Data sources panel, and mark the published border files | F-09, F-10, FR-040, TBL-02, TBL-10, TBL-11, API-002, API-003, API-004, T-036 | S | T-083 | The panel and `sources.json` show the credit and license; both border files carry the license |
+| T-087 | Make the map's boundary credit follow the selected site. Today it always names the Philippine source. Not built yet | F-01, F-10, FR-040, SCR-01 | S | T-086 | Panama's map credit names geoBoundaries and CC BY-SA 4.0; Mayon's is unchanged |
+
 T-073 waits for the owner's Google Earth check, and T-010 and T-074 to T-078 wait for T-073.
 
 ### Done work added on 2026-11-01
@@ -161,7 +164,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 
 ## 4. Build Order
 
-Done work from T-050 to T-072, and T-079 to T-085, is listed in §3 and isn't repeated here.
+Done work from T-050 to T-072, and T-079 to T-086, is listed in §3 and isn't repeated here.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.
