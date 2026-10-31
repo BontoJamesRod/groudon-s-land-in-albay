@@ -681,3 +681,21 @@ The earthquake pair now flags about 3 times the quiet pair, and the old 26% came
 ## Evidence
 
 `pytest -q`: 370 passed, 6 skipped, exit code 0. Contract check: 0 errors on `site/data`, exit code 0. IDs: 0 dangling, by script. No threshold values were found in `docs/` by script. All 14 Mermaid diagrams render. The new labels and the reach were checked by the automated browser tests, not by eye on a phone.
+
+# Panama site files (2026-11-01)
+
+**T-036 is done and the Panama borders are credited under CC BY-SA 4.0, on `night-1`, not merged into `main`.** Panama isn't on the map or in the site list: its status stays `draft` until it has a pair (T-037).
+
+- **Credit:** `sources.json` has a new row, `pa_admin_boundaries`, and the Data sources panel shows it with geoBoundaries, its upstream sources, a link to geoboundaries.org and "License: CC BY-SA 4.0". A browser test checks the panel. This row is on the panel for every site, because the panel lists all context sources.
+- **Marking:** `towns.geojson` and `land.geojson` under `site/data/sites/panama/` both carry a top-level `license` member. Docs 05 and 06 describe it, and the contract check accepts it.
+- **Site config:** `pipeline/sites/panama.json` has the same rule and thresholds as Mayon, and a test keeps them equal. It has no summit, reach or channels.
+- **Districts:** Las Minas, Los Pozos and Mariato. The land matches the trial's land almost exactly.
+
+**Things to know:**
+
+- **One code change:** `context.py` had the Philippine source ID hardcoded, so a boundary file can now name its own source and license. The next site won't need this, but T-036's "no code changes" wasn't strictly met. TC-035 should be read with that in mind when T-037 runs it.
+- **Map credit (T-087, not built):** `map.js` always shows the Philippine boundary credit, which would be wrong on Panama. T-037 now depends on it.
+- **Public reachability:** the two Panama files will be reachable by direct URL once `night-1` is merged, even though the site isn't listed. They carry their license, so that's fine under the terms you accepted.
+- **Still true:** the upstream record is marked deprecated, and the Panama result hasn't been checked against mapped landslides.
+
+**Evidence:** `pytest -q`: 375 passed, 6 skipped, exit code 0. Contract check: 0 errors, exit code 0.

@@ -504,7 +504,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | Albay municipal boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through GitHub `faeldon/philippines-json-maps`) | Town borders, town names, land mask and coastline for Mayon | F-01, F-02, F-05 |
 | PHIVOLCS bulletins (read by the maintainer) | Channel names, event dates, validation records | F-03, F-12, F-19, F-20 |
 | Channel line data: OpenStreetMap candidates, confirmed by the owner (`pipeline/context/channel_name_candidates.geojson`) | Lines for the named channels | F-19, F-20 |
-| Boundary data for Panama: geoBoundaries gbOpen ADM2. Its upstream source states CC BY-SA 4.0 and is marked deprecated; the owner decides before public use | Borders and land mask outside the Philippines | F-10 |
+| Boundary data for Panama: geoBoundaries gbOpen ADM2, under CC BY-SA 4.0 by owner decision (the terms its upstream source states) | Borders and land mask outside the Philippines | F-10 |
 | Public code hosting and static web hosting (GitHub; host choice in step 04) | Public repository and public link | F-11 |
 | Google Colab | Where the maintainer runs the pipeline | F-05, F-10 |
 
@@ -540,7 +540,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | 2 | Closed on 2026-11-01: the owner set the final thresholds and rule; the values live in the site config. | FR-023, US-008 |
 | 3 | What distance from a channel counts as "in or near" it? | US-023/AC-2, FR-057 |
 | 4 | Partly closed on 2026-11-01: candidates come from OpenStreetMap, and only lines the owner confirms are used. Which lines are confirmed? | F-19, F-20, §8 |
-| 5 | Partly closed on 2026-11-01: Panama, same final rule, no per-site tuning. Accept the share-alike terms of the upstream boundary source, or use another source? | F-10, §8 |
+| 5 | Partly closed on 2026-11-01: Panama, same final rule, no per-site tuning. The owner accepted CC BY-SA 4.0 for the borders. | F-10, §8 |
 | 6 | What are the performance, availability, compatibility and scalability targets? (Suggestions given in §7.) | NFR-001, NFR-003, NFR-005, NFR-006 |
 | 7 | What is the data-freshness target? | NFR-009 |
 | 8 | Closed on 2026-11-01: the owner chose the same width as the channel test. The value is in the site config. | FR-064, T-074 |

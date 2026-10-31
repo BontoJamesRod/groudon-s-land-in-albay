@@ -79,7 +79,7 @@ Update on 2026-11-01, after the owner's decisions: the plan files moved to `plan
 | 1 | Major | 01 OQ4; 07 T-073 | The owner hasn't confirmed any channel line yet, so F-20 can't start |
 | 2 | Closed | 01 OQ8; FR-064 | Strip width is in the site config (T-080) |
 | 3 | Major | 01 OQ3; US-023/AC-2 | Channel distance is still `[TBD]` (consistency-02 #3) |
-| 4 | Major | 01 OQ5; T-036 | Panama: the upstream boundary source states a share-alike license and is marked deprecated (T-083) |
+| 4 | Closed | 01 OQ5; T-036 | The owner accepted CC BY-SA 4.0 for the Panama borders (T-086). The upstream record is still marked deprecated |
 | 5 | Closed | FR-060; `site/js/readout.js` | The browser reads the reach distance from `sites.json`, built from the site config (T-084) |
 | 6 | Closed | API-008; `site/data/` | Legend labels renamed and the pairs republished (T-085) |
 | 7 | Minor | 01 US-005/AC-3 | Whether an event on a pass's local date counts as inside the pair is still unstated (consistency-02 #8) |

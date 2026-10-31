@@ -13,7 +13,7 @@ This system has no backend (04, ADR-001). Its "API" is the set of static files t
 | Base URL | `https://<github-user>.github.io/<repository>` [TBD]; the app requests paths relative to its own page, so the same paths work on localhost |
 | Auth | None: every file is public and read-only (PRD §4) |
 | Methods | `GET` only |
-| Format | JSON (UTF-8) with the envelope below; GeoJSON (RFC 7946) `FeatureCollection` with `generated_at` and `schema_version` members; PNG or WebP images; little-endian binary grids |
+| Format | JSON (UTF-8) with the envelope below; GeoJSON (RFC 7946) `FeatureCollection` with `generated_at` and `schema_version` members, and an optional `license` member; PNG or WebP images; little-endian binary grids |
 | Field naming | `snake_case`, exactly the column names in 05 |
 | Dates and times | ISO 8601: `date-time` in UTC (e.g. `2026-10-19T21:13:19Z`), `date` as `YYYY-MM-DD` |
 | Pagination | Not applicable: one site gains about 30 pairs per year per track, so lists stay small |

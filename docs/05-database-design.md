@@ -6,7 +6,7 @@
 
 **Database:** None. Per 04 (ADR-003), data is stored as static files under `site/data/`: JSON (UTF-8), GeoJSON (RFC 7946, EPSG:4326), PNG or WebP images, and little-endian binary value grids. Each "table" below is a collection of records stored in the file named in its data dictionary. Types are JSON types: `string`, `number`, `integer`, `boolean`, `array`, `object`; dates are `string` in ISO 8601 (`date-time` in UTC with `Z`, or `date` as `YYYY-MM-DD`).
 
-**File envelope.** Every JSON file is `{"data": …, "meta": {"generated_at": "<date-time>", "schema_version": "1.0"}}`. Every GeoJSON file is a `FeatureCollection` with the same two members, `generated_at` and `schema_version`, at its top level; each Feature's `properties` hold the columns and its `geometry` holds the shape.
+**File envelope.** Every JSON file is `{"data": …, "meta": {"generated_at": "<date-time>", "schema_version": "1.0"}}`. Every GeoJSON file is a `FeatureCollection` with the same two members, `generated_at` and `schema_version`, at its top level, plus an optional `license` when the file's data requires it to be marked (the Panama border files); each Feature's `properties` hold the columns and its `geometry` holds the shape.
 
 ## 1. Entity Overview
 
@@ -549,12 +549,12 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 
 | Table | Records | Purpose |
 | --- | --- | --- |
-| `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels are in the site config. Second site: `panama`, the Azuero Peninsula, one pair, no summit and no channels (not published yet). | The two showcase sites (F-10) |
+| `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels are in the site config. Second site: `panama`, the Azuero Peninsula, one pair, no summit and no channels (status `draft` until T-037). | The two showcase sites (F-10) |
 | `towns` | Albay towns inside the Mayon bounds, from `municities-provdist-500500000.0.1.json` (progress notes) | Borders, names, search (F-01, F-02) |
 | `channels` | Channels named in PHIVOLCS bulletins. A starting list from a PHIVOLCS update quoted on ReliefWeb (2000): Mabinit and Buyuan-Padang (Legazpi), Miisi (Daraga), Tumpa, Anoling and Quirangay (Camalig), Maninila (Guinobatan), Basud-Lidong (Santo Domingo), Bulawan (Malilipot), San Vicente and Buang (Tabaco), Upper Nasisi and Upper Nabonton (Ligao). 2026 reports also name the Mi-isi, Bonga and Basud gullies. Check against current bulletins before use. | Channels and towns (F-19) |
 | `channel_areas` | Computed for every confirmed channel and published pair | Channel timeline (F-20) |
 | `events` | Mayon pyroclastic density current, 2026-07-14; Mayon moderately explosive eruption, 2026-10-30 (source: PHIVOLCS via news reports) | Timeline markers (F-03) |
-| `sources` | Philippine admin boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through `faeldon/philippines-json-maps`); background tiles (Esri, terms: verify); channel lines [TBD] | Context data list (F-09) |
+| `sources` | Philippine admin boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through `faeldon/philippines-json-maps`); Panama district boundaries (geoBoundaries gbOpen, CC BY-SA 4.0); background tiles (Esri, terms: verify); channel lines [TBD] | Context data list (F-09) |
 | `land_areas` | One land polygon for Mayon, from the union of the Albay town borders | Coastline and sea mask |
 
 ## 9. Data Privacy and Retention
@@ -576,7 +576,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 | 1 | What zoom levels should Mayon use (default, minimum, maximum)? | `sites` seed |
 | 2 | Closed on 2026-11-01: final values live in the site config, never in `docs/`. | `pairs.brightness_threshold_db`, `pairs.coherence_loss_threshold` |
 | 3 | What is the exact ASF Vertex URL format for linking one granule? (verify) | `passes.vertex_url`, `pairs.gunw_vertex_url` |
-| 4 | Closed on 2026-11-01: Panama has no channels; geoBoundaries for its borders (upstream license to be accepted or replaced, 01 Open Question 5). | `towns`, `sources` |
+| 4 | Closed on 2026-11-01: Panama has no channels; geoBoundaries for its borders, under CC BY-SA 4.0. | `towns`, `sources` |
 | 5 | Should readouts also show the brightness change and coherence loss values at the tapped spot? That would need value grids for those layers too. | `layers` |
 
 ## 12. Conflicts with Earlier Documents

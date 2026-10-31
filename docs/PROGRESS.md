@@ -18,7 +18,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 85 tasks; ID errata in §11 |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 87 tasks; ID errata in §11 |
 | 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 76 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
@@ -31,7 +31,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Gate 2 (rule and thresholds) | Decided before any post-eruption data was opened. The final rule is live on the public site on 11 pairs |
 | Products | NISAR products are still PROVISIONAL |
 | Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
-| Second site | Panama, one pair, same final rule with no per-site tuning; not published yet (T-036, T-037). The boundary license is still the owner's decision |
+| Second site | Panama, one pair, same final rule with no per-site tuning; its site files are built and credited under CC BY-SA 4.0 (T-036, T-086). Status stays `draft`: no pair yet, and it isn't in the site list. Next are T-087 and T-037 |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
 | Next | The owner's Google Earth check, then T-073, T-010, T-074 to T-078; T-038 as soon as the eruption passes are on ASF |
 
@@ -67,7 +67,7 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | # | Question | From | Blocks |
 | --- | --- | --- | --- |
 | 1 | Do the Space Apps and Legazpi local-event rules allow code written before 2026-11-14? | 00 OQ5 | All of Phase 1 in 07 |
-| 2 | Accept the share-alike terms of the Panama boundary source, or use another source? | 01 OQ5 | T-036 |
+| 2 | Closed on 2026-11-01: the owner accepted CC BY-SA 4.0 for the Panama borders. | 01 OQ5 | Nothing now |
 | 3 | Which channel lines does the owner confirm? Waiting for the owner's Google Earth check. | 01 OQ4 | T-073, T-010, F-20 |
 | 4 | Closed on 2026-11-01: strip width is in the site config. | 01 OQ8 | Nothing now |
 | 5 | What distance from a channel counts as "in or near" it? | 01 OQ3 | US-023/AC-2, TC-045, TC-046 |
