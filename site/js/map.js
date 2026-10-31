@@ -31,13 +31,13 @@ function addBackground(map, notice) {
 
 function addTowns(map, towns) {
   L.geoJSON(towns, { style: TOWN_STYLE, interactive: false }).addTo(map);
-  for (const town of towns.features) {
+  return towns.features.map((town) => {
     const { label_lat: lat, label_lon: lon, name } = town.properties;
-    L.tooltip({ permanent: true, direction: "center", className: "town-label", interactive: false })
+    return L.tooltip({ permanent: true, direction: "center", className: "town-label", interactive: false })
       .setLatLng([lat, lon])
       .setContent(escapeText(name))
       .addTo(map);
-  }
+  });
 }
 
 // Leaflet tooltips take HTML, so a name from a data file is turned into plain text first.
@@ -48,14 +48,30 @@ function escapeText(text) {
 }
 
 function addDangerZone(map, site) {
-  if (site.danger_zone_radius_km == null || site.summit_lat == null) return;
+  if (site.danger_zone_radius_km == null || site.summit_lat == null) return null;
   const center = [site.summit_lat, site.summit_lon];
   const ring = L.circle(center, { ...RING_STYLE, radius: site.danger_zone_radius_km * 1000, interactive: false }).addTo(map);
-  // The label sits on the ring's northern edge, where it doesn't cover the summit.
-  L.tooltip({ permanent: true, direction: "top", className: "zone-label", interactive: false })
-    .setLatLng([ring.getBounds().getNorth(), site.summit_lon])
+  // The label sits just outside the ring's southern edge. At Mayon the northern edge
+  // puts it on top of Tabaco City.
+  return L.tooltip({ permanent: true, direction: "bottom", className: "zone-label", interactive: false })
+    .setLatLng([ring.getBounds().getSouth(), site.summit_lon])
     .setContent(escapeText(site.danger_zone_label))
     .addTo(map);
+}
+
+// Zoomed out, labels crowd together. The danger zone matters most, so a town's name
+// makes way for it until the visitor zooms back in.
+function keepZoneLabelClear(map, zoneLabel, townLabels) {
+  function update() {
+    const zone = zoneLabel.getElement().getBoundingClientRect();
+    for (const town of townLabels) {
+      const box = town.getElement().getBoundingClientRect();
+      const touches = box.left < zone.right && box.right > zone.left && box.top < zone.bottom && box.bottom > zone.top;
+      town.getElement().style.visibility = touches ? "hidden" : "";
+    }
+  }
+  map.on("zoomend moveend resize", update);
+  update();
 }
 
 // Build the map for a site. `notice` is the "Background map unavailable" element.
@@ -67,7 +83,8 @@ export function createMap(site, siteData, notice) {
   map.createPane(COMPARE_PANE).style.zIndex = 340;
   addBackground(map, notice);
   L.geoJSON(siteData.land, { style: COAST_STYLE, interactive: false }).addTo(map);
-  addTowns(map, siteData.towns);
-  addDangerZone(map, site);
+  const townLabels = addTowns(map, siteData.towns);
+  const zoneLabel = addDangerZone(map, site);
+  if (zoneLabel) keepZoneLabelClear(map, zoneLabel, townLabels);
   return map;
 }

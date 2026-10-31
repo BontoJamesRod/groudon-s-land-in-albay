@@ -8,6 +8,7 @@ import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 const KEY_STEP_PX = 20;
+const LABEL_GAP_PX = 6; // the space kept between the divider's line and a map label
 
 function preload(url) {
   return new Promise((resolve, reject) => {
@@ -26,6 +27,25 @@ export function createCompare(map, elements, site, hideRadar) {
   let request = 0; // closing, or opening again, cancels a load that is still running
   let wanted = false; // the visitor asked for compare and hasn't closed it
 
+  function mapLabels() {
+    return map.getContainer().querySelectorAll(".town-label, .zone-label");
+  }
+
+  // A label that the divider's line would cut moves to whichever side is closer. CSS
+  // `translate` adds to the position Leaflet sets, so Leaflet's own placing isn't touched.
+  function moveLabelsOffDivider(dividerX) {
+    const lineX = map.getContainer().getBoundingClientRect().left + dividerX;
+    for (const label of mapLabels()) {
+      label.style.translate = "";
+      const box = label.getBoundingClientRect();
+      if (box.left - LABEL_GAP_PX < lineX && box.right + LABEL_GAP_PX > lineX) {
+        const toRight = lineX + LABEL_GAP_PX - box.left;
+        const toLeft = lineX - LABEL_GAP_PX - box.right;
+        label.style.translate = `${Math.abs(toLeft) < toRight ? toLeft : toRight}px 0`;
+      }
+    }
+  }
+
   function applyClip() {
     if (!overlays) return;
     const width = map.getSize().x;
@@ -38,6 +58,7 @@ export function createCompare(map, elements, site, hideRadar) {
     const split = Math.min(Math.max(dividerX - left, 0), right - left);
     overlays.before.getElement().style.clipPath = `inset(0 ${right - left - split}px 0 0)`;
     overlays.after.getElement().style.clipPath = `inset(0 0 0 ${split}px)`;
+    moveLabelsOffDivider(dividerX);
   }
 
   function hide() {
@@ -47,6 +68,7 @@ export function createCompare(map, elements, site, hideRadar) {
     overlays.after.remove();
     overlays = null;
     map.off("move zoom zoomend resize", applyClip);
+    for (const label of mapLabels()) label.style.translate = "";
     elements.view.hidden = true;
     hideRadar(false);
   }
