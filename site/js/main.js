@@ -7,7 +7,7 @@ import { createCompare } from "./compare.js";
 import { loadPair, loadSiteData, loadSites } from "./data.js";
 import { createDrawer } from "./drawer.js";
 import { createChannelLayer, createNewMaterialLayer, showChannelLegend } from "./layers.js";
-import { createMap, RADAR_PANE } from "./map.js";
+import { createMap, RADAR_PANE, showStartView } from "./map.js";
 import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
 import { createReadout } from "./readout.js";
 import { createSearch } from "./search.js";
@@ -109,7 +109,7 @@ function setUpPairs(map, site, siteData, readout) {
   byId("panel").hidden = false;
   // Showing the panel made the map shorter, and Leaflet only notices that when told.
   map.invalidateSize({ pan: false });
-  map.setView([site.center_lat, site.center_lon], site.default_zoom, { animate: false });
+  showStartView(map, site);
   const showPair = createNewMaterialLayer(map, {
     toggle: byId("layer-toggle"),
     title: byId("legend-title"),

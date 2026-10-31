@@ -797,3 +797,19 @@ None of these stopped the build.
 - **Accessibility:** axe-core finds no serious or critical problem on the list and the view, at 1280 and 360 px.
 - **Screens,** in `pipeline/reports/screens/` at 1280 and 360 px, with real map tiles: `channels-list`, `channel-view`, `channel-view-short`, `channel-gap`, `gap-pair`, `channels-loading`, `channels-error`, `channels-empty`, `channels-no-data`, `channel-no-data` and `channels-unavailable`. I checked them by eye, in the test browser, not on a real phone.
 - **Test data in some screens:** no real pair has a strip without radar data, and the site does have channels, so the loading, error, empty, no-data and unavailable screens use data made up in the test browser only. Nothing made up is published.
+
+# Owner's channel decisions (2026-11-01)
+
+Your five answers are in. T-092 to T-095 are the new tasks.
+
+- **Matanag:** recorded as not confirmed, and it stays off. You named no imagery date for it, so that field is empty.
+- **ODbL:** accepted for `channels.geojson` and `channel_areas.json`, and recorded in `pipeline/reports/owner-checks.md`.
+- **"Bonga Gully":** the contract check now looks for unconfirmed names only in the channel files, so a check can cite one as a place. The July check itself is still an unpublished draft: I didn't publish it.
+- **3 decimals:** areas are rebuilt from the published grids, and the smallest flagged area now reads 0.001 km². The latest pair ranks Mi-isi 0.024, Basud 0.015, Lidong 0.008, Padang 0.006 km². At 2 decimals, the last three all read 0.01.
+- **Short phones:** on the phone layout, if the label wouldn't clear the credits, the map opens one zoom step out, still centered. FR-001, US-001/AC-1, 05 and 08 say so, and TC-082 is new.
+- **Citation:** Lidong and Padang now cite the PHIVOLCS lahar advisory of 16 January 2026, as [reported by DZRH News](https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains), next to the 2000 bulletin. I read the DZRH page directly. It says "Sto. Domingo: Lidong and Basud rivers" and lists Padang under Legaspi City, without calling Padang a channel or a river, so the citation doesn't either. Channels with a second source carry it in a new optional field, `also_name_source_url`.
+
+## Things to know
+
+- **One step isn't always enough.** With wider fonts at 320 x 568, the label is still 14 px behind the credits. On this machine's fonts at that size, it clears by 1 px.
+- **Three town names give way on short phones.** At the opening view at 360 x 640, Daraga, Legazpi City and Camalig are hidden because they touch the danger-zone label, the existing rule when zoomed out. They return one zoom step in. The channel labels and Santo Domingo also sit close together at that zoom.

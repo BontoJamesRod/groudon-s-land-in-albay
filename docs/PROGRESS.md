@@ -1,7 +1,7 @@
 # Progress
 
 **Project:** Mayon Radar Watch
-**Current step:** The Channel timeline (T-073, T-010, T-028, T-074 to T-077, T-091) is built on `night-1`, with 4 confirmed channels. It isn't on the public site until `night-1` is merged.
+**Current step:** The Channel timeline (T-073, T-010, T-028, T-074 to T-077, T-091) is merged into `main`, with 4 confirmed channels.
 **Last updated:** 2026-11-01
 
 Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · `Skipped` · `Reopened`
@@ -33,7 +33,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
 | Second site | Panama, two pairs, same final rule with no per-site tuning, published on `night-1` with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088). Not on the public site until `night-1` is merged |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
-| Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag has no verdict and stays off (`pipeline/reports/owner-checks.md`) |
+| Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag was then given as not confirmed, and stays off (`pipeline/reports/owner-checks.md`) |
 | Next | T-078, which wasn't in the owner's request; T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
 
 ## After Launch

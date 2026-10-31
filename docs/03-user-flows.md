@@ -559,7 +559,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 
 | Element | Type | Behavior and validation |
 | --- | --- | --- |
-| Channel rows | List | Name and flagged area in km² with 2 decimals for the latest pair, largest first (US-024/AC-1) |
+| Channel rows | List | Name and flagged area in km² with 3 decimals for the latest pair, largest first (US-024/AC-1) |
 | Latest pair line | Text | The dates the areas refer to, with the gap note if its gap isn't 12 days (US-025/AC-4) |
 | Notes | Text | How the area is counted, with the strip width and the reach distance, and that only confirmed channels are listed |
 | Close | Button | Returns to the map |

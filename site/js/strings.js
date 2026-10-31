@@ -140,7 +140,7 @@ export const STRINGS = {
   channelsError: "Couldn't load channel changes. Try again.",
   channelsEmpty: "No confirmed channels yet for this site",
   channelsLatest: (range, track) => `Most changed first, since the last pass: ${range}, track ${track}`,
-  channelArea: (km2) => `${km2.toFixed(2)} km²`,
+  channelArea: (km2) => `${km2.toFixed(3)} km²`,
   channelNoData: "No radar data",
   channelsHow: (halfWidth, reach) => `This is the area flagged as possible or likely new material in a strip ${halfWidth} m on each side of the line${reach ? `, within ${reach} km of the summit` : ""}.`,
   channelsOnlyConfirmed: "Only channels the project owner has checked are listed. Other channels also drain Mayon.",

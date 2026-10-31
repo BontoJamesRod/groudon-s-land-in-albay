@@ -20,7 +20,6 @@ NONE = 0
 LOW = 1
 HIGH = 2
 SQUARE_METRES_PER_KM2 = 1_000_000
-SMALLEST_AREA_KM2 = 0.01
 # How the two signals combine. A site config can choose one with thresholds.rule.
 EITHER_SIGNAL = "either_signal"
 BRIGHTNESS_LEADS = "brightness_leads"
@@ -54,12 +53,13 @@ def classify(change_db, loss, reasons, brightness_threshold_db, coherence_loss_t
     return classes
 
 
-def rounded_km2(cells, cell_km2):
-    """Turn a number of cells into km2 with 2 decimals.
+def rounded_km2(cells, cell_km2, decimals=2):
+    """Turn a number of cells into km2 with this many decimals.
 
-    Any cell counts as at least 0.01, so a few cells on the map can't be reported as "nothing detected".
+    Any cell counts as at least the smallest number that can show (0.01 at 2 decimals), so a few
+    cells on the map can't be reported as "nothing detected".
     """
-    return max(round(cells * cell_km2, 2), SMALLEST_AREA_KM2) if cells else 0.0
+    return max(round(cells * cell_km2, decimals), 10 ** -decimals) if cells else 0.0
 
 
 def areas_km2(classes, spacing_x_m, spacing_y_m):

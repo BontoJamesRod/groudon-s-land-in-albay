@@ -93,6 +93,7 @@ erDiagram
         array town_ids
         string name_source
         string name_source_url
+        string also_name_source_url
         string line_source_id FK
         string confirmed_by
         string confirmed_on
@@ -259,7 +260,7 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `bounds_south` | number | Yes | — | < `bounds_north` | Southern edge, degrees |
 | `bounds_east` | number | Yes | — | > `bounds_west` | Eastern edge, degrees |
 | `bounds_north` | number | Yes | — | > `bounds_south` | Northern edge, degrees |
-| `default_zoom` | integer | Yes | — | `min_zoom` ≤ value ≤ `max_zoom` | Zoom when the site opens |
+| `default_zoom` | integer | Yes | — | `min_zoom` ≤ value ≤ `max_zoom` | Zoom when the site opens, or one step less on a short phone screen (FR-001) |
 | `min_zoom` | integer | Yes | — | 0–22 | Lowest zoom allowed (FR-006) |
 | `max_zoom` | integer | Yes | — | `min_zoom`–22 | Highest zoom allowed (FR-006) |
 | `summit_lat` | number | No | `null` | −90 to 90 | Reference point for distance and the danger zone |
@@ -306,6 +307,7 @@ A row is one named channel that drains the volcano. Stored in `site/data/sites/<
 | `town_ids` | array of string | Yes | — | At least 1 item; each item FK `towns.id` | Towns the channel passes through |
 | `name_source` | string | Yes | — | — | Where the name comes from, e.g. "PHIVOLCS Mayon Volcano Bulletin" |
 | `name_source_url` | string | No | `null` | URL | Link to that source |
+| `also_name_source_url` | string | No | `null` | URL | Link to a second source, when `name_source` names two |
 | `line_source_id` | string | Yes | — | FK `sources.id` | Where the line comes from |
 | `confirmed_by` | string | Yes | — | — | Who confirmed the line (FR-065), e.g. "project owner" |
 | `confirmed_on` | string (date) | Yes | — | Equals the owner's record | When the line was confirmed (FR-065) |
@@ -491,7 +493,7 @@ A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_a
 | `site_id` | string | Yes | — | FK `sites.id` | Site |
 | `channel_id` | string | Yes | — | FK `channels.id` | Channel |
 | `pair_id` | string | Yes | — | FK `pairs.id`; published pairs only; one row per channel and pair | Pair |
-| `flagged_area_km2` | number | No | `null` | ≥ 0; `null` when `checked_area_km2` is 0 | Area of class 1 or 2 cells in the strip, km² with 2 decimals (FR-062, FR-064). Any flagged cell counts as at least 0.01, the same as a pair's areas |
+| `flagged_area_km2` | number | No | `null` | ≥ 0; `null` when `checked_area_km2` is 0 | Area of class 1 or 2 cells in the strip, km² with 3 decimals (FR-062, FR-064). Any flagged cell counts as at least 0.001, so a few cells can't read as nothing |
 | `checked_area_km2` | number | Yes | `0` | ≥ `flagged_area_km2` | Area of strip cells with a valid radar value, km² (FR-067) |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |

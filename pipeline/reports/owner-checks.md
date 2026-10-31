@@ -17,8 +17,12 @@ The owner checked the candidate lines in Google Earth Pro. The lines are the one
 | Mabinit | Not confirmed | 2026-11-01 | 2026-05-16 | Project owner |
 | Maninila | Not confirmed | 2026-11-01 | 2026-05-16 | Project owner |
 | Masarawag | Not confirmed | 2026-11-01 | 2026-05-16 | Project owner |
-| Matanag | No verdict | — | — | — |
+| Matanag | Not confirmed | 2026-11-01 | — | Project owner |
 
-**Not confirmed** means the channel must never be shown. The contract check fails if its name appears anywhere in the published data.
+**Not confirmed** means the channel must never be drawn or listed. The contract check fails if its name appears in the channel files. A check can still cite it as a place name, such as "Bonga Gully" in the July check text (owner's decision, 2026-11-01).
 
-**No verdict:** Matanag is in the candidates file, but the owner's message doesn't mention it. Without a confirmation it's treated like an unconfirmed channel and stays off the site. If the owner gives a verdict, add it here and in `mayon_channels.json`.
+**Matanag:** the owner gave this verdict separately on 2026-11-01 and named no imagery date.
+
+## Channel files license
+
+On 2026-11-01 the owner accepted ODbL for `channels.geojson` and `channel_areas.json`.

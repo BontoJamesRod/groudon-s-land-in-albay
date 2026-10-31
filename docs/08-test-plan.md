@@ -24,7 +24,7 @@ Fixtures used below are listed in §5.
 
 | TC-ID | Acceptance criterion | Other IDs | Scenario | Steps | Expected result | Type | Priority |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-001 | US-001/AC-1 | FR-001, FR-002, FR-003, FR-004, SCR-01, API-001, API-003, API-004 | Map opens on Mayon | 1. Open the public link. 2. Wait for the map. | Map centered on 13.2572° N, 123.6856° E at the default zoom; town borders, town names, coastline and a 6 km ring labeled "Permanent Danger Zone (6 km)" are visible | Positive | High |
+| TC-001 | US-001/AC-1 | FR-001, FR-002, FR-003, FR-004, SCR-01, API-001, API-003, API-004 | Map opens on Mayon | 1. Open the public link. 2. Wait for the map. | Map centered on 13.2572° N, 123.6856° E at the default zoom (see TC-082 for short phones); town borders, town names, coastline and a 6 km ring labeled "Permanent Danger Zone (6 km)" are visible | Positive | High |
 | TC-002 | US-001/AC-2 | FR-005, SCR-01 | Background imagery fails | 1. In DevTools, block requests to the tile host. 2. Reload. | "Background map unavailable" appears; borders, coastline and the ring still show | Negative | High |
 | TC-003 | US-002/AC-1 | FR-006, SCR-01 | Pan and zoom | 1. Drag the map. 2. Zoom in 3 steps with scroll or pinch. | Map moves and zooms; the new-material overlay and channels stay on the same town borders | Positive | High |
 | TC-004 | US-002/AC-2 | FR-006, SCR-01 | Zoom out past the minimum | 1. Zoom out until it stops. 2. Try once more. | Zoom level stays at the site's `min_zoom` | Edge | Medium |
@@ -76,7 +76,7 @@ Fixtures used below are listed in §5.
 | TC-061 | US-004/AC-4 | FR-060, SCR-02, API-010 | Tap beyond the reach limit | 1. Tap a land point in Oas, about 13.5 km from the summit. | Card says "Not checked: this map only looks within 10 km of the summit"; it doesn't say "No new material detected" | Edge | High |
 | TC-062 | US-008/AC-5 | FR-060, SCR-01, TBL-01, TBL-06 | Reach limit is drawn and stated | 1. Open the map and legend. 2. Run the contract check on published layers. | A dotted ring shows at the reach distance; every published `new_material` layer title states the limit | Positive | High |
 | TC-063 | US-008/AC-4 | FR-023, TBL-06 | Only coherence loss passes | 1. Run the `classify` unit tests with test arrays where only coherence loss passes. | Those cells get class 0 (none) and add no area | Negative | High |
-| TC-064 | US-024/AC-1 | FR-061, SCR-13, API-012 | Channels sorted | 1. Use a fixture with 3 channels with different areas and 1 with no radar data for the latest pair. 2. Open Channels. | Largest area first, 2 decimals, ties by name, the no-data channel last | Positive | High |
+| TC-064 | US-024/AC-1 | FR-061, SCR-13, API-012 | Channels sorted | 1. Use a fixture with 3 channels with different areas and 1 with no radar data for the latest pair. 2. Open Channels. | Largest area first, 3 decimals, ties by name, the no-data channel last | Positive | High |
 | TC-065 | US-024/AC-2 | FR-067, SCR-13, SCR-01 | No confirmed channels | 1. Use an empty-channels fixture. 2. Open Channels. 3. Switch to a site with no channel data. | "No confirmed channels yet for this site"; the other site shows no Channels button | Edge | Medium |
 | TC-066 | US-024/AC-3 | FR-067, SCR-13, API-012 | List loading and failing | 1. Throttle, then block `channel_areas.json`. 2. Open Channels. | "Loading channel changes…", then "Couldn't load channel changes. Try again." with Retry; the map stays as it was | Negative | Medium |
 | TC-067 | US-025/AC-1 | FR-062, SCR-14, API-012 | Bars per pass | 1. Open a channel. | One bar per published pair, in order of after date, labeled with its dates; each value equals its `flagged_area_km2` | Positive | High |
@@ -86,13 +86,14 @@ Fixtures used below are listed in §5.
 | TC-071 | US-005/AC-4 | FR-066, SCR-01, API-007 | Unequal gap on the pass timeline | 1. Open the pair list. 2. Find the 24-day pair. | Pair dimmed with "24-day gap, not comparable"; 12-day pairs aren't dimmed | Edge | High |
 | TC-072 | US-026/AC-1 | FR-064, FR-060, SCR-12, TBL-12, API-012 | Area in a strip | 1. Run the `channel_areas` unit tests with a small grid and a known strip, with flagged cells inside the strip, outside it and beyond the reach. | Only flagged cells inside the strip and the reach count; the area matches a hand calculation; one row per channel and pair | Positive | High |
 | TC-073 | US-026/AC-2 | FR-064, SCR-12, TBL-01 | Strip width missing | 1. Run with a config that has channels and no width. | Stops with "Channel strip width missing in site config: <file>" | Negative | High |
-| TC-074 | US-026/AC-3 | FR-065, TBL-03, API-005 | Confirmed channels only | 1. Run `contract_check` on a fixture with a channel without `confirmed_on`. 2. Check that no candidate from `channel_name_candidates.geojson` is under `site/data/`. | The check fails on the fixture; no candidate is published | Negative | High |
+| TC-074 | US-026/AC-3 | FR-065, TBL-03, API-005 | Confirmed channels only | 1. Run `contract_check` on a fixture with a channel without `confirmed_on`. 2. Check that no unconfirmed candidate from `channel_name_candidates.geojson` is in the published channel files. | The check fails on the fixture; no candidate is drawn or listed | Negative | High |
 | TC-075 | US-012/AC-4 | FR-068 | No legal labels | 1. Search `strings.js`, every page and `site/data/` for "illegal", "unpermitted" and "violation". | No hits | Negative | High |
 | TC-076 | US-004/AC-5 | FR-069, SCR-02, TBL-01 | Site with no summit | 1. Switch to Panama. 2. Tap a land point. | Card shows the town and the result, with no distance or danger-zone line | Edge | High |
 | TC-077 | US-013/AC-3 | FR-040, SCR-01, SCR-06, TBL-10, API-001, API-002 | Credit and sources follow the site | 1. On Mayon, read the map credit and open Data sources. 2. Switch to a second site and do the same. | Each site shows its own boundary credit and sources plus the shared ones, never the other site's | Positive | High |
 | TC-078 | US-014/AC-3 | FR-070, SCR-01, SCR-02, SCR-05, TBL-01, TBL-06, API-001 | A site's own wording | 1. Switch to Panama. 2. Read the legend, a card, the disclaimer, the help panel and the phone handle. 3. Switch back. | Panama says "change", names SINAPROC, titles the earthquake pair "Changed after the earthquake", and never says landslides there; Mayon's text comes back unchanged | Positive | High |
 | TC-079 | US-001/AC-3 | FR-003, SCR-01, API-004 | No line along a clipped edge | 1. Build the coast and town lines for each site. | The real lines are there; no segment runs along the site's edge | Negative | Medium |
 | TC-080 | US-017/AC-3 | FR-048, SCR-07, TBL-05, API-008 | A pair's check note | 1. Switch to Panama. 2. Select the quiet pair. 3. Open "How we checked this". | "Used as the 'before' comparison for the earthquake pair", not "Not yet checked" | Positive | Medium |
+| TC-082 | US-001/AC-1 | FR-001, FR-004, SCR-01 | Short phone screen | 1. Open the site at 360 x 640. 2. Open it at 390 x 844 and at 1280 x 500. | At 360 x 640 the map opens one zoom step out, still centered, with the danger-zone label above the credits; the other two keep the default zoom | Positive | Medium |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -198,4 +199,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-081. |
+| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-082. |

@@ -39,6 +39,8 @@ LINE_LICENSE = "ODbL 1.0, (c) OpenStreetMap contributors"
 MIN_TOWN_LENGTH_M = 100
 # A channel's name is drawn this far along the part of its line that the map checks.
 LABEL_SHARE = 0.45
+# The owner chose 3 decimals for channels: strips are small, and at 2 most rows read the same.
+AREA_DECIMALS = 3
 # Candidate lines have 7 decimals, so the parts cut from them keep the same.
 LINE_DECIMALS = 7
 
@@ -121,6 +123,7 @@ def channel_feature(check, candidate, site_id, line_source_id, half_width_m, cir
             "town_ids": towns_along(line, towns),
             "name_source": check["name_source"],
             "name_source_url": check["name_source_url"],
+            "also_name_source_url": check.get("also_name_source_url"),
             "line_source_id": line_source_id,
             "confirmed_by": check["checked_by"],
             "confirmed_on": check["checked_on"],
@@ -202,8 +205,8 @@ def channel_row(channel, pair_id, cells, layer, now):
     cell_km2 = cell_area_km2(layer)
     return {
         "id": f"{props['id']}__{pair_id}", "site_id": props["site_id"], "channel_id": props["id"], "pair_id": pair_id,
-        "flagged_area_km2": rounded_km2(flagged, cell_km2) if checked else None,
-        "checked_area_km2": rounded_km2(checked, cell_km2),
+        "flagged_area_km2": rounded_km2(flagged, cell_km2, AREA_DECIMALS) if checked else None,
+        "checked_area_km2": rounded_km2(checked, cell_km2, AREA_DECIMALS),
         "created_at": now, "updated_at": now,
     }
 

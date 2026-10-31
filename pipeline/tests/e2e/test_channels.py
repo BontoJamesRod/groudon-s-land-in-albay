@@ -181,7 +181,7 @@ def test_tc064_the_channels_are_sorted_with_no_data_last(app):
     serve_areas(app, area_rows({"mayon_padang": 0.12, "mayon_miisi": 0.03, "mayon_basud": 0.03, "mayon_lidong": None}))
     app.click("#channels-button")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
-    assert list_rows(app) == ["Padang 0.12 km²", "Basud 0.03 km²", "Mi-isi 0.03 km²", "Lidong No radar data"]
+    assert list_rows(app) == ["Padang 0.120 km²", "Basud 0.030 km²", "Mi-isi 0.030 km²", "Lidong No radar data"]
 
 
 def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
@@ -190,7 +190,7 @@ def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
     wanted = sorted(latest, key=lambda channel_id: (-latest[channel_id], names[channel_id]))
     app.click("#channels-button")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
-    assert list_rows(app) == [f"{names[channel_id]} {latest[channel_id]:.2f} km²" for channel_id in wanted]
+    assert list_rows(app) == [f"{names[channel_id]} {latest[channel_id]:.3f} km²" for channel_id in wanted]
     expect(app.locator(".channel-lead")).to_have_text("Most changed first, since the last pass: Oct 8, 2026 to Oct 20, 2026, track 111")
 
 
@@ -388,7 +388,7 @@ def test_tc067_one_bar_per_pair_in_order_with_its_dates_and_value(app):
     texts = bar_rows(app)
     assert [bar.get_attribute("data-pair") for bar in app.locator("#channel-body .channel-bar").all()] == [pair["id"] for pair in pairs]
     for text, pair in zip(texts, pairs):
-        assert f"{rows[pair['id']]['flagged_area_km2']:.2f} km²" in text
+        assert f"{rows[pair['id']]['flagged_area_km2']:.3f} km²" in text
         assert f"track {pair['track']}" in text
     assert texts[-1].startswith("Oct 8, 2026 to Oct 20, 2026, track 111")
 
@@ -493,7 +493,7 @@ def test_tc069_a_real_zero_still_shows_as_zero(app):
     serve_areas(app, area_rows({"mayon_miisi": 0}))
     open_channel(app, "Mi-isi")
     last = app.locator("#channel-body .channel-bar").last
-    expect(last).to_contain_text("0.00 km²")
+    expect(last).to_contain_text("0.000 km²")
     expect(last).not_to_contain_text("No radar data")
 
 

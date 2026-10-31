@@ -488,14 +488,19 @@ def test_a_confirmation_date_that_differs_from_the_record_fails(data_dir):
     assert any("differs from the owner's record" in e for e in check_data_dir(data_dir))
 
 
-def test_an_unconfirmed_name_anywhere_in_the_published_data_fails(data_dir):
-    edit_json(data_dir / "sources.json", lambda c: c["data"][0].update(name="Boundaries near Bonga"))
+def test_an_unconfirmed_name_in_a_channel_file_fails(data_dir):
+    add_channels(data_dir, channel_feature(name_source="PHIVOLCS, near Bonga"))
     assert any("a channel the owner hasn't confirmed" in e and "Bonga" in e for e in check_data_dir(data_dir))
 
 
 def test_a_longer_word_holding_an_unconfirmed_name_is_fine(data_dir):
-    edit_json(data_dir / "sources.json", lambda c: c["data"][0].update(name="Boundaries near Bongabong"))
-    assert check_data_dir(data_dir) == []
+    add_channels(data_dir, channel_feature(name_source="PHIVOLCS, near Bongabong"))
+    assert not any("a channel the owner hasn't confirmed" in e for e in check_data_dir(data_dir))
+
+
+def test_another_published_file_can_cite_an_unconfirmed_name_as_a_place(data_dir):
+    edit_json(data_dir / "sources.json", lambda c: c["data"][0].update(name="Deposits in Bonga Gully"))
+    assert not any("a channel the owner hasn't confirmed" in e for e in check_data_dir(data_dir))
 
 
 def test_a_file_that_is_not_utf8_is_reported_not_a_crash(data_dir):

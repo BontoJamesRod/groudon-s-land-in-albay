@@ -19,8 +19,9 @@
       "verdict": "confirmed",
       "id": "mayon_lidong",
       "alt_names": [],
-      "name_source": "PHIVOLCS Mayon Volcano Bulletin of 24 March 2000, where it's named together with Basud as one channel",
-      "name_source_url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
+      "name_source": "PHIVOLCS lahar advisory of 16 January 2026, as reported by DZRH News (Lidong river, Sto. Domingo), and PHIVOLCS Mayon Volcano Bulletin of 24 March 2000, where it's named together with Basud as one channel",
+      "name_source_url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+      "also_name_source_url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
       "checked_by": "project owner",
       "checked_on": "2026-11-01",
       "imagery_date": "2026-05-16"
@@ -41,8 +42,9 @@
       "verdict": "confirmed",
       "id": "mayon_padang",
       "alt_names": [],
-      "name_source": "PHIVOLCS Mayon Volcano Bulletin of 24 March 2000, where it's part of a longer channel name",
-      "name_source_url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
+      "name_source": "PHIVOLCS lahar advisory of 16 January 2026, as reported by DZRH News (Padang, Legazpi City), and PHIVOLCS Mayon Volcano Bulletin of 24 March 2000, where it's part of a longer channel name",
+      "name_source_url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+      "also_name_source_url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
       "checked_by": "project owner",
       "checked_on": "2026-11-01",
       "imagery_date": "2026-05-16"
@@ -52,6 +54,6 @@
     {"channel": "Mabinit", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
     {"channel": "Maninila", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
     {"channel": "Masarawag", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": "2026-05-16"},
-    {"channel": "Matanag", "verdict": "no_verdict"}
+    {"channel": "Matanag", "verdict": "not_confirmed", "checked_by": "project owner", "checked_on": "2026-11-01", "imagery_date": null}
   ]
 }

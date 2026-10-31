@@ -6,6 +6,7 @@ import { STRINGS } from "./strings.js";
 
 const TILE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const TILE_FAILURES_FOR_NOTICE = 4;
+const PHONE_LAYOUT = "(max-width: 700px)"; // the same width as in app.css
 const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false };
 const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
 const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
@@ -113,6 +114,19 @@ export function outlinesInsideSite(shapes, site) {
 function boundaryCredit(site) {
   const text = escapeText(site.boundary_credit);
   return site.boundary_credit_url ? `<a href="${site.boundary_credit_url}">${text}</a>` : text;
+}
+
+// Open at the site's own view. On a short phone screen the danger-zone ring runs behind the map
+// credits and takes its label with it, so the map opens one zoom step further out (FR-001).
+export function showStartView(map, site) {
+  const center = [site.center_lat, site.center_lon];
+  map.setView(center, site.default_zoom, { animate: false });
+  const label = map.getContainer().querySelector(".zone-label");
+  if (!label || !window.matchMedia(PHONE_LAYOUT).matches) return;
+  const credits = map.attributionControl.getContainer();
+  if (label.getBoundingClientRect().bottom > credits.getBoundingClientRect().top) {
+    map.setView(center, site.default_zoom - 1, { animate: false });
+  }
 }
 
 // Build the map for a site. `notice` is the "Background map unavailable" element.

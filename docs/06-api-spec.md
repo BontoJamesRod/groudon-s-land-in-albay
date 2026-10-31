@@ -333,6 +333,7 @@ None (`GET`).
         "town_ids": ["mayon_daraga", "mayon_legazpi_city"],
         "name_source": "PHIVOLCS Mayon Volcano Bulletin",
         "name_source_url": null,
+        "also_name_source_url": null,
         "line_source_id": "channel_lines",
         "confirmed_by": "project owner",
         "confirmed_on": "2026-11-01",

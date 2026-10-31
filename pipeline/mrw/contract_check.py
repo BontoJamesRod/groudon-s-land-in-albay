@@ -109,6 +109,7 @@ CHANNELS = {
     "town_ids": field("array"),
     "name_source": field("string"),
     "name_source_url": field("url", required=False),
+    "also_name_source_url": field("url", required=False),
     "line_source_id": field("string"),
     "confirmed_by": field("string"),
     "confirmed_on": field("date"),
@@ -601,13 +602,16 @@ def _names_never_shown(context_folder):
 
 
 def check_no_unconfirmed_names(root, errors, context_folder=CONTEXT_FOLDER):
-    """An unconfirmed channel must never be shown, so its name can't be in any published file (FR-065)."""
+    """An unconfirmed channel must never be drawn or listed, so its name can't be in the channel files (FR-065).
+
+    The owner's rule stops there: other files, such as a validation, can cite it as a place name.
+    """
     names = _names_never_shown(context_folder)
     if not names:
         return
     pattern = re.compile(r"\b(" + "|".join(re.escape(name) for name in sorted(names)) + r")\b", re.IGNORECASE)
-    for suffix in ("*.json", "*.geojson"):
-        for path in sorted(Path(root).rglob(suffix)):
+    for file_name in ("channels.geojson", "channel_areas.json"):
+        for path in sorted(Path(root).rglob(file_name)):
             # A file that isn't valid UTF-8 is reported where its contents are checked, so it can't stop this.
             found = pattern.search(path.read_text(encoding="utf-8", errors="replace"))
             if found:

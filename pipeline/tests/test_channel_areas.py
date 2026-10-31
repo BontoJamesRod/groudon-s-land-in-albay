@@ -63,7 +63,7 @@ def test_the_owner_checks_report_says_the_same_as_the_record():
     report = (REPO / "pipeline" / "reports" / "owner-checks.md").read_text(encoding="utf-8")
     words = {"confirmed": "Confirmed", "not_confirmed": "Not confirmed", "no_verdict": "No verdict"}
     for check in read(CONTEXT / "mayon_channels.json")["checks"]:
-        date, imagery, who = check.get("checked_on", "—"), check.get("imagery_date", "—"), check.get("checked_by")
+        date, imagery, who = check.get("checked_on", "—"), check.get("imagery_date") or "—", check.get("checked_by")
         who = "Project owner" if who else "—"
         assert f"| {check['channel']} | {words[check['verdict']]} | {date} | {imagery} | {who} |" in report
 
@@ -223,7 +223,7 @@ def test_a_few_flagged_cells_are_never_reported_as_nothing():
         "type": "Polygon", "coordinates": [[(WEST, SOUTH), (WEST + 0.0005, SOUTH), (WEST + 0.0005, SOUTH + 0.0005), (WEST, SOUTH + 0.0005), (WEST, SOUTH)]]}))}}
     cells = np.zeros((5, 5), dtype="uint8")
     cells[2, 2] = 1
-    assert channel_row(channel, "pair", cells, tiny, NOW)["flagged_area_km2"] == 0.01
+    assert channel_row(channel, "pair", cells, tiny, NOW)["flagged_area_km2"] == 0.001
 
 
 @pytest.fixture

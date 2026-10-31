@@ -33,9 +33,29 @@
     "id": "channel_names",
     "site_id": "mayon",
     "name": "Channel names",
-    "provider": "PHIVOLCS: the Mayon Volcano Bulletin of 24 March 2000, and the advisory of 16 January 2026 as reported by GMA News",
+    "provider": "PHIVOLCS: the advisory of 16 January 2026 as reported by GMA News (Mi-isi, Basud)",
     "used_for": "channels",
     "url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
+    "license": "Names only, cited from the source",
+    "retrieved_on": "2026-11-01"
+  },
+  {
+    "id": "channel_names_dzrh",
+    "site_id": "mayon",
+    "name": "Channel names",
+    "provider": "PHIVOLCS: the lahar advisory of 16 January 2026 as reported by DZRH News (Lidong, Padang)",
+    "used_for": "channels",
+    "url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+    "license": "Names only, cited from the source",
+    "retrieved_on": "2026-11-01"
+  },
+  {
+    "id": "channel_names_bulletin",
+    "site_id": "mayon",
+    "name": "Channel names",
+    "provider": "PHIVOLCS: the Mayon Volcano Bulletin of 24 March 2000 (Lidong, Padang)",
+    "used_for": "channels",
+    "url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
     "license": "Names only, cited from the source",
     "retrieved_on": "2026-11-01"
   },

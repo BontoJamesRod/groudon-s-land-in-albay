@@ -66,7 +66,7 @@ As a visitor, I want to open the app and see a map of the Mayon area with town b
 
 **Acceptance criteria**
 
-- **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
+- **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom, or one zoom step further out on a short phone screen where the danger-zone label wouldn't clear the map credits, and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
 - **US-001/AC-2:** Given background map imagery fails to load, when the map appears, then town borders, the coastline and the danger-zone ring still show and the notice "Background map unavailable" appears.
 - **US-001/AC-3:** Given the site's land file stops at the site's edge, when the map appears, then no coastline or town border is drawn along that edge.
 
@@ -385,7 +385,7 @@ As a visitor, I want a list of Mayon's channels with the most changed first, so 
 
 **Acceptance criteria**
 
-- **US-024/AC-1:** Given a site with confirmed channels and published pairs, when the visitor opens the channel list, then each confirmed channel shows with its flagged area in km² (2 decimals) for the latest pair, largest first, and channels with no radar data for that pair come last.
+- **US-024/AC-1:** Given a site with confirmed channels and published pairs, when the visitor opens the channel list, then each confirmed channel shows with its flagged area in km² (3 decimals) for the latest pair, largest first, and channels with no radar data for that pair come last.
 - **US-024/AC-2:** Given a site with no confirmed channels, when the visitor opens the channel list, then "No confirmed channels yet for this site" appears, and a site with no channel data shows no channel-list button.
 - **US-024/AC-3:** Given the channel areas are still downloading or fail to load, when the list shows, then "Loading channel changes…" appears, or "Couldn't load channel changes. Try again." with a Retry button, and the map stays as it was.
 
@@ -395,7 +395,7 @@ As a visitor, I want to open a channel and see its change across every pass, so 
 
 **Acceptance criteria**
 
-- **US-025/AC-1:** Given a channel in the list, when the visitor opens it, then one bar per published pair shows the flagged area in its strip in km², in order of after date, each labeled with its dates.
+- **US-025/AC-1:** Given a channel in the list, when the visitor opens it, then one bar per published pair shows the flagged area in its strip in km² with 3 decimals, in order of after date, each labeled with its dates.
 - **US-025/AC-2:** Given a channel is open, when the map shows, then that channel's strip is drawn on the map and the map fits it.
 - **US-025/AC-3:** Given a pair with no valid radar value inside the channel's strip, when its bar would show, then the bar's place says "No radar data" instead of 0 km².
 - **US-025/AC-4:** Given a pair whose gap isn't 12 days, when its bar shows, then the bar is dimmed and has a short note such as "24-day gap, not comparable".
@@ -409,13 +409,13 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 
 - **US-026/AC-1:** Given a site config with a strip width and a confirmed channel, when the maintainer publishes a pair, then `channel_areas.json` has one row for that channel and pair, computed from the final rule's flagged grid inside the strip and within the reach distance.
 - **US-026/AC-2:** Given a site with channels whose config has no strip width, when the pipeline runs, then it stops with "Channel strip width missing in site config: <file>".
-- **US-026/AC-3:** Given a channel without a recorded confirmation, or an unconfirmed candidate from `pipeline/context/channel_name_candidates.geojson`, when the contract check runs on published files, then it fails if that channel is in them.
+- **US-026/AC-3:** Given a channel without a recorded confirmation, or an unconfirmed candidate from `pipeline/context/channel_name_candidates.geojson`, when the contract check runs on the published channel files, then it fails if that channel is in them.
 
 ## 6. Functional Requirements
 
 | FR-ID | Requirement | F-ID | US-ID |
 | --- | --- | --- | --- |
-| FR-001 | The system shall center the map on the selected site's center point at the site's default zoom. | F-01 | US-001 |
+| FR-001 | The system shall center the map on the selected site's center point at the site's default zoom, or one zoom step further out on a short phone screen where the danger-zone label wouldn't clear the map credits. | F-01 | US-001 |
 | FR-002 | The system shall draw town borders and town names for the selected site. | F-01 | US-001 |
 | FR-003 | The system shall draw the coastline from the app's own land data, not from background imagery, and shall not draw a coastline or town border where the data is only clipped to the site's edge. | F-01 | US-001 |
 | FR-004 | The system shall draw a ring of the site's danger-zone radius around the summit, labeled with the site's danger-zone label, when the site defines one. | F-01 | US-001 |
@@ -475,11 +475,11 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-058 | The system shall show the source of the channel names and of the channel lines, and credit OpenStreetMap on the map while its lines are shown. | F-19 | US-023 |
 | FR-059 | The system shall show visitors only pairs whose status is "published". | F-03 | US-006 |
 | FR-060 | The site config shall set a reach distance from the summit. The pipeline shall not flag anything beyond it, the system shall draw and state the limit, and a tap beyond it shall say "Not checked: this map only looks within 10 km of the summit" (with the site's distance). | F-02, F-05 | US-004, US-008 |
-| FR-061 | The system shall list a site's confirmed channels with the flagged area of the latest pair in km² with 2 decimals, largest first, ties by name, with channels that have no radar data for that pair last. | F-20 | US-024 |
+| FR-061 | The system shall list a site's confirmed channels with the flagged area of the latest pair in km² with 3 decimals, largest first, ties by name, with channels that have no radar data for that pair last. | F-20 | US-024 |
 | FR-062 | The system shall show, for an opened channel, one bar per published pair with the flagged area in its strip, in order of after date. | F-20 | US-025 |
 | FR-063 | The system shall draw an opened channel's strip on the map and fit the map to it. | F-20 | US-025 |
 | FR-064 | The pipeline shall compute each channel's flagged area per pair from the final rule's flagged grid, inside a strip of the width set in the site config (measured on each side of the line) and within the reach distance (FR-060), and shall stop with "Channel strip width missing in site config: <file>" when a site with channels has no width. The browser shall never compute these areas. | F-20 | US-026 |
-| FR-065 | The system shall show and publish only channels whose line the owner has confirmed, with the source and the confirmation recorded in the data. Unconfirmed candidates shall never be shown. | F-19, F-20 | US-023, US-026 |
+| FR-065 | The system shall show and publish only channels whose line the owner has confirmed, with the source and the confirmation recorded in the data. Unconfirmed candidates shall never be drawn or listed as channels; a validation may cite such a name as a place. | F-19, F-20 | US-023, US-026 |
 | FR-066 | The system shall dim a pair whose gap isn't 12 days and show a short note such as "24-day gap, not comparable", on the channel timeline and on the pass timeline. | F-03, F-20 | US-005, US-025 |
 | FR-067 | The system shall show the channel list's empty, loading and error states, and "No radar data" for a pair with no valid radar value in a channel's strip. | F-20 | US-024, US-025 |
 | FR-068 | The system shall never label any change as illegal or unpermitted. | F-08 | US-012 |

@@ -9,8 +9,8 @@
    "url": "https://www.geoboundaries.org/",
    "license": "CC BY-SA 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "ph_admin_boundaries",
@@ -21,8 +21,8 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "ph_coastline",
@@ -33,20 +33,44 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "channel_names",
    "site_id": "mayon",
    "name": "Channel names",
-   "provider": "PHIVOLCS: the Mayon Volcano Bulletin of 24 March 2000, and the advisory of 16 January 2026 as reported by GMA News",
+   "provider": "PHIVOLCS: the advisory of 16 January 2026 as reported by GMA News (Mi-isi, Basud)",
    "used_for": "channels",
    "url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
    "license": "Names only, cited from the source",
    "retrieved_on": "2026-11-01",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
+   "id": "channel_names_dzrh",
+   "site_id": "mayon",
+   "name": "Channel names",
+   "provider": "PHIVOLCS: the lahar advisory of 16 January 2026 as reported by DZRH News (Lidong, Padang)",
+   "used_for": "channels",
+   "url": "https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains",
+   "license": "Names only, cited from the source",
+   "retrieved_on": "2026-11-01",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
+  },
+  {
+   "id": "channel_names_bulletin",
+   "site_id": "mayon",
+   "name": "Channel names",
+   "provider": "PHIVOLCS: the Mayon Volcano Bulletin of 24 March 2000 (Lidong, Padang)",
+   "used_for": "channels",
+   "url": "https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf",
+   "license": "Names only, cited from the source",
+   "retrieved_on": "2026-11-01",
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "channel_lines",
@@ -57,8 +81,8 @@
    "url": "https://www.openstreetmap.org/copyright",
    "license": "ODbL 1.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "esri_world_imagery",
@@ -68,8 +92,8 @@
    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
    "license": "Esri terms of use, with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "esa_worldcover_2021",
@@ -80,8 +104,8 @@
    "url": "https://esa-worldcover.org/",
    "license": "CC BY 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   },
   {
    "id": "copernicus_dem_glo30",
@@ -92,12 +116,12 @@
    "url": "https://registry.opendata.aws/copernicus-dem/",
    "license": "Copernicus DEM GLO-30 licence, free with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:49:08Z",
-   "updated_at": "2026-10-31T21:49:08Z"
+   "created_at": "2026-10-31T23:13:04Z",
+   "updated_at": "2026-10-31T23:13:04Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T21:49:08Z",
+  "generated_at": "2026-10-31T23:13:04Z",
   "schema_version": "1.0"
  }
 }
