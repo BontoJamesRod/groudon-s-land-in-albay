@@ -1,4 +1,6 @@
 """Tests for search and pairs using fake search results (T-012, TC-025, TC-026)."""
+from datetime import datetime, timezone
+
 import pytest
 
 from mrw.config import load_site
@@ -7,6 +9,8 @@ from mrw.pairs import (MIXED_PASSES_MESSAGE, PairError, build_track_pairs, check
 from mrw.search import (BlindnessError, is_before_cutoff, parse_gcov, parse_gunw, require_before_cutoff,
                         search_gcov, search_gunw)
 
+# Named here, not read from search.py, so these tests still test the check after it is lifted.
+CUTOFF = datetime(2026, 10, 30, tzinfo=timezone.utc)
 GCOV_1 = "NISAR_L2_PR_GCOV_032_111_A_008_4005_DHDH_A_20261007T211319_20261007T211354_P05023_N_F_J_001"
 GCOV_2 = "NISAR_L2_PR_GCOV_033_111_A_008_4005_DHDH_A_20261019T211319_20261019T211354_P05023_N_F_J_001"
 GCOV_ERUPTION = "NISAR_L2_PR_GCOV_034_111_A_008_4005_DHDH_A_20261031T211319_20261031T211354_P05023_N_F_J_001"
@@ -45,17 +49,17 @@ def test_gunw_name_is_parsed():
 
 
 def test_blind_check_looks_at_every_date():
-    assert is_before_cutoff(GUNW_SAFE)
-    assert not is_before_cutoff(GUNW_ERUPTION)
-    assert not is_before_cutoff(GCOV_ERUPTION)
-    assert not is_before_cutoff("no dates in this name")
+    assert is_before_cutoff(GUNW_SAFE, CUTOFF)
+    assert not is_before_cutoff(GUNW_ERUPTION, CUTOFF)
+    assert not is_before_cutoff(GCOV_ERUPTION, CUTOFF)
+    assert not is_before_cutoff("no dates in this name", CUTOFF)
     with pytest.raises(BlindnessError):
-        require_before_cutoff(GUNW_ERUPTION)
+        require_before_cutoff(GUNW_ERUPTION, CUTOFF)
 
 
 def test_search_drops_eruption_products_and_limits_the_request():
     searcher = fake_searcher(GCOV_2, GCOV_ERUPTION, GCOV_1)
-    passes = search_gcov(load_site("mayon"), "2026-06-17", searcher=searcher)
+    passes = search_gcov(load_site("mayon"), "2026-06-17", searcher=searcher, cutoff=CUTOFF)
     assert [p["granule_id"] for p in passes] == [GCOV_1, GCOV_2]
     assert searcher.options["end"].strftime("%Y-%m-%d") == "2026-10-29"
 
@@ -68,7 +72,7 @@ def test_products_with_an_unknown_maturity_are_left_out():
 
 
 def test_gunw_search_drops_a_product_whose_second_date_is_after_the_cutoff():
-    products = search_gunw(load_site("mayon"), "2026-06-17", searcher=fake_searcher(GUNW_SAFE, GUNW_ERUPTION))
+    products = search_gunw(load_site("mayon"), "2026-06-17", searcher=fake_searcher(GUNW_SAFE, GUNW_ERUPTION), cutoff=CUTOFF)
     assert [p["granule_id"] for p in products] == [GUNW_SAFE]
 
 
