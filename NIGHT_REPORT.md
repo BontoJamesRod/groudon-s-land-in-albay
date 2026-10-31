@@ -552,4 +552,6 @@ The full report is [pipeline/reports/channel-test.md](pipeline/reports/channel-t
 
 **Commits:** c00d4ae (the test and its report), plus the commit that adds this section.
 
-**Final evidence:** `pytest -q`: 344 passed, 6 skipped. Contract check: 0 errors on `site/data`.
+**Part E, optional, done:** branch `brightness-leads-prep` (f41a49c) adds a `thresholds.rule` switch to `classify.py`. Brightness alone decides whether a pixel is flagged, and coherence can only raise it to high. The default is unchanged, Mayon's config doesn't choose it, and no existing test changed. It's pushed but not merged, and it contains no threshold values. On that branch: 354 passed, 6 skipped.
+
+**Final evidence:** `pytest -q` on `night-1`: 344 passed, 6 skipped. Contract check: 0 errors on `site/data`.
