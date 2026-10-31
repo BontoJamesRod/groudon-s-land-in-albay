@@ -699,3 +699,11 @@ The earthquake pair now flags about 3 times the quiet pair, and the old 26% came
 - **Still true:** the upstream record is marked deprecated, and the Panama result hasn't been checked against mapped landslides.
 
 **Evidence:** `pytest -q`: 375 passed, 6 skipped, exit code 0. Contract check: 0 errors, exit code 0.
+
+# Accessibility, site credits and the Panama check (2026-11-01)
+
+**Stopped for your decision on T-037: read `pipeline/reports/panama-check.md`. Nothing was published, and `main` is untouched.**
+
+- **Accessibility:** already done as T-079. I confirmed the files are in Git and all 6 axe tests pass, and added no new task.
+- **T-087:** the map credit and the Data sources panel now follow the selected site. `sites.json` has `boundary_credit` and `boundary_credit_url`, and `sources.json` rows have an optional `site_id`, where no value means shared. WorldCover and the Copernicus elevation model count as Mayon's, because only Mayon's study used them. New: US-013/AC-3, TC-077.
+- **T-088:** the pair matches the University of Panama's landslide map at the scale of a few km, under a rule fixed before the comparison. It's not evidence for any single spot, and about a quarter of the flagged area isn't explained by the map. The report has three decisions for you.

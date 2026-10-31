@@ -18,7 +18,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 87 tasks; ID errata in §11 |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 88 tasks; ID errata in §11 |
 | 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 76 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
@@ -31,7 +31,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Gate 2 (rule and thresholds) | Decided before any post-eruption data was opened. The final rule is live on the public site on 11 pairs |
 | Products | NISAR products are still PROVISIONAL |
 | Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
-| Second site | Panama, one pair, same final rule with no per-site tuning; its site files are built and credited under CC BY-SA 4.0 (T-036, T-086). Status stays `draft`: no pair yet, and it isn't in the site list. Next are T-087 and T-037 |
+| Second site | Panama, one pair, same final rule with no per-site tuning; its site files are built and credited under CC BY-SA 4.0 (T-036, T-086). Status stays `draft`: no pair yet, and it isn't in the site list. T-087 is done, and the T-088 check is in `pipeline/reports/panama-check.md`. T-037 waits for the owner's decision |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
 | Next | The owner's Google Earth check, then T-073, T-010, T-074 to T-078; T-038 as soon as the eruption passes are on ASF |
 

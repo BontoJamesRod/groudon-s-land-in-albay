@@ -1,0 +1,169 @@
+{
+ "tick_fit_residual_deg": 0.00028,
+ "coast_check": {
+  "agreement_as_fitted": 0.9456,
+  "best_agreement": 0.9512,
+  "best_shift_pixels": [
+   -2,
+   -1
+  ],
+  "pixel_m": 134
+ },
+ "usable_land_km2": 433.3,
+ "dots_share_of_usable_land": 0.228,
+ "earthquake": {
+  "cells": 122,
+  "cells_dense": 31,
+  "cells_no_landslides": 65,
+  "rho_map": 0.656,
+  "rho_map_high_only": 0.805,
+  "rho_usgs": 0.426,
+  "flagged_share_dense_cells": 0.036,
+  "flagged_share_other_cells": 0.0104,
+  "flagged_share_no_landslide_cells": 0.0085,
+  "dense_ratio": 3.47,
+  "share_of_flagged_in_dense_cells": 0.542,
+  "share_of_flagged_in_no_landslide_cells": 0.268
+ },
+ "quiet": {
+  "cells": 122,
+  "cells_dense": 31,
+  "cells_no_landslides": 65,
+  "rho_map": -0.228,
+  "rho_map_high_only": -0.144,
+  "rho_usgs": -0.423,
+  "flagged_share_dense_cells": 0.0021,
+  "flagged_share_other_cells": 0.0073,
+  "flagged_share_no_landslide_cells": 0.0094,
+  "dense_ratio": 0.29,
+  "share_of_flagged_in_dense_cells": 0.091,
+  "share_of_flagged_in_no_landslide_cells": 0.834
+ },
+ "verdict": "SUPPORTS",
+ "sensitivity_1_km": {
+  "verdict": "SUPPORTS",
+  "earthquake": {
+   "cells": 465,
+   "cells_dense": 117,
+   "cells_no_landslides": 277,
+   "rho_map": 0.602,
+   "rho_map_high_only": 0.689,
+   "rho_usgs": 0.373,
+   "flagged_share_dense_cells": 0.0364,
+   "flagged_share_other_cells": 0.011,
+   "flagged_share_no_landslide_cells": 0.0092,
+   "dense_ratio": 3.32,
+   "share_of_flagged_in_dense_cells": 0.528,
+   "share_of_flagged_in_no_landslide_cells": 0.315
+  },
+  "quiet": {
+   "cells": 465,
+   "cells_dense": 117,
+   "cells_no_landslides": 277,
+   "rho_map": -0.116,
+   "rho_map_high_only": -0.121,
+   "rho_usgs": -0.272,
+   "flagged_share_dense_cells": 0.0022,
+   "flagged_share_other_cells": 0.0067,
+   "flagged_share_no_landslide_cells": 0.0078,
+   "dense_ratio": 0.34,
+   "share_of_flagged_in_dense_cells": 0.102,
+   "share_of_flagged_in_no_landslide_cells": 0.842
+  }
+ },
+ "sensitivity_3_km": {
+  "verdict": "WEAK SUPPORT",
+  "earthquake": {
+   "cells": 52,
+   "cells_dense": 13,
+   "cells_no_landslides": 22,
+   "rho_map": 0.638,
+   "rho_map_high_only": 0.839,
+   "rho_usgs": 0.373,
+   "flagged_share_dense_cells": 0.0362,
+   "flagged_share_other_cells": 0.0124,
+   "flagged_share_no_landslide_cells": 0.0109,
+   "dense_ratio": 2.93,
+   "share_of_flagged_in_dense_cells": 0.494,
+   "share_of_flagged_in_no_landslide_cells": 0.25
+  },
+  "quiet": {
+   "cells": 52,
+   "cells_dense": 13,
+   "cells_no_landslides": 22,
+   "rho_map": -0.316,
+   "rho_map_high_only": -0.173,
+   "rho_usgs": -0.431,
+   "flagged_share_dense_cells": 0.0021,
+   "flagged_share_other_cells": 0.0083,
+   "flagged_share_no_landslide_cells": 0.0131,
+   "dense_ratio": 0.26,
+   "share_of_flagged_in_dense_cells": 0.079,
+   "share_of_flagged_in_no_landslide_cells": 0.817
+  }
+ },
+ "pixel_overlap": {
+  "earthquake": {
+   "flagged_share_on_dots": 0.0392,
+   "flagged_share_off_dots": 0.011,
+   "share_of_flagged_on_dots": 0.511,
+   "share_of_usable_land_on_dots": 0.228
+  },
+  "quiet": {
+   "flagged_share_on_dots": 0.0022,
+   "flagged_share_off_dots": 0.0064,
+   "share_of_flagged_on_dots": 0.094,
+   "share_of_usable_land_on_dots": 0.228
+  }
+ },
+ "reported_cluster": {
+  "earthquake": {
+   "within_km": 3,
+   "flagged_share_near": 0.0136,
+   "flagged_share_elsewhere": 0.0177
+  },
+  "quiet": {
+   "within_km": 3,
+   "flagged_share_near": 0.0011,
+   "flagged_share_elsewhere": 0.0057
+  }
+ },
+ "largest_patches_off_the_map": [
+  {
+   "lat": 7.3882,
+   "lon": -80.9038,
+   "area_km2": 0.152,
+   "high_share": 0.14
+  },
+  {
+   "lat": 7.4289,
+   "lon": -80.8423,
+   "area_km2": 0.091,
+   "high_share": 0.0
+  },
+  {
+   "lat": 7.4199,
+   "lon": -80.8492,
+   "area_km2": 0.073,
+   "high_share": 0.0
+  },
+  {
+   "lat": 7.4249,
+   "lon": -80.8748,
+   "area_km2": 0.065,
+   "high_share": 0.04
+  },
+  {
+   "lat": 7.3831,
+   "lon": -80.8523,
+   "area_km2": 0.056,
+   "high_share": 0.98
+  },
+  {
+   "lat": 7.418,
+   "lon": -80.8452,
+   "area_km2": 0.023,
+   "high_share": 0.0
+  }
+ ]
+}
