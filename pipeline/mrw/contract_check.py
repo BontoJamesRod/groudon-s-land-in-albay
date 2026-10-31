@@ -77,6 +77,7 @@ SITES = {
     "danger_zone_radius_km": field("number", required=False),
     "danger_zone_label": field("string", required=False),
     "detection_reach_km": field("number", required=False),
+    "wording_set": field("string", required=False, enum={"plain_change"}),
     "boundary_credit": field("string", required=False),
     "boundary_credit_url": field("url", required=False),
     "change_types": field("array"),
@@ -905,7 +906,7 @@ def check_data_dir(root, published=True):
     # Every data file must be one the contract describes. Drafts have their own folder in pipeline/out.
     for pattern in ("*.json", "*.geojson"):
         for path in sorted(root.rglob(pattern)):
-            if path not in known and "validation_drafts" not in path.parts:
+            if path not in known and "validation_drafts" not in path.parts and "reports" not in path.parts:
                 errors.append(f"{path}: this file is not part of the data contract")
     return errors
 

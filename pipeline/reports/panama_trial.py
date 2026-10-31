@@ -120,7 +120,8 @@ def main():
     results["after_pass_start_utc"] = pairs[EVENT_PAIR]["after"]["acquired_start"]
     results["gb_fetched"] = round((total_bytes_logged() - start_bytes) / 1e9, 3)
     results["contract_errors_pipeline_out"] = len(check_data_dir(OUT_FOLDER, published=False))
-    (OUT_FOLDER / "panama-trial-final-rule.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    (OUT_FOLDER / "reports").mkdir(exist_ok=True)
+    (OUT_FOLDER / "reports" / "panama-trial-final-rule.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
     print("GB fetched", results["gb_fetched"], "contract errors", results["contract_errors_pipeline_out"], "after pass", results["after_pass_start_utc"])
 
 

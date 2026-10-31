@@ -2,7 +2,7 @@
   "id": "panama",
   "name": "Azuero Peninsula, Panama",
   "country": "Panama",
-  "status": "draft",
+  "status": "published",
   "time_zone": "America/Panama",
   "center_lat": 7.477,
   "center_lon": -80.865,
@@ -19,6 +19,15 @@
   "danger_zone_label": null,
   "boundary_credit": "Boundaries: geoBoundaries (CC BY-SA 4.0)",
   "boundary_credit_url": "https://www.geoboundaries.org/",
+  "wording_set": "plain_change",
+  "layer_wording": {
+    "title": "Radar change",
+    "low_label": "Possible change (brightness only)",
+    "high_label": "Likely change (brightness and coherence agree)",
+    "pair_titles": {
+      "panama_D141F085_20260927_20261009": "Changed after the earthquake"
+    }
+  },
   "change_types": [
     "new_material"
   ],

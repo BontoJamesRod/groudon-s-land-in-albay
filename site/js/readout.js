@@ -2,7 +2,7 @@
 // from the pair's value grid, entirely in the browser: nothing is sent anywhere.
 
 import { loadGrid } from "./data.js";
-import { STRINGS } from "./strings.js";
+import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 const EARTH_RADIUS_KM = 6371;
@@ -55,12 +55,12 @@ export function findTown(towns, lat, lon) {
 }
 
 // Turn a grid value into the card's result line and whether it is a "no data" answer.
-export function resultLines(value, layer) {
+export function resultLines(value, layer, text = STRINGS) {
   const code = value === null ? 255 : value;
   if (layer.no_data_codes && layer.no_data_codes[String(code)] !== undefined) {
     return [STRINGS.noRadarData, STRINGS.noDataReasons[code]];
   }
-  if (code === NONE) return [STRINGS.noNewMaterial];
+  if (code === NONE) return [text.noNewMaterial];
   const item = layer.legend.find((entry) => entry.value === code);
   return [STRINGS.classWithConfidence(item.label, item.confidence)];
 }
@@ -104,7 +104,7 @@ export function createReadout(elements, site, towns) {
     if (value === NONE && reach && distanceKm(lat, lon, site.summit_lat, site.summit_lon) > reach) {
       return [STRINGS.beyondReach(reach)];
     }
-    return resultLines(value, layer);
+    return resultLines(value, layer, textFor(site));
   }
 
   function showLines(lines) {

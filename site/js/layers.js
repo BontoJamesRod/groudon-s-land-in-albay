@@ -1,7 +1,7 @@
 // Task T-025: the new-material layer, its legend and the area summary.
 
 import { RADAR_PANE } from "./map.js";
-import { STRINGS } from "./strings.js";
+import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 function layerBounds(layer) {
@@ -36,11 +36,12 @@ function showLegend(elements, layer, pair) {
   elements.area.textContent = `${STRINGS.layerUnits(layer.units)}. ${STRINGS.totalArea(pair.new_material_area_km2)}`;
 }
 
-function summaryText(pair, timeZone) {
+function summaryText(pair, site) {
+  const timeZone = site.time_zone;
   if (pair.new_material_area_km2 !== 0) return "";
   const before = localDate(pair.before_acquired_start, timeZone);
   const after = localDate(pair.after_acquired_start, timeZone);
-  return STRINGS.nothingDetected(before, after);
+  return textFor(site).nothingDetected(before, after);
 }
 
 // Set up the layer's toggle. Returns the function that shows a pair on the map.
@@ -62,6 +63,6 @@ export function createNewMaterialLayer(map, elements, site) {
     overlay = L.imageOverlay(url, layerBounds(layer), { pane: RADAR_PANE, alt: layer.title, className: "radar-image" });
     if (elements.toggle.checked) overlay.addTo(map);
     showLegend(elements, layer, pair);
-    elements.summary.textContent = summaryText(pair, site.time_zone);
+    elements.summary.textContent = summaryText(pair, site);
   };
 }

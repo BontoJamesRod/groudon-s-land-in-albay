@@ -129,6 +129,38 @@ export const STRINGS = {
   pickerOption: (name, country) => `${name}, ${country}`,
 };
 
+// A site whose map shows change in general, not volcanic material. Its `wording_set` in
+// sites.json is "plain_change". Anything not listed here is the same for every site.
+const PLAIN_CHANGE = {
+  drawerShow: "Show legend and details (PROVISIONAL radar products)",
+  disclaimer: "This is not an official warning. Follow SINAPROC and your local authorities.",
+  nothingDetected: (before, after) => `No change detected between ${before} and ${after}`,
+  noNewMaterial: "No change detected. Confidence: none",
+  helpHowRadar: [
+    STRINGS.helpHowRadar[0],
+    "Comparing two passes from the same angle shows where the ground changed. Changed ground reflects the radar differently, and it can make the two passes look less alike.",
+  ],
+  helpNoColor: "No color: no change detected, or no radar data.",
+  helpClasses: [
+    "Orange: possible change (brightness only). Confidence: low",
+    "Dark orange: likely change (brightness and coherence agree). Confidence: high",
+  ],
+  helpLimits: [
+    STRINGS.helpLimits[0],
+    "This map shows where the ground changed, not why. Crops, rain and building work can look the same to the radar.",
+    "Steep slopes facing away from the radar can't be seen, and small changes can be missed.",
+    STRINGS.helpLimits[4],
+  ],
+  helpOfficial: "For warnings and advice, follow SINAPROC and your local authorities.",
+  helpOfficialLink: "SINAPROC website",
+  helpOfficialUrl: "https://www.sinaproc.gob.pa/",
+};
+
+// The text for one site: the shared text, with that site's wording on top.
+export function textFor(site) {
+  return site && site.wording_set === "plain_change" ? { ...STRINGS, ...PLAIN_CHANGE } : STRINGS;
+}
+
 // Put the text into the page's fixed elements: `data-text` sets what it shows,
 // and `data-label` sets what a screen reader says.
 export function applyPageStrings(root = document) {

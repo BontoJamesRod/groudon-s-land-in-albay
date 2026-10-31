@@ -145,8 +145,20 @@ def pass_record(one_pass, site_id, spacing_m, now):
     }
 
 
-def new_material_title(config):
+def class_legend(config):
+    """The legend for the class layer. A site can word it in its own config."""
+    wording = config.get("layer_wording")
+    if not wording:
+        return CLASS_LEGEND
+    labels = {LOW: wording["low_label"], HIGH: wording["high_label"]}
+    return [{**item, "label": labels[item["value"]]} for item in CLASS_LEGEND]
+
+
+def new_material_title(config, pair_key=None):
     """Say on the layer itself when its thresholds aren't final."""
+    wording = config.get("layer_wording")
+    if wording:
+        return wording.get("pair_titles", {}).get(pair_key, wording["title"])
     title = "New material (PROVISIONAL thresholds)" if thresholds_are_provisional(config) else "New material"
     reach = (config.get("filters") or {}).get("max_distance_km")
     return f"{title}, within {reach:g} km of the summit" if reach else title
@@ -173,8 +185,8 @@ def write_layers(folder, gcov_result, loss, classes, config, pair_key, granules,
     web_classes[~inside] = OUTSIDE_COVERAGE
     save_png(colorize_classes(web_classes), folder / "new_material.png")
     (folder / "new_material.bin").write_bytes(web_classes.astype("uint8").tobytes())
-    record = layer_record(pair_key, "new_material", new_material_title(config), "class", bounds, size,
-                          granules["new_material"], CLASS_LEGEND, now)
+    record = layer_record(pair_key, "new_material", new_material_title(config, pair_key), "class", bounds, size,
+                          granules["new_material"], class_legend(config), now)
     record.update(grid_path="new_material.bin", grid_dtype="uint8", grid_scale=1,
                   no_data_codes=NO_DATA_CODES, grid_width=size[0], grid_height=size[1])
     layers.append(record)

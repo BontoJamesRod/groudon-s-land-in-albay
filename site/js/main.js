@@ -10,7 +10,7 @@ import { createMap, RADAR_PANE } from "./map.js";
 import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
 import { createReadout } from "./readout.js";
 import { createSearch } from "./search.js";
-import { applyPageStrings, STRINGS } from "./strings.js";
+import { applyPageStrings, STRINGS, textFor } from "./strings.js";
 import { createTimeline } from "./timeline.js";
 
 const byId = (id) => document.getElementById(id);
@@ -119,6 +119,8 @@ async function showSite(site, siteData) {
   app.pair = null;
   app.site = site;
   byId("site-name").textContent = site.name;
+  document.querySelector(".disclaimer").textContent = textFor(site).disclaimer;
+  app.drawer.siteChanged();
   const map = createMap(site, siteData, byId("background-notice"));
   app.map = map;
   app.compare = setUpCompare(map, site);
@@ -162,8 +164,8 @@ async function openSite(site) {
 function setUpPanels() {
   app.drawer = createDrawer(byId("panel"), byId("drawer-toggle"), () => {
     if (app.map) app.map.invalidateSize({ animate: false });
-  });
-  const help = createPanel(byId("help-panel"), (body) => fillHelp(body, () => app.pair));
+  }, () => app.site);
+  const help = createPanel(byId("help-panel"), (body) => fillHelp(body, () => app.pair, app.site));
   const sources = createPanel(byId("sources-panel"), (body) => fillSources(body, () => app.pair, app.site));
   const picker = createPanel(byId("picker-panel"), (body) => fillPicker(body, app.sites, (site) => {
     byId("picker-panel").close();

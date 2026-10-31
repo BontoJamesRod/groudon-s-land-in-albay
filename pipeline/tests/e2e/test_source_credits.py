@@ -1,13 +1,8 @@
-"""TC-077: the map credit and the Data sources panel follow the selected site (T-086, T-087).
-
-Panama is still a draft, so it's added to the site list in this test's browser only.
-"""
+"""TC-077: the map credit and the Data sources panel follow the selected site (T-086, T-087)."""
 import pytest
 from playwright.sync_api import expect
 
-from mrw.config import build_sites_row, load_site
-
-from .conftest import envelope, prepare_page, read_data, wait_until_ready
+from .conftest import prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -16,10 +11,7 @@ PANAMA_CREDIT = "Boundaries: geoBoundaries (CC BY-SA 4.0)"
 
 
 def open_with_panama(page, site_url):
-    panama = {**build_sites_row(load_site("panama")), "status": "published"}
     prepare_page(page)
-    page.route("**/data/sites.json", lambda route: route.fulfill(body=envelope(read_data("sites.json") + [panama]), content_type="application/json"))
-    page.route("**/sites/panama/pairs.json", lambda route: route.fulfill(body=envelope([]), content_type="application/json"))
     page.goto(site_url)
     wait_until_ready(page)
 

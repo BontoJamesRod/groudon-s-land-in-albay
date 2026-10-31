@@ -319,9 +319,12 @@ def test_tc032_context_sources(app):
         expect(context).to_contain_text(row["license"])
 
 
-@pytest.mark.skip(reason="No second site: choosing one is the owner's decision.")
-def test_tc033_switch_to_the_second_site():
-    pass
+def test_tc033_switch_to_the_second_site(app):
+    app.click("#site-name")
+    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    expect(app.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
+    expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
+    expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
 
 
 def test_tc034_second_site_fails_and_mayon_stays(page, site_url):

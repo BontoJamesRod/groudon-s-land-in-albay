@@ -34,7 +34,7 @@ EARTHQUAKE_PAIR = "panama_D141F085_20260927_20261009"
 QUIET_PAIR = "panama_D141F085_20260915_20260927"
 LAND = ROOT / "site" / "data" / "sites" / "panama" / "land.geojson"
 OUTPUT = Path(__file__).with_name("panama-check.json")
-PICTURE = ROOT / "pipeline" / "out" / "panama-check.png"
+PICTURE = ROOT / "pipeline" / "out" / "reports" / "panama-check.png"
 
 # Fixed before the comparison was run.
 CELL_KM_MAIN = 2
@@ -226,6 +226,7 @@ def verdict(result):
 
 def save_picture(grid, slides, usable, bounds):
     """A picture to check by eye. It stays in pipeline/out, because it copies the published map's dots."""
+    PICTURE.parent.mkdir(exist_ok=True)
     picture = np.full(grid.shape + (3,), 235, dtype="uint8")
     picture[~usable] = (190, 215, 235)
     picture[slides & usable] = (160, 160, 160)
