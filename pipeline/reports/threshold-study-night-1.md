@@ -198,3 +198,68 @@ It might be a false alarm, for example from weather. It might also be real chang
 - **Land cover is from 2021**, at 10 m, and is read here at 20 m. Coconut groves count as tree cover, so some farming is in "other". WorldCover is context only, and isn't drawn on the map.
 - **Steep slopes:** 20° or more, from a 30 m elevation model, within 60° of the direction to the radar (77°). The product metadata says `lookDirection: Left` and `Ascending`, which gives that direction. The published images don't confirm it: average brightness barely changes with slope direction, probably because the product corrects for terrain.
 - **Sources** are cited in `site/data/sources.json` as `validation`, the closest value `docs/05` allows, since it has none for analysis.
+
+## Added in the afternoon run: Oct 8 → Oct 20, and masks
+
+**No mask was turned on, and no default or threshold changed.** All numbers use the PROVISIONAL thresholds and pairs from before 2026-10-30. To reproduce: `python pipeline/reports/reach_zone_study.py`, which downloaded no radar data. Full numbers are in `reach-zone-study.json`.
+
+### Oct 8 → Oct 20 inside the danger zone
+
+![Which signal flagged each cell](october-signal-split.png)
+
+| Signal | Area (km²) | Share | NW of summit (km²) | On steep slopes facing away (km²) | Near-grazing beam (km²) | Near the noise floor (km²) |
+| --- | --- | --- | --- | --- | --- | --- |
+| Coherence only | 2.433 | 98% | 1.180 | 0.447 | 0.057 | 0.000 |
+| Brightness only | 0.054 | 2% | 0.021 | 0.019 | 0.016 | 0.000 |
+| Both | 0.004 | 0.2% | 0.002 | 0.000 | 0.000 | 0.000 |
+
+**What this says:**
+
+1. **Almost all of it is coherence only.** Brightness barely changed there, and only 0.004 km² has both signals, so the app rates nearly all of it low confidence.
+2. **Radar geometry doesn't explain it.** Steep away-facing slopes are 10% of the zone's land and hold 18% of the coherence-only area, so they're only mildly over-represented. The other 82% is elsewhere.
+3. **Radar noise doesn't explain it.** None of it is at or below -18 dB. The check does work: faint land exists there, with values down to -25 dB, and the zone's median is about -6 dB.
+4. **It's unusual.** Other pairs with coherence in use have 0.02–0.37 km² of coherence-only area in the zone. This pair has 7 to 120 times that.
+
+**What it doesn't say:** whether this is real. Coherence falling with no brightness change could be wet ground or changing vegetation, and could also be thin disturbance of the surface. A thick fresh deposit would usually be expected to change brightness as well, which leans against one, but that's general reasoning and isn't tested here. Rain records for Oct 8–20, PHIVOLCS bulletins, and a pass from another track over the same dates would each help.
+
+The blocky look comes from coherence's coarser grid, about 80 m against 20 m.
+
+**How the terms are defined:**
+
+- **Facing away:** a slope of 20° or more, within 60° of directly away from the radar. The pass direction and left-looking radar come from the product's metadata.
+- **Near-grazing:** the beam is 70° or more from the ground's perpendicular. This uses an **assumed** 40° beam angle, not one read from the product. At that angle, true shadow is only about 0.009 km² of the zone.
+- **Noise floor:** the fainter pass at or below a test level. The real noise level wasn't read from the product, so -25, -22, -20 and -18 dB were all tried, and all gave 0. The mask below uses -20 dB.
+
+### Masks on every pre-eruption pair
+
+The quiet set is 7 pairs. It leaves out the July pair and Oct 8 → Oct 20, so its base differs from the day 3 table, which counted October as quiet. The mask comes first, then clusters.
+
+| Option | Quiet mean (km²) | Quiet removed | Quiet worst (km²) | Cropland share of quiet | July total (km²) | July flanks (km²) | July flanks kept | Oct 8 → Oct 20 (km²) | October kept |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| No mask | 6.74 | | 14.57 | 66% | 5.23 | 0.120 | 100% | 8.66 | 100% |
+| Clusters from 2,000 m² only | 5.56 | 17% | 13.13 | 72% | 3.83 | 0.083 | 69% | 7.83 | 90% |
+| Within 8 km | 0.57 | 92% | 1.05 | 6% | 0.57 | 0.120 | 100% | 2.83 | 33% |
+| Within 8 km + clusters | 0.41 | 94% | 0.85 | 7% | 0.32 | 0.083 | 69% | 2.73 | 32% |
+| Within 10 km | 2.01 | 70% | 4.02 | 48% | 1.77 | 0.120 | 100% | 4.03 | 47% |
+| Within 10 km + clusters | 1.53 | 77% | 3.32 | 52% | 1.14 | 0.083 | 69% | 3.76 | 43% |
+| Within 12 km | 3.99 | 41% | 8.61 | 61% | 3.52 | 0.120 | 100% | 5.62 | 65% |
+| Within 12 km + clusters | 3.19 | 53% | 7.51 | 67% | 2.54 | 0.083 | 69% | 5.12 | 59% |
+| Noise floor and away-facing slopes | 6.62 | 2% | 14.46 | 67% | 5.10 | 0.113 | 94% | 8.07 | 93% |
+| Noise and away-facing + clusters | 5.49 | 19% | 13.07 | 72% | 3.75 | 0.077 | 64% | 7.26 | 84% |
+
+**What this says:**
+
+- **A reach zone removes far more than any filter tried so far**, mainly because it removes farmland: at 8 km, cropland falls from 66% to 6% of quiet area.
+- **"100% of July flanks kept" is partly built in.** The flank wedges only reach 3.8 km, so a mask at 8 km or more can't touch them. It shows the mask is safe for those three flanks, not that the mask finds the event better. The July pair's flanks (0.120 km²) are still below the worst quiet pair's (0.374 km²), with or without a reach mask.
+- **A reach zone hides things as well as cleaning up.** It would blank anything beyond its edge, and the reason to watch further out is flows travelling down channels toward towns. Town label points are about 8.6 km (Daraga), 8.8 km (Camalig), 8.9 km (Legazpi City), 9.5 km (Ligao City), 10.0 km (Bacacay) and 10.3 km (Guinobatan) from the summit. So 8 km cuts off every one of these, and 10 km still cuts off Guinobatan.
+- **The noise and away-facing mask isn't worth having.** It removes 2% and costs 6% of the July flank signal.
+
+### Options for the owner
+
+| Option | For | Against |
+| --- | --- | --- |
+| **Within 12 km alone** | Keeps these town centres and every July flank cell, and removes 41% | Quiet pairs still average 3.99 km² |
+| **Within 10 km alone** | Removes 70% with no loss in the flanks. My pick if you want a mask now, because the map stops looking like a farmland map | Cuts off Guinobatan's label point. The map must say that it only looks within 10 km |
+| **Within 10 km + clusters from 2,000 m²** | Removes 77% | Loses 31% of the July flank signal for 7 more points |
+
+None of these tells real change from false alarms inside the zone. They limit where the map looks.

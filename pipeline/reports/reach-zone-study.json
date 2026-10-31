@@ -1,0 +1,912 @@
+{
+ "note": "PROVISIONAL thresholds. Analysis only: no filter, mask or threshold was chosen.",
+ "bytes_downloaded": 0,
+ "assumed": {
+  "noise_db": -20,
+  "incidence_degrees": 40
+ },
+ "danger_zone_geometry": {
+  "zone_land_km2": 113.1,
+  "zone_away_km2": 11.57,
+  "zone_grazing_km2": 2.82,
+  "shadow_km2_at_assumed_angle": 0.009
+ },
+ "danger_zone_split": {
+  "06-21 → 07-03": null,
+  "07-03 → 07-15": null,
+  "07-15 → 07-27": {
+   "Brightness only": {
+    "km2": 0.218,
+    "northwest_km2": 0.049,
+    "away_slope_km2": 0.038,
+    "grazing_km2": 0.026,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 0.374,
+    "northwest_km2": 0.036,
+    "away_slope_km2": 0.088,
+    "grazing_km2": 0.028,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.003,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": true,
+   "zone_faint_median_db": -6.4
+  },
+  "07-27 → 08-20": {
+   "Brightness only": {
+    "km2": 0.125,
+    "northwest_km2": 0.052,
+    "away_slope_km2": 0.033,
+    "grazing_km2": 0.025,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 8.092,
+    "northwest_km2": 0.658,
+    "away_slope_km2": 0.389,
+    "grazing_km2": 0.035,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.01,
+    "northwest_km2": 0.007,
+    "away_slope_km2": 0.001,
+    "grazing_km2": 0.001,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": false,
+   "zone_faint_median_db": -6.2
+  },
+  "08-20 → 09-01": {
+   "Brightness only": {
+    "km2": 0.066,
+    "northwest_km2": 0.024,
+    "away_slope_km2": 0.024,
+    "grazing_km2": 0.021,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 0.007,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.0,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": false,
+   "zone_faint_median_db": -6.2
+  },
+  "09-01 → 09-13": {
+   "Brightness only": {
+    "km2": 0.062,
+    "northwest_km2": 0.028,
+    "away_slope_km2": 0.031,
+    "grazing_km2": 0.024,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 0.159,
+    "northwest_km2": 0.007,
+    "away_slope_km2": 0.004,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.0,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": true,
+   "zone_faint_median_db": -6.3
+  },
+  "09-13 → 09-25": {
+   "Brightness only": {
+    "km2": 0.063,
+    "northwest_km2": 0.024,
+    "away_slope_km2": 0.028,
+    "grazing_km2": 0.023,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 0.185,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.0,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": true,
+   "zone_faint_median_db": -6.1
+  },
+  "09-25 → 10-07": {
+   "Brightness only": {
+    "km2": 0.041,
+    "northwest_km2": 0.013,
+    "away_slope_km2": 0.02,
+    "grazing_km2": 0.017,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 0.02,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.003,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.0,
+    "northwest_km2": 0.0,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": true,
+   "zone_faint_median_db": -6.1
+  },
+  "10-07 → 10-19": {
+   "Brightness only": {
+    "km2": 0.054,
+    "northwest_km2": 0.021,
+    "away_slope_km2": 0.019,
+    "grazing_km2": 0.016,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Coherence only": {
+    "km2": 2.433,
+    "northwest_km2": 1.18,
+    "away_slope_km2": 0.447,
+    "grazing_km2": 0.057,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "Both": {
+    "km2": 0.004,
+    "northwest_km2": 0.002,
+    "away_slope_km2": 0.0,
+    "grazing_km2": 0.0,
+    "near_noise_km2": {
+     "-25": 0.0,
+     "-22": 0.0,
+     "-20": 0.0,
+     "-18": 0.0
+    }
+   },
+   "app_uses_coherence": true,
+   "zone_faint_median_db": -6.2
+  }
+ },
+ "masks_by_pair": {
+  "No mask": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 7.471,
+    "cropland_km2": 3.944,
+    "flanks_km2": 0.076
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 5.228,
+    "cropland_km2": 3.433,
+    "flanks_km2": 0.12
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 6.413,
+    "cropland_km2": 3.966,
+    "flanks_km2": 0.374
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 14.572,
+    "cropland_km2": 11.965,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 3.149,
+    "cropland_km2": 1.878,
+    "flanks_km2": 0.021
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 5.835,
+    "cropland_km2": 2.825,
+    "flanks_km2": 0.003
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 4.994,
+    "cropland_km2": 3.324,
+    "flanks_km2": 0.18
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 4.762,
+    "cropland_km2": 3.126,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 8.661,
+    "cropland_km2": 3.704,
+    "flanks_km2": 0.235
+   }
+  },
+  "No mask + clusters from 2,000 m²": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 5.532,
+    "cropland_km2": 3.317,
+    "flanks_km2": 0.062
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 3.829,
+    "cropland_km2": 2.852,
+    "flanks_km2": 0.083
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 5.128,
+    "cropland_km2": 3.371,
+    "flanks_km2": 0.334
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 13.126,
+    "cropland_km2": 11.412,
+    "flanks_km2": 0.013
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 2.216,
+    "cropland_km2": 1.512,
+    "flanks_km2": 0.01
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 4.608,
+    "cropland_km2": 2.377,
+    "flanks_km2": 0.0
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 4.274,
+    "cropland_km2": 3.058,
+    "flanks_km2": 0.177
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 4.055,
+    "cropland_km2": 2.843,
+    "flanks_km2": 0.034
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 7.826,
+    "cropland_km2": 3.456,
+    "flanks_km2": 0.232
+   }
+  },
+  "Within 8 km": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 0.859,
+    "cropland_km2": 0.057,
+    "flanks_km2": 0.076
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 0.565,
+    "cropland_km2": 0.053,
+    "flanks_km2": 0.12
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 1.054,
+    "cropland_km2": 0.058,
+    "flanks_km2": 0.374
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 0.507,
+    "cropland_km2": 0.092,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 0.298,
+    "cropland_km2": 0.012,
+    "flanks_km2": 0.021
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 0.533,
+    "cropland_km2": 0.021,
+    "flanks_km2": 0.003
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 0.467,
+    "cropland_km2": 0.009,
+    "flanks_km2": 0.18
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 0.296,
+    "cropland_km2": 0.009,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 2.829,
+    "cropland_km2": 0.066,
+    "flanks_km2": 0.235
+   }
+  },
+  "Within 8 km + clusters from 2,000 m²": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 0.526,
+    "cropland_km2": 0.047,
+    "flanks_km2": 0.062
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 0.318,
+    "cropland_km2": 0.042,
+    "flanks_km2": 0.083
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 0.848,
+    "cropland_km2": 0.049,
+    "flanks_km2": 0.334
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 0.318,
+    "cropland_km2": 0.087,
+    "flanks_km2": 0.013
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 0.188,
+    "cropland_km2": 0.009,
+    "flanks_km2": 0.01
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 0.404,
+    "cropland_km2": 0.014,
+    "flanks_km2": 0.0
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 0.389,
+    "cropland_km2": 0.004,
+    "flanks_km2": 0.177
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 0.213,
+    "cropland_km2": 0.005,
+    "flanks_km2": 0.034
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 2.733,
+    "cropland_km2": 0.064,
+    "flanks_km2": 0.232
+   }
+  },
+  "Within 10 km": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 2.379,
+    "cropland_km2": 1.002,
+    "flanks_km2": 0.076
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 1.771,
+    "cropland_km2": 0.789,
+    "flanks_km2": 0.12
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 2.267,
+    "cropland_km2": 0.782,
+    "flanks_km2": 0.374
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 4.021,
+    "cropland_km2": 2.787,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 1.142,
+    "cropland_km2": 0.497,
+    "flanks_km2": 0.021
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 1.698,
+    "cropland_km2": 0.613,
+    "flanks_km2": 0.003
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 1.234,
+    "cropland_km2": 0.397,
+    "flanks_km2": 0.18
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 1.344,
+    "cropland_km2": 0.638,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 4.033,
+    "cropland_km2": 0.726,
+    "flanks_km2": 0.235
+   }
+  },
+  "Within 10 km + clusters from 2,000 m²": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 1.596,
+    "cropland_km2": 0.763,
+    "flanks_km2": 0.062
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 1.141,
+    "cropland_km2": 0.584,
+    "flanks_km2": 0.083
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 1.712,
+    "cropland_km2": 0.583,
+    "flanks_km2": 0.334
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 3.322,
+    "cropland_km2": 2.527,
+    "flanks_km2": 0.013
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 0.764,
+    "cropland_km2": 0.37,
+    "flanks_km2": 0.01
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 1.259,
+    "cropland_km2": 0.452,
+    "flanks_km2": 0.0
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 0.967,
+    "cropland_km2": 0.311,
+    "flanks_km2": 0.177
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 1.085,
+    "cropland_km2": 0.556,
+    "flanks_km2": 0.034
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 3.76,
+    "cropland_km2": 0.669,
+    "flanks_km2": 0.232
+   }
+  },
+  "Within 12 km": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 4.49,
+    "cropland_km2": 2.552,
+    "flanks_km2": 0.076
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 3.518,
+    "cropland_km2": 2.196,
+    "flanks_km2": 0.12
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 3.946,
+    "cropland_km2": 2.022,
+    "flanks_km2": 0.374
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 8.608,
+    "cropland_km2": 6.672,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 2.283,
+    "cropland_km2": 1.363,
+    "flanks_km2": 0.021
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 3.608,
+    "cropland_km2": 1.803,
+    "flanks_km2": 0.003
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 2.481,
+    "cropland_km2": 1.293,
+    "flanks_km2": 0.18
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 2.542,
+    "cropland_km2": 1.403,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 5.624,
+    "cropland_km2": 1.676,
+    "flanks_km2": 0.235
+   }
+  },
+  "Within 12 km + clusters from 2,000 m²": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 3.256,
+    "cropland_km2": 2.109,
+    "flanks_km2": 0.062
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 2.537,
+    "cropland_km2": 1.808,
+    "flanks_km2": 0.083
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 3.02,
+    "cropland_km2": 1.612,
+    "flanks_km2": 0.334
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 7.514,
+    "cropland_km2": 6.229,
+    "flanks_km2": 0.013
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 1.62,
+    "cropland_km2": 1.088,
+    "flanks_km2": 0.01
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 2.826,
+    "cropland_km2": 1.476,
+    "flanks_km2": 0.0
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 1.982,
+    "cropland_km2": 1.106,
+    "flanks_km2": 0.177
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 2.099,
+    "cropland_km2": 1.237,
+    "flanks_km2": 0.034
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 5.12,
+    "cropland_km2": 1.543,
+    "flanks_km2": 0.232
+   }
+  },
+  "Noise floor and away-facing slopes": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 7.345,
+    "cropland_km2": 3.943,
+    "flanks_km2": 0.069
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 5.097,
+    "cropland_km2": 3.432,
+    "flanks_km2": 0.113
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 6.211,
+    "cropland_km2": 3.965,
+    "flanks_km2": 0.341
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 14.458,
+    "cropland_km2": 11.965,
+    "flanks_km2": 0.032
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 3.074,
+    "cropland_km2": 1.878,
+    "flanks_km2": 0.019
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 5.676,
+    "cropland_km2": 2.825,
+    "flanks_km2": 0.003
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 4.901,
+    "cropland_km2": 3.324,
+    "flanks_km2": 0.18
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 4.659,
+    "cropland_km2": 3.126,
+    "flanks_km2": 0.035
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 8.07,
+    "cropland_km2": 3.704,
+    "flanks_km2": 0.227
+   }
+  },
+  "Noise floor and away-facing slopes + clusters from 2,000 m²": {
+   "mayon_A111F008_20260621_20260703": {
+    "total_km2": 5.468,
+    "cropland_km2": 3.316,
+    "flanks_km2": 0.056
+   },
+   "mayon_A111F008_20260703_20260715": {
+    "total_km2": 3.753,
+    "cropland_km2": 2.851,
+    "flanks_km2": 0.077
+   },
+   "mayon_A111F008_20260715_20260727": {
+    "total_km2": 4.975,
+    "cropland_km2": 3.37,
+    "flanks_km2": 0.299
+   },
+   "mayon_A111F008_20260727_20260820": {
+    "total_km2": 13.072,
+    "cropland_km2": 11.412,
+    "flanks_km2": 0.011
+   },
+   "mayon_A111F008_20260820_20260901": {
+    "total_km2": 2.189,
+    "cropland_km2": 1.512,
+    "flanks_km2": 0.007
+   },
+   "mayon_A111F008_20260901_20260913": {
+    "total_km2": 4.514,
+    "cropland_km2": 2.377,
+    "flanks_km2": 0.0
+   },
+   "mayon_A111F008_20260913_20260925": {
+    "total_km2": 4.23,
+    "cropland_km2": 3.058,
+    "flanks_km2": 0.177
+   },
+   "mayon_A111F008_20260925_20261007": {
+    "total_km2": 3.997,
+    "cropland_km2": 2.843,
+    "flanks_km2": 0.034
+   },
+   "mayon_A111F008_20261007_20261019": {
+    "total_km2": 7.262,
+    "cropland_km2": 3.456,
+    "flanks_km2": 0.224
+   }
+  }
+ },
+ "masks_summary": {
+  "No mask": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 6.742,
+   "quiet_max_km2": 14.572,
+   "quiet_cropland_share": 0.657,
+   "quiet_flanks_max_km2": 0.374,
+   "july_total_km2": 5.228,
+   "july_flanks_km2": 0.12,
+   "october_total_km2": 8.661,
+   "quiet_removed_percent": 0,
+   "july_flanks_kept_percent": 100,
+   "july_total_kept_percent": 100,
+   "october_kept_percent": 100
+  },
+  "No mask + clusters from 2,000 m²": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 5.563,
+   "quiet_max_km2": 13.126,
+   "quiet_cropland_share": 0.716,
+   "quiet_flanks_max_km2": 0.334,
+   "july_total_km2": 3.829,
+   "july_flanks_km2": 0.083,
+   "october_total_km2": 7.826,
+   "quiet_removed_percent": 17,
+   "july_flanks_kept_percent": 69,
+   "july_total_kept_percent": 73,
+   "october_kept_percent": 90
+  },
+  "Within 8 km": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 0.573,
+   "quiet_max_km2": 1.054,
+   "quiet_cropland_share": 0.064,
+   "quiet_flanks_max_km2": 0.374,
+   "july_total_km2": 0.565,
+   "july_flanks_km2": 0.12,
+   "october_total_km2": 2.829,
+   "quiet_removed_percent": 92,
+   "july_flanks_kept_percent": 100,
+   "july_total_kept_percent": 11,
+   "october_kept_percent": 33
+  },
+  "Within 8 km + clusters from 2,000 m²": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 0.412,
+   "quiet_max_km2": 0.848,
+   "quiet_cropland_share": 0.074,
+   "quiet_flanks_max_km2": 0.334,
+   "july_total_km2": 0.318,
+   "july_flanks_km2": 0.083,
+   "october_total_km2": 2.733,
+   "quiet_removed_percent": 94,
+   "july_flanks_kept_percent": 69,
+   "july_total_kept_percent": 6,
+   "october_kept_percent": 32
+  },
+  "Within 10 km": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 2.012,
+   "quiet_max_km2": 4.021,
+   "quiet_cropland_share": 0.477,
+   "quiet_flanks_max_km2": 0.374,
+   "july_total_km2": 1.771,
+   "july_flanks_km2": 0.12,
+   "october_total_km2": 4.033,
+   "quiet_removed_percent": 70,
+   "july_flanks_kept_percent": 100,
+   "july_total_kept_percent": 34,
+   "october_kept_percent": 47
+  },
+  "Within 10 km + clusters from 2,000 m²": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 1.529,
+   "quiet_max_km2": 3.322,
+   "quiet_cropland_share": 0.52,
+   "quiet_flanks_max_km2": 0.334,
+   "july_total_km2": 1.141,
+   "july_flanks_km2": 0.083,
+   "october_total_km2": 3.76,
+   "quiet_removed_percent": 77,
+   "july_flanks_kept_percent": 69,
+   "july_total_kept_percent": 22,
+   "october_kept_percent": 43
+  },
+  "Within 12 km": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 3.994,
+   "quiet_max_km2": 8.608,
+   "quiet_cropland_share": 0.612,
+   "quiet_flanks_max_km2": 0.374,
+   "july_total_km2": 3.518,
+   "july_flanks_km2": 0.12,
+   "october_total_km2": 5.624,
+   "quiet_removed_percent": 41,
+   "july_flanks_kept_percent": 100,
+   "july_total_kept_percent": 67,
+   "october_kept_percent": 65
+  },
+  "Within 12 km + clusters from 2,000 m²": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 3.188,
+   "quiet_max_km2": 7.514,
+   "quiet_cropland_share": 0.666,
+   "quiet_flanks_max_km2": 0.334,
+   "july_total_km2": 2.537,
+   "july_flanks_km2": 0.083,
+   "october_total_km2": 5.12,
+   "quiet_removed_percent": 53,
+   "july_flanks_kept_percent": 69,
+   "july_total_kept_percent": 49,
+   "october_kept_percent": 59
+  },
+  "Noise floor and away-facing slopes": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 6.618,
+   "quiet_max_km2": 14.458,
+   "quiet_cropland_share": 0.67,
+   "quiet_flanks_max_km2": 0.341,
+   "july_total_km2": 5.097,
+   "july_flanks_km2": 0.113,
+   "october_total_km2": 8.07,
+   "quiet_removed_percent": 2,
+   "july_flanks_kept_percent": 94,
+   "july_total_kept_percent": 97,
+   "october_kept_percent": 93
+  },
+  "Noise floor and away-facing slopes + clusters from 2,000 m²": {
+   "quiet_pairs": 7,
+   "quiet_mean_km2": 5.492,
+   "quiet_max_km2": 13.072,
+   "quiet_cropland_share": 0.725,
+   "quiet_flanks_max_km2": 0.299,
+   "july_total_km2": 3.753,
+   "july_flanks_km2": 0.077,
+   "october_total_km2": 7.262,
+   "quiet_removed_percent": 19,
+   "july_flanks_kept_percent": 64,
+   "july_total_kept_percent": 72,
+   "october_kept_percent": 84
+  }
+ }
+}
