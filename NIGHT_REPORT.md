@@ -238,14 +238,113 @@ Panama and Fuego are on the same continent, and Nyamulagira is the only one in A
 
 # Day 3
 
-Branch `night-1`. Nothing pushed, nothing merged. `docs/DAY_PLAN_3.md` is your file, and I left it untracked. Results are being added as each task finishes.
+Branch `night-1`. Nothing pushed, nothing merged. No file in `docs/` was changed: `docs/DAY_PLAN_3.md` and `docs/NIGHT_PLAN_2.md` are your files, and I left them untracked.
+
+**Final evidence, all run locally:** `pytest -q`: 295 passed, 6 skipped, 1 expected failure. That splits into `pytest -m "not e2e"`: 208 passed, and `pytest -m e2e`: 87 passed, 6 skipped, 1 expected failure. Contract check: 0 errors on `site/data`, and 0 on `pipeline/out` under its unpublished rules. **Downloaded today: under 0.05 GB** of 10 GB (estimate, as these reads aren't logged). That's two map windows that take 8.8 MB on disk, and one read of a July product's metadata. No radar crops were fetched, and nothing from on or after 2026-10-30 was opened.
+
+## Read this first
+
+1. **Compare is fixed, but do a hard reload to see it (Ctrl+Shift+R).** In real Chrome a normal reload kept running the old JavaScript. It showed the old labels until I hard reloaded. The real host may cache files too, so a visitor could see old code for a while.
+2. **Most false alarms are on farmland.** Cropland is 7.7% of the land but holds 41–80% of detected area. No filter fixes this without also losing July signal.
+3. **Don't assume Oct 8 → Oct 20 is a false alarm.** It has 2.49 km² inside the danger zone, about 4 to 40 times the other pairs, and it's the last pair before the eruption. Check it against PHIVOLCS bulletins first.
+4. **CI still has never run**, including the new browser step.
+
+## Tasks
+
+| # | Task | Status | Commit | Evidence |
+| --- | --- | --- | --- | --- |
+| 0 | Leftovers | Done; 3 parts blocked (below) | d0b5561, 88ce6eb | Divider drag by mouse is now tested. TC-011, 019 and 040 are now repeatable tests |
+| 1 | Browser test harness | Done; CI run blocked | d0b5561 | `pipeline/tests/e2e/`, marked `e2e`, serves `site/` on a free port. `pytest-playwright` added to requirements. CI installs Chromium and runs them, but that step has never run |
+| 2 | Compare bug and TC-018, TC-019 | Done | d0b5561, 313ce06 | Before the fix: 3 failed, 6 passed. After: all pass |
+| 3 | Browser tests for the MVP | Done | 88ce6eb, 313ce06 | Table below. 20 screenshots in `pipeline/reports/screens/` |
+| 4 | False-alarm study | Done; nothing turned on | fa8a62f | `pipeline/reports/threshold-study-night-1.md`, day 3 section. 208 non-browser tests include the new filter tests |
+| 5 | Small UI fixes | Done | e7ae4db, 313ce06 | Before the fixes: 9 label tests failed. After: all 24 pass |
+| 6 | Visual pass | Done on desktop | none: no code | Claude in Chrome was connected. Checked the main map, Compare, a divider drag and the labels by eye, after a hard reload. Screenshots at 360 px were read by eye too |
+
+## Blocked, with reasons
+
+| Task | What is blocked | Reason | What unblocks it |
+| --- | --- | --- | --- |
+| 0, 1 | Running CI, including the new browser step, and the fake-secret test | Hard rule 1 forbids pushing | You push `night-1` to a test branch |
+| 0, night 2 T-033 | Opening the 404 page at a real GitHub Pages address (TC-038 passes on a local server that behaves the same way) | It needs a deploy | The same push, then a deploy |
+| 0, night 2 T-034 | Check on a real phone, including a finger drag of the divider | No phone in this session. 360 px and touch tap are emulated in Chromium, and the drag used a mouse | You, on a phone |
+
+Not attempted, because they're your decisions and the plan excludes them: publishing the July validation, the second site, the channel source.
+
+**One review leftover stays open on purpose:** `previous_pair_id` isn't checked against `pairs.json`. I tried it and took it back, because it would stop a pair being published on its own when its baseline pair isn't published. All 8 real links are correct today.
 
 ## Compare bug: root cause
 
 **Cause:** when a pair finished loading, `main.js` always called `compare.close()`. If you picked another pair and clicked Compare before that pair had finished loading, the view opened on the old pair, then closed when the new pair arrived. With a slow file it opened at 0.06 s and closed at 1.4 s.
 
-**How sure I am:** this is the only path I could make fail, and it matches what you saw, but I can't watch your session. A single click on a settled page never failed, at 1280 px, at 360 px by touch, or as a double click, and it stayed open in real Chrome too. None of the plan's three guesses was the cause: there is one handler, nothing on the map closes the view, and the divider's handlers don't either.
+**How sure I am:** this is the only path I could make fail, and it matches what you saw, but I can't watch your session. A single click on a settled page never failed, at 1280 px, at 360 px by touch, or as a double click, and it stayed open in real Chrome too. None of the plan's three guesses was the cause: there is one handler, nothing on the map closes the view, and the divider's handlers don't either. **If it still snaps back after a hard reload, tell me what you clicked first**, since that would mean there's a second cause.
 
 **Fix:** a visitor who is comparing keeps comparing, and the view moves to the new pair's images. Close is what ends it. Compare is also disabled until the first pair has loaded, because clicking early falsely said the images were missing.
 
-**Tests:** `pipeline/tests/e2e/test_compare.py`. Before the fix: 3 failed, 6 passed, including the snap-back test. After: 9 passed. The mouse drag of the divider, blocked on night 2, is now tested in Chromium. It is still not tested on a real phone.
+**Also fixed:** dragging the divider to the far right blocked the Close button, and the divider could cut through the date labels. A touch interrupted mid-drag now ends the drag properly.
+
+## Browser test results (`pipeline/tests/e2e/`)
+
+| TC | Result | Note |
+| --- | --- | --- |
+| 001–009 | Pass | |
+| 010 | Pass | No published grid has a 255 cell, so it taps just off the grid, which reads as 255 |
+| 011–014 | Pass | |
+| 015 | July: pass. Eruption: skip | No eruption pair may be opened yet |
+| 016 | Pass | |
+| 017 | Pass | Empty-pairs fixture |
+| 018 | Pass | Includes a real mouse drag both ways, and the snap-back case |
+| 019 | Pass | Each image missing in turn |
+| 020 | Pass, on the latest pair | The doc asks for the eruption pair |
+| 021 | Pass | Zero-area data made in the test; the image itself isn't blank |
+| 028 | Pass | PHIVOLCS link's address checked, not opened |
+| 029, 030 | Pass | |
+| 031 | Pass, on the latest pair | ASF links' format checked, not opened |
+| 032 | Pass, without channels | Channels aren't built |
+| 033 | Skip | No second site: your decision |
+| 034 | Pass | Uses a made-up second site, in the test browser only |
+| 038 | Pass, locally | Real Pages address blocked |
+| 040 | Pass, from a local fixture | Uses the July draft's table in the test only. Nothing is published |
+| 041 | Pass | |
+| 042 | Pass, **with one known failure** | Leaflet's small credit link in the map's corner is under 44 px, so that test is marked as an expected failure. Every other control passes. Emulated, not a real phone |
+| 043 | Pass | Chromium's deuteranopia and protanopia emulation |
+| 044–047 | Skip | Channels aren't built: they wait for your channel source |
+
+The plan's list doesn't include TC-022 to 027 or 035 to 037, which aren't browser cases.
+
+**Screenshots:** `pipeline/reports/screens/`, as `<screen>-1280.jpg` and `<screen>-360.jpg`, for main, readout, search, compare, help, sources, check, picker, no-pairs and not-found. A normal test run doesn't change them; `test_screens.py` says how to refresh them.
+
+## UI fixes
+
+- **Danger-zone label:** moved to just outside the ring's south edge. Below the default zoom, a town name that would touch it is hidden until you zoom back in, because the danger zone matters more. All 12 town names show at the default zoom.
+- **Divider:** a map label that the line would cut moves to the nearer side, then returns when Compare closes.
+- **Still open at 360 px:** the map is about 270 px tall, smaller than the ring, so the danger-zone label is off screen until you pan. This was already true with the label in the north, and fixing it means a different default zoom for phones, so it's a question for you below.
+
+## False-alarm study in short
+
+Full tables, figures and limits are in `pipeline/reports/threshold-study-night-1.md`. All filters are off, and no default or threshold changed.
+
+| Filter | Removed on quiet pairs | July flank signal kept |
+| --- | --- | --- |
+| Clusters from 2,000 m² | 16% | 70% |
+| Clusters from 10,000 m² | 54% | 42% |
+| High confidence only | 97% | **0%**: the July pair has no coherence |
+| Persists into next pair | 86% | 18%, and it needs a pass 12 days later |
+| Mixed: high only with coherence, else clusters from 10,000 m² | 75% | 42% |
+
+Your own observations mostly hold. Ligao and Guinobatan: 41–80% of detections are on cropland across the site. Built-up areas are only 1.5–4% of detected area, though. The upper northwest slopes stand out in one pair only, and those slopes face away from the radar.
+
+## Decisions waiting for you
+
+1. **Filter:** none, 2,000 m², 10,000 m², or mixed? The study recommends these three and advises against persistence. Mixed needs a small code change.
+2. **Oct 8 → Oct 20:** real change before the eruption, or a false alarm? Please check PHIVOLCS bulletins for October.
+3. **Cropland:** would you consider hiding or dimming it? It would remove more than any filter, but new material can reach fields too. It's outside the brief, so I didn't test it as a filter.
+4. **Phone map:** should phones start one zoom level further out, so the whole ring and its label show? `default_zoom` is PROVISIONAL.
+5. **Leaflet's credit link** (TC-042): make it bigger, or remove it? Leaflet's license doesn't appear to need the link, but check before removing it.
+6. All the night 2 decisions are still open: thresholds, event date, 24-day pairs, July draft, channel source, second site.
+
+## Worth checking in the docs (I didn't edit them)
+
+- 05 `context_use` has no value for analysis data, so WorldCover and the elevation model are listed as `validation`, and they now appear in the Data sources panel.
+- 08 TC-020 and TC-031 need an eruption pair, which the blind rule forbids for now.
+- 08 §5 asks for fixture files for the missing-image and zero-area pairs. The tests make those in the browser instead, so no large copies are stored. `grid_cells.json` and `empty_pairs.json` are real files.
