@@ -17,3 +17,6 @@ _netrc
 # Editors and OS
 .DS_Store
 Thumbs.db
+
+# Created by the data libraries; keep it off GitHub
+.dodsrc
