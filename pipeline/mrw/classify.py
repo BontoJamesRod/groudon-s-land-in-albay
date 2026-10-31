@@ -19,14 +19,23 @@ LOW = 1
 HIGH = 2
 SQUARE_METRES_PER_KM2 = 1_000_000
 SMALLEST_AREA_KM2 = 0.01
+# How the two signals combine. A site config can choose one with thresholds.rule.
+EITHER_SIGNAL = "either_signal"
+BRIGHTNESS_LEADS = "brightness_leads"
+RULES = (EITHER_SIGNAL, BRIGHTNESS_LEADS)
 
 
-def classify(change_db, loss, reasons, brightness_threshold_db, coherence_loss_threshold):
+def classify(change_db, loss, reasons, brightness_threshold_db, coherence_loss_threshold, rule=EITHER_SIGNAL):
     """Return the class grid. Pixels with no value keep their no-data code.
 
     `loss` is None when there is no coherence data. A brightness drop counts as
     well as a rise, because the threshold applies to the absolute change.
+
+    `rule` picks how the two signals combine. With BRIGHTNESS_LEADS, only brightness can
+    flag a pixel, and coherence loss can only raise it to high: it never adds area.
     """
+    if rule not in RULES:
+        raise ValueError(f"Unknown classify rule: {rule}")
     has_value = reasons == HAS_VALUE
     # Comparing with NaN gives False, so pixels with no value never pass.
     with np.errstate(invalid="ignore"):
@@ -37,7 +46,8 @@ def classify(change_db, loss, reasons, brightness_threshold_db, coherence_loss_t
             decorrelated = loss >= coherence_loss_threshold
     classes = np.array(reasons, dtype="uint8")
     classes[has_value] = NONE
-    classes[has_value & (bright | decorrelated)] = LOW
+    flagged = bright if rule == BRIGHTNESS_LEADS else bright | decorrelated
+    classes[has_value & flagged] = LOW
     classes[has_value & bright & decorrelated] = HIGH
     return classes
 

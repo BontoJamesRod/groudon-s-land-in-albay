@@ -69,6 +69,8 @@ def _check_thresholds(config, path):
         raise SiteConfigError(f"brightness_threshold_db must be above 0 in site config: {path}")
     if not isinstance(loss, (int, float)) or not 0 <= loss <= 1:
         raise SiteConfigError(f"coherence_loss_threshold must be 0 to 1 in site config: {path}")
+    if values.get("rule", "either_signal") not in ("either_signal", "brightness_leads"):
+        raise SiteConfigError(f"thresholds.rule must be either_signal or brightness_leads in site config: {path}")
 
 
 def load_site_config(path):
