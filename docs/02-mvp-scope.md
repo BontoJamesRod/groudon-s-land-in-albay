@@ -2,11 +2,11 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 00-project-brief.md v0.3 (Draft), 01-prd.md v0.1 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 00-project-brief.md v0.4 (Draft), 01-prd.md v0.2 (Draft) |
 
 ## 1. MVP Goal
 
-**This MVP proves that:** NISAR radar, shown in a simple public web app, can show non-experts where Mayon put new material after the Oct 30, 2026 eruption and which named channels it sits in, and that the same engine works on a second site on another continent.
+**This MVP proves that:** NISAR radar, shown in a simple public web app, can show non-experts how Mayon's named channels change between passes, including after the Oct 30, 2026 eruption, and that the same engine works on a second site on another continent.
 
 ## 2. MVP Constraints
 
@@ -32,6 +32,7 @@
 | F-12 | Validation check | US-017 | Proves the core result is true; supports the Validity criterion |
 | F-13 | Mobile-friendly, color-blind-safe design | US-018 | Residents mainly use phones; cheaper to build in from the start |
 | F-19 | Channels and towns | US-023 | The link from new material to the people downstream (R8) |
+| F-20 | Channel timeline | US-024, US-025, US-026 | Shows how each channel changes from pass to pass; the owner's chosen feature for the Nov 5–10 build (R4, R8) |
 
 ## 4. Deferred
 
@@ -53,10 +54,11 @@
 4. They swipe between the before and after radar images. (US-007)
 5. They tap a detected area and read the card: town, distance to the summit, danger-zone status, confidence, and the channel it's in. (US-004, US-023)
 6. They step back through the timeline to the July 14, 2026 pyroclastic flow. (US-005)
-7. They open "What am I looking at?", "Data sources" and "How we checked this". (US-012, US-013, US-017)
-8. They switch to the second site and see the same method there. (US-014)
+7. They open the channel list, see which channels changed most, and open one to see its bars and strip. (US-024, US-025)
+8. They open "What am I looking at?", "Data sources" and "How we checked this". (US-012, US-013, US-017)
+9. They switch to the second site and see the same method there. (US-014)
 
-Behind the journey, the maintainer processes and publishes each pair and adds the second site from a config file. (US-009, US-015) The whole journey works on a phone. (US-018)
+Behind the journey, the maintainer processes and publishes each pair and adds the second site from a config file; the pipeline computes the channel areas. (US-009, US-015, US-026) The whole journey works on a phone. (US-018)
 
 ## 6. MVP Success Criteria
 
@@ -66,6 +68,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | 2 | Eruption shown in real NISAR data (G-02) | ≥ 1 post-eruption pair published by 2026-11-07 | Count published pairs after 2026-10-30 in the Mayon pair list |
 | 3 | Second site live (R7) | 1 site on another continent with ≥ 1 published pair by 2026-11-13 | Site list on the live app |
 | 4 | Result checked against an independent source | ≥ 1 pair with a validation record by 2026-11-13 | "How we checked this" panel on the live app |
+| 6 | Channel timeline live (F-20) | At least 1 confirmed channel with its bars on the live app, by 2026-11-10 | Open the channel list on the live app |
 | 5 | Readable for non-experts (G-03) | ≥ 7 of 10 testers correctly say where new material is and which channel it's in, by 2026-11-30 | Short test session with a written answer sheet |
 
 ## 7. Allowed Shortcuts
@@ -116,3 +119,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | Added F-20 Channel timeline and criterion 6. Second site is Panama. |

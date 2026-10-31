@@ -2,11 +2,11 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 01 v0.1, 02 v0.1, 03 v0.1, 06 v0.1 (all Draft) |
+| 0.2 | Draft | 2026-11-01 | 01 v0.2, 02 v0.2, 03 v0.2, 06 v0.2 (all Draft) |
 
 ## 1. Scope
 
-**Tested in this plan:** the MVP features F-01, F-02, F-03, F-04, F-05, F-08, F-09, F-10, F-11, F-12, F-13 and F-19 (02 §3), and NFR-001 to NFR-009.
+**Tested in this plan:** the MVP features F-01, F-02, F-03, F-04, F-05, F-08, F-09, F-10, F-11, F-12, F-13, F-19 and F-20 (02 §3), and NFR-001 to NFR-009.
 **Not tested:** F-06, F-07, F-14, F-16, F-17 and F-18, deferred to v1.1 and later (02 §4); F-15, removed in brief v0.2.
 
 ## 2. Test Approach
@@ -76,6 +76,17 @@ Fixtures used below are listed in §5.
 | TC-061 | US-004/AC-4 | FR-060, SCR-02, API-010 | Tap beyond the reach limit | 1. Tap a land point in Oas, about 13.5 km from the summit. | Card says "Not checked: this map only looks within 10 km of the summit"; it doesn't say "No new material detected" | Edge | High |
 | TC-062 | US-008/AC-5 | FR-060, SCR-01, TBL-01, TBL-06 | Reach limit is drawn and stated | 1. Open the map and legend. 2. Run the contract check on published layers. | A dotted ring shows at the reach distance; every published `new_material` layer title states the limit | Positive | High |
 | TC-063 | US-008/AC-4 | FR-023, TBL-06 | Only coherence loss passes | 1. Run the `classify` unit tests with test arrays where only coherence loss passes. | Those cells get class 0 (none) and add no area | Negative | High |
+| TC-064 | US-024/AC-1 | FR-061, SCR-13, API-012 | Channels sorted | 1. Use a fixture with 3 channels with different areas and 1 with no radar data for the latest pair. 2. Open Channels. | Largest area first, 2 decimals, ties by name, the no-data channel last | Positive | High |
+| TC-065 | US-024/AC-2 | FR-067, SCR-13, SCR-01 | No confirmed channels | 1. Use an empty-channels fixture. 2. Open Channels. 3. Switch to a site with no channel data. | "No confirmed channels yet for this site"; the other site shows no Channels button | Edge | Medium |
+| TC-066 | US-024/AC-3 | FR-067, SCR-13, API-012 | List loading and failing | 1. Throttle, then block `channel_areas.json`. 2. Open Channels. | "Loading channel changes…", then "Couldn't load channel changes. Try again." with Retry; the map stays as it was | Negative | Medium |
+| TC-067 | US-025/AC-1 | FR-062, SCR-14, API-012 | Bars per pass | 1. Open a channel. | One bar per published pair, in order of after date, labeled with its dates; each value equals its `flagged_area_km2` | Positive | High |
+| TC-068 | US-025/AC-2 | FR-063, SCR-14, API-005 | Strip on the map | 1. Open a channel. 2. Go back. | Its strip shows and the map fits it; going back removes it | Positive | High |
+| TC-069 | US-025/AC-3 | FR-067, SCR-14, API-012 | No radar data in a strip | 1. Use a fixture row with `checked_area_km2` 0. | The bar's place says "No radar data", never 0 km² | Edge | Medium |
+| TC-070 | US-025/AC-4 | FR-066, SCR-14 | Unequal gap on the channel timeline | 1. Open a channel. 2. Find the 24-day pair. | Bar dimmed with "24-day gap, not comparable"; 12-day bars aren't dimmed | Edge | High |
+| TC-071 | US-005/AC-4 | FR-066, SCR-01, API-007 | Unequal gap on the pass timeline | 1. Open the pair list. 2. Find the 24-day pair. | Pair dimmed with "24-day gap, not comparable"; 12-day pairs aren't dimmed | Edge | High |
+| TC-072 | US-026/AC-1 | FR-064, FR-060, SCR-12, TBL-12, API-012 | Area in a strip | 1. Run the `channel_areas` unit tests with a small grid and a known strip, with flagged cells inside the strip, outside it and beyond the reach. | Only flagged cells inside the strip and the reach count; the area matches a hand calculation; one row per channel and pair | Positive | High |
+| TC-073 | US-026/AC-2 | FR-064, SCR-12, TBL-01 | Strip width missing | 1. Run with a config that has channels and no width. | Stops with "Channel strip width missing in site config: <file>" | Negative | High |
+| TC-074 | US-026/AC-3 | FR-065, TBL-03, API-005 | Confirmed channels only | 1. Run `contract_check` on a fixture with a channel without `confirmed_on`. 2. Check that no candidate from `channel_name_candidates.geojson` is under `site/data/`. | The check fails on the fixture; no candidate is published | Negative | High |
 
 ## 4. Non-Functional Tests
 
@@ -119,7 +130,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-002 | AC-1, AC-2 | TC-003, TC-004 |
 | US-003 | AC-1, AC-2 | TC-005, TC-007, TC-006 |
 | US-004 | AC-1, AC-2, AC-3, AC-4 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061 |
-| US-005 | AC-1, AC-2, AC-3 | TC-013, TC-014, TC-015 |
+| US-005 | AC-1, AC-2, AC-3, AC-4 | TC-013, TC-014, TC-015, TC-071 |
 | US-006 | AC-1, AC-2 | TC-016, TC-049, TC-017 |
 | US-007 | AC-1, AC-2 | TC-018, TC-019 |
 | US-008 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-020, TC-021, TC-022, TC-023, TC-063, TC-062 |
@@ -132,6 +143,9 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-017 | AC-1, AC-2 | TC-040, TC-041 |
 | US-018 | AC-1, AC-2 | TC-042, TC-043 |
 | US-023 | AC-1, AC-2, AC-3 | TC-044, TC-045, TC-046, TC-047 |
+| US-024 | AC-1, AC-2, AC-3 | TC-064, TC-065, TC-066 |
+| US-025 | AC-1, AC-2, AC-3, AC-4 | TC-067, TC-068, TC-069, TC-070 |
+| US-026 | AC-1, AC-2, AC-3 | TC-072, TC-073, TC-074 |
 
 ## 8. Exit Criteria
 
@@ -177,3 +191,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-076. |

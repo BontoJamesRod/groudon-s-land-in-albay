@@ -2,7 +2,7 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 01 v0.1 (Draft), 02 v0.1 (Draft), 04 v0.1 (Draft), 05 v0.1 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 01 v0.2 (Draft), 02 v0.2 (Draft), 04 v0.2 (Draft), 05 v0.2 (Draft) |
 
 This system has no backend (04, ADR-001). Its "API" is the set of static files the pipeline publishes and the web app reads. This document is the contract between the two halves, so the pipeline and the web app can be built in parallel and checked automatically (04 §3, `contract_check`). Outbound calls from the pipeline to ASF and Earthdata are third-party services, described in 04 §6.
 
@@ -69,13 +69,14 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 | API-002 | GET | `/data/sources.json` | Context data sources | Visitor, Maintainer | FR-040, FR-058, US-013, US-023 | Yes |
 | API-003 | GET | `/data/sites/{site_id}/towns.geojson` | Town borders and names | Visitor, Maintainer | FR-002, FR-007, FR-008, FR-009, FR-010, US-001, US-003, US-004 | Yes |
 | API-004 | GET | `/data/sites/{site_id}/land.geojson` | Land polygon for the coastline | Visitor, Maintainer | FR-003, FR-005, FR-011, US-001, US-004 | Yes |
-| API-005 | GET | `/data/sites/{site_id}/channels.geojson` | Named channels and their towns | Visitor, Maintainer | FR-056, FR-057, US-023 | Yes |
+| API-005 | GET | `/data/sites/{site_id}/channels.geojson` | Confirmed channels, their towns and strips | Visitor, Maintainer | FR-056, FR-057, FR-063, FR-065, US-023, US-025 | Yes |
 | API-006 | GET | `/data/sites/{site_id}/events.json` | Events for timeline markers | Visitor, Maintainer | FR-016, US-005 | Yes |
 | API-007 | GET | `/data/sites/{site_id}/pairs.json` | Published pairs, oldest first | Visitor, Maintainer | FR-013, FR-015, FR-017, FR-018, FR-059, US-005, US-006 | Yes |
 | API-008 | GET | `/data/sites/{site_id}/pairs/{pair_id}/pair.json` | One pair with its passes and layers | Visitor, Maintainer | FR-014, FR-019, FR-020, FR-025, FR-026, FR-039, US-005, US-007, US-008, US-013 | Yes |
 | API-009 | GET | `/data/sites/{site_id}/pairs/{pair_id}/{image_path}` | Layer image | Visitor, Maintainer | FR-019, FR-025, US-007, US-008 | Yes |
 | API-010 | GET | `/data/sites/{site_id}/pairs/{pair_id}/{grid_path}` | Layer value grid | Visitor, Maintainer | FR-010, FR-011, FR-057, FR-060, US-004, US-023 | Yes |
 | API-011 | GET | `/data/sites/{site_id}/pairs/{pair_id}/validation.json` | Validation of one pair | Visitor, Maintainer | FR-048, US-017 | Yes |
+| API-012 | GET | `/data/sites/{site_id}/channel_areas.json` | Flagged area per channel per pair | Visitor, Maintainer | FR-061, FR-062, FR-067, US-024, US-025 | Yes |
 
 ## 4. Endpoint Details
 
@@ -292,9 +293,9 @@ None (`GET`).
 
 ### API-005: `GET /data/sites/{site_id}/channels.geojson`
 
-**Purpose:** Named channels with their towns and sources.
+**Purpose:** Owner-confirmed channels with their towns, sources and strips.
 **Roles:** Visitor, Maintainer
-**Supports:** FR-056, FR-057, US-023
+**Supports:** FR-056, FR-057, FR-063, FR-065, US-023, US-025
 
 **Path and query parameters**
 
@@ -306,7 +307,7 @@ None (`GET`).
 
 None (`GET`).
 
-**Success response:** `200 OK` (line shortened; the line source is still [TBD])
+**Success response:** `200 OK` (line and strip shortened, illustrative)
 
 ```json
 {
@@ -325,7 +326,13 @@ None (`GET`).
         "town_ids": ["mayon_daraga"],
         "name_source": "PHIVOLCS Mayon Volcano Bulletin",
         "name_source_url": null,
-        "line_source_id": "channel_lines"
+        "line_source_id": "channel_lines",
+        "confirmed_by": "project owner",
+        "confirmed_on": "2026-11-05",
+        "strip_geometry": {
+          "type": "Polygon",
+          "coordinates": [[[123.679, 13.250], [123.681, 13.250], [123.701, 13.200], [123.699, 13.200], [123.679, 13.250]]]
+        }
       },
       "geometry": {
         "type": "LineString",
@@ -342,7 +349,7 @@ None (`GET`).
 | --- | --- | --- |
 | 404 | `NOT_FOUND` | Unknown `site_id` or file missing; Suggestion: the channel layer is hidden and the legend says "Channels unavailable" (03 §5) |
 | — | `NETWORK_ERROR` | No connection |
-| 200 | `INVALID_DATA` | A `town_ids` item doesn't exist in `towns.geojson` |
+| 200 | `INVALID_DATA` | A `town_ids` item doesn't exist in `towns.geojson`, or a channel has no `confirmed_on` (FR-065) |
 
 ### API-006: `GET /data/sites/{site_id}/events.json`
 
@@ -694,6 +701,53 @@ None (`GET`).
 | — | `NETWORK_ERROR` | No connection |
 | 200 | `INVALID_DATA` | `detected` isn't a `detection_result` value |
 
+### API-012: `GET /data/sites/{site_id}/channel_areas.json`
+
+**Purpose:** Flagged area for every confirmed channel in every published pair, for the channel list and channel view.
+**Roles:** Visitor, Maintainer
+**Supports:** FR-061, FR-062, FR-067, US-024, US-025
+
+**Path and query parameters**
+
+| Name | In | Type | Required | Description |
+| --- | --- | --- | --- | --- |
+| `site_id` | path | string | Yes | `sites.id` |
+
+**Request body**
+
+None (`GET`).
+
+**Success response:** `200 OK` (illustrative values; the file doesn't exist yet)
+
+```json
+{
+  "data": [
+    {
+      "id": "mayon_miisi__mayon_A111F008_20261007_20261019",
+      "site_id": "mayon",
+      "channel_id": "mayon_miisi",
+      "pair_id": "mayon_A111F008_20261007_20261019",
+      "flagged_area_km2": 0.04,
+      "checked_area_km2": 1.12,
+      "created_at": "2026-11-05T09:00:00Z",
+      "updated_at": "2026-11-05T09:00:00Z"
+    }
+  ],
+  "meta": {
+    "generated_at": "2026-11-05T09:00:00Z",
+    "schema_version": "1.0"
+  }
+}
+```
+
+**Errors**
+
+| Status | Code | When |
+| --- | --- | --- |
+| 404 | `NOT_FOUND` | Site has no channels; no Channels button shows (US-024/AC-2) |
+| — | `NETWORK_ERROR` | No connection; "Couldn't load channel changes. Try again." with Retry (US-024/AC-3) |
+| 200 | `INVALID_DATA` | A row's `channel_id` or `pair_id` doesn't exist, or `flagged_area_km2` is `null` while `checked_area_km2` is above 0 |
+
 ## 5. Rate Limiting and Security
 
 | Endpoint or group | Limit | Reason |
@@ -726,3 +780,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | Layer count note. Removed threshold numbers from the examples. Added API-012 and the new API-005 fields. |

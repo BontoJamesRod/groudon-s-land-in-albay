@@ -2,7 +2,7 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 00 v0.3 (Draft), 01 v0.1 (Draft), 02 v0.1 (Draft), 03 v0.1 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 00 v0.4 (Draft), 01 v0.2 (Draft), 02 v0.2 (Draft), 03 v0.2 (Draft) |
 
 ## 1. Architecture Overview
 
@@ -64,6 +64,7 @@ Hosting:
 | `coherence` | Read GUNW coherence for the current and previous pair; compute coherence loss | F-05 |
 | `classify` | Apply the final rule and thresholds; produce none, low and high confidence classes and areas in km² | F-05 |
 | `context` | Prepare towns, land, coastline, channels and events for a site | F-01, F-02, F-03, F-19 |
+| `channel_areas` | Build channel strips from the confirmed lines and the configured width; compute the flagged area per channel per pair | F-20 |
 | `export` | Reproject to EPSG:4326, colorize, write images, value grids and JSON records to `pipeline/out/` | F-03, F-04, F-05, F-09 |
 | `publish` | Copy a checked pair from `pipeline/out/` to `site/data/`, set status "published", rebuild the pair list | F-03, F-11 |
 | `validation` | Turn a hand-filled validation sheet into a validation record | F-12 |
@@ -73,6 +74,7 @@ Hosting:
 | Web: `timeline.js` | Pair list, latest-pair default, Previous and Next, event markers | F-03 |
 | Web: `layers.js` | New-material and channel layers, legend, summary line | F-05, F-19 |
 | Web: `readout.js` | Decode value grids and build the readout card for a tap, town or channel | F-02, F-19 |
+| Web: `channels.js` | Channel list, channel view, bars, strip on the map | F-20 |
 | Web: `search.js` | Town suggestions and no-match message | F-02 |
 | Web: `compare.js` | Before/after divider | F-04 |
 | Web: `panels.js` | "What am I looking at?", Data sources, "How we checked this", site picker | F-08, F-09, F-10, F-12 |
@@ -200,7 +202,7 @@ Leaflet is copied into `site/vendor/` instead of loaded from a CDN, so the app h
 mayon-radar-watch/
 ├── docs/                      # planning documents (this kit)
 ├── pipeline/
-│   ├── mrw/                   # Python package: config, search, pairs, download, gcov, coherence, classify, context, export, publish, validation, contract_check
+│   ├── mrw/                   # Python package: config, search, pairs, download, gcov, coherence, classify, context, channel_areas, export, publish, validation, contract_check
 │   ├── sites/                 # one config file per site, e.g. mayon.json
 │   ├── context/               # source files for boundaries, channels, events, validation sheets
 │   ├── notebooks/             # Colab notebooks, incl. nisar_albay_starter.ipynb
@@ -213,7 +215,7 @@ mayon-radar-watch/
 │   ├── index.html
 │   ├── 404.html
 │   ├── css/
-│   ├── js/                    # data, map, timeline, layers, readout, search, compare, panels, strings
+│   ├── js/                    # data, map, timeline, layers, readout, channels, search, compare, panels, strings
 │   ├── vendor/leaflet-1.9.4/
 │   └── data/                  # published data files (see 05 and 06)
 ├── .github/workflows/         # CI checks and deploy
@@ -294,6 +296,13 @@ mayon-radar-watch/
 - **Alternatives considered:** No background tiles at all (less context for visitors).
 - **Consequences:** The map stays usable when tiles fail (FR-005); tile terms and attribution must be checked (verify).
 
+### ADR-011: Compute channel strips in the pipeline, with the width in the site config
+
+- **Context:** The channel timeline (F-20) needs the area flagged along each channel for every pair. A value grid is about a megabyte per pair, so reading every pair in the browser would break the NFR-001 target. Area must also match the final rule exactly.
+- **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_width_m`), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
+- **Alternatives considered:** Computing in the browser from each pair's grid (many downloads, and results could differ from the pipeline's); flow routing from elevation data (out of scope, ADR-008).
+- **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part.
+
 ## 12. Assumptions
 
 - The maintainer has write access to one public GitHub repository.
@@ -319,3 +328,4 @@ None. The conflict raised in 01-prd.md §13 (brief F-05 wording) closed with the
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | CI text updated. ADR-006 now states the final rule, the reach distance and the lifted blind cutoff. Added ADR-011 and the `channel_areas` and `channels.js` modules. |

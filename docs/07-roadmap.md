@@ -2,7 +2,7 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 00 v0.3, 01–06 v0.1 (all Draft), consistency-01 |
+| 0.2 | Draft | 2026-11-01 | 00 v0.4, 01–06 v0.2 (all Draft), consistency-03 |
 
 No calendar is given, because weekly hours aren't known yet (02 Open Question 1). The dates below are fixed outside events and the targets already set in 02 §6, not estimates.
 
@@ -11,7 +11,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | Phase | Goal | Includes (F-IDs) | Exit criteria |
 | --- | --- | --- | --- |
 | Phase 0: Setup | Project ready to build and deploy | — | An empty Leaflet map opens at the public URL in a private window; CI runs tests, the contract check and the secret scan |
-| Phase 1: MVP | Show where Mayon put new material after the Oct 30, 2026 eruption and which channels it's in, plus a second site (02 §1) | F-01, F-02, F-03, F-04, F-05, F-08, F-09, F-10, F-11, F-12, F-13, F-19 | 02 §6 success criteria 1–4 met; 08 exit criteria met; entry submitted |
+| Phase 1: MVP | Show where Mayon put new material after the Oct 30, 2026 eruption and which channels it's in, plus a second site (02 §1) | F-01, F-02, F-03, F-04, F-05, F-08, F-09, F-10, F-11, F-12, F-13, F-19, F-20 | 02 §6 success criteria 1–4 and 6 met; 08 exit criteria met; entry submitted |
 | Phase 2: v1.1 | Add the deferred Could features that reuse the same data | F-06, F-07, F-14 | Their stories (US-010, US-011, US-019) pass their acceptance criteria |
 | Phase 3: v1.2 | Reach more residents and stop manual runs | F-16, F-17 | US-020 and US-021 pass their acceptance criteria |
 | Phase 4: v2 | Other change types and places | F-18 | US-022 passes its acceptance criteria |
@@ -26,6 +26,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | 4 | MVP feature-complete | Second site (T-037), validation (T-039) and phone pass (T-034) done | Target 2026-11-13 (02 §6, criteria 3 and 4) |
 | 5 | Tested and submitted | T-040 to T-042 done | Hackathon 2026-11-14 to 2026-11-15 (fixed) |
 | 6 | Readability test | T-043 done | Target 2026-11-30 (02 §6, criterion 5) |
+| 7 | Channel timeline live | T-073 to T-078 done | Build 2026-11-05 to 2026-11-10 (02 §6, criterion 6) |
 
 ## 3. Task Breakdown
 
@@ -47,7 +48,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | --- | --- | --- | --- | --- | --- |
 | T-008 | Write `pipeline/sites/mayon.json` and the `config` module that checks it and builds the `sites` row | US-015, TBL-01, SCR-12 | S | T-002 | A valid config gives the row; reversed bounds stop with "Invalid bounds in site config: <file>" |
 | T-009 | Build `towns.geojson`, `land.geojson` and the boundary row of `sources.json` for Mayon from the Albay boundary file | US-001, US-003, TBL-02, TBL-10, TBL-11, API-002, API-003, API-004 | M | T-008 | Files pass the contract check; town borders line up with the background imagery on localhost |
-| T-010 | Compile the channel names from PHIVOLCS bulletins, get their lines from the chosen source, link each to its towns, write `channels.geojson` and its `sources.json` row | US-023, TBL-03, TBL-10, API-005, ADR-008 | M | T-009 | Every channel has a line, at least 1 town and a name source; the file passes the contract check |
+| T-010 | Compile the channel names from PHIVOLCS bulletins, get their lines from the chosen source, link each to its towns, write `channels.geojson` and its `sources.json` row | US-023, TBL-03, TBL-10, API-005, ADR-008 | M | T-009, T-073 | Every channel has a confirmed line, at least 1 town and a name source; the file passes the contract check |
 | T-011 | Write `events.json` with the 2026-07-14 and 2026-10-30 events and their sources | US-005, TBL-07, API-006 | S | T-008 | The file passes the contract check |
 | T-012 | Build the `search` and `pairs` modules: list passes per track, frame and direction, form consecutive pairs, stop on mixed passes or missing GCOV products | US-009, TBL-04, TBL-05, SCR-12 | M | T-003, T-008 | Track 111 pairs match Vertex; mixed tracks and an unknown granule give the exact 01 messages and write no files |
 | T-013 | Build the `download` module: download or stream, crop to the site bounds, cache in `raw/` (or Google Drive in Colab) | US-009 | M | T-012 | A second run uses the cache; cropped arrays cover the site bounds |
@@ -77,7 +78,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-037 | Process and publish at least 1 pair for the second site | US-014, US-015 | M | T-036, T-019, T-032 | TC-033 and TC-035 pass |
 | T-038 | Process and publish the eruption pairs (tracks 104 and 111, 2026-10-19 → 2026-10-31 UTC) as soon as they are on ASF, including each track's previous pair if not yet done | US-005, US-008, F-05 | M | T-016, T-019 | At least 1 post-eruption pair is live (G-02) |
 | T-039 | Create the validation record for an eruption pair | US-017, TBL-08, TBL-09 | S | T-038, T-035 | The panel shows it on the live site |
-| T-040 | Run the whole test plan (08) on the live site; fix every Critical and Major bug | All MVP stories (US-001 to US-023), NFR-001 to NFR-009 | M | T-034, T-037, T-039 | 08 exit criteria met |
+| T-040 | Run the whole test plan (08) on the live site; fix every Critical and Major bug | All MVP stories (US-001 to US-026), NFR-001 to NFR-009 | M | T-034, T-037, T-039, T-076, T-077, T-078 | 08 exit criteria met |
 | T-041 | With the presenter, write and record the 30-second demo, write the submission text and data citations | F-11, US-016 | M | T-040 | Demo is 30 s or less, public, in English, with subtitles |
 | T-042 | Release v1.0: final deploy, private-window check, first `CHANGELOG.md` entry | F-11, US-016 | S | T-041 | Public link and repository open in a private window; entry submitted |
 | T-043 | Run the readability test with 10 residents or LGU staff | US-012, US-018 | M | T-042 | Results recorded against 02 §6 criterion 5 |
@@ -103,6 +104,16 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | --- | --- | --- | --- | --- | --- |
 | T-049 | Add the first additional change type at a new site | US-022, F-18 | M | T-042 | US-022 acceptance criteria pass |
 
+### Phase 1: Channel timeline (F-20, build 2026-11-05 to 2026-11-10)
+
+| T-ID | Task | Related IDs | Size | Depends on | Done when |
+| --- | --- | --- | --- | --- | --- |
+| T-073 | Owner: confirm which candidate channel lines are right, and record who and when | F-19, F-20, FR-065, TBL-03, US-023, US-026 | S | T-065 | The confirmed list is written down; candidates stay out of `site/data/` |
+| T-074 | Add `channel_strip_width_m` to the site config; build the `channel_areas` module and `channel_areas.json`; add the confirmed-only and TBL-12 rules to the contract check | US-026, FR-060, FR-064, FR-065, TBL-01, TBL-03, TBL-12, API-005, API-012, ADR-011, SCR-12 | M | T-010, T-019 | TC-072, TC-073 and TC-074 pass |
+| T-075 | Build the channel list in `channels.js`, with empty, loading and error states | US-024, FR-061, FR-067, SCR-01, SCR-13, API-012 | M | T-022, T-074 | TC-064, TC-065 and TC-066 pass |
+| T-076 | Build the channel view: bars, no-data state and the strip on the map | US-025, FR-062, FR-063, FR-067, SCR-14, API-005, API-012 | M | T-075, T-028 | TC-067, TC-068, TC-069 and TC-070 pass |
+| T-077 | Dim pairs with an unequal gap, with a short note, on the pass timeline and the channel timeline. Not built yet | US-005, US-025, FR-066, SCR-01, SCR-14, API-007 | S | T-024, T-076 | TC-070 and TC-071 pass |
+
 ### Done work added on 2026-11-01
 
 These tasks are done. They're listed so that every piece of finished work has an ID (see the ID errata in §11).
@@ -111,6 +122,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 | --- | --- | --- | --- | --- | --- |
 | T-067 | Apply the 6 approved changes in `docs/notes/proposed-doc-changes.md`, with the code, test and data parts of changes 2 and 6 | FR-011, FR-022, FR-030, TC-011, TC-024, API-008, TBL-10, US-004 | S | — | Done on 2026-11-01 |
 | T-068 | Record the owner's decisions in the docs: the final rule, the reach limit, the lifted blind cutoff and the held pair | FR-023, FR-060, ADR-006, US-004, US-008, TC-022, TC-061, TC-062, TC-063 | S | — | Done on 2026-11-01 |
+| T-069 | Add the Channel timeline to every doc, with new IDs | F-20, US-024, US-025, US-026, FR-061 to FR-067, SCR-13, SCR-14, ADR-011, TBL-12, API-012, TC-064 to TC-074 | M | — | Done on 2026-11-01 |
 
 ## 4. Build Order
 

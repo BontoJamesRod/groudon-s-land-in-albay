@@ -2,7 +2,7 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 01-prd.md v0.1 (Draft), 02-mvp-scope.md v0.1 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 01-prd.md v0.2 (Draft), 02-mvp-scope.md v0.2 (Draft) |
 
 Layout approach, Suggestion: mobile-first. One full-screen map with a top bar (site name, search, help) and a bottom bar (timeline). Details open as a bottom sheet on phones and a side panel on desktops. Residents mainly use phones (brief §7), and the core journey happens on one map.
 
@@ -21,7 +21,9 @@ Layout approach, Suggestion: mobile-first. One full-screen map with a top bar (s
 | SCR-09 | Page not found | Recover from a wrong link | Visitor | US-016 | Yes |
 | SCR-10 | Point history | Chart of a spot across every pair | Visitor | US-019 | No |
 | SCR-11 | Language menu | Switch the interface language | Visitor | US-020 | No |
-| SCR-12 | Pipeline console | Where the maintainer runs, checks and publishes pairs (notebook or command line, not a web page) | Maintainer | US-009, US-015; later US-021 | Yes |
+| SCR-12 | Pipeline console | Where the maintainer runs, checks and publishes pairs (notebook or command line, not a web page) | Maintainer | US-009, US-015, US-026; later US-021 | Yes |
+| SCR-13 | Channel list | Confirmed channels, most changed first | Visitor | US-024 | Yes |
+| SCR-14 | Channel view | One channel's bars per pass, with its strip on the map | Visitor | US-025 | Yes |
 
 ## 2. Navigation Map
 
@@ -36,6 +38,9 @@ flowchart LR
     SCR01 --> SCR07["SCR-07 How we checked this"]
     SCR01 --> SCR08["SCR-08 Site picker"]
     SCR08 --> SCR01
+    SCR01 --> SCR13["SCR-13 Channel list"]
+    SCR13 --> SCR14["SCR-14 Channel view"]
+    SCR14 --> SCR13
     SCR09["SCR-09 Page not found"] --> SCR01
     SCR12["SCR-12 Pipeline console"] -. publish .-> SCR01
 ```
@@ -190,13 +195,33 @@ flowchart TD
 
 Nothing is written when a check fails; only published pairs reach visitors (FR-059).
 
+### Flow 9: Follow a channel across passes (US-024, US-025)
+
+```mermaid
+flowchart TD
+    A(["Tap Channels"]) --> B["SCR-13 Channel list loading"]
+    B --> C{"Loaded?"}
+    C -- No --> D["Error with Retry; map stays"]
+    C -- Yes --> E{"Any confirmed channels?"}
+    E -- No --> F["Message: No confirmed channels yet"]
+    E -- Yes --> G["Channels, most changed first"]
+    G --> H["Open a channel"]
+    H --> I["SCR-14 bars per pass, strip on the map"]
+    I --> J{"Gap is 12 days and strip has radar data?"}
+    J -- "No radar data" --> K["Bar place says No radar data"]
+    J -- "Gap differs" --> L["Bar dimmed with a gap note"]
+    J -- Yes --> M(["Bar shown"])
+```
+
+Sites with no channel data, such as Panama, show no Channels button.
+
 ## 4. Screen Details
 
 ### SCR-01: Map view
 
 **Purpose:** See the site, its layers and the selected pair; reach every other screen.
 **Roles:** Visitor
-**Stories:** US-001, US-002, US-005, US-006, US-008, US-012, US-016, US-018, US-023
+**Stories:** US-001, US-002, US-005, US-006, US-008, US-012, US-016, US-018, US-023, US-024
 
 **Elements**
 
@@ -215,7 +240,8 @@ Nothing is written when a check fails; only published pairs reach visitors (FR-0
 | Legend | Panel | Class names, confidence, units, total detected area in km² with 2 decimals, channel sources (US-008/AC-1, US-023/AC-3) |
 | Summary line | Text | "No new material detected between <before date> and <after date>" when the area is 0 km² (US-008/AC-2) |
 | Compare button | Button | Opens SCR-04 (US-007) |
-| Timeline | Control | Previous and Next buttons, pair list, event markers, pair label (US-005/AC-1, US-005/AC-3) |
+| Channels button | Button | Opens SCR-13; hidden for a site with no channel data (US-024/AC-2) |
+| Timeline | Control | Previous and Next buttons, pair list, event markers, pair label; a pair whose gap isn't 12 days is dimmed with a short note (US-005/AC-1, US-005/AC-3, US-005/AC-4) |
 | Disclaimer line | Text | "This is not an official warning. Follow PHIVOLCS and your LGU." always visible while a radar layer is on (US-012/AC-2) |
 | Footer links | Links | "Data sources" opens SCR-06; "How we checked this" opens SCR-07 |
 
@@ -229,6 +255,7 @@ Nothing is written when a check fails; only published pairs reach visitors (FR-0
 | Pick a pair | Layers and label update | SCR-01 |
 | Tap Compare | Compare view opens | SCR-04 |
 | Tap the site name | Site picker opens | SCR-08 |
+| Tap Channels | Channel list opens | SCR-13 |
 
 **States**
 
@@ -522,6 +549,69 @@ Nothing is written when a check fails; only published pairs reach visitors (FR-0
 | Error | One of the three error messages above; no files written |
 | Success | The summary output |
 
+### SCR-13: Channel list
+
+**Purpose:** See which confirmed channels changed most since the last pass.
+**Roles:** Visitor
+**Stories:** US-024
+
+**Elements**
+
+| Element | Type | Behavior and validation |
+| --- | --- | --- |
+| Channel rows | List | Name and flagged area in km² with 2 decimals for the latest pair, largest first (US-024/AC-1) |
+| Latest pair line | Text | The dates the areas refer to, with the gap note if its gap isn't 12 days (US-025/AC-4) |
+| Close | Button | Returns to the map |
+
+**Actions**
+
+| Action | Result | Goes to |
+| --- | --- | --- |
+| Tap a channel | Channel view opens | SCR-14 |
+| Tap Close | List closes | SCR-01 |
+
+**States**
+
+| State | What the user sees |
+| --- | --- |
+| Empty | "No confirmed channels yet for this site" (US-024/AC-2) |
+| Loading | "Loading channel changes…" (US-024/AC-3) |
+| Error | "Couldn't load channel changes. Try again." with a Retry button; the map stays as it was (US-024/AC-3) |
+| Success | Channels sorted, most changed first; channels with no radar data for the latest pair come last and say "No radar data" |
+
+### SCR-14: Channel view
+
+**Purpose:** See one channel's change across every pass.
+**Roles:** Visitor
+**Stories:** US-025
+
+**Elements**
+
+| Element | Type | Behavior and validation |
+| --- | --- | --- |
+| Channel name | Text | Name as written by PHIVOLCS |
+| Bars | Chart | One bar per published pair, in order of after date, flagged area in km², each labeled with its dates (US-025/AC-1) |
+| Gap note | Text | Dimmed bar with a note such as "24-day gap, not comparable" (US-025/AC-4) |
+| Channel strip | Map layer | The strip for this channel; the map fits it (US-025/AC-2) |
+| Back | Button | Returns to SCR-13 and removes the strip |
+
+**Actions**
+
+| Action | Result | Goes to |
+| --- | --- | --- |
+| Tap a bar | The map selects that pair | SCR-14 |
+| Tap Back | Channel list shows | SCR-13 |
+
+**States**
+
+| State | What the user sees |
+| --- | --- |
+| Empty | Not applicable: the view opens only from a listed channel; a site with no pairs has an empty list |
+| Loading | Not applicable: the data was loaded for SCR-13 |
+| Error | Not applicable: a failed load stays on SCR-13 |
+| No data | The bar's place says "No radar data" instead of 0 km² (US-025/AC-3) |
+| Success | Bars and strip |
+
 ## 5. Edge Cases
 
 | Situation | Expected behavior | Screens |
@@ -561,3 +651,4 @@ None.
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | Added SCR-13, SCR-14 and Flow 9. The channel card from T-028 stays as it is. Added the reach ring and message, and the new no-data wording. |

@@ -2,11 +2,11 @@
 
 | Version | Status | Last updated | Based on |
 | --- | --- | --- | --- |
-| 0.1 | Draft | 2026-10-31 | 00-project-brief.md v0.3 (Draft) |
+| 0.2 | Draft | 2026-11-01 | 00-project-brief.md v0.4 (Draft) |
 
 ## 1. Overview
 
-Mayon Radar Watch is a public web app that answers one question after every NISAR satellite pass: where did Mayon put new material, and which river channels and towns is it near? It compares NASA–ISRO NISAR radar images taken 12 days apart, maps fresh ash, rock and lava deposits, and shows them with the channels that drain the volcano. It is first built as an entry for the NASA Space Apps Challenge 2026 "Dancing with the SARs" challenge, and the same engine runs on a second site on another continent.
+Mayon Radar Watch is a public web app that watches how Mayon's river channels change between NISAR satellite passes. It compares NASA–ISRO NISAR radar images, usually taken 12 days apart, maps possible fresh ash, rock and lava deposits, and shows how much changed along each channel that drains the volcano. It is first built as an entry for the NASA Space Apps Challenge 2026 "Dancing with the SARs" challenge, and the same engine runs on a second site on another continent.
 
 ## 2. Objectives
 
@@ -117,6 +117,7 @@ As a visitor, I want to step through every pair of passes, so that I can see how
 - **US-005/AC-1:** Given a site has published pairs, when the visitor picks a pair on the timeline, then the map shows that pair's layers and the label shows the before and after dates in the site's local time zone, the track, the frame and the orbit direction.
 - **US-005/AC-2:** Given the newest pair is selected, when the visitor presses "Next", then the selection does not change and "This is the latest pass" appears.
 - **US-005/AC-3:** Given a recorded event falls between a pair's before and after dates, when the timeline shows, then that pair is marked with the event's name.
+- **US-005/AC-4:** Given a pair whose gap isn't 12 days, when the timeline shows, then that pair is dimmed and has a short note such as "24-day gap, not comparable".
 
 #### US-006: Open on the latest pass
 
@@ -367,6 +368,42 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 - **US-023/AC-2:** Given the visitor taps a new-material area, when it lies within the channel distance [TBD] of a named channel, then the card says "New material detected in or near <channel name>"; otherwise it says "Not in a named channel".
 - **US-023/AC-3:** Given the channel layer is on, when the visitor checks the legend or Data sources, then the source of the channel names and of the channel lines is shown.
 
+### F-20: Channel timeline
+
+**Priority:** Must
+**Description:** A list of the owner-confirmed channels, sorted by how much changed since the last pass. Each channel has one bar per radar pass showing the area flagged inside its channel strip, and opening a channel shows its strip on the map (R4, R8). Builds on F-19.
+
+#### US-024: See which channels changed most
+
+As a visitor, I want a list of Mayon's channels with the most changed first, so that I can see where to look after the latest pass.
+
+**Acceptance criteria**
+
+- **US-024/AC-1:** Given a site with confirmed channels and published pairs, when the visitor opens the channel list, then each confirmed channel shows with its flagged area in km² (2 decimals) for the latest pair, largest first, and channels with no radar data for that pair come last.
+- **US-024/AC-2:** Given a site with no confirmed channels, when the visitor opens the channel list, then "No confirmed channels yet for this site" appears, and a site with no channel data shows no channel-list button.
+- **US-024/AC-3:** Given the channel areas are still downloading or fail to load, when the list shows, then "Loading channel changes…" appears, or "Couldn't load channel changes. Try again." with a Retry button, and the map stays as it was.
+
+#### US-025: Read one channel's timeline
+
+As a visitor, I want to open a channel and see its change across every pass, so that I can tell a one-off change from a steady one.
+
+**Acceptance criteria**
+
+- **US-025/AC-1:** Given a channel in the list, when the visitor opens it, then one bar per published pair shows the flagged area in its strip in km², in order of after date, each labeled with its dates.
+- **US-025/AC-2:** Given a channel is open, when the map shows, then that channel's strip is drawn on the map and the map fits it.
+- **US-025/AC-3:** Given a pair with no valid radar value inside the channel's strip, when its bar would show, then the bar's place says "No radar data" instead of 0 km².
+- **US-025/AC-4:** Given a pair whose gap isn't 12 days, when its bar shows, then the bar is dimmed and has a short note such as "24-day gap, not comparable".
+
+#### US-026: Compute channel areas
+
+As the maintainer, I want the pipeline to compute each channel's flagged area for each pair, so that the browser only reads the results.
+
+**Acceptance criteria**
+
+- **US-026/AC-1:** Given a site config with a strip width and a confirmed channel, when the maintainer publishes a pair, then `channel_areas.json` has one row for that channel and pair, computed from the final rule's flagged grid inside the strip and within the reach distance.
+- **US-026/AC-2:** Given a site with channels whose config has no strip width, when the pipeline runs, then it stops with "Channel strip width missing in site config: <file>".
+- **US-026/AC-3:** Given a channel without a recorded confirmation, or an unconfirmed candidate from `pipeline/context/channel_name_candidates.geojson`, when the contract check runs on published files, then it fails if that channel is in them.
+
 ## 6. Functional Requirements
 
 | FR-ID | Requirement | F-ID | US-ID |
@@ -431,6 +468,13 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | FR-058 | The system shall show the source of the channel names and of the channel lines. | F-19 | US-023 |
 | FR-059 | The system shall show visitors only pairs whose status is "published". | F-03 | US-006 |
 | FR-060 | The site config shall set a reach distance from the summit. The pipeline shall not flag anything beyond it, the system shall draw and state the limit, and a tap beyond it shall say "Not checked: this map only looks within 10 km of the summit" (with the site's distance). | F-02, F-05 | US-004, US-008 |
+| FR-061 | The system shall list a site's confirmed channels with the flagged area of the latest pair in km² with 2 decimals, largest first, ties by name, with channels that have no radar data for that pair last. | F-20 | US-024 |
+| FR-062 | The system shall show, for an opened channel, one bar per published pair with the flagged area in its strip, in order of after date. | F-20 | US-025 |
+| FR-063 | The system shall draw an opened channel's strip on the map and fit the map to it. | F-20 | US-025 |
+| FR-064 | The pipeline shall compute each channel's flagged area per pair from the final rule's flagged grid, inside a strip of the width set in the site config and within the reach distance (FR-060), and shall stop with "Channel strip width missing in site config: <file>" when a site with channels has no width. The browser shall never compute these areas. | F-20 | US-026 |
+| FR-065 | The system shall show and publish only channels whose line the owner has confirmed, with the source and the confirmation recorded in the data. Unconfirmed candidates shall never be shown. | F-19, F-20 | US-023, US-026 |
+| FR-066 | The system shall dim a pair whose gap isn't 12 days and show a short note such as "24-day gap, not comparable", on the channel timeline and on the pass timeline. | F-03, F-20 | US-005, US-025 |
+| FR-067 | The system shall show the channel list's empty, loading and error states, and "No radar data" for a pair with no valid radar value in a channel's strip. | F-20 | US-024, US-025 |
 
 ## 7. Non-Functional Requirements
 
@@ -454,8 +498,8 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | NASA Earthdata Login | Authentication for downloading NISAR data (maintainer only) | F-05, F-06, F-07, F-17 |
 | Background map imagery (Esri tiles, per the progress notes) | Visual base map under the radar layers (terms of use: verify) | F-01 |
 | Albay municipal boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through GitHub `faeldon/philippines-json-maps`) | Town borders, town names, land mask and coastline for Mayon | F-01, F-02, F-05 |
-| PHIVOLCS bulletins (read by the maintainer) | Channel names, event dates, validation records | F-03, F-12, F-19 |
-| Channel line data [TBD] | Lines for the named channels | F-19 |
+| PHIVOLCS bulletins (read by the maintainer) | Channel names, event dates, validation records | F-03, F-12, F-19, F-20 |
+| Channel line data: OpenStreetMap candidates, confirmed by the owner (`pipeline/context/channel_name_candidates.geojson`) | Lines for the named channels | F-19, F-20 |
 | Boundary data for the second site [TBD] | Borders and land mask outside the Philippines | F-10 |
 | Public code hosting and static web hosting (GitHub; host choice in step 04) | Public repository and public link | F-11 |
 | Google Colab | Where the maintainer runs the pipeline | F-05, F-10 |
@@ -491,10 +535,11 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | 1 | How comfortable with technology are residents, officials and judges, and which device does each mainly use? | §3 Personas |
 | 2 | Closed on 2026-11-01: the owner set the final thresholds and rule; the values live in the site config. | FR-023, US-008 |
 | 3 | What distance from a channel counts as "in or near" it? | US-023/AC-2, FR-057 |
-| 4 | Where do the channel lines come from (for example OpenStreetMap waterways, or traced by hand)? | F-19, §8 |
+| 4 | Partly closed on 2026-11-01: candidates come from OpenStreetMap, and only lines the owner confirms are used. Which lines are confirmed? | F-19, F-20, §8 |
 | 5 | Which second site, and which boundary data for it? | F-10, §8 |
 | 6 | What are the performance, availability, compatibility and scalability targets? (Suggestions given in §7.) | NFR-001, NFR-003, NFR-005, NFR-006 |
 | 7 | What is the data-freshness target? | NFR-009 |
+| 8 | What strip width should the site config use? | FR-064, T-074 |
 
 ## 13. Conflicts with Earlier Documents
 
@@ -505,3 +550,4 @@ As a visitor, I want to see the channels that drain Mayon and the towns along ea
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
+| 0.2 | 2026-11-01 | Applied changes 1 and 2 of `docs/notes/proposed-doc-changes.md`. Final rule in FR-023 and US-008. Added FR-060 to FR-069, US-024 to US-026, and new acceptance criteria on US-004, US-005, US-008 and US-012. |
