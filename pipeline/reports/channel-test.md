@@ -4,7 +4,7 @@
 
 The rule was fixed before the numbers, and it is applied as written. Please don't read GO as "radar sees quarrying". It says quarry polygons change more often than quiet channel stretches. It doesn't say why, and dropping either of two single quarries brings the count down to 4 of 9.
 
-Rain could not be tested: NASA's server refused the IMERG files (Part B).
+Rain was added afterwards (see "Rain rerun"): the quarry ratio reaches 2.0 in 2 of the 3 low-rain pairs, and no pair meets the heavy-rain rule. It doesn't change the verdict.
 
 ## What to check by eye on Sunday
 
@@ -76,7 +76,7 @@ The other viewing direction agrees on both pairs it has, and both are above 2.0.
 
 ## Part B: rain between passes
 
-**Skipped, because access failed.** The search worked and confirmed the product: `GPM_3IMERGDL`, version 07, with 120 files for 06-22 to 10-19 (the files are V07C). Reading the first file then returned `403 Forbidden` from `data.gesdisc.earthdata.nasa.gov`. **0 bytes were downloaded** of the 1.5 GB limit.
+**This records the first attempt, and "Rain rerun" below replaces it.** Skipped, because access failed. The search worked and confirmed the product: `GPM_3IMERGDL`, version 07, with 120 files for 06-22 to 10-19 (the files are V07C). Reading the first file then returned `403 Forbidden` from `data.gesdisc.earthdata.nasa.gov`. **0 bytes were downloaded** of the 1.5 GB limit.
 
 | Asked for | Result |
 | --- | --- |
@@ -127,8 +127,8 @@ All 9 pairs are at 1.5 or more. That holds for brighter, darker, 4.0 dB, 5.0 dB 
 ## What it means for Channel Watch
 
 - **The go-ahead is real but thin.** It clears the fixed bar with nothing to spare, and two single quarries can each undo it. Treat it as "worth a closer look", not as proof.
-- **The signal isn't shown to be digging.** Quarry polygons are the barest ground in the test (16% bare against 2%). Bare gravel may respond more to moisture than vegetated banks, and without rain data or known digging dates, this test can't separate the two.
-- **The later pairs carry it.** The last three are the strongest (2.87–4.18), while the two pairs before mid-July, the 24-day pair and 09-01 → 09-13 aren't at 2.0. I can't say why without rain.
+- **The signal isn't shown to be digging.** Quarry polygons are the barest ground in the test (16% bare against 2%). Bare gravel may respond more to moisture than vegetated banks. The ratio holding in 2 of 3 low-rain pairs leans against rain alone, but without known digging dates, this test can't separate the two.
+- **The later pairs carry it.** The last three are the strongest (2.87–4.18), while the two pairs before mid-July, the 24-day pair and 09-01 → 09-13 aren't at 2.0. Rain doesn't explain this pattern.
 - **A stricter threshold separates better.** The count rises from 5 at 3.0 dB to 7 at 4.0 dB and 8 at 5.0 dB, and the site's current rule falls to 4, so a quarry layer probably shouldn't reuse that rule as it stands.
 - **Coverage is the bigger gap.** Six of the 8 quarries are in one cluster near Padang, none is near Budiao or Maninila, and the owner's own sites would be a much better test than these.
 
@@ -143,31 +143,39 @@ All 9 pairs are at 1.5 or more. That holds for brighter, darker, 4.0 dB, 5.0 dB 
 
 ## Rain rerun
 
-**Blocked again, so there are no rain results yet.** The first read of the rerun also returned 403, and this time I read the server's reason: `EULA Acceptance Failure`. The Earthdata login itself works. NASA's terms for this data archive haven't been accepted on the account. Accepting them is the owner's decision, so I didn't do it, and I didn't use another rain source. **0 bytes of rain data were read** of the 1.5 GB limit, apart from the server's short refusal messages.
+**The quarry ratio partly holds in the low-rain pairs: 2 of the 3 reach 2.0. No pair meets the heavy-rain rule, so this test says nothing about how channels respond to heavy rain.** The verdict stays GO at 5 of 9, because rain is report-only.
 
-| Asked for | Result |
-| --- | --- |
-| Rain per pair, wettest day, low/middle/high | Not available |
-| Heavy rain: any 3 consecutive days in a pair's window totalling 100 mm or more | Not available. The rule is now in `channel_test.py`, tested on made-up numbers only |
-| Oct 8 → Oct 20: unusually wet or dry? | **Still unanswered** |
-| Does the quarry ratio hold in low-rain pairs? | **Still not tested** |
+Rain is NASA GPM IMERG Late Run daily (`GPM_3IMERGDL`, version 07, V07C files), for all 120 days from 06-22 to 10-19, averaged over the channel strips. A pair's window runs from the day after its first pass through the day of its second, because the passes are at about 21:13 UTC.
 
-The verdict above doesn't change either way, because rain is report-only.
+| Pair (UTC) | Days | Total (mm) | mm per day | Wettest day (mm) | Wettest 3 days (mm) | Heavy rain? | Third | Quarry ratio |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 06-21 → 07-03 | 12 | 88.5 | 7.4 | 06-29 (27.9) | 50.5 | No | High | 1.52 |
+| 07-03 → 07-15 | 12 | 32.3 | 2.7 | 07-09 (7.7) | 19.0 | No | **Low** | 1.45 |
+| 07-15 → 07-27 | 12 | 62.7 | 5.2 | 07-22 (11.7) | 30.0 | No | Middle | **2.38** |
+| 07-27 → 08-20 | 24 | 152.7 | 6.4 | 08-08 (21.6) | 45.5 | No | High | 0.70 |
+| 08-20 → 09-01 | 12 | 9.6 | 0.8 | 08-29 (3.3) | 7.0 | No | **Low** | **2.31** |
+| 09-01 → 09-13 | 12 | 51.4 | 4.3 | 09-06 (10.8) | 20.9 | No | Middle | 1.33 |
+| 09-13 → 09-25 | 12 | 61.2 | 5.1 | 09-21 (13.4) | 28.6 | No | Middle | **3.40** |
+| 09-25 → 10-07 | 12 | 41.6 | 3.5 | 10-05 (12.4) | 18.8 | No | **Low** | **2.87** |
+| 10-07 → 10-19 | 12 | 95.5 | 8.0 | 10-15 (16.1) | 31.8 | No | High | **4.18** |
 
-To finish it, the owner opens NASA's approval page, signed in to Earthdata, and accepts the terms: <https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ> (this link is the one in the server's reply). Then:
+Heavy rain means any 3 consecutive days in a pair's window totalling 100 mm or more, the owner's rule. The thirds are by total, as the plan says. Ranking by mm per day gives the same thirds, so the 24-day pair's length doesn't change them.
 
-```powershell
-python pipeline/reports/channel_test_inputs.py rain
-python pipeline/reports/channel_test.py
-```
+- **Low-rain check:** 2 of 3 pairs reach 2.0 (1.45, 2.31, 2.87). Pairs reaching 2.0 by third: low 2 of 3, middle 2 of 3, high 1 of 3.
+- **What that means for the gravel doubt:** the signal doesn't need much rain, because the driest pair (9.6 mm) still reaches 2.31. That leans against rain alone explaining it, but three pairs can't settle it. Wetter pairs don't clearly score higher: the wettest rate (10-07 → 10-19) has the highest ratio, and the 24-day pair has the lowest.
+- **Oct 8 → Oct 20 (10-07 → 10-19 UTC):** on the wet side, but not extreme. It has the highest daily rate of the 9 pairs (8.0 mm a day), and its 95.5 mm total is second only to the 24-day pair. Its wettest 3 days total 31.8 mm, well short of heavy rain. This compares it only with these 9 pairs, not with a long-term normal.
+- **Heavy rain:** the closest pair reached 50.5 mm in 3 days, half the limit. Channel Watch's behaviour after heavy rain is untested.
 
-The results then land in `channel-test.json` under `rain_by_pair` and `low_rain_check`, and the figure gains the rain labels.
+**Limits:** IMERG is a satellite estimate with cells of about 10 km, and it wasn't compared with rain gauges. It can miss rain on a steep volcano, so the totals may be low, and the 100 mm rule may not read the same on this product as on a gauge.
+
+**Download:** 1.699 GB. That is over the plan's 1.5 GB limit: the first run stopped at the limit on 10-03, and the owner raised it to 1.75 GB for the rain fetch only. Only days inside the pair windows were read.
 
 ## Data used
 
 - NISAR GCOV and GUNW: cached crops in `raw/` only, the latest dated 2026-10-19. No NISAR product was searched for, downloaded or opened beyond those.
 - OpenStreetMap quarries, places and waterways: © OpenStreetMap contributors, ODbL.
 - ESA WorldCover 2021, the false-alarm study's cached copy: CC BY 4.0.
+- NASA GPM IMERG Late Run daily, `GPM_3IMERGDL` version 07, read from NASA GES DISC. The small Mayon extract is kept in `raw/imerg/`.
 
 To reproduce:
 

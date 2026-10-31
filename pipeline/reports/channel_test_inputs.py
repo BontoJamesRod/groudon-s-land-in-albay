@@ -9,7 +9,7 @@ contributors, ODbL. Place names are saved beside them, because the table in the 
 
 `rain` reads only the Mayon part of each daily IMERG file, by asking the server for pieces of
 the file (ranged reads), and keeps the small result in raw/. Every byte is counted, and it stops
-before going over the plan's 1.5 GB limit.
+before going over the rain download limit.
 """
 import json
 import sys
@@ -40,7 +40,7 @@ RAIN_SHORT_NAME = "GPM_3IMERGDL"
 # midnight to midnight UTC, so the day of a first pass is left out: it was nearly over.
 FIRST_RAIN_DAY = date(2026, 6, 22)
 LAST_RAIN_DAY = date(2026, 10, 19)
-RAIN_BYTE_LIMIT = 1_500_000_000
+RAIN_BYTE_LIMIT = 1_750_000_000  # the owner raised it from 1.5 GB on 2026-11-01
 OSM_NOTE = "CANDIDATE only, not checked by hand. Data (c) OpenStreetMap contributors, ODbL."
 
 

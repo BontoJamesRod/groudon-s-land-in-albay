@@ -162,9 +162,114 @@
   }
  },
  "strip_share_of_circle_land": 0.5060580558243531,
- "rain_source": null,
- "rain_by_pair": {},
- "low_rain_check": null,
+ "rain_source": {
+  "short_name": "GPM_3IMERGDL",
+  "version": "07",
+  "bytes_fetched": 1698693120,
+  "units": "['mm/day']",
+  "days": 120
+ },
+ "rain_by_pair": {
+  "06-21 → 07-03": {
+   "days": 12,
+   "total_mm": 88.5,
+   "wettest_day": "2026-06-29",
+   "wettest_mm": 27.9,
+   "mm_per_day": 7.4,
+   "wettest_3_days_mm": 50.5,
+   "heavy_rain": false,
+   "third": "high"
+  },
+  "07-03 → 07-15": {
+   "days": 12,
+   "total_mm": 32.3,
+   "wettest_day": "2026-07-09",
+   "wettest_mm": 7.7,
+   "mm_per_day": 2.7,
+   "wettest_3_days_mm": 19.0,
+   "heavy_rain": false,
+   "third": "low"
+  },
+  "07-15 → 07-27": {
+   "days": 12,
+   "total_mm": 62.7,
+   "wettest_day": "2026-07-22",
+   "wettest_mm": 11.7,
+   "mm_per_day": 5.2,
+   "wettest_3_days_mm": 30.0,
+   "heavy_rain": false,
+   "third": "middle"
+  },
+  "07-27 → 08-20": {
+   "days": 24,
+   "total_mm": 152.7,
+   "wettest_day": "2026-08-08",
+   "wettest_mm": 21.6,
+   "mm_per_day": 6.4,
+   "wettest_3_days_mm": 45.5,
+   "heavy_rain": false,
+   "third": "high"
+  },
+  "08-20 → 09-01": {
+   "days": 12,
+   "total_mm": 9.6,
+   "wettest_day": "2026-08-29",
+   "wettest_mm": 3.3,
+   "mm_per_day": 0.8,
+   "wettest_3_days_mm": 7.0,
+   "heavy_rain": false,
+   "third": "low"
+  },
+  "09-01 → 09-13": {
+   "days": 12,
+   "total_mm": 51.4,
+   "wettest_day": "2026-09-06",
+   "wettest_mm": 10.8,
+   "mm_per_day": 4.3,
+   "wettest_3_days_mm": 20.9,
+   "heavy_rain": false,
+   "third": "middle"
+  },
+  "09-13 → 09-25": {
+   "days": 12,
+   "total_mm": 61.2,
+   "wettest_day": "2026-09-21",
+   "wettest_mm": 13.4,
+   "mm_per_day": 5.1,
+   "wettest_3_days_mm": 28.6,
+   "heavy_rain": false,
+   "third": "middle"
+  },
+  "09-25 → 10-07": {
+   "days": 12,
+   "total_mm": 41.6,
+   "wettest_day": "2026-10-05",
+   "wettest_mm": 12.4,
+   "mm_per_day": 3.5,
+   "wettest_3_days_mm": 18.8,
+   "heavy_rain": false,
+   "third": "low"
+  },
+  "10-07 → 10-19": {
+   "days": 12,
+   "total_mm": 95.5,
+   "wettest_day": "2026-10-15",
+   "wettest_mm": 16.1,
+   "mm_per_day": 8.0,
+   "wettest_3_days_mm": 31.8,
+   "heavy_rain": false,
+   "third": "high"
+  }
+ },
+ "low_rain_check": {
+  "ratios": {
+   "07-03 → 07-15": 1.448648233678033,
+   "08-20 → 09-01": 2.3073685244498328,
+   "09-25 → 10-07": 2.866557564690736
+  },
+  "pairs_at_least_2": 2,
+  "pairs": 3
+ },
  "pairs": [
   {
    "label": "06-21 → 07-03",
@@ -483,6 +588,16 @@
    "circle_share": {
     "combined_3": 0.5864,
     "site_rule": 0.5864
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 88.5,
+    "wettest_day": "2026-06-29",
+    "wettest_mm": 27.9,
+    "mm_per_day": 7.4,
+    "wettest_3_days_mm": 50.5,
+    "heavy_rain": false,
+    "third": "high"
    }
   },
   {
@@ -802,6 +917,16 @@
    "circle_share": {
     "combined_3": 0.5484729227869852,
     "site_rule": 0.5484729227869852
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 32.3,
+    "wettest_day": "2026-07-09",
+    "wettest_mm": 7.7,
+    "mm_per_day": 2.7,
+    "wettest_3_days_mm": 19.0,
+    "heavy_rain": false,
+    "third": "low"
    }
   },
   {
@@ -1121,6 +1246,16 @@
    "circle_share": {
     "combined_3": 0.5275822928490352,
     "site_rule": 0.5317556459288743
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 62.7,
+    "wettest_day": "2026-07-22",
+    "wettest_mm": 11.7,
+    "mm_per_day": 5.2,
+    "wettest_3_days_mm": 30.0,
+    "heavy_rain": false,
+    "third": "middle"
    }
   },
   {
@@ -1440,6 +1575,16 @@
    "circle_share": {
     "combined_3": 0.6071148952828342,
     "site_rule": 0.6071148952828342
+   },
+   "rain": {
+    "days": 24,
+    "total_mm": 152.7,
+    "wettest_day": "2026-08-08",
+    "wettest_mm": 21.6,
+    "mm_per_day": 6.4,
+    "wettest_3_days_mm": 45.5,
+    "heavy_rain": false,
+    "third": "high"
    }
   },
   {
@@ -1759,6 +1904,16 @@
    "circle_share": {
     "combined_3": 0.5724113907515458,
     "site_rule": 0.5724113907515458
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 9.6,
+    "wettest_day": "2026-08-29",
+    "wettest_mm": 3.3,
+    "mm_per_day": 0.8,
+    "wettest_3_days_mm": 7.0,
+    "heavy_rain": false,
+    "third": "low"
    }
   },
   {
@@ -2078,6 +2233,16 @@
    "circle_share": {
     "combined_3": 0.57624014650848,
     "site_rule": 0.5849252013808975
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 51.4,
+    "wettest_day": "2026-09-06",
+    "wettest_mm": 10.8,
+    "mm_per_day": 4.3,
+    "wettest_3_days_mm": 20.9,
+    "heavy_rain": false,
+    "third": "middle"
    }
   },
   {
@@ -2397,6 +2562,16 @@
    "circle_share": {
     "combined_3": 0.5937909352894943,
     "site_rule": 0.6452421376020697
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 61.2,
+    "wettest_day": "2026-09-21",
+    "wettest_mm": 13.4,
+    "mm_per_day": 5.1,
+    "wettest_3_days_mm": 28.6,
+    "heavy_rain": false,
+    "third": "middle"
    }
   },
   {
@@ -2716,6 +2891,16 @@
    "circle_share": {
     "combined_3": 0.548018648018648,
     "site_rule": 0.5451734040203225
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 41.6,
+    "wettest_day": "2026-10-05",
+    "wettest_mm": 12.4,
+    "mm_per_day": 3.5,
+    "wettest_3_days_mm": 18.8,
+    "heavy_rain": false,
+    "third": "low"
    }
   },
   {
@@ -3035,6 +3220,16 @@
    "circle_share": {
     "combined_3": 0.615313286528017,
     "site_rule": 0.6326114211263797
+   },
+   "rain": {
+    "days": 12,
+    "total_mm": 95.5,
+    "wettest_day": "2026-10-15",
+    "wettest_mm": 16.1,
+    "mm_per_day": 8.0,
+    "wettest_3_days_mm": 31.8,
+    "heavy_rain": false,
+    "third": "high"
    }
   }
  ],

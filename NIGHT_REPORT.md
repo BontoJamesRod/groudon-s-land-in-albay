@@ -543,10 +543,10 @@ The full report is [pipeline/reports/channel-test.md](pipeline/reports/channel-t
 **Verdict: GO, by the smallest possible margin.** The quarry-to-quiet ratio reached 2.0 in exactly 5 of 9 track 111 pairs at 3.0 dB combined. Leaving out either of two single quarries makes it 4 of 9, and the test can't say whether the change is digging or bare gravel responding to the weather.
 
 - **Part A:** OpenStreetMap has 8 quarries (77.81 ha), all kept. Six are near Padang, and none is near Budiao or Maninila. Check them by eye in `pipeline/context/channel_test_sites.kml`.
-- **Part B: skipped.** NASA's server refused the IMERG files with a 403, so the Oct 8 → Oct 20 rain question and the low-rain check are still open. The report says how to retry.
+- **Part B: skipped on the first attempt.** NASA's server refused the IMERG files with a 403. "Rain rerun" below has the results.
 - **Part C:** the channel-to-land ratio reached 1.5 in 9 of 9 pairs, but a strip mask would keep 53–62% of the 10 km circle's flagged area while already covering 51% of its land.
 
-**Downloads:** IMERG rain 0 bytes of the 1.5 GB limit. OpenStreetMap quarries and places were two small Overpass queries. NISAR nothing.
+**Downloads:** IMERG rain 0 bytes on the first attempt (see "Rain rerun" below). OpenStreetMap quarries and places were two small Overpass queries. NISAR nothing.
 
 **No NISAR product was searched for or opened** beyond the cached crops already in `raw/`, the latest dated 2026-10-19. `site/`, the site config, `classify.py`, the thresholds and `docs/` are unchanged on `night-1`, and nothing was merged into `main`. `docs/NIGHT_PLAN_4.md` is still untracked, because the plan says not to change `docs/`.
 
@@ -556,4 +556,4 @@ The full report is [pipeline/reports/channel-test.md](pipeline/reports/channel-t
 
 **Final evidence:** `pytest -q` on `night-1`: 344 passed, 6 skipped. Contract check: 0 errors on `site/data`.
 
-**Rain rerun: blocked, no rain results.** NASA's server refused IMERG again (403, `EULA Acceptance Failure`), so 0 bytes of rain data were read, and the low-rain check and the 100 mm heavy-rain rule have no results yet. The owner needs to accept the terms; the steps are under "Rain rerun" in [pipeline/reports/channel-test.md](pipeline/reports/channel-test.md). No NISAR product was searched for or opened.
+**Rain rerun: the quarry ratio reaches 2.0 in 2 of the 3 low-rain pairs, and no pair meets the heavy-rain rule** (100 mm in 3 days; the most was 50.5 mm), so the verdict stays GO and heavy rain is untested. Oct 8 → Oct 20 was on the wet side but not extreme: 95.5 mm, the highest daily rate of the 9 pairs. Rain download: 1.699 GB, after the owner raised the limit from 1.5 to 1.75 GB for this fetch. No NISAR product was searched for or opened. Details are under "Rain rerun" in [pipeline/reports/channel-test.md](pipeline/reports/channel-test.md).
