@@ -204,8 +204,9 @@ def layer_granules(before, after, gunw, previous_gunw):
 def build_pair_record(config, before, after, gunw, previous_id, used_coherence, areas, now):
     """Build the `pairs` row (docs/05 TBL-05) with status 'ready' (FR-029)."""
     thresholds = config["thresholds"]
+    key = pair_id(config["id"], before, after)
     return {
-        "id": pair_id(config["id"], before, after), "site_id": config["id"], "status": "ready",
+        "id": key, "site_id": config["id"], "status": "ready",
         "track": before["track"], "frame": before["frame"], "orbit_direction": before["orbit_direction"],
         "before_pass_id": pass_id(before), "after_pass_id": pass_id(after),
         "before_acquired_start": before["acquired_start"], "after_acquired_start": after["acquired_start"],
@@ -217,6 +218,7 @@ def build_pair_record(config, before, after, gunw, previous_id, used_coherence, 
         "coherence_loss_threshold": thresholds["coherence_loss_threshold"] if used_coherence else None,
         **areas,
         "pipeline_version": __version__, "error_message": None, "published_at": None,
+        "check_note": (config.get("layer_wording") or {}).get("pair_check_notes", {}).get(key),
         "created_at": now, "updated_at": now,
     }
 

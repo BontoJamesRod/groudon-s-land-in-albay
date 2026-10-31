@@ -26,6 +26,9 @@
     "high_label": "Likely change (brightness and coherence agree)",
     "pair_titles": {
       "panama_D141F085_20260927_20261009": "Changed after the earthquake"
+    },
+    "pair_check_notes": {
+      "panama_D141F085_20260915_20260927": "Used as the 'before' comparison for the earthquake pair"
     }
   },
   "change_types": [

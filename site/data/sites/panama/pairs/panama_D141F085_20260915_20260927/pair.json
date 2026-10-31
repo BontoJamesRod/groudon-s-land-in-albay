@@ -21,9 +21,10 @@
   "new_material_area_km2": 2.4,
   "pipeline_version": "0.1.0",
   "error_message": null,
-  "published_at": "2026-10-31T20:35:56Z",
-  "created_at": "2026-10-31T20:35:54Z",
-  "updated_at": "2026-10-31T20:35:56Z",
+  "published_at": "2026-10-31T20:50:54Z",
+  "check_note": "Used as the 'before' comparison for the earthquake pair",
+  "created_at": "2026-10-31T20:50:52Z",
+  "updated_at": "2026-10-31T20:50:54Z",
   "passes": [
    {
     "id": "D141F085_20260915T235335",
@@ -44,8 +45,8 @@
     "pixel_spacing_m": 10.0,
     "maturity": "PROVISIONAL",
     "vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GCOV_030_141_D_085_4005_DHDH_A_20260915T235335_20260915T235344_P05023_N_P_J_001",
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    },
    {
     "id": "D141F085_20260927T235335",
@@ -66,8 +67,8 @@
     "pixel_spacing_m": 10.0,
     "maturity": "PROVISIONAL",
     "vertex_url": "https://search.asf.alaska.edu/#/?dataset=NISAR&searchType=List%20Search&searchList=NISAR_L2_PR_GCOV_031_141_D_085_4005_DHDH_A_20260927T235335_20260927T235344_P05023_N_P_J_001",
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    }
   ],
   "layers": [
@@ -111,8 +112,8 @@
     "source_granule_ids": [
      "NISAR_L2_PR_GCOV_030_141_D_085_4005_DHDH_A_20260915T235335_20260915T235344_P05023_N_P_J_001"
     ],
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    },
    {
     "id": "panama_D141F085_20260915_20260927_after_db",
@@ -154,8 +155,8 @@
     "source_granule_ids": [
      "NISAR_L2_PR_GCOV_031_141_D_085_4005_DHDH_A_20260927T235335_20260927T235344_P05023_N_P_J_001"
     ],
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    },
    {
     "id": "panama_D141F085_20260915_20260927_change_db",
@@ -198,8 +199,8 @@
      "NISAR_L2_PR_GCOV_030_141_D_085_4005_DHDH_A_20260915T235335_20260915T235344_P05023_N_P_J_001",
      "NISAR_L2_PR_GCOV_031_141_D_085_4005_DHDH_A_20260927T235335_20260927T235344_P05023_N_P_J_001"
     ],
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    },
    {
     "id": "panama_D141F085_20260915_20260927_coherence_loss",
@@ -242,8 +243,8 @@
      "NISAR_L2_PR_GUNW_030_141_D_085_031_4000_SH_20260915T235335_20260915T235344_20260927T235335_20260927T235344_P05023_N_P_J_001",
      "NISAR_L2_PR_GUNW_029_141_D_085_030_4000_SH_20260903T235335_20260903T235344_20260915T235335_20260915T235344_P05023_N_P_J_001"
     ],
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    },
    {
     "id": "panama_D141F085_20260915_20260927_new_material",
@@ -292,13 +293,13 @@
      "NISAR_L2_PR_GUNW_030_141_D_085_031_4000_SH_20260915T235335_20260915T235344_20260927T235335_20260927T235344_P05023_N_P_J_001",
      "NISAR_L2_PR_GUNW_029_141_D_085_030_4000_SH_20260903T235335_20260903T235344_20260915T235335_20260915T235344_P05023_N_P_J_001"
     ],
-    "created_at": "2026-10-31T20:35:54Z",
-    "updated_at": "2026-10-31T20:35:54Z"
+    "created_at": "2026-10-31T20:50:52Z",
+    "updated_at": "2026-10-31T20:50:52Z"
    }
   ]
  },
  "meta": {
-  "generated_at": "2026-10-31T20:35:56Z",
+  "generated_at": "2026-10-31T20:50:54Z",
   "schema_version": "1.0"
  }
 }

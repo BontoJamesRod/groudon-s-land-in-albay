@@ -14,7 +14,7 @@ published:
 - channel_strip_half_width_m: for the channel timeline, how far the strip goes on each side
   of a channel line, in metres.
 - layer_wording: for a site that shows change in general, the layer title and legend labels
-  to use instead of "new material", with optional titles for chosen pairs.
+  to use instead of "new material", with optional titles and check notes for chosen pairs.
 - ground_movement: min_coherence hides movement where the two passes are too unlike to trust.
 """
 import json

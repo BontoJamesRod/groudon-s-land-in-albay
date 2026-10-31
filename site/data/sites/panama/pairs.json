@@ -22,9 +22,10 @@
    "new_material_area_km2": 2.4,
    "pipeline_version": "0.1.0",
    "error_message": null,
-   "published_at": "2026-10-31T20:35:56Z",
-   "created_at": "2026-10-31T20:35:54Z",
-   "updated_at": "2026-10-31T20:35:56Z"
+   "published_at": "2026-10-31T20:50:54Z",
+   "check_note": "Used as the 'before' comparison for the earthquake pair",
+   "created_at": "2026-10-31T20:50:52Z",
+   "updated_at": "2026-10-31T20:50:54Z"
   },
   {
    "id": "panama_D141F085_20260927_20261009",
@@ -54,7 +55,7 @@
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T20:36:04Z",
+  "generated_at": "2026-10-31T20:50:54Z",
   "schema_version": "1.0"
  }
 }

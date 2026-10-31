@@ -31,8 +31,8 @@ function addBackground(map, notice) {
   tiles.addTo(map);
 }
 
-function addTowns(map, towns) {
-  L.geoJSON(towns, { style: TOWN_STYLE, interactive: false }).addTo(map);
+function addTowns(map, towns, site) {
+  L.geoJSON(outlinesInsideSite(towns, site), { style: TOWN_STYLE, interactive: false }).addTo(map);
   return towns.features.map((town) => {
     const { label_lat: lat, label_lon: lon, name } = town.properties;
     return L.tooltip({ permanent: true, direction: "center", className: "town-label", interactive: false })
@@ -79,6 +79,35 @@ function keepZoneLabelClear(map, zoneLabel, townLabels) {
   update();
 }
 
+// A file's polygon outlines as lines, leaving out any stretch along the site's edge. Land and
+// towns are clipped to the site, so those stretches are where the data stops, not a real line.
+export function outlinesInsideSite(shapes, site) {
+  const near = (a, b) => Math.abs(a - b) < 0.00002;
+  const alongEdge = ([lon1, lat1], [lon2, lat2]) =>
+    (near(lon1, site.bounds_west) && near(lon2, site.bounds_west))
+    || (near(lon1, site.bounds_east) && near(lon2, site.bounds_east))
+    || (near(lat1, site.bounds_south) && near(lat2, site.bounds_south))
+    || (near(lat1, site.bounds_north) && near(lat2, site.bounds_north));
+  const lines = [];
+  for (const feature of shapes.features) {
+    const { type, coordinates } = feature.geometry;
+    for (const polygon of type === "Polygon" ? [coordinates] : coordinates) {
+      for (const ring of polygon) {
+        let line = [ring[0]];
+        for (let i = 1; i < ring.length; i += 1) {
+          if (alongEdge(ring[i - 1], ring[i])) {
+            if (line.length > 1) lines.push(line);
+            line = [];
+          }
+          line.push(ring[i]);
+        }
+        if (line.length > 1) lines.push(line);
+      }
+    }
+  }
+  return { type: "MultiLineString", coordinates: lines };
+}
+
 // The credit for this site's borders, as a link when the source asks for one.
 function boundaryCredit(site) {
   const text = escapeText(site.boundary_credit);
@@ -95,8 +124,8 @@ export function createMap(site, siteData, notice) {
   // Above town borders and below the labels (Leaflet's label layer is 650).
   map.createPane(COMPARE_LINE_PANE).style.zIndex = 630;
   addBackground(map, notice);
-  L.geoJSON(siteData.land, { style: COAST_STYLE, interactive: false }).addTo(map);
-  const townLabels = addTowns(map, siteData.towns);
+  L.geoJSON(outlinesInsideSite(siteData.land, site), { style: COAST_STYLE, interactive: false }).addTo(map);
+  const townLabels = addTowns(map, siteData.towns, site);
   const zoneLabel = addDangerZone(map, site);
   if (zoneLabel) keepZoneLabelClear(map, zoneLabel, townLabels);
   return map;

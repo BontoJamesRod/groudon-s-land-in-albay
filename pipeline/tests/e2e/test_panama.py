@@ -85,6 +85,40 @@ def test_the_check_summarizes_the_comparison_and_links_the_map(panama):
     assert panel.locator("img").count() == 0
 
 
+def test_tc080_the_quiet_pair_says_what_it_was_used_for(panama):
+    panama.select_option("#pair-list", QUIET)
+    expect(panama.locator("#legend-title")).to_have_text("Radar change")
+    panama.click("#check-button")
+    panel = panama.locator("#check-panel")
+    expect(panel).to_contain_text("Used as the 'before' comparison for the earthquake pair")
+    expect(panel).not_to_contain_text("Not yet checked")
+
+
+COAST_LINES = """async () => {
+  const { outlinesInsideSite } = await import("./js/map.js");
+  const read = async (name) => (await (await fetch(`data/sites/${name}`)).json());
+  const site = (await read("../sites.json")).data.find((row) => row.id === "SITE");
+  const lines = outlinesInsideSite(await read("SITE/FILE.geojson"), site).coordinates;
+  const near = (a, b) => Math.abs(a - b) < 0.00002;
+  const edgeSegments = lines.flatMap((line) => line.slice(1).filter((point, i) => {
+    const before = line[i];
+    return (near(point[0], site.bounds_east) && near(before[0], site.bounds_east))
+      || (near(point[0], site.bounds_west) && near(before[0], site.bounds_west))
+      || (near(point[1], site.bounds_north) && near(before[1], site.bounds_north))
+      || (near(point[1], site.bounds_south) && near(before[1], site.bounds_south));
+  })).length;
+  return { lines: lines.length, points: lines.flat().length, edgeSegments };
+}"""
+
+
+@pytest.mark.parametrize("site_id", ["panama", "mayon"])
+@pytest.mark.parametrize("name", ["land", "towns"])
+def test_tc079_lines_leave_out_the_clipped_edges(app, site_id, name):
+    result = app.evaluate(COAST_LINES.replace("SITE", site_id).replace("FILE", name))
+    assert result["points"] > 100  # the real lines are still there
+    assert result["edgeSegments"] == 0
+
+
 def test_axe_on_panama_with_the_check_open(panama):
     panama.click("#check-button")
     expect(panama.locator("#check-panel table")).to_be_visible()

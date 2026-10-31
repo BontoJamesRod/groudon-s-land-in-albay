@@ -150,6 +150,7 @@ PAIRS = {
     "new_material_area_km2": field("number", low=0),
     "pipeline_version": field("string", pattern=re.compile(r"^\d+\.\d+\.\d+$")),
     "error_message": field("string", required=False),
+    "check_note": field("string", required=False),
     "published_at": field("date-time", required=False),
     "created_at": field("date-time"),
     "updated_at": field("date-time"),

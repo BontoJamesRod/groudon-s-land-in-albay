@@ -170,7 +170,8 @@ export async function fillCheck(body, getPair) {
   try {
     const record = await loadValidation(pair.folder);
     if (!record) {
-      body.replaceChildren(element("p", STRINGS.checkEmpty));
+      // A pair can say why it has no check of its own.
+      body.replaceChildren(element("p", pair.check_note || STRINGS.checkEmpty));
       return;
     }
     const source = element("p", `${STRINGS.checkSource(record.source_name, record.source_date)} `);
