@@ -146,6 +146,8 @@ export const STRINGS = {
   channelBarsLead: "Area flagged in each radar pass. Tap one to show that pass on the map.",
   channelBarLabel: (range, track) => `${range}, track ${track}`,
   channelBarsScale: "All channels use the same scale, so their bars can be compared.",
+  channelNotChecked: "Not checked",
+  channelNotCheckedNote: (reach) => `The dashed white part of this channel is more than ${reach} km from the summit. It's not checked and not counted, which doesn't mean that nothing changed there.`,
   channelCredit: 'Channel lines: <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> (ODbL)',
 
   // Site picker (SCR-08)

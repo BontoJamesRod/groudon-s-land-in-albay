@@ -447,6 +447,12 @@ button:disabled { color: #6e7781; }
   vertical-align: top;
 }
 
+.not-checked-label {
+  font-style: normal;
+  color: var(--ink);
+  background: var(--paper);
+}
+
 /* The channel panel sits beside the map, so that the strip stays in view. On phones it goes under it. */
 .channel-panel {
   flex: 0 0 380px;

@@ -475,3 +475,38 @@ def test_axe_on_the_view_on_a_phone(page, site_url):
     open_phone(page, site_url)
     open_channel(page, "Mi-isi")
     assert problems_on(page) == []
+
+
+def not_checked_paths(page):
+    return page.locator('.leaflet-overlay-pane path[stroke="#ffffff"][stroke-dasharray="6 7"]')
+
+
+def test_tc081_the_part_past_the_reach_is_dashed_on_the_map(app):
+    """Every confirmed line runs at least a little past 10 km. Mi-isi runs about 4 km past it."""
+    assert all(item["properties"]["not_checked_geometry"] for item in channels())
+    expect(not_checked_paths(app)).to_have_count(4)
+    expect(app.locator("#channel-note")).to_contain_text("past the reach of this map, so not checked")
+
+
+def test_tc081_opening_a_channel_labels_that_part_and_keeps_it_in_view(app):
+    open_channel(app, "Mi-isi")
+    label = app.locator(".not-checked-label")
+    expect(label).to_have_text("Not checked")
+    expect(label).to_be_in_viewport()
+    expect(app.locator("#channel-body")).to_contain_text("more than 10 km from the summit")
+    expect(app.locator("#channel-body")).to_contain_text("doesn't mean that nothing changed there")
+    west, south, east, north = shape(channel("Mi-isi")["properties"]["not_checked_geometry"]).bounds
+    assert app.evaluate(f"testMap.getBounds().contains(L.latLngBounds([{south}, {west}], [{north}, {east}]))")
+    app.click("#channel-back")
+    expect(app.locator(".not-checked-label")).to_have_count(0)
+
+
+def test_tc081_the_strip_stops_at_the_reach_and_nothing_past_it_counts(app):
+    """A tap on the dashed part says it wasn't checked, and never that nothing was found."""
+    stretch = channel("Mi-isi")["properties"]["not_checked_geometry"]["coordinates"]
+    lon, lat = stretch[len(stretch) // 2]
+    tap_at(app, lat, lon)
+    expect(card(app).locator(".readout-place").first).to_have_text("Mi-isi")
+    expect(card(app)).to_contain_text("Not checked: this map only looks within 10 km of the summit")
+    expect(card(app)).not_to_contain_text("No new material detected")
+    assert not shape(channel("Mi-isi")["properties"]["strip_geometry"]).contains(shape({"type": "Point", "coordinates": [lon, lat]}))

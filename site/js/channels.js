@@ -1,4 +1,4 @@
-// Tasks T-075 and T-076: the channel list, one channel's bars, and its strip on the map.
+// Tasks T-075, T-076 and T-091: the channel list, one channel's bars, and its strip on the map.
 // The browser only shows these areas: the pipeline works them out (FR-064).
 
 import { loadChannelAreas, loadChannels } from "./data.js";
@@ -10,6 +10,16 @@ import { pairDates } from "./timeline.js";
 
 const STRIP_STYLE = { color: "#22d3ee", weight: 1.5, opacity: 0.9, fillColor: "#22d3ee", fillOpacity: 0.22, interactive: false };
 const FIT_PADDING_PX = 24;
+
+// A label for what lies past the reach, at the middle of its longest stretch (FR-071).
+function notCheckedLabel({ type, coordinates }) {
+  const stretches = type === "LineString" ? [coordinates] : coordinates;
+  const longest = stretches.reduce((best, stretch) => (stretch.length > best.length ? stretch : best));
+  const [lon, lat] = longest[Math.floor(longest.length / 2)];
+  return L.tooltip({ permanent: true, direction: "center", className: "channel-label not-checked-label", interactive: false })
+    .setLatLng([lat, lon])
+    .setContent(STRINGS.channelNotChecked);
+}
 
 // Largest first, ties by name, and channels with no radar data for that pair last (FR-061).
 export function sortChannels(channels, areaOf) {
@@ -67,9 +77,16 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
   // The strip goes under the radar image, so that its color doesn't change the flagged cells.
   function drawStrip(channel) {
     removeStrip();
-    const strip = L.geoJSON(channel.properties.strip_geometry, { style: STRIP_STYLE, pane: STRIP_PANE });
-    stripLayer = L.layerGroup([strip, channelLines(channel)]).addTo(map);
-    map.fitBounds(strip.getBounds(), { padding: [FIT_PADDING_PX, FIT_PADDING_PX], animate: false });
+    const { strip_geometry: stripShape, not_checked_geometry: notChecked } = channel.properties;
+    const strip = L.geoJSON(stripShape, { style: STRIP_STYLE, pane: STRIP_PANE });
+    const parts = [strip, channelLines(channel)];
+    const bounds = strip.getBounds();
+    if (notChecked) {
+      parts.push(notCheckedLabel(notChecked));
+      bounds.extend(L.geoJSON(notChecked).getBounds());
+    }
+    stripLayer = L.layerGroup(parts).addTo(map);
+    map.fitBounds(bounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], animate: false });
   }
 
   function markSelectedBar() {
@@ -124,6 +141,9 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       element("p", STRINGS.channelsHow(site.channel_strip_half_width_m, site.detection_reach_km), "channel-note"),
       element("p", STRINGS.channelBarsScale, "channel-note"),
     );
+    if (channel.properties.not_checked_geometry) {
+      elements.body.append(element("p", STRINGS.channelNotCheckedNote(site.detection_reach_km), "channel-note"));
+    }
     markSelectedBar();
     elements.panel.scrollTop = 0;
     drawStrip(channel);
