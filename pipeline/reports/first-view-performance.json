@@ -1,13 +1,17 @@
 {
  "1280 px": {
-  "median_mb": 0.78,
-  "median_seconds": 2.01,
-  "own_files_mb": 0.5,
+  "median_mb": 0.96,
+  "median_seconds": 2.18,
+  "own_files_mb": 0.68,
   "tiles_mb": 0.28,
   "largest": [
    [
     157981,
     "data/sites/mayon/towns.geojson"
+   ],
+   [
+    153419,
+    "data/sites/mayon/channels.geojson"
    ],
    [
     147748,
@@ -16,10 +20,6 @@
    [
     59651,
     "data/sites/mayon/land.geojson"
-   ],
-   [
-    24692,
-    "data/sites/mayon/pairs/mayon_A111F008_20261007_20261019/new_"
    ],
    [
     15861,
@@ -28,14 +28,18 @@
   ]
  },
  "360 px": {
-  "median_mb": 0.58,
-  "median_seconds": 1.98,
-  "own_files_mb": 0.5,
+  "median_mb": 0.75,
+  "median_seconds": 2.14,
+  "own_files_mb": 0.68,
   "tiles_mb": 0.08,
   "largest": [
    [
     157981,
     "data/sites/mayon/towns.geojson"
+   ],
+   [
+    153419,
+    "data/sites/mayon/channels.geojson"
    ],
    [
     147748,
@@ -44,10 +48,6 @@
    [
     59651,
     "data/sites/mayon/land.geojson"
-   ],
-   [
-    24692,
-    "data/sites/mayon/pairs/mayon_A111F008_20261007_20261019/new_"
    ],
    [
     14994,
