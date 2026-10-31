@@ -7,7 +7,20 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "reports"))
 
-from channel_test import count_at_least, decide, fraction, ratio, refuse_download
+from channel_test import count_at_least, decide, fraction, low_rain_check, rain_thirds, ratio, refuse_download, wettest_three_days
+
+
+def test_wettest_three_days_must_be_consecutive():
+    assert wettest_three_days([50, 0, 50, 0, 50]) == 100
+    assert wettest_three_days([40, 0, 40, 30, 30, 0]) == 100
+    assert wettest_three_days([40, 0, 40, 0, 40, 0]) == 80
+
+
+def test_low_rain_check_uses_the_lowest_third_only():
+    totals_and_ratios = [(10, 3.0), (20, 1.0), (30, 2.0), (40, 9.0), (50, 9.0), (60, 9.0), (70, 9.0), (80, 9.0), (90, 9.0)]
+    rows = [{"label": str(total), "rain": {"total_mm": total}, "combined_3": {"ratio": value}} for total, value in totals_and_ratios]
+    rain_thirds(rows)
+    assert low_rain_check(rows) == {"ratios": {"10": 3.0, "20": 1.0, "30": 2.0}, "pairs_at_least_2": 2, "pairs": 3}
 
 
 def test_five_of_nine_at_2_is_go():

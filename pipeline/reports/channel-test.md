@@ -141,6 +141,28 @@ All 9 pairs are at 1.5 or more. That holds for brighter, darker, 4.0 dB, 5.0 dB 
 - **Stops at the site bounds.** Cached crops end there, so "past 10 km" means up to the crop's edge. The 10–14 km band is partly cut off and channels further out aren't measured.
 - **Quarry tags say nothing about activity.** They don't show whether a site is working, or since when, and radar can't tell who changed the ground or under what permission. This report only says "quarry mapped in OpenStreetMap" and "change".
 
+## Rain rerun
+
+**Blocked again, so there are no rain results yet.** The first read of the rerun also returned 403, and this time I read the server's reason: `EULA Acceptance Failure`. The Earthdata login itself works. NASA's terms for this data archive haven't been accepted on the account. Accepting them is the owner's decision, so I didn't do it, and I didn't use another rain source. **0 bytes of rain data were read** of the 1.5 GB limit, apart from the server's short refusal messages.
+
+| Asked for | Result |
+| --- | --- |
+| Rain per pair, wettest day, low/middle/high | Not available |
+| Heavy rain: any 3 consecutive days in a pair's window totalling 100 mm or more | Not available. The rule is now in `channel_test.py`, tested on made-up numbers only |
+| Oct 8 → Oct 20: unusually wet or dry? | **Still unanswered** |
+| Does the quarry ratio hold in low-rain pairs? | **Still not tested** |
+
+The verdict above doesn't change either way, because rain is report-only.
+
+To finish it, the owner opens NASA's approval page, signed in to Earthdata, and accepts the terms: <https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ> (this link is the one in the server's reply). Then:
+
+```powershell
+python pipeline/reports/channel_test_inputs.py rain
+python pipeline/reports/channel_test.py
+```
+
+The results then land in `channel-test.json` under `rain_by_pair` and `low_rain_check`, and the figure gains the rain labels.
+
 ## Data used
 
 - NISAR GCOV and GUNW: cached crops in `raw/` only, the latest dated 2026-10-19. No NISAR product was searched for, downloaded or opened beyond those.

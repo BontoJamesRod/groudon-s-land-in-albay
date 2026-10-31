@@ -164,6 +164,7 @@
  "strip_share_of_circle_land": 0.5060580558243531,
  "rain_source": null,
  "rain_by_pair": {},
+ "low_rain_check": null,
  "pairs": [
   {
    "label": "06-21 → 07-03",

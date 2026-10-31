@@ -59,6 +59,7 @@ RAIN_FILE = RAW_FOLDER / "imerg" / "mayon_daily.json"
 COVER_FILE = RAW_FOLDER / "context_download" / "false_alarm" / "worldcover.npy"
 CROPLAND = 40  # ESA WorldCover class code
 RAIN_DAYS = 120  # 2026-06-22 to 2026-10-19
+HEAVY_RAIN_MM = 100  # the owner's rule: this much or more in any 3 consecutive days of a pair's window
 
 # The nine track 111 pairs, and the two published track 104 pairs as a cross-check only (UTC).
 TRACK_111_DATES = ["20260621", "20260703", "20260715", "20260727", "20260820", "20260901", "20260913", "20260925", "20261007", "20261019"]
@@ -304,8 +305,22 @@ def pair_rain(first, second, rain, strip, result):
     days = [day for day in sorted(rain["days"]) if first["acquired_start"][:10] < day <= second["acquired_start"][:10]]
     totals = {day: float((np.array(rain["days"][day]["rain_mm"], dtype=float) * weights).sum()) for day in days}
     wettest = max(totals, key=totals.get)
+    three_days = wettest_three_days([totals[day] for day in days])
     return {"days": len(days), "total_mm": round(sum(totals.values()), 1), "wettest_day": wettest,
-            "wettest_mm": round(totals[wettest], 1), "mm_per_day": round(sum(totals.values()) / len(days), 1)}
+            "wettest_mm": round(totals[wettest], 1), "mm_per_day": round(sum(totals.values()) / len(days), 1),
+            "wettest_3_days_mm": round(three_days, 1), "heavy_rain": three_days >= HEAVY_RAIN_MM}
+
+
+def wettest_three_days(daily_mm):
+    """Return the largest total of any 3 consecutive days. The owner's heavy-rain rule uses this."""
+    return max(sum(daily_mm[start:start + 3]) for start in range(max(len(daily_mm) - 2, 1)))
+
+
+def low_rain_check(rows):
+    """Does the quarry ratio hold in the low-rain pairs? Reported only: it can't change the verdict."""
+    low = [row for row in rows if row["rain"]["third"] == "low"]
+    ratios = {row["label"]: row["combined_3"]["ratio"] for row in low}
+    return {"ratios": ratios, "pairs_at_least_2": count_at_least(list(ratios.values()), GO_RATIO), "pairs": len(low)}
 
 
 def rain_thirds(rows):
@@ -572,6 +587,7 @@ def main():
         "strip_share_of_circle_land": float(np.count_nonzero(masks["strip"] & circle)) / max(int(np.count_nonzero(masks["land"] & circle)), 1),
         "rain_source": {key: rain[key] for key in ("short_name", "version", "bytes_fetched", "units")} | {"days": len(rain["days"])} if rain else None,
         "rain_by_pair": {row["label"]: row["rain"] for row in rows} if rain else {},
+        "low_rain_check": low_rain_check(rows) if rain and has_quarries else None,
         "part_a": {"pairs": rows if has_quarries else []},
         "pairs": rows,
         "track_104_cross_check": cross,
