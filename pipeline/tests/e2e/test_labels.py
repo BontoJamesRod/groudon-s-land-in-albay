@@ -43,6 +43,14 @@ def test_every_town_label_shows_at_the_default_zoom(app):
     expect(app.locator(".zone-label")).to_be_in_viewport()
 
 
+def test_opening_compare_does_not_shift_the_map(app):
+    start = app.evaluate("(() => { const c = testMap.getCenter(); return [c.lat, c.lng, testMap.getSize().y]; })()")
+    app.click("#compare-button")
+    expect(app.locator("#compare-view")).to_be_visible()
+    assert app.evaluate("(() => { const c = testMap.getCenter(); return [c.lat, c.lng, testMap.getSize().y]; })()") == start
+    assert start[2] == app.evaluate("testMap.getContainer().clientHeight")
+
+
 def drag_to(page, share):
     box = page.locator("#map").bounding_box()
     middle_y = box["y"] + box["height"] / 2
