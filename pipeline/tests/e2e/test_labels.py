@@ -68,3 +68,46 @@ def test_labels_return_when_compare_closes(app):
     expect(app.locator("#compare-view")).to_be_visible()
     app.click("#compare-close")
     assert app.evaluate("[...document.querySelectorAll('.town-label, .zone-label')].map((label) => label.getBoundingClientRect().left)") == start
+
+
+def top_element_is_inside(page, selector):
+    """Is this element what a tap at its center would actually reach?"""
+    return page.evaluate(f"""(() => {{
+      const target = document.querySelector('{selector}');
+      const box = target.getBoundingClientRect();
+      const top = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      return top === target || target.contains(top);
+    }})()""")
+
+
+@pytest.mark.parametrize("width, height", [(1280, 800), (360, 740)])
+def test_date_labels_stay_in_front_of_the_divider(page, site_url, width, height):
+    prepare_page(page, width=width, height=height)
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.locator("#compare-button").scroll_into_view_if_needed()
+    page.click("#compare-button")
+    expect(page.locator("#compare-view")).to_be_visible()
+    box = page.locator("#compare-before").bounding_box()
+    page.focus("#compare-divider")
+    area = page.locator("#map").bounding_box()
+    # Put the divider's line through the middle of the "Before" label.
+    page.evaluate(f"""document.getElementById('compare-divider').style.left = '{box['x'] + box['width'] / 2 - area['x']}px'""")
+    order = page.evaluate("""[getComputedStyle(document.getElementById('compare-before')).zIndex,
+      getComputedStyle(document.getElementById('compare-divider')).zIndex]""")
+    assert order[0] != "auto" and (order[1] == "auto" or int(order[0]) > int(order[1]))
+
+
+def test_close_works_with_the_divider_dragged_over_it(app):
+    app.click("#compare-button")
+    expect(app.locator("#compare-view")).to_be_visible()
+    box = app.locator("#map").bounding_box()
+    close = app.locator("#compare-close").bounding_box()
+    middle_y = box["y"] + box["height"] / 2
+    app.mouse.move(box["x"] + box["width"] / 2, middle_y)
+    app.mouse.down()
+    app.mouse.move(close["x"] + close["width"] / 2, middle_y, steps=6)
+    app.mouse.up()
+    assert top_element_is_inside(app, "#compare-close")
+    app.click("#compare-close")
+    expect(app.locator("#compare-view")).to_be_hidden()

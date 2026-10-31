@@ -263,8 +263,10 @@ button:disabled { color: #6e7781; }
   pointer-events: none;
 }
 
+/* The date labels and Close stay in front of the divider, wherever it is dragged. */
 .compare-label {
   position: absolute;
+  z-index: 1;
   top: 12px;
   padding: 4px 8px;
   border-radius: 4px;
@@ -279,6 +281,7 @@ button:disabled { color: #6e7781; }
 
 .compare-close {
   position: absolute;
+  z-index: 1;
   top: 48px;
   right: 12px;
   pointer-events: auto;
