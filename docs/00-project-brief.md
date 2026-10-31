@@ -48,7 +48,7 @@ Requirement IDs (R1–R8) refer to Section 1 of the challenge checklist. Feature
 | F-07 | Flood layer | Open water in the Albay lowlands after typhoons, using the same change engine | Could |
 | F-08 | "What am I looking at?" panel | How radar sees, what the colors mean, confidence levels, limitations, and that official warnings come from PHIVOLCS and LGUs (R8) | Must |
 | F-09 | Data sources panel | Product name, granule ID, acquisition dates, provisional status and link for every layer (R2, R3) | Must |
-| F-10 | Second showcase site | The same new-material engine run on one site on another continent (R7) | Must |
+| F-10 | Second showcase site | One pair on the Azuero Peninsula, Panama, using the same engine and the plain change map, with no channels (R7; `pipeline/reports/second-site-candidates.md` and the Panama trial) | Must |
 | F-11 | Public app and code | A public link and a public code repository that judges can open | Must |
 | F-12 | Validation check | At least one result compared with an independent source, such as the gullies named in PHIVOLCS bulletins for the same dates | Should |
 | F-13 | Mobile-friendly, color-blind-safe design | Readable on a phone, with a color-blind-safe palette | Should |
@@ -77,6 +77,14 @@ Suggestion (not yet confirmed, see Open Question 3):
 - Comparisons with years before calibrated NISAR data (before June 17, 2026).
 - User accounts and collecting personal data.
 - A native mobile app. The project is web only.
+
+Considered on 2026-11-01, not in this version:
+
+- Why labels using rain data (eruption, heavy rain, little rain). Rain stays a study input in the channel-test report.
+- A story intro with real radar images.
+- A quarry hint ("changed during little rain").
+
+Rule: **the app never labels any change as illegal or unpermitted.**
 
 ## 7. Constraints
 
@@ -135,7 +143,7 @@ Suggestion (not yet confirmed, see Open Question 3):
 | 1 | How do people near Mayon find out today what changed in their area and channel? | Section 2 |
 | 2 | What goes wrong with that today? | Section 2 |
 | 3 | Do you agree with the suggested out-of-scope list? | Section 6 |
-| 4 | Which second site, on another continent? It should have a clear surface change in 2026 NISAR data (an eruption, landslide or flood), so the same engine applies. | F-10 |
+| 4 | Closed on 2026-11-01: Panama, the Azuero Peninsula landslides, as one pair (`pipeline/reports/second-site-candidates.md`). | F-10 |
 | 5 | Do the Space Apps and Legazpi local event rules allow code written before Nov 14? This decides how much existing work can be used, so check it first. | Section 7 |
 | 6 | What is the monthly budget? Suggestion: ₱0, using free tiers (Colab, GitHub Pages, NASA Earthdata). | Section 7 |
 | 7 | Closed on 2026-11-01: the owner set the final thresholds and rule before the post-eruption passes were opened. The values live in the site config. | F-05 |

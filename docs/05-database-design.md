@@ -547,7 +547,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 
 | Table | Records | Purpose |
 | --- | --- | --- |
-| `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels [TBD]. Second site [TBD]. | The two showcase sites (F-10) |
+| `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels are in the site config. Second site: `panama`, the Azuero Peninsula, one pair, no summit and no channels (not published yet). | The two showcase sites (F-10) |
 | `towns` | Albay towns inside the Mayon bounds, from `municities-provdist-500500000.0.1.json` (progress notes) | Borders, names, search (F-01, F-02) |
 | `channels` | Channels named in PHIVOLCS bulletins. A starting list from a PHIVOLCS update quoted on ReliefWeb (2000): Mabinit and Buyuan-Padang (Legazpi), Miisi (Daraga), Tumpa, Anoling and Quirangay (Camalig), Maninila (Guinobatan), Basud-Lidong (Santo Domingo), Bulawan (Malilipot), San Vicente and Buang (Tabaco), Upper Nasisi and Upper Nabonton (Ligao). 2026 reports also name the Mi-isi, Bonga and Basud gullies. Check against current bulletins before use. | Channels and towns (F-19) |
 | `channel_areas` | Computed for every confirmed channel and published pair | Channel timeline (F-20) |
@@ -563,7 +563,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 
 ## 10. Assumptions
 
-- Sites without a summit (for example a non-volcanic second site) show no distance or danger-zone line in the readout. Suggestion, since US-004/AC-1 assumes a summit.
+- Sites without a summit, such as Panama, show no distance or danger-zone line in the readout (US-004/AC-5).
 - The boundary file's town names match the names used in PHIVOLCS bulletins closely enough to link channels to towns by hand.
 - One polarization (HH) is enough for the MVP's brightness change.
 
@@ -574,7 +574,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 | 1 | What zoom levels should Mayon use (default, minimum, maximum)? | `sites` seed |
 | 2 | Closed on 2026-11-01: final values live in the site config, never in `docs/`. | `pairs.brightness_threshold_db`, `pairs.coherence_loss_threshold` |
 | 3 | What is the exact ASF Vertex URL format for linking one granule? (verify) | `passes.vertex_url`, `pairs.gunw_vertex_url` |
-| 4 | Which boundary and channel sources for the second site? | `towns`, `channels`, `sources` |
+| 4 | Closed on 2026-11-01: Panama has no channels; geoBoundaries for its borders (license still to be read). | `towns`, `sources` |
 | 5 | Should readouts also show the brightness change and coherence loss values at the tapped spot? That would need value grids for those layers too. | `layers` |
 
 ## 12. Conflicts with Earlier Documents

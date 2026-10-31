@@ -74,8 +74,8 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-033 | Finish the 404 page and the public README (what the app is, data sources, how to run the pipeline) | US-016, SCR-09 | S | T-005 | TC-038 and TC-039 pass |
 | T-034 | Phone and color-blind pass: 360 px layout, 44 × 44 px tap targets, palette check, text labels for every class | US-018, SCR-01, NFR-004 | M | T-028, T-029, T-030, T-031, T-032 | TC-042, TC-043 and TC-055 pass |
 | T-035 | Build the "How we checked this" panel and the `validation` module; create the validation record for the July 14 pair from a PHIVOLCS bulletin | US-017, SCR-07, TBL-08, TBL-09, API-011 | M | T-020, T-025 | TC-040 and TC-041 pass |
-| T-036 | Choose the second site; write its config and build its towns, land and sources files | US-015, F-10, TBL-01, TBL-02, TBL-10, TBL-11 | M | T-008, T-009 | Its files pass the contract check with no code changes |
-| T-037 | Process and publish at least 1 pair for the second site | US-014, US-015 | M | T-036, T-019, T-032 | TC-033 and TC-035 pass |
+| T-036 | Second site is Panama (`pipeline/reports/second-site-candidates.md` and the Panama trial); write its config and build its towns, land and sources files | US-004, US-015, F-10, FR-069, TBL-01, TBL-02, TBL-10, TBL-11 | M | T-008, T-009 | Its files pass the contract check with no code changes |
+| T-037 | Process and publish 1 Panama pair, with the plain change map and no channels | US-014, US-015, F-10 | M | T-036, T-019, T-032 | TC-033, TC-035 and TC-076 pass |
 | T-038 | Process and publish the eruption pairs (tracks 104 and 111, 2026-10-19 → 2026-10-31 UTC) as soon as they are on ASF, including each track's previous pair if not yet done | US-005, US-008, F-05 | M | T-016, T-019 | At least 1 post-eruption pair is live (G-02) |
 | T-039 | Create the validation record for an eruption pair | US-017, TBL-08, TBL-09 | S | T-038, T-035 | The panel shows it on the live site |
 | T-040 | Run the whole test plan (08) on the live site; fix every Critical and Major bug | All MVP stories (US-001 to US-026), NFR-001 to NFR-009 | M | T-034, T-037, T-039, T-076, T-077, T-078 | 08 exit criteria met |
@@ -113,6 +113,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-075 | Build the channel list in `channels.js`, with empty, loading and error states | US-024, FR-061, FR-067, SCR-01, SCR-13, API-012 | M | T-022, T-074 | TC-064, TC-065 and TC-066 pass |
 | T-076 | Build the channel view: bars, no-data state and the strip on the map | US-025, FR-062, FR-063, FR-067, SCR-14, API-005, API-012 | M | T-075, T-028 | TC-067, TC-068, TC-069 and TC-070 pass |
 | T-077 | Dim pairs with an unequal gap, with a short note, on the pass timeline and the channel timeline. Not built yet | US-005, US-025, FR-066, SCR-01, SCR-14, API-007 | S | T-024, T-076 | TC-070 and TC-071 pass |
+| T-078 | Add the rule against legal labels to the wording test | US-012, FR-068 | S | T-030 | TC-075 passes |
 
 ### Done work added on 2026-11-01
 
@@ -123,6 +124,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 | T-067 | Apply the 6 approved changes in `docs/notes/proposed-doc-changes.md`, with the code, test and data parts of changes 2 and 6 | FR-011, FR-022, FR-030, TC-011, TC-024, API-008, TBL-10, US-004 | S | — | Done on 2026-11-01 |
 | T-068 | Record the owner's decisions in the docs: the final rule, the reach limit, the lifted blind cutoff and the held pair | FR-023, FR-060, ADR-006, US-004, US-008, TC-022, TC-061, TC-062, TC-063 | S | — | Done on 2026-11-01 |
 | T-069 | Add the Channel timeline to every doc, with new IDs | F-20, US-024, US-025, US-026, FR-061 to FR-067, SCR-13, SCR-14, ADR-011, TBL-12, API-012, TC-064 to TC-074 | M | — | Done on 2026-11-01 |
+| T-070 | Add the out-of-scope lines and the legal-label rule, and name Panama as the second site | F-10, US-004, US-012, FR-068, FR-069, TC-075, TC-076 | S | — | Done on 2026-11-01 |
 
 ## 4. Build Order
 
@@ -193,7 +195,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 | Eruption products arrive after 2026-11-04 | Milestone 3 slips by the same number of days | Finish the thin slice first, so T-038 takes hours, not days |
 | Threshold study (T-016) is inconclusive | Milestones 2 and 3 slip by [TBD] days | Use the July 14 pair as the reference event; keep low and high confidence separate instead of forcing one threshold |
 | Large downloads on slow internet; Colab resets | Each backlog task takes longer | Crop early, cache on Google Drive, process the eruption pairs before the backlogs |
-| No second site with a clear change | Milestone 4 slips; R7 at risk | Decide the site (T-036) right after the thin slice |
+| The Panama result is too broad to show as it is | Milestone 4 slips; R7 at risk | Compare it with mapped landslides first; Fuego and Nyamulagira stay the fallbacks in the candidates report |
 | Event rules forbid pre-built code | Most of Phase 1 has to happen during the 48 hours | Check the rules first (brief Open Question 5); keep this roadmap as the 48-hour plan if needed |
 | One builder | Any sickness or school deadline stops all work | Keep deferred features deferred; the presenter takes T-041 |
 
@@ -208,8 +210,8 @@ These tasks are done. They're listed so that every piece of finished work has an
 | # | Question | Affects |
 | --- | --- | --- |
 | 1 | What is the start date and how many hours per week are available? Needed to put dates on the plan. | §2 |
-| 2 | Which channel line source? | T-010 |
-| 3 | Which second site? | T-036, T-037 |
+| 2 | Closed on 2026-11-01: OpenStreetMap candidates, confirmed by the owner (T-073). | T-010, T-073 |
+| 3 | Closed on 2026-11-01: Panama. | T-036, T-037 |
 | 4 | Do the event rules allow building before 2026-11-14? | All of Phase 1 |
 
 ## 9. Conflicts with Earlier Documents

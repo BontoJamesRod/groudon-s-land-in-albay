@@ -27,7 +27,7 @@
 | F-05 | New-material layer | US-008, US-009 | The core result, made from real NISAR data (R2, R3, R5, R6) |
 | F-08 | "What am I looking at?" panel | US-012 | Makes radar understandable and keeps the app honest (R8) |
 | F-09 | Data sources panel | US-013 | Judges must see NISAR products named and dated (R2, R3) |
-| F-10 | Second showcase site | US-014, US-015 | Required for "locations around the world" (R7) |
+| F-10 | Second showcase site (one Panama pair) | US-014, US-015 | Required for "locations around the world" (R7) |
 | F-11 | Public app and code | US-016 | Judges can't score what they can't open |
 | F-12 | Validation check | US-017 | Proves the core result is true; supports the Validity criterion |
 | F-13 | Mobile-friendly, color-blind-safe design | US-018 | Residents mainly use phones; cheaper to build in from the start |
@@ -89,7 +89,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | Space Apps or local-event rules don't allow code written before 2026-11-14 | [TBD] | High | Check the rules first (brief Open Question 5); if not allowed, keep the docs and rebuild during the event from the roadmap |
 | The eruption pair shows no clear new material | Med | High | Keep the July 14, 2026 pyroclastic-flow pair as the backup showcase |
 | Post-eruption products arrive later than 36–72 h | Med | Med | Prepare the pipeline on older pairs first so the eruption pair takes hours, not days |
-| No suitable second site is found in time | Med | High | Choose the second site in the first days; prefer an event with an obvious surface change |
+| The Panama result isn't specific: the trial flagged a large share of the land | Med | Med | Show it as one plain change map with its limits stated, and compare it with mapped landslides before publishing |
 | Thresholds are tuned to make the eruption look good | Med | High | Done: the thresholds were set on 2026-11-01, before the post-eruption passes were opened (FR-023) |
 | Text reads like a lahar forecast | Med | High | Review all text against FR-038 before release |
 | Large downloads on slow internet; Colab resets | High | Med | Crop early, cache downloads, save outputs to Google Drive |
@@ -108,7 +108,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | 1 | How many hours per week can the builder spend? | §2, 07-roadmap |
 | 2 | Who are the 10 testers, and when can the test session happen? | §6 criterion 5 |
 | 3 | Do the event rules allow code written before 2026-11-14? | §8 |
-| 4 | Which second site? | F-10, §6 criterion 3 |
+| 4 | Closed on 2026-11-01: Panama, one pair. | F-10, §6 criterion 3 |
 
 ## 11. Conflicts with Earlier Documents
 

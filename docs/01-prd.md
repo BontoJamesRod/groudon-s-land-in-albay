@@ -102,6 +102,7 @@ As a visitor, I want to tap a spot and see what the radar found there, so that I
 - **US-004/AC-2:** Given the tapped point has no radar value, when the card opens, then it says "No radar data here" and gives the reason: outside radar coverage, sea, or flagged invalid by the product.
 - **US-004/AC-3:** Given the tapped point is within the danger-zone radius, when the card opens, then it shows "Inside the Permanent Danger Zone. Entry is not allowed."
 - **US-004/AC-4:** Given a site whose config sets a reach distance and a tapped point beyond it, when the card opens, then it says "Not checked: this map only looks within 10 km of the summit" (with the site's distance) instead of a new-material result.
+- **US-004/AC-5:** Given a site with no summit, such as Panama, when the card opens, then it leaves out the distance and danger-zone lines and still shows the town and the new-material result.
 
 ### F-03: Pass timeline
 
@@ -211,6 +212,7 @@ As a visitor, I want a short explanation of the map, so that I read it correctly
 - **US-012/AC-1:** Given the visitor opens "What am I looking at?", when the panel shows, then it explains how radar sees, what each color means, the confidence levels, and at least 3 limitations, with a link to PHIVOLCS.
 - **US-012/AC-2:** Given any radar layer is on screen, when the visitor looks at the main screen, then the line "This is not an official warning. Follow PHIVOLCS and your LGU." is visible without opening a panel.
 - **US-012/AC-3:** Given any screen of the app, when its text is reviewed, then no text states that a lahar, eruption or flood will happen.
+- **US-012/AC-4:** Given any screen of the app or any published file, when its text is reviewed, then no change is labeled illegal or unpermitted.
 
 ### F-09: Data sources panel
 
@@ -229,7 +231,7 @@ As a visitor or judge, I want to see exactly which NISAR products made each laye
 ### F-10: Second showcase site
 
 **Priority:** Must
-**Description:** The same new-material engine run on one site on another continent (R7).
+**Description:** One pair on the Azuero Peninsula, Panama, using the same engine and the plain change map, with no channels (R7).
 
 #### US-014: Switch sites
 
@@ -475,6 +477,8 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-065 | The system shall show and publish only channels whose line the owner has confirmed, with the source and the confirmation recorded in the data. Unconfirmed candidates shall never be shown. | F-19, F-20 | US-023, US-026 |
 | FR-066 | The system shall dim a pair whose gap isn't 12 days and show a short note such as "24-day gap, not comparable", on the channel timeline and on the pass timeline. | F-03, F-20 | US-005, US-025 |
 | FR-067 | The system shall show the channel list's empty, loading and error states, and "No radar data" for a pair with no valid radar value in a channel's strip. | F-20 | US-024, US-025 |
+| FR-068 | The system shall never label any change as illegal or unpermitted. | F-08 | US-012 |
+| FR-069 | The system shall leave the distance and danger-zone lines out of the readout for a site with no summit. | F-02, F-10 | US-004 |
 
 ## 7. Non-Functional Requirements
 
@@ -500,7 +504,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | Albay municipal boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through GitHub `faeldon/philippines-json-maps`) | Town borders, town names, land mask and coastline for Mayon | F-01, F-02, F-05 |
 | PHIVOLCS bulletins (read by the maintainer) | Channel names, event dates, validation records | F-03, F-12, F-19, F-20 |
 | Channel line data: OpenStreetMap candidates, confirmed by the owner (`pipeline/context/channel_name_candidates.geojson`) | Lines for the named channels | F-19, F-20 |
-| Boundary data for the second site [TBD] | Borders and land mask outside the Philippines | F-10 |
+| Boundary data for Panama: geoBoundaries gbOpen ADM2 (license detail to read before public use) | Borders and land mask outside the Philippines | F-10 |
 | Public code hosting and static web hosting (GitHub; host choice in step 04) | Public repository and public link | F-11 |
 | Google Colab | Where the maintainer runs the pipeline | F-05, F-10 |
 
@@ -536,7 +540,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | 2 | Closed on 2026-11-01: the owner set the final thresholds and rule; the values live in the site config. | FR-023, US-008 |
 | 3 | What distance from a channel counts as "in or near" it? | US-023/AC-2, FR-057 |
 | 4 | Partly closed on 2026-11-01: candidates come from OpenStreetMap, and only lines the owner confirms are used. Which lines are confirmed? | F-19, F-20, §8 |
-| 5 | Which second site, and which boundary data for it? | F-10, §8 |
+| 5 | Partly closed on 2026-11-01: Panama. Is the geoBoundaries license fine for public use? | F-10, §8 |
 | 6 | What are the performance, availability, compatibility and scalability targets? (Suggestions given in §7.) | NFR-001, NFR-003, NFR-005, NFR-006 |
 | 7 | What is the data-freshness target? | NFR-009 |
 | 8 | What strip width should the site config use? | FR-064, T-074 |

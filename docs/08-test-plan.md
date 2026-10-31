@@ -87,6 +87,8 @@ Fixtures used below are listed in §5.
 | TC-072 | US-026/AC-1 | FR-064, FR-060, SCR-12, TBL-12, API-012 | Area in a strip | 1. Run the `channel_areas` unit tests with a small grid and a known strip, with flagged cells inside the strip, outside it and beyond the reach. | Only flagged cells inside the strip and the reach count; the area matches a hand calculation; one row per channel and pair | Positive | High |
 | TC-073 | US-026/AC-2 | FR-064, SCR-12, TBL-01 | Strip width missing | 1. Run with a config that has channels and no width. | Stops with "Channel strip width missing in site config: <file>" | Negative | High |
 | TC-074 | US-026/AC-3 | FR-065, TBL-03, API-005 | Confirmed channels only | 1. Run `contract_check` on a fixture with a channel without `confirmed_on`. 2. Check that no candidate from `channel_name_candidates.geojson` is under `site/data/`. | The check fails on the fixture; no candidate is published | Negative | High |
+| TC-075 | US-012/AC-4 | FR-068 | No legal labels | 1. Search `strings.js`, every page and `site/data/` for "illegal", "unpermitted" and "violation". | No hits | Negative | High |
+| TC-076 | US-004/AC-5 | FR-069, SCR-02, TBL-01 | Site with no summit | 1. Switch to Panama. 2. Tap a land point. | Card shows the town and the result, with no distance or danger-zone line | Edge | High |
 
 ## 4. Non-Functional Tests
 
@@ -109,7 +111,7 @@ Fixtures used below are listed in §5.
 
 | Role | Test account | Data needed |
 | --- | --- | --- |
-| Visitor | None: no login | Published Mayon pairs: track 111, 2026-10-07 → 2026-10-19; the pair spanning 2026-07-14; at least 1 eruption pair; the second site with 1 pair |
+| Visitor | None: no login | Published Mayon pairs: track 111, 2026-10-07 → 2026-10-19; the pair spanning 2026-07-14; the 24-day pair; at least 1 eruption pair; Panama with 1 pair; at least 1 confirmed channel |
 | Visitor (localhost only) | None | Fixtures in `pipeline/tests/fixtures/`, never deployed: a site with an empty `pairs.json`; a pair with `before_db.png` removed; a pair with 0 km² detected; a short list of grid cells with values 253, 254 and 255 |
 | Maintainer | The maintainer's own Earthdata and GitHub accounts | Site config with reversed bounds; a track 111 pass and a track 104 pass; a fake granule ID; a pair whose GUNW is unavailable (or a flag that simulates it); small arrays for unit tests |
 
@@ -129,13 +131,13 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-001 | AC-1, AC-2 | TC-001, TC-002 |
 | US-002 | AC-1, AC-2 | TC-003, TC-004 |
 | US-003 | AC-1, AC-2 | TC-005, TC-007, TC-006 |
-| US-004 | AC-1, AC-2, AC-3, AC-4 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061 |
+| US-004 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061, TC-076 |
 | US-005 | AC-1, AC-2, AC-3, AC-4 | TC-013, TC-014, TC-015, TC-071 |
 | US-006 | AC-1, AC-2 | TC-016, TC-049, TC-017 |
 | US-007 | AC-1, AC-2 | TC-018, TC-019 |
 | US-008 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-020, TC-021, TC-022, TC-023, TC-063, TC-062 |
 | US-009 | AC-1, AC-2, AC-3 | TC-024, TC-027, TC-048, TC-025, TC-026 |
-| US-012 | AC-1, AC-2, AC-3 | TC-028, TC-029, TC-030 |
+| US-012 | AC-1, AC-2, AC-3, AC-4 | TC-028, TC-029, TC-030, TC-075 |
 | US-013 | AC-1, AC-2 | TC-031, TC-032 |
 | US-014 | AC-1, AC-2 | TC-033, TC-034 |
 | US-015 | AC-1, AC-2 | TC-035, TC-036 |

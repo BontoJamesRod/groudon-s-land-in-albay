@@ -277,8 +277,8 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Element | Type | Behavior and validation |
 | --- | --- | --- |
 | Place name | Text | Town name for a spot or town; channel name for a channel (US-004/AC-1, US-023/AC-1) |
-| Distance to summit | Text | In km with 1 decimal (US-004/AC-1) |
-| Danger-zone notice | Text | "Inside the Permanent Danger Zone. Entry is not allowed." when within the radius (US-004/AC-3) |
+| Distance to summit | Text | In km with 1 decimal (US-004/AC-1); left out for a site with no summit (US-004/AC-5) |
+| Danger-zone notice | Text | "Inside the Permanent Danger Zone. Entry is not allowed." when within the radius (US-004/AC-3); left out for a site with no summit (US-004/AC-5) |
 | New-material result | Text | None, low confidence or high confidence (US-004/AC-1) |
 | Beyond-reach message | Text | "Not checked: this map only looks within 10 km of the summit" with the site's distance (US-004/AC-4) |
 | No-data message | Text | "No radar data here" plus one reason: outside radar coverage, sea, or "the radar product marked this spot as invalid" (US-004/AC-2) |
