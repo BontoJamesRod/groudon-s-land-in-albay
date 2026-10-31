@@ -680,4 +680,4 @@ The earthquake pair now flags about 3 times the quiet pair, and the old 26% came
 
 ## Evidence
 
-The test and contract-check results are in the push message for this run: `pytest -q` and the contract check were both required to exit with code 0 before the push.
+`pytest -q`: 370 passed, 6 skipped, exit code 0. Contract check: 0 errors on `site/data`, exit code 0. IDs: 0 dangling, by script. No threshold values were found in `docs/` by script. All 14 Mermaid diagrams render. The new labels and the reach were checked by the automated browser tests, not by eye on a phone.
