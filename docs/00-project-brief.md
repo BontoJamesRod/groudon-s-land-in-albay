@@ -6,7 +6,7 @@
 
 ## 1. Summary
 
-Mayon Radar Watch is a web app that watches how Mayon's river channels change between NISAR satellite passes. It compares NASA–ISRO NISAR radar images from the same track, usually 12 days apart, maps where fresh ash, rock and lava may have landed, and shows how much changed along each channel that drains the volcano and which towns lie along it. The Oct 30, 2026 eruption is one chapter of that story, not the whole of it. It is built first as an entry for the NASA Space Apps Challenge 2026 "Dancing with the SARs" challenge (Nov 14–15, 2026), and the same engine runs on a second site on another continent, one pair in Panama. Radar sees through clouds, ash and darkness, so the map stays current in typhoon season, when normal satellite photos are blocked.
+Mayon Radar Watch is a web app that watches how Mayon's river channels change between NISAR satellite passes. It compares NASA–ISRO NISAR radar images from the same track, usually 12 days apart, maps where fresh ash, rock and lava may have landed, and shows how much changed along each channel that drains the volcano and which towns lie along it. The Oct 30, 2026 eruption is one chapter of that story, not the whole of it. It is built first as an entry for the NASA Space Apps Challenge 2026 "Dancing with the SARs" challenge (Nov 14–15, 2026), and the same engine runs on a second site on another continent, two pairs in Panama. Radar sees through clouds, ash and darkness, so the map stays current in typhoon season, when normal satellite photos are blocked.
 
 ## 2. Problem Statement
 
@@ -48,7 +48,7 @@ Requirement IDs (R1–R8) refer to Section 1 of the challenge checklist. Feature
 | F-07 | Flood layer | Open water in the Albay lowlands after typhoons, using the same change engine | Could |
 | F-08 | "What am I looking at?" panel | How radar sees, what the colors mean, confidence levels, limitations, and that official warnings come from PHIVOLCS and LGUs (R8) | Must |
 | F-09 | Data sources panel | Product name, granule ID, acquisition dates, provisional status and link for every layer (R2, R3) | Must |
-| F-10 | Second showcase site | One pair on the Azuero Peninsula, Panama, using the same engine and the plain change map, with no channels (R7; `pipeline/reports/second-site-candidates.md` and the Panama trial) | Must |
+| F-10 | Second showcase site | Two pairs on the Azuero Peninsula, Panama, a quiet pair and the earthquake pair, using the same engine and the plain change map, with no channels (R7; `pipeline/reports/second-site-candidates.md` and the Panama trial) | Must |
 | F-11 | Public app and code | A public link and a public code repository that judges can open | Must |
 | F-12 | Validation check | At least one result compared with an independent source, such as the gullies named in PHIVOLCS bulletins for the same dates | Should |
 | F-13 | Mobile-friendly, color-blind-safe design | Readable on a phone, with a color-blind-safe palette | Should |
@@ -143,7 +143,7 @@ Rule: **the app never labels any change as illegal or unpermitted.**
 | 1 | How do people near Mayon find out today what changed in their area and channel? | Section 2 |
 | 2 | What goes wrong with that today? | Section 2 |
 | 3 | Do you agree with the suggested out-of-scope list? | Section 6 |
-| 4 | Closed on 2026-11-01: Panama, the Azuero Peninsula landslides, as one pair (`pipeline/reports/second-site-candidates.md`). | F-10 |
+| 4 | Closed on 2026-11-01: Panama, the Azuero Peninsula earthquake, as two pairs (`pipeline/reports/second-site-candidates.md`). | F-10 |
 | 5 | Do the Space Apps and Legazpi local event rules allow code written before Nov 14? This decides how much existing work can be used, so check it first. | Section 7 |
 | 6 | What is the monthly budget? Suggestion: ₱0, using free tiers (Colab, GitHub Pages, NASA Earthdata). | Section 7 |
 | 7 | Closed on 2026-11-01: the owner set the final thresholds and rule before the post-eruption passes were opened. The values live in the site config. | F-05 |

@@ -1,6 +1,6 @@
 # Mayon Radar Watch
 
-A web app that watches how Mayon Volcano's river channels change between NISAR radar satellite passes. It compares radar images from the same track, usually 12 days apart, and maps where fresh ash, rock and lava may have landed. A channel timeline, now being built, will rank the channels that the owner has confirmed by how much changed since the last pass. The Oct 30, 2026 eruption is one chapter of that story, and one pair in Panama shows the same engine on another continent. Built for the NASA Space Apps Challenge 2026, "Dancing with the SARs".
+A web app that watches how Mayon Volcano's river channels change between NISAR radar satellite passes. It compares radar images from the same track, usually 12 days apart, and maps where fresh ash, rock and lava may have landed. A channel timeline, now being built, will rank the channels that the owner has confirmed by how much changed since the last pass. The Oct 30, 2026 eruption is one chapter of that story, and two pairs in Panama show the same engine on another continent. Built for the NASA Space Apps Challenge 2026, "Dancing with the SARs".
 
 **This is not an official warning service. Follow PHIVOLCS and your LGU.**
 

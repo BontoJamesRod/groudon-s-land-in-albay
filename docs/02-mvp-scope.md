@@ -27,7 +27,7 @@
 | F-05 | New-material layer | US-008, US-009 | The core result, made from real NISAR data (R2, R3, R5, R6) |
 | F-08 | "What am I looking at?" panel | US-012 | Makes radar understandable and keeps the app honest (R8) |
 | F-09 | Data sources panel | US-013 | Judges must see NISAR products named and dated (R2, R3) |
-| F-10 | Second showcase site (one Panama pair) | US-014, US-015 | Required for "locations around the world" (R7) |
+| F-10 | Second showcase site (two Panama pairs) | US-014, US-015 | Required for "locations around the world" (R7) |
 | F-11 | Public app and code | US-016 | Judges can't score what they can't open |
 | F-12 | Validation check | US-017 | Proves the core result is true; supports the Validity criterion |
 | F-13 | Mobile-friendly, color-blind-safe design | US-018 | Residents mainly use phones; cheaper to build in from the start |
@@ -79,7 +79,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | Validation records are typed by hand from PHIVOLCS bulletins | A repeatable validation routine for every pair | More validated pairs in v1.1 |
 | Channel lines are prepared once and kept as a fixed file | A maintained channel dataset | Reviewed after the hackathon (v1.1) |
 | English only | Filipino and Bikol | F-16, US-020 (v1.2) |
-| The second site has 1 pair | A full timeline for the second site | v1.1 |
+| The second site has 2 pairs | A full timeline for the second site | v1.1 |
 | No staging site; the maintainer checks on localhost before publishing | A separate staging deployment | Reviewed in v1.1 |
 
 ## 8. Risks and Mitigations
@@ -108,7 +108,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | 1 | How many hours per week can the builder spend? | §2, 07-roadmap |
 | 2 | Who are the 10 testers, and when can the test session happen? | §6 criterion 5 |
 | 3 | Do the event rules allow code written before 2026-11-14? | §8 |
-| 4 | Closed on 2026-11-01: Panama, one pair. | F-10, §6 criterion 3 |
+| 4 | Closed on 2026-11-01: Panama, two pairs. | F-10, §6 criterion 3 |
 
 ## 11. Conflicts with Earlier Documents
 

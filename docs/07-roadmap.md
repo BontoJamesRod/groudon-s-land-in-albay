@@ -167,7 +167,7 @@ These tasks are done. They're listed so that every piece of finished work has an
 
 ## 4. Build Order
 
-Done work from T-050 to T-072, and T-079 to T-088, is listed in §3 and isn't repeated here.
+Done work from T-050 to T-072, and T-079 to T-089, is listed in §3 and isn't repeated here.
 
 1. T-001: everything else lives in the repository.
 2. T-002: the pipeline needs its libraries.

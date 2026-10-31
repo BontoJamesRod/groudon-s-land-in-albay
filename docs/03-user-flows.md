@@ -242,7 +242,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Compare button | Button | Opens SCR-04 (US-007) |
 | Channels button | Button | Opens SCR-13; hidden for a site with no channel data (US-024/AC-2) |
 | Timeline | Control | Previous and Next buttons, pair list, event markers, pair label; a pair whose gap isn't 12 days is dimmed with a short note (US-005/AC-1, US-005/AC-3, US-005/AC-4) |
-| Disclaimer line | Text | "This is not an official warning. Follow PHIVOLCS and your LGU." always visible while a radar layer is on (US-012/AC-2) |
+| Disclaimer line | Text | "This is not an official warning. Follow PHIVOLCS and your LGU." always visible while a radar layer is on (US-012/AC-2); a site with its own wording names its own official source (US-014/AC-3) |
 | Footer links | Links | "Data sources" opens SCR-06; "How we checked this" opens SCR-07 |
 
 **Actions**

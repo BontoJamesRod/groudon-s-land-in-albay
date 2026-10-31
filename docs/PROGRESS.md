@@ -18,8 +18,8 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 88 tasks; ID errata in §11 |
-| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 76 test cases |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 89 tasks; ID errata in §11 |
+| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 78 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
 
@@ -31,7 +31,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Gate 2 (rule and thresholds) | Decided before any post-eruption data was opened. The final rule is live on the public site on 11 pairs |
 | Products | NISAR products are still PROVISIONAL |
 | Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
-| Second site | Panama, one pair, same final rule with no per-site tuning; its site files are built and credited under CC BY-SA 4.0 (T-036, T-086). Status stays `draft`: no pair yet, and it isn't in the site list. T-087 is done, and the T-088 check is in `pipeline/reports/panama-check.md`. T-037 waits for the owner's decision |
+| Second site | Panama, two pairs, same final rule with no per-site tuning, published on `night-1` with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088). Not on the public site until `night-1` is merged |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
 | Next | The owner's Google Earth check, then T-073, T-010, T-074 to T-078; T-038 as soon as the eruption passes are on ASF |
 
@@ -52,7 +52,7 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-10-31 | Past-years water comparison (F-15) removed; water-shortage users dropped | 00 §5, §13 (v0.2) |
 | 2026-10-31 | All documents drafted in one pass at the owner's request, instead of one at a time with approval between | This file |
 | 2026-11-01 | Gate 1: the Nov 5–10 build is the Channel timeline only (F-20) | 00 §5, 07 §3 |
-| 2026-11-01 | Second site is one Panama pair, for R7, using the same final rule | 00 §5, F-10 |
+| 2026-11-01 | Second site is Panama, for R7, using the same final rule. Two pairs, by owner decision | 00 §5, F-10 |
 | 2026-11-01 | Channel strip width set in the site config, the same as the channel test | 01 FR-064, 07 T-080 |
 | 2026-11-01 | Plan files moved from `docs/` to `plans/` | 07 T-081 |
 | 2026-11-01 | Ground-movement mask moved to the site config; reach distance read from it | 07 T-082, T-084 |

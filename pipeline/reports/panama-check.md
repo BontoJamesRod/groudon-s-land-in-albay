@@ -75,4 +75,8 @@ The script is `pipeline/reports/panama_check.py`, and its numbers are in `panama
 
 1. **Publish the pair (T-037)?** I recommend yes, as one plain change map worded as "changed after the earthquake", not "landslides". The match is real at this scale, and about a quarter of the flagged area isn't explained by the map.
 2. **If you publish, what about the baseline pair?** The earthquake pair's coherence uses the quiet pair as its baseline, and F-10 says one pair. Its record would point to a pair that isn't on the site. I didn't test how the publish step and contract check treat that, because I didn't try publishing. Publishing the quiet pair too would avoid the question, and it would show visitors the "before".
-3. **Can the map be used in "How we checked this"?** A link and citation are fine, but I found no license for the image, so it shouldn't be copied into the site or repository. That's why the image stays in the ignored `raw/` folder, and the overlay picture stays in `pipeline/out/`. For a data file, or to confirm the dot positions, you could ask the institute directly.
+3. **Can the map be used in "How we checked this"?** A link and citation are fine, but I found no license for the image, so it shouldn't be copied into the site or repository. That's why the image stays in the ignored `raw/` folder, and the overlay picture stays in `pipeline/out/reports/`. For a data file, or to confirm the dot positions, you could ask the institute directly.
+
+## Owner's decisions (2026-11-01)
+
+Both pairs are published (T-037), the quiet pair first. The earthquake pair is titled "Changed after the earthquake" and is never called landslides. "How we checked this" summarizes this report and links the map, without copying the image. "Landslide" appears only in that panel, where it describes the map it cites.

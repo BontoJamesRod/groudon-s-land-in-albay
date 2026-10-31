@@ -232,7 +232,7 @@ As a visitor or judge, I want to see exactly which NISAR products made each laye
 ### F-10: Second showcase site
 
 **Priority:** Must
-**Description:** One pair on the Azuero Peninsula, Panama, using the same engine and the plain change map, with no channels (R7).
+**Description:** Two pairs on the Azuero Peninsula, Panama, a quiet pair and the earthquake pair, using the same engine and the plain change map, with no channels (R7).
 
 #### US-014: Switch sites
 
@@ -242,6 +242,7 @@ As a visitor, I want to switch between Mayon and the second site, so that I can 
 
 - **US-014/AC-1:** Given 2 published sites, when the visitor picks the other site, then the map moves to that site and shows its timeline and latest pair.
 - **US-014/AC-2:** Given the chosen site's data fails to load, when the visitor picks it, then "Couldn't load <site name>. Try again." appears with a Retry button and the previous site stays on screen.
+- **US-014/AC-3:** Given a site whose map shows change in general, such as Panama, when the visitor reads its map, card and help, then they say "change" instead of "new material", name that site's official source, and the earthquake pair is titled "Changed after the earthquake" and is never called landslides.
 
 #### US-015: Add a site without code changes
 
@@ -480,6 +481,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-067 | The system shall show the channel list's empty, loading and error states, and "No radar data" for a pair with no valid radar value in a channel's strip. | F-20 | US-024, US-025 |
 | FR-068 | The system shall never label any change as illegal or unpermitted. | F-08 | US-012 |
 | FR-069 | The system shall leave the distance and danger-zone lines out of the readout for a site with no summit. | F-02, F-10 | US-004 |
+| FR-070 | The system shall show a site's own wording for its change layer, limits and official source when its config sets one, and shall title the Panama earthquake pair "Changed after the earthquake", never landslides. | F-10 | US-014 |
 
 ## 7. Non-Functional Requirements
 
@@ -555,4 +557,4 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | Version | Date | Changes |
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
-| 0.2 | 2026-11-01 | Applied changes 1 and 2 of `docs/notes/proposed-doc-changes.md`. Final rule in FR-023 and US-008. Added FR-060 to FR-069, US-024 to US-026, and new acceptance criteria on US-004, US-005, US-008 and US-012. |
+| 0.2 | 2026-11-01 | Applied changes 1 and 2 of `docs/notes/proposed-doc-changes.md`. Final rule in FR-023 and US-008. Added FR-060 to FR-070, US-024 to US-026, and new acceptance criteria on US-004, US-005, US-008 and US-012. |

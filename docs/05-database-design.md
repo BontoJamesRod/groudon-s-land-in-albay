@@ -12,12 +12,12 @@
 
 | TBL-ID | Table | Purpose | FR-IDs | MVP |
 | --- | --- | --- | --- | --- |
-| TBL-01 | `sites` | Showcase sites: map settings, summit and danger zone | FR-001, FR-004, FR-006, FR-010, FR-012, FR-014, FR-041, FR-042, FR-043, FR-044, FR-060 | Yes |
+| TBL-01 | `sites` | Showcase sites: map settings, summit and danger zone | FR-001, FR-004, FR-006, FR-010, FR-012, FR-014, FR-041, FR-042, FR-043, FR-044, FR-060, FR-070 | Yes |
 | TBL-02 | `towns` | Town borders and names for each site | FR-002, FR-007, FR-008, FR-009, FR-010, FR-056 | Yes |
 | TBL-03 | `channels` | Named channels that drain the volcano, with their towns | FR-056, FR-057, FR-058, FR-063, FR-065 | Yes |
 | TBL-04 | `passes` | NISAR GCOV acquisitions used by pairs | FR-014, FR-027, FR-028, FR-039 | Yes |
 | TBL-05 | `pairs` | Two consecutive same-track passes and their results | FR-013, FR-014, FR-015, FR-017, FR-018, FR-022, FR-026, FR-029, FR-030, FR-059, FR-062, FR-066 | Yes |
-| TBL-06 | `layers` | Images and value grids made for a pair | FR-010, FR-011, FR-019, FR-020, FR-021, FR-023, FR-024, FR-025, FR-039, FR-060 | Yes |
+| TBL-06 | `layers` | Images and value grids made for a pair | FR-010, FR-011, FR-019, FR-020, FR-021, FR-023, FR-024, FR-025, FR-039, FR-060, FR-070 | Yes |
 | TBL-07 | `events` | Recorded events shown on the timeline | FR-016 | Yes |
 | TBL-08 | `validations` | A check of one pair against an independent source | FR-048 | Yes |
 | TBL-09 | `validation_items` | One place compared in a validation | FR-048 | Yes |
@@ -68,6 +68,7 @@ erDiagram
         number danger_zone_radius_km
         string danger_zone_label
         number detection_reach_km
+        string wording_set
         array change_types
         string created_at
         string updated_at
@@ -258,6 +259,7 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `summit_lon` | number | No | `null` | −180 to 180 | Reference point for distance and the danger zone |
 | `danger_zone_radius_km` | number | No | `null` | > 0; needs `summit_lat` and `summit_lon` | Danger-zone ring radius in km, e.g. 6 for Mayon |
 | `danger_zone_label` | string | No | `null` | Required when `danger_zone_radius_km` is set | e.g. "Permanent Danger Zone (6 km)" |
+| `wording_set` | string | No | `null` | `plain_change` or `null` | Which wording the web app uses for this site (FR-070) |
 | `boundary_credit` | string | No | `null` | — | Map credit for the site's borders (FR-040) |
 | `boundary_credit_url` | string | No | `null` | URL | Link for that credit, when the source asks for one |
 | `detection_reach_km` | number | No | `null` | > 0; built from `filters.max_distance_km` in the site config | How far from the summit detections go (FR-060) |
@@ -265,7 +267,7 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
 
-The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, for sites with channels, the strip width on each side of the line `channel_strip_half_width_m` (FR-064), and the ground-movement mask `ground_movement.min_coherence` (FR-031).
+The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, for sites with channels, the strip width on each side of the line `channel_strip_half_width_m` (FR-064), the ground-movement mask `ground_movement.min_coherence` (FR-031), and `layer_wording`, the layer title and legend labels for a site with its own wording (FR-070).
 
 ### TBL-02: `towns`
 
@@ -366,7 +368,7 @@ A row is one image (and optionally one value grid) made for a pair. Stored insid
 | `id` | string | Yes | — | PK; `<pair_id>_<kind>` | Layer key |
 | `pair_id` | string | Yes | — | FK `pairs.id` | Pair the layer belongs to |
 | `kind` | string | Yes | — | enum `layer_kind`; unique per pair | What the layer shows |
-| `title` | string | Yes | — | — | Display name, e.g. "New material" |
+| `title` | string | Yes | — | — | Display name, e.g. "New material" or "Changed after the earthquake" |
 | `units` | string | Yes | — | — | e.g. `dB`, `coherence loss (0–1)`, `class` |
 | `image_path` | string | Yes | — | Relative to the pair folder | e.g. `new_material.png` |
 | `image_format` | string | Yes | — | enum `image_format` | PNG or WebP |
@@ -553,7 +555,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 
 | Table | Records | Purpose |
 | --- | --- | --- |
-| `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels are in the site config. Second site: `panama`, the Azuero Peninsula, one pair, no summit and no channels (status `draft` until T-037). | The two showcase sites (F-10) |
+| `sites` | `mayon`: center and summit 13.2572° N, 123.6856° E; bounds 123.56° E to 123.81° E, 13.14° N to 13.38° N; danger zone 6 km; time zone `Asia/Manila` (all from the progress notes); zoom levels are in the site config. Second site: `panama`, the Azuero Peninsula, two pairs, no summit and no channels. | The two showcase sites (F-10) |
 | `towns` | Albay towns inside the Mayon bounds, from `municities-provdist-500500000.0.1.json` (progress notes) | Borders, names, search (F-01, F-02) |
 | `channels` | Channels named in PHIVOLCS bulletins. A starting list from a PHIVOLCS update quoted on ReliefWeb (2000): Mabinit and Buyuan-Padang (Legazpi), Miisi (Daraga), Tumpa, Anoling and Quirangay (Camalig), Maninila (Guinobatan), Basud-Lidong (Santo Domingo), Bulawan (Malilipot), San Vicente and Buang (Tabaco), Upper Nasisi and Upper Nabonton (Ligao). 2026 reports also name the Mi-isi, Bonga and Basud gullies. Check against current bulletins before use. | Channels and towns (F-19) |
 | `channel_areas` | Computed for every confirmed channel and published pair | Channel timeline (F-20) |

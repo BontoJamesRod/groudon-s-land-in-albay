@@ -662,7 +662,7 @@ Hard rule 3 says not to change `site/data/`, while section A requires the data p
 
 ## Panama under the final rule
 
-Mayon's rule and thresholds are read when the trial runs, with no tuning. Output is in `pipeline/out/` only (`panama-trial-final-rule.json`). No NISAR data was downloaded, because the crops were cached. The earlier `pipeline/reports/panama-trial.json` stays as it was, so the old rule's numbers remain on record.
+Mayon's rule and thresholds are read when the trial runs, with no tuning. Output is in `pipeline/out/` only (`reports/panama-trial-final-rule.json`). No NISAR data was downloaded, because the crops were cached. The earlier `pipeline/reports/panama-trial.json` stays as it was, so the old rule's numbers remain on record.
 
 | Pair | Land checked | Flagged share of land | Flagged area (final rule) | Low / high | Flagged area (old rule) |
 | --- | --- | --- | --- | --- | --- |
@@ -707,3 +707,27 @@ The earthquake pair now flags about 3 times the quiet pair, and the old 26% came
 - **Accessibility:** already done as T-079. I confirmed the files are in Git and all 6 axe tests pass, and added no new task.
 - **T-087:** the map credit and the Data sources panel now follow the selected site. `sites.json` has `boundary_credit` and `boundary_credit_url`, and `sources.json` rows have an optional `site_id`, where no value means shared. WorldCover and the Copernicus elevation model count as Mayon's, because only Mayon's study used them. New: US-013/AC-3, TC-077.
 - **T-088:** the pair matches the University of Panama's landslide map at the scale of a few km, under a rule fixed before the comparison. It's not evidence for any single spot, and about a quarter of the flagged area isn't explained by the map. The report has three decisions for you.
+
+# Panama published on `night-1` (2026-11-01)
+
+**T-037 is done: both Panama pairs are published on `night-1`, the quiet pair first, then the earthquake pair. They aren't on the public site until `night-1` is merged.**
+
+| Pair | Title on the map | Flagged area | Check panel |
+| --- | --- | --- | --- |
+| 09-15 → 09-27 (quiet) | Radar change | 2.40 km² | "Not yet checked" |
+| 09-27 → 10-09 (earthquake) | Changed after the earthquake | 7.72 km² | Summary of `pipeline/reports/panama-check.md` |
+
+- **Wording (T-089):** Panama says "change" instead of "new material" in the legend, card, summary and help. Its disclaimer and help name SINAPROC instead of PHIVOLCS, and it has no summit limit on the phone handle. Mayon's text is unchanged, and tests cover both.
+- **"Landslide" appears on Panama in one place only:** the check panel, where it describes the University of Panama's map. The panel can't cite that map without the word. Tests keep it out of the pair files, legend, card and help.
+- **The map:** linked and cited, with no image copied.
+- **Timeline event:** a new `panama_events.json` marks the earthquake, citing USGS.
+
+**Things to know:**
+
+- **SINAPROC was my choice.** You didn't name a Panamanian authority, and PHIVOLCS would have been wrong there. It's Panama's civil protection agency, and its site loads. Please check the wording.
+- **The quiet pair has its own unpublished baseline** (09-03 → 09-15). Its record points to a pair that isn't on the site, and the contract check allows that. The earthquake pair's baseline is now published.
+- **TC-035 isn't met as written.** It expects a new site with no code changes, and Panama needed changes to `context.py`, the export step and the site wording. The next site with this wording needs only a config and its context files.
+- **A false coastline:** Panama's land stops at the site's east edge, so a straight blue line is drawn there. It's the same drawing as Mayon's, and I left it.
+- **Site size:** Panama adds 13 MB to `site/data`. Mayon still opens first, so its first view doesn't load these files.
+
+**Evidence:** `pytest -q`: 396 passed, 5 skipped, exit code 0, with TC-033 and TC-076 no longer skipped. Contract check: 0 errors, exit code 0. Checked by eye in screenshots at desktop and phone width, in the test browser, not on a real phone.
