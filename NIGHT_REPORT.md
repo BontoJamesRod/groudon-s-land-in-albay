@@ -535,3 +535,21 @@ Full tables are in the study. All of this is within 10 km, and none of it choose
 **Worth knowing:** the timeline now mixes two tracks, and each pair's label names its track. Areas from different tracks aren't directly comparable, because the viewing angle differs.
 
 **Final evidence:** `pytest -q`: 337 passed, 6 skipped. Contract check: 0 errors on `site/data`. **Downloaded this evening: 0.26 GB** of 10 GB (5.25 GB logged in `raw/` in total). Nothing from on or after 2026-10-30 was searched for or opened.
+
+# Night 4
+
+The full report is [pipeline/reports/channel-test.md](pipeline/reports/channel-test.md). It's for gate 1 on Sunday.
+
+**Verdict: GO, by the smallest possible margin.** The quarry-to-quiet ratio reached 2.0 in exactly 5 of 9 track 111 pairs at 3.0 dB combined. Leaving out either of two single quarries makes it 4 of 9, and the test can't say whether the change is digging or bare gravel responding to the weather.
+
+- **Part A:** OpenStreetMap has 8 quarries (77.81 ha), all kept. Six are near Padang, and none is near Budiao or Maninila. Check them by eye in `pipeline/context/channel_test_sites.kml`.
+- **Part B: skipped.** NASA's server refused the IMERG files with a 403, so the Oct 8 → Oct 20 rain question and the low-rain check are still open. The report says how to retry.
+- **Part C:** the channel-to-land ratio reached 1.5 in 9 of 9 pairs, but a strip mask would keep 53–62% of the 10 km circle's flagged area while already covering 51% of its land.
+
+**Downloads:** IMERG rain 0 bytes of the 1.5 GB limit. OpenStreetMap quarries and places were two small Overpass queries. NISAR nothing.
+
+**No NISAR product was searched for or opened** beyond the cached crops already in `raw/`, the latest dated 2026-10-19. `site/`, the site config, `classify.py`, the thresholds and `docs/` are unchanged on `night-1`, and nothing was merged into `main`. `docs/NIGHT_PLAN_4.md` is still untracked, because the plan says not to change `docs/`.
+
+**Commits:** c00d4ae (the test and its report), plus the commit that adds this section.
+
+**Final evidence:** `pytest -q`: 344 passed, 6 skipped. Contract check: 0 errors on `site/data`.
