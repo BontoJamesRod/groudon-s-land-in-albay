@@ -1,7 +1,7 @@
 # Progress
 
 **Project:** Mayon Radar Watch
-**Current step:** Build the Channel timeline, Nov 5–10 (07 T-073 to T-078). The owner confirms channel lines first (T-073).
+**Current step:** Waiting for the owner's Google Earth check of the channel lines. T-073 hasn't started, and the Channel timeline build (T-010, T-074 to T-078, Nov 5–10) follows it.
 **Last updated:** 2026-11-01
 
 Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · `Skipped` · `Reopened`
@@ -18,7 +18,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 78 tasks; ID errata in §11 |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 85 tasks; ID errata in §11 |
 | 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 76 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
@@ -31,9 +31,9 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Gate 2 (rule and thresholds) | Decided before any post-eruption data was opened. The final rule is live on the public site on 11 pairs |
 | Products | NISAR products are still PROVISIONAL |
 | Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
-| Second site | Panama, one pair; not published yet (T-036, T-037) |
+| Second site | Panama, one pair, same final rule with no per-site tuning; not published yet (T-036, T-037). The boundary license is still the owner's decision |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
-| Next | T-073 (owner confirms channel lines), then T-010, T-074 to T-078; T-038 as soon as the eruption passes are on ASF |
+| Next | The owner's Google Earth check, then T-073, T-010, T-074 to T-078; T-038 as soon as the eruption passes are on ASF |
 
 ## After Launch
 
@@ -52,7 +52,11 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-10-31 | Past-years water comparison (F-15) removed; water-shortage users dropped | 00 §5, §13 (v0.2) |
 | 2026-10-31 | All documents drafted in one pass at the owner's request, instead of one at a time with approval between | This file |
 | 2026-11-01 | Gate 1: the Nov 5–10 build is the Channel timeline only (F-20) | 00 §5, 07 §3 |
-| 2026-11-01 | Second site is one Panama pair, for R7 | 00 §5, F-10 |
+| 2026-11-01 | Second site is one Panama pair, for R7, using the same final rule | 00 §5, F-10 |
+| 2026-11-01 | Channel strip width set in the site config, the same as the channel test | 01 FR-064, 07 T-080 |
+| 2026-11-01 | Plan files moved from `docs/` to `plans/` | 07 T-081 |
+| 2026-11-01 | Ground-movement mask moved to the site config; reach distance read from it | 07 T-082, T-084 |
+| 2026-11-01 | Legend labels renamed to say which signals agree; 11 pairs republished | 07 T-085 |
 | 2026-10-31 | Detections are limited by a reach distance from the summit set in the site config (live since Oct 31) | 01 FR-060, 04 ADR-006 |
 | 2026-11-01 | Gate 2: final classification rule and thresholds locked before any post-eruption data was opened. Brightness change flags a pixel; coherence loss only raises it to high confidence. Values live in the site config | 01 FR-023, 04 ADR-006 |
 | 2026-11-01 | Blind cutoff lifted for the Oct 31 passes only | 04 ADR-006, `CLAUDE.md` |
@@ -63,9 +67,9 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | # | Question | From | Blocks |
 | --- | --- | --- | --- |
 | 1 | Do the Space Apps and Legazpi local-event rules allow code written before 2026-11-14? | 00 OQ5 | All of Phase 1 in 07 |
-| 2 | Is the Panama boundary license fine for public use? | 01 OQ5 | T-036 |
-| 3 | Which channel lines does the owner confirm? | 01 OQ4 | T-073, T-010, F-20 |
-| 4 | What strip width goes in the site config? | 01 OQ8 | T-074 |
+| 2 | Accept the share-alike terms of the Panama boundary source, or use another source? | 01 OQ5 | T-036 |
+| 3 | Which channel lines does the owner confirm? Waiting for the owner's Google Earth check. | 01 OQ4 | T-073, T-010, F-20 |
+| 4 | Closed on 2026-11-01: strip width is in the site config. | 01 OQ8 | Nothing now |
 | 5 | What distance from a channel counts as "in or near" it? | 01 OQ3 | US-023/AC-2, TC-045, TC-046 |
 | 6 | Frontend approach and hosting: accept the Suggestions (plain JavaScript, GitHub Pages)? They're what was built. | 04 OQ1, OQ2 | Nothing now |
 | 7 | How many hours per week can the builder spend? | 02 OQ1 | Dates in 07 |

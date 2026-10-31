@@ -70,20 +70,22 @@ No classification threshold value is in documents 00–08, PROGRESS or the revie
 - FR-031 and US-010/AC-1 hold a display mask for the ground-movement layer (F-06). It isn't a classification threshold.
 - The Git history still holds the old API examples, because history isn't rewritten.
 
+Update on 2026-11-01, after the owner's decisions: the plan files moved to `plans/`, and the ground-movement mask moved to the site config, so `docs/` no longer holds any of these values. Only the Git history does.
+
 ## 5. Open Items
 
 | # | Severity | Location | Item |
 | --- | --- | --- | --- |
 | 1 | Major | 01 OQ4; 07 T-073 | The owner hasn't confirmed any channel line yet, so F-20 can't start |
-| 2 | Major | 01 OQ8; FR-064 | Strip width isn't chosen |
+| 2 | Closed | 01 OQ8; FR-064 | Strip width is in the site config (T-080) |
 | 3 | Major | 01 OQ3; US-023/AC-2 | Channel distance is still `[TBD]` (consistency-02 #3) |
-| 4 | Major | 01 OQ5; T-036 | Panama: the boundary license must be read, and the trial's result is broad |
-| 5 | Minor | FR-060; `site/js/readout.js` | The browser's reach distance is a constant in the code, not read from the site config |
-| 6 | Minor | API-008; `site/data/` | Published legends still say "(one signal)" and "(both signals)". That's still true, but less clear under the final rule |
+| 4 | Major | 01 OQ5; T-036 | Panama: the upstream boundary source states a share-alike license and is marked deprecated (T-083) |
+| 5 | Closed | FR-060; `site/js/readout.js` | The browser reads the reach distance from `sites.json`, built from the site config (T-084) |
+| 6 | Closed | API-008; `site/data/` | Legend labels renamed and the pairs republished (T-085) |
 | 7 | Minor | 01 US-005/AC-3 | Whether an event on a pass's local date counts as inside the pair is still unstated (consistency-02 #8) |
 
 Consistency-02 issues 1, 2, 4 and 6 are closed by this update, and issue 5 is closed apart from the confirmation in item 1.
 
 ## 6. Verdict
 
-The IDs are consistent and the documents agree. The Nov 5–10 build can follow them once items 1 and 2 are decided.
+The IDs are consistent and the documents agree. The Nov 5–10 build can follow them once item 1 is done, which waits for the owner's Google Earth check.

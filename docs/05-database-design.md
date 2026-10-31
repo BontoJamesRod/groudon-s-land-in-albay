@@ -576,7 +576,7 @@ The Maintainer's rights come from write access to the repository (04 §4). Unpub
 | 1 | What zoom levels should Mayon use (default, minimum, maximum)? | `sites` seed |
 | 2 | Closed on 2026-11-01: final values live in the site config, never in `docs/`. | `pairs.brightness_threshold_db`, `pairs.coherence_loss_threshold` |
 | 3 | What is the exact ASF Vertex URL format for linking one granule? (verify) | `passes.vertex_url`, `pairs.gunw_vertex_url` |
-| 4 | Closed on 2026-11-01: Panama has no channels; geoBoundaries for its borders (license still to be read). | `towns`, `sources` |
+| 4 | Closed on 2026-11-01: Panama has no channels; geoBoundaries for its borders (upstream license to be accepted or replaced, 01 Open Question 5). | `towns`, `sources` |
 | 5 | Should readouts also show the brightness change and coherence loss values at the tapped spot? That would need value grids for those layers too. | `layers` |
 
 ## 12. Conflicts with Earlier Documents

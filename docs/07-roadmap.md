@@ -236,7 +236,7 @@ Done work from T-050 to T-072, and T-079 to T-085, is listed in §3 and isn't re
 | Eruption products arrive after 2026-11-04 | Milestone 3 slips by the same number of days | Finish the thin slice first, so T-038 takes hours, not days |
 | Threshold study (T-016) is inconclusive | Milestones 2 and 3 slip by [TBD] days | Use the July 14 pair as the reference event; keep low and high confidence separate instead of forcing one threshold |
 | Large downloads on slow internet; Colab resets | Each backlog task takes longer | Crop early, cache on Google Drive, process the eruption pairs before the backlogs |
-| The Panama result is too broad to show as it is | Milestone 4 slips; R7 at risk | Compare it with mapped landslides first; Fuego and Nyamulagira stay the fallbacks in the candidates report |
+| The Panama result doesn't match the mapped landslides, or its boundary license doesn't suit | Milestone 4 slips; R7 at risk | Compare it with mapped landslides first; Fuego and Nyamulagira stay the fallbacks in the candidates report |
 | Event rules forbid pre-built code | Most of Phase 1 has to happen during the 48 hours | Check the rules first (brief Open Question 5); keep this roadmap as the 48-hour plan if needed |
 | One builder | Any sickness or school deadline stops all work | Keep deferred features deferred; the presenter takes T-041 |
 

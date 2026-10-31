@@ -89,7 +89,7 @@ Behind the journey, the maintainer processes and publishes each pair and adds th
 | Space Apps or local-event rules don't allow code written before 2026-11-14 | [TBD] | High | Check the rules first (brief Open Question 5); if not allowed, keep the docs and rebuild during the event from the roadmap |
 | The eruption pair shows no clear new material | Med | High | Keep the July 14, 2026 pyroclastic-flow pair as the backup showcase |
 | Post-eruption products arrive later than 36–72 h | Med | Med | Prepare the pipeline on older pairs first so the eruption pair takes hours, not days |
-| The Panama result isn't specific: the trial flagged a large share of the land | Med | Med | Show it as one plain change map with its limits stated, and compare it with mapped landslides before publishing |
+| The Panama result hasn't been checked against mapped landslides | Med | Med | Show it as one plain change map with its limits stated, and compare it with mapped landslides before publishing |
 | Thresholds are tuned to make the eruption look good | Med | High | Done: the thresholds were set on 2026-11-01, before the post-eruption passes were opened (FR-023) |
 | Text reads like a lahar forecast | Med | High | Review all text against FR-038 before release |
 | Large downloads on slow internet; Colab resets | High | Med | Crop early, cache downloads, save outputs to Google Drive |

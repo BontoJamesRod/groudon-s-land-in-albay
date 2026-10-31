@@ -646,3 +646,38 @@ Hard rule 3 says not to change `site/data/`, while section A requires the data p
 - **IDs:** 0 dangling and 0 renumbered, by script. All 16 new acceptance criteria have a test, and all 10 new requirements have a task and a test.
 - **Diagrams:** 14 of 14 Mermaid diagrams rendered in headless Chromium.
 - **Not checked:** the new wording in a browser by eye, beyond the automated test. No NISAR or Earthdata searches or downloads were made, so the eruption passes' status is still from 16:28 UTC on Oct 31.
+
+# Owner's decisions on the docs run (2026-11-01)
+
+**Six of your seven decisions are done and pushed on `night-1`, not merged into `main`. T-073 hasn't started: it waits for your Google Earth check.**
+
+| Decision | Task | Result |
+| --- | --- | --- |
+| Strip width | T-080 | `channel_strip_half_width_m` is 200 in `pipeline/sites/mayon.json`, the same as `STRIP_M` in the channel test. Nothing uses it until T-074 |
+| Plan files | T-081 | All 5 are in `plans/`, with the same checksums as before the move. `NIGHT_PLAN_4.md` and `DOCS_PLAN_6.md` are now in Git for the first time |
+| Ground-movement number | T-082 | Now `ground_movement.min_coherence` in the site config. FR-031 and US-010/AC-1 describe it in words |
+| Panama | T-083 | Below |
+| Reach distance | T-084 | `sites.json` now has `detection_reach_km`, built from `filters.max_distance_km`. `map.js` and `readout.js` read it, and the constant is gone |
+| Legend labels | T-085 | 11 pairs republished. Every area and coherence flag is unchanged, the held pair is still off, and there are no post-eruption pairs. The help panel's color lines use the same words |
+
+## Panama under the final rule
+
+Mayon's rule and thresholds are read when the trial runs, with no tuning. Output is in `pipeline/out/` only (`panama-trial-final-rule.json`). No NISAR data was downloaded, because the crops were cached. The earlier `pipeline/reports/panama-trial.json` stays as it was, so the old rule's numbers remain on record.
+
+| Pair | Land checked | Flagged share of land | Flagged area (final rule) | Low / high | Flagged area (old rule) |
+| --- | --- | --- | --- | --- | --- |
+| Quiet, 09-15 → 09-27 | 443.97 km² | **0.5%** | 2.40 km² | 2.31 / 0.09 | 4.72 km² |
+| Earthquake, 09-27 → 10-09 | 443.97 km² | **1.7%** | 7.73 km² | 3.06 / 4.66 | 117.30 km² (26%) |
+
+The earthquake pair now flags about 3 times the quiet pair, and the old 26% came almost entirely from coherence loss alone. Near the reported landslide cluster it flags 2.40 km² of 120.89 km² of land. This is still unchecked against the mapped landslides, and an earthquake can change the ground without a landslide.
+
+## Panama boundary license: your decision
+
+- **geoBoundaries' record** says CC BY 4.0, with the license detail "need to update". Its site asks for the name and a link in a product's credits.
+- **The upstream source it points to** (Smithsonian Tropical Research Institute data portal on ArcGIS) says **CC BY-SA 4.0**, which is stricter. The record is marked deprecated, is titled "Panama Districts Boundaries - 2016", and credits Panama's National Geographic Institute "Tommy Guardia" (2019). geoBoundaries calls the same data 2012.
+- **What it means:** treat the stricter terms as the real ones. Published borders made from this data would need credit and the same license. `pipeline/reports/panama_trial_land.geojson` still says CC BY 4.0, because it's a trial file I didn't change. This isn't legal advice.
+- **Decision:** accept CC BY-SA for Panama's `towns` and `land` files, or look for another boundary source. T-036 waits for this.
+
+## Evidence
+
+The test and contract-check results are in the push message for this run: `pytest -q` and the contract check were both required to exit with code 0 before the push.
