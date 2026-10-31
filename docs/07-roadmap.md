@@ -109,7 +109,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-ID | Task | Related IDs | Size | Depends on | Done when |
 | --- | --- | --- | --- | --- | --- |
 | T-073 | Owner: confirm which candidate channel lines are right, and record who and when | F-19, F-20, FR-065, TBL-03, US-023, US-026 | S | T-065 | The confirmed list is written down; candidates stay out of `site/data/` |
-| T-074 | Add `channel_strip_width_m` to the site config; build the `channel_areas` module and `channel_areas.json`; add the confirmed-only and TBL-12 rules to the contract check | US-026, FR-060, FR-064, FR-065, TBL-01, TBL-03, TBL-12, API-005, API-012, ADR-011, SCR-12 | M | T-010, T-019 | TC-072, TC-073 and TC-074 pass |
+| T-074 | Build the `channel_areas` module and `channel_areas.json`; add the confirmed-only and TBL-12 rules to the contract check | US-026, FR-060, FR-064, FR-065, TBL-01, TBL-03, TBL-12, API-005, API-012, ADR-011, SCR-12 | M | T-010, T-019, T-080 | TC-072, TC-073 and TC-074 pass |
 | T-075 | Build the channel list in `channels.js`, with empty, loading and error states | US-024, FR-061, FR-067, SCR-01, SCR-13, API-012 | M | T-022, T-074 | TC-064, TC-065 and TC-066 pass |
 | T-076 | Build the channel view: bars, no-data state and the strip on the map | US-025, FR-062, FR-063, FR-067, SCR-14, API-005, API-012 | M | T-075, T-028 | TC-067, TC-068, TC-069 and TC-070 pass |
 | T-077 | Dim pairs with an unequal gap, with a short note, on the pass timeline and the channel timeline. Not built yet | US-005, US-025, FR-066, SCR-01, SCR-14, API-007 | S | T-024, T-076 | TC-070 and TC-071 pass |

@@ -2,7 +2,7 @@
 
 Each site has one file, pipeline/sites/<id>.json, so a new site needs no code
 changes (FR-043). The file uses the column names of the `sites` table in
-docs/05-database-design.md, plus four pipeline-only settings that are never
+docs/05-database-design.md, plus these pipeline-only settings that are never
 published:
 
 - thresholds: the values that decide what counts as new material. They are
@@ -10,6 +10,10 @@ published:
 - provisional_fields: which settings are still PROVISIONAL.
 - tracks: the radar tracks that cover the site.
 - filters: optional false-alarm filters (mrw/filters.py). All off unless the owner turns them on.
+  max_distance_km also reaches the browser, as detection_reach_km in sites.json.
+- channel_strip_half_width_m: for the channel timeline, how far the strip goes on each side
+  of a channel line, in metres.
+- ground_movement: min_coherence hides movement where the two passes are too unlike to trust.
 """
 import json
 from datetime import datetime, timezone
@@ -19,7 +23,7 @@ from mrw.contract_check import SITES, check_row
 from mrw.filters import FilterConfigError, check_filters
 
 SITES_FOLDER = Path(__file__).resolve().parents[1] / "sites"
-PIPELINE_ONLY = ("thresholds", "provisional_fields", "tracks", "filters")
+PIPELINE_ONLY = ("thresholds", "provisional_fields", "tracks", "filters", "channel_strip_half_width_m", "ground_movement")
 TIMESTAMPS = ("created_at", "updated_at")
 
 
@@ -73,6 +77,18 @@ def _check_thresholds(config, path):
         raise SiteConfigError(f"thresholds.rule must be either_signal or brightness_leads in site config: {path}")
 
 
+def _check_channel_and_movement_settings(config, path):
+    """These settings are optional, but a value that's there must make sense."""
+    width = config.get("channel_strip_half_width_m")
+    if width is not None and (not isinstance(width, (int, float)) or width <= 0):
+        raise SiteConfigError(f"channel_strip_half_width_m must be above 0 in site config: {path}")
+    movement = config.get("ground_movement")
+    if movement is not None:
+        mask = movement.get("min_coherence") if isinstance(movement, dict) else None
+        if not isinstance(mask, (int, float)) or not 0 <= mask <= 1:
+            raise SiteConfigError(f"ground_movement.min_coherence must be 0 to 1 in site config: {path}")
+
+
 def load_site_config(path):
     """Read a site config file, check it, and return it as a dictionary."""
     path = Path(path)
@@ -83,6 +99,7 @@ def load_site_config(path):
     _check_bounds(config, path)
     _check_columns(config, path)
     _check_thresholds(config, path)
+    _check_channel_and_movement_settings(config, path)
     try:
         check_filters(config.get("filters"))
     except FilterConfigError as problem:
@@ -99,6 +116,7 @@ def build_sites_row(config, now=None):
     """Build the row for site/data/sites.json: only the columns in docs/05."""
     now = now or utc_now_text()
     row = {name: config.get(name) for name in SITES if name not in TIMESTAMPS}
+    row["detection_reach_km"] = (config.get("filters") or {}).get("max_distance_km")
     row["created_at"] = now
     row["updated_at"] = now
     return row

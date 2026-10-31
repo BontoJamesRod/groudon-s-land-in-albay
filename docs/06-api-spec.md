@@ -65,7 +65,7 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 
 | API-ID | Method | Path | Description | Roles | FR / US | MVP |
 | --- | --- | --- | --- | --- | --- | --- |
-| API-001 | GET | `/data/sites.json` | Published sites | Visitor, Maintainer | FR-001, FR-004, FR-006, FR-041, FR-042, US-001, US-002, US-014 | Yes |
+| API-001 | GET | `/data/sites.json` | Published sites | Visitor, Maintainer | FR-001, FR-004, FR-006, FR-041, FR-042, FR-060, US-001, US-002, US-014 | Yes |
 | API-002 | GET | `/data/sources.json` | Context data sources | Visitor, Maintainer | FR-040, FR-058, US-013, US-023 | Yes |
 | API-003 | GET | `/data/sites/{site_id}/towns.geojson` | Town borders and names | Visitor, Maintainer | FR-002, FR-007, FR-008, FR-009, FR-010, US-001, US-003, US-004 | Yes |
 | API-004 | GET | `/data/sites/{site_id}/land.geojson` | Land polygon for the coastline | Visitor, Maintainer | FR-003, FR-005, FR-011, US-001, US-004 | Yes |
@@ -84,7 +84,7 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 
 **Purpose:** List published sites with their map settings.
 **Roles:** Visitor, Maintainer
-**Supports:** FR-001, FR-004, FR-006, FR-041, FR-042, US-001, US-002, US-014
+**Supports:** FR-001, FR-004, FR-006, FR-041, FR-042, FR-060, US-001, US-002, US-014
 
 **Path and query parameters**
 
@@ -120,6 +120,7 @@ None (`GET`).
       "summit_lon": 123.6856,
       "danger_zone_radius_km": 6,
       "danger_zone_label": "Permanent Danger Zone (6 km)",
+      "detection_reach_km": 10,
       "change_types": ["new_material"],
       "created_at": "2026-11-04T09:00:00Z",
       "updated_at": "2026-11-04T09:00:00Z"

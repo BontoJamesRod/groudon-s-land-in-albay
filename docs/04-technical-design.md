@@ -201,6 +201,7 @@ Leaflet is copied into `site/vendor/` instead of loaded from a CDN, so the app h
 ```text
 mayon-radar-watch/
 ├── docs/                      # planning documents (this kit)
+├── plans/                     # the owner's run plans, kept as written
 ├── pipeline/
 │   ├── mrw/                   # Python package: config, search, pairs, download, gcov, coherence, classify, context, channel_areas, export, publish, validation, contract_check
 │   ├── sites/                 # one config file per site, e.g. mayon.json
@@ -266,7 +267,7 @@ mayon-radar-watch/
 - **Context:** Fresh deposits change radar brightness and destroy coherence; rain-soaked soil also changes brightness (brief §10, PRD FR-021 to FR-023).
 - **Decision (final rule, gate 2, locked 2026-11-01):** A pixel is flagged by its brightness change alone (GCOV HH, dB). Coherence loss only raises a flagged pixel to high confidence and never adds area. The thresholds are final, set on 2026-11-01 before the post-eruption passes were opened; their values live in the site config. Coherence loss = coherence of the previous pair on the same track minus coherence of the current pair, both from GUNW `coherenceMagnitude`.
 - **Alternatives considered:** Flagging on either signal (the first rule: coherence loss alone added area); coherence from GSLC at full resolution (more accurate, but more processing: later).
-- **Consequences:** The first pair on a track has no coherence baseline, so it is low confidence at most, and so is any pair whose baseline spans a different number of days (FR-022). The owner lifted the blind cutoff (`BLIND_CUTOFF` in `pipeline/mrw/search.py`) to open the Oct 31 passes only; NISAR products acquired on or after 2026-11-01 (UTC) stay closed unless the owner moves it again. Each site can set a reach distance from the summit in its config (`filters.max_distance_km`), and nothing is flagged beyond it (FR-060). GUNW is posted at about 80 m versus 10–20 m for GCOV (progress notes), so coherence is upsampled and high-confidence edges are blocky at about 80 m. GUNW products are assumed to exist for consecutive 12-day pairs (verify).
+- **Consequences:** The first pair on a track has no coherence baseline, so it is low confidence at most, and so is any pair whose baseline spans a different number of days (FR-022). The owner lifted the blind cutoff (`BLIND_CUTOFF` in `pipeline/mrw/search.py`) to open the Oct 31 passes only; NISAR products acquired on or after 2026-11-01 (UTC) stay closed unless the owner moves it again. Each site can set a reach distance from the summit in its config (`filters.max_distance_km`). Nothing is flagged beyond it, and `sites.json` carries it to the browser (FR-060). GUNW is posted at about 80 m versus 10–20 m for GCOV (progress notes), so coherence is upsampled and high-confidence edges are blocky at about 80 m. GUNW products are assumed to exist for consecutive 12-day pairs (verify).
 
 ### ADR-007: Web rasters as reprojected images plus value grids
 
@@ -299,7 +300,7 @@ mayon-radar-watch/
 ### ADR-011: Compute channel strips in the pipeline, with the width in the site config
 
 - **Context:** The channel timeline (F-20) needs the area flagged along each channel for every pair. A value grid is over a megabyte per pair, so reading every pair in the browser would break the NFR-001 target. Area must also match the final rule exactly.
-- **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_width_m`), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
+- **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_half_width_m`, measured on each side of the line), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
 - **Alternatives considered:** Computing in the browser from each pair's grid (many downloads, and results could differ from the pipeline's); flow routing from elevation data (out of scope, ADR-008).
 - **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part.
 

@@ -67,6 +67,7 @@ erDiagram
         number summit_lon
         number danger_zone_radius_km
         string danger_zone_label
+        number detection_reach_km
         array change_types
         string created_at
         string updated_at
@@ -256,11 +257,12 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `summit_lon` | number | No | `null` | −180 to 180 | Reference point for distance and the danger zone |
 | `danger_zone_radius_km` | number | No | `null` | > 0; needs `summit_lat` and `summit_lon` | Danger-zone ring radius in km, e.g. 6 for Mayon |
 | `danger_zone_label` | string | No | `null` | Required when `danger_zone_radius_km` is set | e.g. "Permanent Danger Zone (6 km)" |
+| `detection_reach_km` | number | No | `null` | > 0; built from `filters.max_distance_km` in the site config | How far from the summit detections go (FR-060) |
 | `change_types` | array of string | Yes | `["new_material"]` | ≥ 1 item; enum `change_type` | Change types published for this site |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
 
-The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023) and `filters`, including the reach distance `max_distance_km` (FR-060), and, for sites with channels, the strip width `channel_strip_width_m` (FR-064).
+The config also holds settings the pipeline uses that aren't published in this row: `thresholds` (values and rule, FR-023), `filters`, for sites with channels, the strip width on each side of the line `channel_strip_half_width_m` (FR-064), and the ground-movement mask `ground_movement.min_coherence` (FR-031).
 
 ### TBL-02: `towns`
 

@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 
 from mrw.classify import HIGH, LOW, NONE
-from mrw.config import SITES_FOLDER, SiteConfigError, load_site, load_site_config
+from mrw.config import build_sites_row, SITES_FOLDER, SiteConfigError, load_site, load_site_config
 from mrw.filters import FILTERS_OFF, FilterConfigError, apply_filters, check_filters, keep_high_only, keep_persistent, remove_small_clusters
 from mrw.gcov import MASKED_BY_PRODUCT, SEA
 
@@ -31,9 +31,12 @@ def test_mayon_uses_only_the_owner_chosen_10_km_reach():
     assert load_site("mayon")["filters"] == {**FILTERS_OFF, "max_distance_km": 10}
 
 
-def test_the_web_app_knows_the_same_reach_as_the_config():
-    text = (SITES_FOLDER.parents[1] / "site" / "js" / "map.js").read_text(encoding="utf-8")
-    assert "DETECTION_REACH_KM = { mayon: 10 }" in text
+def test_the_web_app_gets_the_reach_from_the_config():
+    row = build_sites_row(load_site("mayon"))
+    assert row["detection_reach_km"] == load_site("mayon")["filters"]["max_distance_km"]
+    for name in ("map.js", "readout.js"):
+        text = (SITES_FOLDER.parents[1] / "site" / "js" / name).read_text(encoding="utf-8")
+        assert "site.detection_reach_km" in text and "DETECTION_REACH_KM" not in text
 
 
 def test_reach_clears_far_detections_and_keeps_codes():

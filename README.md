@@ -20,6 +20,7 @@ The detection thresholds are final, set on 2026-11-01 before the post-eruption p
 | Folder | What's in it |
 | --- | --- |
 | `docs/` | Planning documents: brief, PRD, design, roadmap, tests |
+| `plans/` | The owner's run plans, kept as written |
 | `pipeline/mrw/` | Python code that downloads and processes NISAR data |
 | `pipeline/sites/` | One settings file per site |
 | `pipeline/context/` | Source files for boundaries, events and validation sheets |

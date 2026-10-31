@@ -11,10 +11,6 @@ const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
 const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
 const REACH_STYLE = { color: "#ffffff", weight: 2, opacity: 0.9, fill: false, dashArray: "2 6" };
 
-// How far from the summit each site's detections go. It must match `max_distance_km` in the
-// site's config, and a test checks that.
-export const DETECTION_REACH_KM = { mayon: 10 };
-
 // Radar images go in their own layer, under the borders so that towns stay readable.
 export const RADAR_PANE = "radar";
 export const COMPARE_PANE = "compare";
@@ -56,8 +52,8 @@ function escapeText(text) {
 function addDangerZone(map, site) {
   if (site.danger_zone_radius_km == null || site.summit_lat == null) return null;
   const center = [site.summit_lat, site.summit_lon];
-  if (DETECTION_REACH_KM[site.id]) {
-    L.circle(center, { ...REACH_STYLE, radius: DETECTION_REACH_KM[site.id] * 1000, interactive: false }).addTo(map);
+  if (site.detection_reach_km) {
+    L.circle(center, { ...REACH_STYLE, radius: site.detection_reach_km * 1000, interactive: false }).addTo(map);
   }
   const ring = L.circle(center, { ...RING_STYLE, radius: site.danger_zone_radius_km * 1000, interactive: false }).addTo(map);
   // The label sits just outside the ring's southern edge. At Mayon the northern edge

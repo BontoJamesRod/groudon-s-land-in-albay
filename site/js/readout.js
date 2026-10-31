@@ -2,7 +2,6 @@
 // from the pair's value grid, entirely in the browser: nothing is sent anywhere.
 
 import { loadGrid } from "./data.js";
-import { DETECTION_REACH_KM } from "./map.js";
 import { STRINGS } from "./strings.js";
 import { localDate } from "./timeline.js";
 
@@ -101,7 +100,7 @@ export function createReadout(elements, site, towns) {
 
   // Beyond the reach, "none" only means this map didn't look, so it must not say nothing was found.
   function resultText(value, layer, lat, lon) {
-    const reach = DETECTION_REACH_KM[site.id];
+    const reach = site.detection_reach_km;
     if (value === NONE && reach && distanceKm(lat, lon, site.summit_lat, site.summit_lon) > reach) {
       return [STRINGS.beyondReach(reach)];
     }

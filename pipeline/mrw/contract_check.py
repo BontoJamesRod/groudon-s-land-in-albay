@@ -76,6 +76,7 @@ SITES = {
     "summit_lon": field("number", required=False, low=-180, high=180),
     "danger_zone_radius_km": field("number", required=False),
     "danger_zone_label": field("string", required=False),
+    "detection_reach_km": field("number", required=False),
     "change_types": field("array"),
     "created_at": field("date-time"),
     "updated_at": field("date-time"),

@@ -25,6 +25,10 @@
     "brightness_threshold_db": 3.0,
     "coherence_loss_threshold": 0.3
   },
+  "channel_strip_half_width_m": 200,
+  "ground_movement": {
+    "min_coherence": 0.3
+  },
   "filters": {
     "max_distance_km": 10,
     "min_cluster_m2": null,

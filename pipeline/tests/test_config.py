@@ -70,3 +70,21 @@ def test_unreadable_file_stops(tmp_path):
     path.write_text("{oops", encoding="utf-8")
     with pytest.raises(SiteConfigError):
         load_site_config(path)
+
+
+def test_mayon_has_a_strip_width_and_a_movement_mask():
+    config = load_site("mayon")
+    assert config["channel_strip_half_width_m"] > 0
+    assert 0 <= config["ground_movement"]["min_coherence"] <= 1
+
+
+@pytest.mark.parametrize("setting, match", [
+    ({"channel_strip_half_width_m": 0}, "channel_strip_half_width_m"),
+    ({"ground_movement": {"min_coherence": 2}}, "ground_movement"),
+    ({"ground_movement": 1}, "ground_movement"),
+])
+def test_bad_strip_or_mask_settings_stop(tmp_path, setting, match):
+    path = tmp_path / "test_site.json"
+    path.write_text(json.dumps({**load_site("mayon"), **setting}), encoding="utf-8")
+    with pytest.raises(SiteConfigError, match=match):
+        load_site_config(path)

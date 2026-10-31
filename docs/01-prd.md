@@ -181,7 +181,7 @@ As a visitor, I want to see whether the ground moved toward or away from the sat
 
 **Acceptance criteria**
 
-- **US-010/AC-1:** Given a pair with a movement layer, when the visitor turns it on, then movement shows in cm on a two-color scale, with pixels of coherence below 0.3 hidden.
+- **US-010/AC-1:** Given a pair with a movement layer, when the visitor turns it on, then movement shows in cm on a two-color scale, with pixels hidden where coherence is below the mask set in the site config.
 - **US-010/AC-2:** Given the movement at a tapped point is smaller than the pair's noise level, when the card opens, then it says "Within the noise: no clear movement".
 
 ### F-07: Flood layer
@@ -440,7 +440,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-028 | The pipeline shall stop with "Product not available yet: <granule_id>" and write no files when a needed GCOV product can't be found on ASF. | F-05 | US-009 |
 | FR-029 | The pipeline shall write, for each processed pair, a pair record with status "ready", the granule IDs used and the detected areas in km². | F-05 | US-009 |
 | FR-030 | The pipeline shall still process a pair when its GUNW product is unavailable, or when FR-022 excludes its baseline, classing every detection as low confidence and recording that no coherence data was used. | F-05 | US-008 |
-| FR-031 | The system shall show line-of-sight movement in cm on a two-color scale, hiding pixels with coherence below 0.3. | F-06 | US-010 |
+| FR-031 | The system shall show line-of-sight movement in cm on a two-color scale, hiding pixels where coherence is below the mask set in the site config. | F-06 | US-010 |
 | FR-032 | The pipeline shall remove a best-fit plane from movement using valid land more than 6 km from the summit and record the remaining noise in cm. | F-06 | US-010 |
 | FR-033 | The system shall show "Within the noise: no clear movement" when movement at a tapped point is smaller than the pair's noise level. | F-06 | US-010 |
 | FR-034 | The system shall show land that became open water between two dates, with its area in km². | F-07 | US-011 |
@@ -473,7 +473,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-061 | The system shall list a site's confirmed channels with the flagged area of the latest pair in km² with 2 decimals, largest first, ties by name, with channels that have no radar data for that pair last. | F-20 | US-024 |
 | FR-062 | The system shall show, for an opened channel, one bar per published pair with the flagged area in its strip, in order of after date. | F-20 | US-025 |
 | FR-063 | The system shall draw an opened channel's strip on the map and fit the map to it. | F-20 | US-025 |
-| FR-064 | The pipeline shall compute each channel's flagged area per pair from the final rule's flagged grid, inside a strip of the width set in the site config and within the reach distance (FR-060), and shall stop with "Channel strip width missing in site config: <file>" when a site with channels has no width. The browser shall never compute these areas. | F-20 | US-026 |
+| FR-064 | The pipeline shall compute each channel's flagged area per pair from the final rule's flagged grid, inside a strip of the width set in the site config (measured on each side of the line) and within the reach distance (FR-060), and shall stop with "Channel strip width missing in site config: <file>" when a site with channels has no width. The browser shall never compute these areas. | F-20 | US-026 |
 | FR-065 | The system shall show and publish only channels whose line the owner has confirmed, with the source and the confirmation recorded in the data. Unconfirmed candidates shall never be shown. | F-19, F-20 | US-023, US-026 |
 | FR-066 | The system shall dim a pair whose gap isn't 12 days and show a short note such as "24-day gap, not comparable", on the channel timeline and on the pass timeline. | F-03, F-20 | US-005, US-025 |
 | FR-067 | The system shall show the channel list's empty, loading and error states, and "No radar data" for a pair with no valid radar value in a channel's strip. | F-20 | US-024, US-025 |
@@ -543,7 +543,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | 5 | Partly closed on 2026-11-01: Panama. Is the geoBoundaries license fine for public use? | F-10, §8 |
 | 6 | What are the performance, availability, compatibility and scalability targets? (Suggestions given in §7.) | NFR-001, NFR-003, NFR-005, NFR-006 |
 | 7 | What is the data-freshness target? | NFR-009 |
-| 8 | What strip width should the site config use? | FR-064, T-074 |
+| 8 | Closed on 2026-11-01: the owner chose the same width as the channel test. The value is in the site config. | FR-064, T-074 |
 
 ## 13. Conflicts with Earlier Documents
 
