@@ -9,8 +9,8 @@
    "url": "https://www.geoboundaries.org/",
    "license": "CC BY-SA 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "ph_admin_boundaries",
@@ -21,8 +21,8 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "ph_coastline",
@@ -33,8 +33,8 @@
    "url": "https://github.com/faeldon/philippines-json-maps",
    "license": "CC BY-IGO",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "channel_names",
@@ -45,8 +45,8 @@
    "url": "https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/",
    "license": "Names only, cited from the source",
    "retrieved_on": "2026-11-01",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "channel_lines",
@@ -57,8 +57,8 @@
    "url": "https://www.openstreetmap.org/copyright",
    "license": "ODbL 1.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "esri_world_imagery",
@@ -68,8 +68,8 @@
    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
    "license": "Esri terms of use, with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "esa_worldcover_2021",
@@ -80,8 +80,8 @@
    "url": "https://esa-worldcover.org/",
    "license": "CC BY 4.0",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   },
   {
    "id": "copernicus_dem_glo30",
@@ -92,12 +92,12 @@
    "url": "https://registry.opendata.aws/copernicus-dem/",
    "license": "Copernicus DEM GLO-30 licence, free with attribution",
    "retrieved_on": "2026-10-31",
-   "created_at": "2026-10-31T21:40:18Z",
-   "updated_at": "2026-10-31T21:40:18Z"
+   "created_at": "2026-10-31T21:46:31Z",
+   "updated_at": "2026-10-31T21:46:31Z"
   }
  ],
  "meta": {
-  "generated_at": "2026-10-31T21:40:18Z",
+  "generated_at": "2026-10-31T21:46:31Z",
   "schema_version": "1.0"
  }
 }

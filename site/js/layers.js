@@ -1,8 +1,16 @@
-// Task T-025: the new-material layer, its legend and the area summary.
+// Tasks T-025 and T-028: the new-material layer, its legend and the area summary,
+// and the channel layer with its names and sources.
 
 import { RADAR_PANE } from "./map.js";
 import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
+
+// A dark edge keeps a channel line readable on bright imagery, and a dash marks what isn't checked.
+export const CHANNEL_EDGE_STYLE = { color: "#0f172a", weight: 5, opacity: 0.55, interactive: false };
+export const CHANNEL_STYLE = { color: "#22d3ee", weight: 3, opacity: 1, interactive: false };
+export const NOT_CHECKED_STYLE = { color: "#ffffff", weight: 2.5, opacity: 1, dashArray: "6 7", interactive: false };
+// An invisible, wider line makes a channel easier to tap. Tapping it must not also tap the map.
+const CHANNEL_TAP_STYLE = { opacity: 0, weight: 18, bubblingMouseEvents: false };
 
 function layerBounds(layer) {
   return [[layer.bounds_south, layer.bounds_west], [layer.bounds_north, layer.bounds_east]];
@@ -65,4 +73,55 @@ export function createNewMaterialLayer(map, elements, site) {
     showLegend(elements, layer, pair);
     elements.summary.textContent = summaryText(pair, site);
   };
+}
+
+// One channel's lines: solid where the map checks it, and dashed past the reach (FR-071).
+export function channelLines(channel) {
+  const { checked_geometry: checked, not_checked_geometry: notChecked } = channel.properties;
+  const lines = [L.geoJSON(checked, { style: CHANNEL_EDGE_STYLE }), L.geoJSON(checked, { style: CHANNEL_STYLE })];
+  if (notChecked) {
+    lines.push(L.geoJSON(notChecked, { style: CHANNEL_EDGE_STYLE }), L.geoJSON(notChecked, { style: NOT_CHECKED_STYLE }));
+  }
+  return L.layerGroup(lines);
+}
+
+function channelLabel(channel) {
+  const { label_lat: lat, label_lon: lon, name } = channel.properties;
+  const label = document.createElement("span");
+  label.textContent = name; // text from a data file is never read as HTML
+  return L.tooltip({ permanent: true, direction: "center", className: "channel-label", interactive: false })
+    .setLatLng([lat, lon])
+    .setContent(label);
+}
+
+// Show one of the channel legend's two states, or neither for a site with no channel data.
+export function showChannelLegend(elements, state) {
+  elements.legend.hidden = state === "none";
+  elements.layer.hidden = state !== "layer";
+  elements.unavailable.hidden = state !== "unavailable";
+}
+
+// Draw a site's channels. `onTap(channel, latlng)` runs when the visitor taps a line.
+export function createChannelLayer(map, elements, channels, onTap) {
+  const group = L.layerGroup();
+  for (const channel of channels.features) {
+    group.addLayer(channelLines(channel));
+    group.addLayer(channelLabel(channel));
+    const tapLine = L.geoJSON(channel.geometry, { style: CHANNEL_TAP_STYLE });
+    tapLine.on("click", (event) => {
+      L.DomEvent.stopPropagation(event);
+      onTap(channel, event.latlng);
+    });
+    group.addLayer(tapLine);
+  }
+  showChannelLegend(elements, "layer");
+  elements.note.hidden = !channels.features.some((channel) => channel.properties.not_checked_geometry);
+  // OpenStreetMap's license asks for this credit wherever its data is shown.
+  map.attributionControl.addAttribution(STRINGS.channelCredit);
+  elements.toggle.onchange = () => {
+    if (elements.toggle.checked) group.addTo(map);
+    else group.remove();
+  };
+  elements.toggle.checked = true;
+  group.addTo(map);
 }

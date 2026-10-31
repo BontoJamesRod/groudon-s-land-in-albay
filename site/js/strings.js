@@ -45,6 +45,9 @@ export const STRINGS = {
   outsideDangerZone: "Outside the danger zone",
   outsideTowns: "Outside the mapped towns",
   distanceToSummit: (km) => `Distance to summit: ${km.toFixed(1)} km`,
+  inOrNearChannel: (names) => `New material detected in or near ${names}`,
+  notInChannel: "Not in a named channel on this map",
+  channelTowns: (names) => `Towns along this channel: ${names}`,
   noNewMaterial: "No new material detected. Confidence: none",
   beyondReach: (km) => `Not checked: this map only looks within ${km} km of the summit`,
   classWithConfidence: (label, confidence) => `${label}. Confidence: ${confidence}`,
@@ -91,6 +94,7 @@ export const STRINGS = {
     "At Mayon, this map only looks within 10 km of the summit, shown by the white dotted ring. It can't show anything beyond that, including in towns further away.",
     "Steep slopes facing away from the radar can't be seen, and small deposits can be missed.",
     "The radar products are provisional. The detection thresholds are set, but they haven't been checked against field reports.",
+    "Only channels the project owner has checked are drawn. Other channels also drain Mayon, and they aren't on this map.",
   ],
   helpOfficialTitle: "Official warnings",
   helpOfficial: "For warnings and advice, follow PHIVOLCS and your LGU.",
@@ -122,6 +126,13 @@ export const STRINGS = {
   checkYes: "Yes",
   checkNo: "No",
   checkDetected: { yes: "Yes", no: "No", not_visible: "Not visible to radar" },
+
+  // Channel layer (SCR-01)
+  channelLayerLabel: "Channels",
+  channelsUnavailable: "Channels unavailable",
+  channelLineNote: "Solid line: checked. Dashed white line: past the reach of this map, so not checked.",
+  channelSources: "Names: PHIVOLCS. Lines: OpenStreetMap contributors (ODbL), confirmed by the project owner.",
+  channelCredit: 'Channel lines: <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> (ODbL)',
 
   // Site picker (SCR-08)
   pickerTitle: "Choose a site",

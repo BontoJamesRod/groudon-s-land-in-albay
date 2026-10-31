@@ -5,7 +5,7 @@
 import { createCompare } from "./compare.js";
 import { loadPair, loadSiteData, loadSites } from "./data.js";
 import { createDrawer } from "./drawer.js";
-import { createNewMaterialLayer } from "./layers.js";
+import { createChannelLayer, createNewMaterialLayer, showChannelLegend } from "./layers.js";
 import { createMap, RADAR_PANE } from "./map.js";
 import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
 import { createReadout } from "./readout.js";
@@ -57,6 +57,24 @@ function setUpSearch(map, site, siteData, readout) {
     readout.open(lat, lon, name);
   });
   byId("search-button").onclick = search.open;
+}
+
+// Draw the site's channels, or say why there are none. A tap on a line opens the card for that spot.
+function setUpChannelLayer(map, siteData, readout) {
+  const elements = {
+    legend: byId("channel-legend"),
+    layer: byId("channel-layer"),
+    toggle: byId("channel-toggle"),
+    note: byId("channel-note"),
+    unavailable: byId("channels-unavailable"),
+  };
+  if (siteData.channels) {
+    createChannelLayer(map, elements, siteData.channels, (channel, latlng) => {
+      readout.open(latlng.lat, latlng.lng, undefined, channel);
+    });
+  } else {
+    showChannelLegend(elements, siteData.channelsFailed ? "unavailable" : "none");
+  }
 }
 
 // Connect the pair list, map layer, readout and compare view for the site on screen.
@@ -129,8 +147,9 @@ async function showSite(site, siteData) {
     body: byId("readout-body"),
     close: byId("readout-close"),
     retry: byId("readout-retry"),
-  }, site, siteData.towns);
+  }, site, siteData.towns, siteData.channels);
   map.on("click", (event) => readout.open(event.latlng.lat, event.latlng.lng));
+  setUpChannelLayer(map, siteData, readout);
   setUpSearch(map, site, siteData, readout);
   await setUpPairs(map, site, siteData, readout);
   byId("loading").hidden = true;
@@ -144,7 +163,7 @@ async function openSite(site) {
   const thisRequest = app.openRequest; // only the site picked last may open
   let siteData;
   try {
-    siteData = await loadSiteData(site.id);
+    siteData = await loadSiteData(site);
     if (thisRequest !== app.openRequest) return;
   } catch (problem) {
     if (thisRequest !== app.openRequest) return;

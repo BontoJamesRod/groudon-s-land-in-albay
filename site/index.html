@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=3593cc94c8">
+  <link rel="stylesheet" href="css/app.css?v=d9640cdcfb">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
@@ -79,6 +79,14 @@
         <span id="compare-message" aria-live="polite"></span>
       </p>
     </div>
+    <div id="channel-legend" class="channel-legend" hidden>
+      <div id="channel-layer">
+        <label class="layer-toggle"><input id="channel-toggle" type="checkbox" checked> <span data-text="channelLayerLabel"></span></label>
+        <p id="channel-note" class="channel-note" data-text="channelLineNote"></p>
+        <p id="channel-sources" class="channel-note" data-text="channelSources"></p>
+      </div>
+      <p id="channels-unavailable" class="summary" data-text="channelsUnavailable" hidden></p>
+    </div>
   </section>
 
   <footer class="footer">
@@ -108,19 +116,19 @@
 {
   "imports": {
     "./js/compare.js": "./js/compare.js?v=992505293c",
-    "./js/data.js": "./js/data.js?v=a45739cc5b",
+    "./js/data.js": "./js/data.js?v=2e2462dc5c",
     "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
-    "./js/layers.js": "./js/layers.js?v=e651fe3651",
-    "./js/main.js": "./js/main.js?v=a0f4820fac",
+    "./js/layers.js": "./js/layers.js?v=8fc89d424a",
+    "./js/main.js": "./js/main.js?v=1c3d873eba",
     "./js/map.js": "./js/map.js?v=cf89a226ed",
     "./js/panels.js": "./js/panels.js?v=faebdd7870",
-    "./js/readout.js": "./js/readout.js?v=fe48a915e5",
+    "./js/readout.js": "./js/readout.js?v=f0f7a4cf7a",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=2668425bf3",
+    "./js/strings.js": "./js/strings.js?v=99b4642719",
     "./js/timeline.js": "./js/timeline.js?v=e7616d12bd"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=a0f4820fac"></script>
+  <script type="module" src="js/main.js?v=1c3d873eba"></script>
 </body>
 </html>

@@ -7,6 +7,8 @@ import { localDate } from "./timeline.js";
 
 const EARTH_RADIUS_KM = 6371;
 const NONE = 0;
+const LOW = 1;
+const HIGH = 2;
 
 // Find the grid cell under a point. Row 0 is the northern edge, and each row runs
 // west to east (docs/06, API-010). Returns the cell's value, or null if off the grid.
@@ -45,13 +47,19 @@ function insidePolygon(rings, lat, lon) {
   return insideRing(rings[0], lat, lon) && !rings.slice(1).some((hole) => insideRing(hole, lat, lon));
 }
 
+function insideShape({ type, coordinates }, lat, lon) {
+  const polygons = type === "Polygon" ? [coordinates] : coordinates;
+  return polygons.some((rings) => insidePolygon(rings, lat, lon));
+}
+
 export function findTown(towns, lat, lon) {
-  for (const town of towns.features) {
-    const { type, coordinates } = town.geometry;
-    const polygons = type === "Polygon" ? [coordinates] : coordinates;
-    if (polygons.some((rings) => insidePolygon(rings, lat, lon))) return town.properties.name;
-  }
-  return null;
+  const town = towns.features.find((item) => insideShape(item.geometry, lat, lon));
+  return town ? town.properties.name : null;
+}
+
+// "In or near" a channel means inside its strip: the same ground its bars count.
+export function channelsAt(channels, lat, lon) {
+  return channels.features.filter((channel) => insideShape(channel.properties.strip_geometry, lat, lon));
 }
 
 // Turn a grid value into the card's result line and whether it is a "no data" answer.
@@ -72,8 +80,9 @@ function line(text, className) {
   return paragraph;
 }
 
-// Set up the card. Returns open(lat, lon, name) and setPair(pair).
-export function createReadout(elements, site, towns) {
+// Set up the card. Returns open(lat, lon, name, channel) and setPair(pair). `channels` is null when a
+// site has none, or its file failed to load, and then the card has no channel line (03 section 5).
+export function createReadout(elements, site, towns, channels) {
   let pair = null;
   let grid = null; // the grid of the selected pair, only downloaded when first needed
   let gridPairId = null;
@@ -86,8 +95,18 @@ export function createReadout(elements, site, towns) {
     elements.card.hidden = true;
   }
 
-  function placeLines(lat, lon, name) {
-    const lines = [line(name || findTown(towns, lat, lon) || STRINGS.outsideTowns, "readout-place")];
+  // Tapping a channel's line says which channel it is, and the towns it passes through.
+  function channelLines(channel) {
+    const names = channel.properties.town_ids.map((id) => {
+      const town = towns.features.find((item) => item.properties.id === id);
+      return town ? town.properties.name : id;
+    });
+    return [line(channel.properties.name, "readout-place"), line(STRINGS.channelTowns(names.join(", ")))];
+  }
+
+  function placeLines(lat, lon, name, channel) {
+    const lines = channel ? channelLines(channel) : [];
+    lines.push(line(name || findTown(towns, lat, lon) || STRINGS.outsideTowns, channel ? "" : "readout-place"));
     if (site.summit_lat == null || site.summit_lon == null) return lines;
     const km = distanceKm(lat, lon, site.summit_lat, site.summit_lon);
     lines.push(line(STRINGS.distanceToSummit(km)));
@@ -107,16 +126,23 @@ export function createReadout(elements, site, towns) {
     return resultLines(value, layer, textFor(site));
   }
 
+  // Only a flagged spot gets a channel line (03, Flow 3).
+  function channelResult(value, lat, lon) {
+    if (!channels || (value !== LOW && value !== HIGH)) return [];
+    const names = channelsAt(channels, lat, lon).map((channel) => channel.properties.name);
+    return [names.length ? STRINGS.inOrNearChannel(names.join(" and ")) : STRINGS.notInChannel];
+  }
+
   function showLines(lines) {
     elements.body.replaceChildren(...lines);
     elements.card.hidden = false;
   }
 
-  async function open(lat, lon, name) {
-    spot = { lat, lon, name };
+  async function open(lat, lon, name, channel) {
+    spot = { lat, lon, name, channel };
     request += 1;
     const thisRequest = request;
-    const place = placeLines(lat, lon, name);
+    const place = placeLines(lat, lon, name, channel);
     elements.retry.hidden = true;
     // With no pair on screen there are no radar values, but the place is still useful.
     if (!pair) {
@@ -142,21 +168,22 @@ export function createReadout(elements, site, towns) {
       gridPairId = shownPair.id;
     }
     if (thisRequest !== request) return;
-    const results = resultText(gridValue(layer, cells, lat, lon), layer, lat, lon).map((text) => line(text, "readout-result"));
+    const value = gridValue(layer, cells, lat, lon);
+    const results = [...resultText(value, layer, lat, lon), ...channelResult(value, lat, lon)].map((text) => line(text, "readout-result"));
     const dates = STRINGS.pairDates(localDate(pair.before_acquired_start, site.time_zone),
       localDate(pair.after_acquired_start, site.time_zone));
     showLines([...place, ...results, line(dates)]);
   }
 
   elements.close.onclick = close;
-  elements.retry.onclick = () => spot && open(spot.lat, spot.lon, spot.name);
+  elements.retry.onclick = () => spot && open(spot.lat, spot.lon, spot.name, spot.channel);
 
   // A new pair means new values: forget the old grid and refresh an open card.
   function setPair(newPair) {
     pair = newPair;
     grid = null;
     gridPairId = null;
-    if (spot) open(spot.lat, spot.lon, spot.name);
+    if (spot) open(spot.lat, spot.lon, spot.name, spot.channel);
   }
 
   return { open, setPair, close };

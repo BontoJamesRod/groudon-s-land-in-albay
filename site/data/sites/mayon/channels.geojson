@@ -1,6 +1,6 @@
 {
  "type": "FeatureCollection",
- "generated_at": "2026-10-31T21:40:18Z",
+ "generated_at": "2026-10-31T21:46:31Z",
  "schema_version": "1.0",
  "license": "ODbL 1.0, (c) OpenStreetMap contributors",
  "features": [
@@ -21,8 +21,8 @@
     "confirmed_by": "project owner",
     "confirmed_on": "2026-11-01",
     "imagery_date": "2026-05-16",
-    "label_lat": 13.24862,
-    "label_lon": 123.74915,
+    "label_lat": 13.25459,
+    "label_lon": 123.73777,
     "strip_geometry": {
      "type": "Polygon",
      "coordinates": [
@@ -1924,8 +1924,8 @@
     "confirmed_by": "project owner",
     "confirmed_on": "2026-11-01",
     "imagery_date": "2026-05-16",
-    "label_lat": 13.23028,
-    "label_lon": 123.74146,
+    "label_lat": 13.23489,
+    "label_lon": 123.73055,
     "strip_geometry": {
      "type": "Polygon",
      "coordinates": [
@@ -4318,8 +4318,8 @@
     "confirmed_by": "project owner",
     "confirmed_on": "2026-11-01",
     "imagery_date": "2026-05-16",
-    "label_lat": 13.19874,
-    "label_lon": 123.69126,
+    "label_lat": 13.2112,
+    "label_lon": 123.69067,
     "strip_geometry": {
      "type": "Polygon",
      "coordinates": [
@@ -6698,8 +6698,8 @@
     "confirmed_by": "project owner",
     "confirmed_on": "2026-11-01",
     "imagery_date": "2026-05-16",
-    "label_lat": 13.22001,
-    "label_lon": 123.74519,
+    "label_lat": 13.22281,
+    "label_lon": 123.73751,
     "strip_geometry": {
      "type": "Polygon",
      "coordinates": [

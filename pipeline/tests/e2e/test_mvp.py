@@ -21,7 +21,6 @@ LATEST_PAIR = "mayon_A111F008_20261007_20261019"
 SUMMIT = (13.2572, 123.6856)
 DISCLAIMER = "This is not an official warning. Follow PHIVOLCS and your LGU."
 NO_ERUPTION_PAIR = "No eruption pair: nothing acquired on or after 2026-10-30 may be opened until the thresholds are set."
-NO_CHANNELS = "Channels (T-010, T-028) aren't built: they wait for the owner's choice of channel source."
 
 
 def map_center(page):
@@ -308,7 +307,6 @@ def test_tc031_radar_sources_on_the_latest_pair(app):
 
 
 def test_tc032_context_sources(app):
-    """Channels aren't listed yet, because channels aren't built (see the TC-044 to TC-047 skips)."""
     app.click("#sources-button")
     context = app.locator("#sources-panel h3:has-text('Context data') + ul")
     expect(context).to_be_visible()
@@ -424,7 +422,7 @@ def test_tc042_credit_link_is_a_real_44_px_target_and_still_shows(page, site_url
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    link = page.locator(".leaflet-control-attribution a")
+    link = page.locator(".leaflet-control-attribution a", has_text="Leaflet")
     expect(link).to_be_visible()
     expect(link).to_contain_text("Leaflet")
     box = link.bounding_box()
@@ -458,9 +456,3 @@ def test_tc043_colors_stay_apart(app, deficiency):
     assert distance > 40, f"{low} and {high} are too close"
     for row in app.locator("#legend-rows li").all_inner_texts():
         assert "Confidence:" in row
-
-
-@pytest.mark.skip(reason=NO_CHANNELS)
-@pytest.mark.parametrize("case", ["TC-044", "TC-045", "TC-046", "TC-047"])
-def test_tc044_to_047_channels(case):
-    pass

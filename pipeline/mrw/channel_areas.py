@@ -29,7 +29,7 @@ LINE_LICENSE = "ODbL 1.0, (c) OpenStreetMap contributors"
 # A line cut at a town's edge can touch the next town, so a town counts only with this much of the line.
 MIN_TOWN_LENGTH_M = 100
 # A channel's name is drawn this far along the part of its line that the map checks.
-LABEL_SHARE = 0.6
+LABEL_SHARE = 0.45
 # Candidate lines have 7 decimals, so the parts cut from them keep the same.
 LINE_DECIMALS = 7
 
