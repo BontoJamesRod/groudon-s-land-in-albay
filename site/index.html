@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=d96d0a867b">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
@@ -104,6 +104,23 @@
   </dialog>
 
   <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
-  <script type="module" src="js/main.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "./js/compare.js": "./js/compare.js?v=30632ac9c1",
+    "./js/data.js": "./js/data.js?v=a45739cc5b",
+    "./js/drawer.js": "./js/drawer.js?v=c08f798634",
+    "./js/layers.js": "./js/layers.js?v=34b3c7e5b2",
+    "./js/main.js": "./js/main.js?v=73cfffc38a",
+    "./js/map.js": "./js/map.js?v=8c65db4dd4",
+    "./js/panels.js": "./js/panels.js?v=7349722b76",
+    "./js/readout.js": "./js/readout.js?v=5f4fdd710a",
+    "./js/search.js": "./js/search.js?v=49363b9f38",
+    "./js/strings.js": "./js/strings.js?v=81aab6663b",
+    "./js/timeline.js": "./js/timeline.js?v=e7616d12bd"
+  }
+}
+  </script>
+  <script type="module" src="js/main.js?v=73cfffc38a"></script>
 </body>
 </html>

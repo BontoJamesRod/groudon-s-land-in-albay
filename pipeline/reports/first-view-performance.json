@@ -1,0 +1,58 @@
+{
+ "1280 px": {
+  "median_mb": 0.78,
+  "median_seconds": 2.01,
+  "own_files_mb": 0.5,
+  "tiles_mb": 0.28,
+  "largest": [
+   [
+    157981,
+    "data/sites/mayon/towns.geojson"
+   ],
+   [
+    147748,
+    "vendor/leaflet-1.9.4/leaflet.js"
+   ],
+   [
+    59651,
+    "data/sites/mayon/land.geojson"
+   ],
+   [
+    24692,
+    "data/sites/mayon/pairs/mayon_A111F008_20261007_20261019/new_"
+   ],
+   [
+    15861,
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_I"
+   ]
+  ]
+ },
+ "360 px": {
+  "median_mb": 0.58,
+  "median_seconds": 1.98,
+  "own_files_mb": 0.5,
+  "tiles_mb": 0.08,
+  "largest": [
+   [
+    157981,
+    "data/sites/mayon/towns.geojson"
+   ],
+   [
+    147748,
+    "vendor/leaflet-1.9.4/leaflet.js"
+   ],
+   [
+    59651,
+    "data/sites/mayon/land.geojson"
+   ],
+   [
+    24692,
+    "data/sites/mayon/pairs/mayon_A111F008_20261007_20261019/new_"
+   ],
+   [
+    14994,
+    "vendor/leaflet-1.9.4/leaflet.css"
+   ]
+  ]
+ }
+}
