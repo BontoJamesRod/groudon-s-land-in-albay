@@ -142,6 +142,33 @@ def maturity_of(props):
     return None
 
 
+def maturity_label(name, props):
+    """Name a product's maturity for a list, including kinds the pipeline doesn't use."""
+    text = f"{name} {props.get('collectionName')} {props.get('url')}"
+    if "_UR_" in text:
+        return "URGENT RESPONSE"
+    return maturity_of(props) or f"OTHER ({props.get('collectionName')})"
+
+
+def list_all_maturities(config, start, tracks, searcher=_asf_search, cutoff=BLIND_CUTOFF):
+    """List GCOV and GUNW products of every maturity on these tracks. Names only, nothing is opened.
+
+    The cutoff still applies. These rows are for reading: the pipeline's own searches stay as
+    they are, so an Urgent Response product can't reach processing from here.
+    """
+    rows = []
+    for level, parse in (("GCOV", parse_gcov), ("GUNW", parse_gunw)):
+        results = searcher(processingLevel=level, intersectsWith=site_polygon(config), start=start,
+                           end=cutoff - timedelta(seconds=1))
+        for name, props in _safe_results(results, cutoff):
+            parsed = parse(name)
+            if parsed and parsed["track"] in tracks:
+                rows.append({"level": level, "track": parsed["track"], "frame": parsed["frame"], "granule_id": name,
+                             "maturity": maturity_label(name, props),
+                             "acquired": parsed.get("acquired_start") or parsed["after_acquired_start"]})
+    return rows
+
+
 def search_gcov(config, start, searcher=_asf_search, cutoff=BLIND_CUTOFF):
     """List GCOV passes over a site, oldest first, all from before the cutoff."""
     results = searcher(processingLevel="GCOV", intersectsWith=site_polygon(config), start=start,
