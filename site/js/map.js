@@ -7,6 +7,8 @@ import { STRINGS } from "./strings.js";
 const TILE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const TILE_FAILURES_FOR_NOTICE = 4;
 const PHONE_LAYOUT = "(max-width: 700px)"; // the same width as in app.css
+const PHONE_LABEL_DROP_PX = 22; // far enough inside the ring to clear the town names beside its top edge
+const RING_ROOM_PX = 26; // the room the ring needs above the map credits to show clearly
 const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false };
 const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
 const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
@@ -58,12 +60,18 @@ function addDangerZone(map, site) {
     L.circle(center, { ...REACH_STYLE, radius: site.detection_reach_km * 1000, interactive: false }).addTo(map);
   }
   const ring = L.circle(center, { ...RING_STYLE, radius: site.danger_zone_radius_km * 1000, interactive: false }).addTo(map);
-  // The label sits just outside the ring's southern edge. At Mayon the northern edge
-  // puts it on top of Tabaco City.
-  return L.tooltip({ permanent: true, direction: "bottom", className: "zone-label", interactive: false })
-    .setLatLng([ring.getBounds().getSouth(), site.summit_lon])
+  // The label sits just outside the ring's southern edge. At Mayon the northern edge puts it on
+  // top of Tabaco City. A phone has no room for it there beside the towns and the map credits, so
+  // it hangs inside the northern edge on two lines, and the town names keep their places.
+  const onPhone = window.matchMedia(PHONE_LAYOUT).matches;
+  return L.tooltip({ permanent: true, direction: "bottom", offset: [0, onPhone ? PHONE_LABEL_DROP_PX : 0], className: onPhone ? "zone-label zone-label-phone" : "zone-label", interactive: false })
+    .setLatLng([onPhone ? ring.getBounds().getNorth() : ring.getBounds().getSouth(), site.summit_lon])
     .setContent(escapeText(site.danger_zone_label))
     .addTo(map);
+}
+
+function boxesTouch(a, b) {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
 }
 
 // Zoomed out, labels crowd together. The danger zone matters most, so a town's name
@@ -72,13 +80,26 @@ function keepZoneLabelClear(map, zoneLabel, townLabels) {
   function update() {
     const zone = zoneLabel.getElement().getBoundingClientRect();
     for (const town of townLabels) {
-      const box = town.getElement().getBoundingClientRect();
-      const touches = box.left < zone.right && box.right > zone.left && box.top < zone.bottom && box.bottom > zone.top;
+      const touches = boxesTouch(town.getElement().getBoundingClientRect(), zone);
       town.getElement().style.visibility = touches ? "hidden" : "";
     }
   }
   map.on("zoomend moveend resize", update);
   update();
+}
+
+// On a phone a town's name matters more than a channel's, and the Channels list still names them all.
+function keepTownLabelsClear(map, townLabels) {
+  function update() {
+    const towns = townLabels.map((town) => town.getElement())
+      .filter((town) => town.style.visibility !== "hidden")
+      .map((town) => town.getBoundingClientRect());
+    for (const label of map.getContainer().querySelectorAll(".channel-label")) {
+      const touches = towns.some((town) => boxesTouch(town, label.getBoundingClientRect()));
+      label.style.visibility = touches ? "hidden" : "";
+    }
+  }
+  map.on("zoomend moveend resize layeradd", update);
 }
 
 // A file's polygon outlines as lines, leaving out any stretch along the site's edge. Land and
@@ -117,14 +138,15 @@ function boundaryCredit(site) {
 }
 
 // Open at the site's own view. On a short phone screen the danger-zone ring runs behind the map
-// credits and takes its label with it, so the map opens one zoom step further out (FR-001).
+// credits, so the map opens one zoom step further out (FR-001).
 export function showStartView(map, site) {
   const center = [site.center_lat, site.center_lon];
   map.setView(center, site.default_zoom, { animate: false });
-  const label = map.getContainer().querySelector(".zone-label");
-  if (!label || !window.matchMedia(PHONE_LAYOUT).matches) return;
-  const credits = map.attributionControl.getContainer();
-  if (label.getBoundingClientRect().bottom > credits.getBoundingClientRect().top) {
+  if (site.danger_zone_radius_km == null || !window.matchMedia(PHONE_LAYOUT).matches) return;
+  const ring = L.latLng(site.summit_lat, site.summit_lon).toBounds(site.danger_zone_radius_km * 2000);
+  const ringBottom = map.latLngToContainerPoint([ring.getSouth(), site.summit_lon]).y;
+  const creditsTop = map.getSize().y - map.attributionControl.getContainer().offsetHeight;
+  if (ringBottom + RING_ROOM_PX > creditsTop) {
     map.setView(center, site.default_zoom - 1, { animate: false });
   }
 }
@@ -144,5 +166,6 @@ export function createMap(site, siteData, notice) {
   const townLabels = addTowns(map, siteData.towns, site);
   const zoneLabel = addDangerZone(map, site);
   if (zoneLabel) keepZoneLabelClear(map, zoneLabel, townLabels);
+  if (window.matchMedia(PHONE_LAYOUT).matches) keepTownLabelsClear(map, townLabels);
   return map;
 }

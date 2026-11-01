@@ -849,3 +849,17 @@ I'm stopping here. Your Google Earth check decides each line, and these need you
 - **Old verdicts:** the record in `mayon_channels.json` still lists these names as not confirmed. It stays that way until you give a verdict on the new lines.
 
 **Evidence:** see the CI page for `night-1`. A new test file checks the splitting, that no name uses another place's evidence, the KML legend, and that nothing is published.
+
+# Town names on phones (2026-11-01)
+
+**T-097 is done on `night-1`, not merged.** On phones, the danger-zone label now sits inside the ring near its north edge, on two lines, with its full wording. It no longer touches a town name or the credits. Desktop is unchanged.
+
+- **At 360 x 640:** Daraga, Legazpi City, Camalig and Santo Domingo all show whole, and no town name is hidden.
+- **At 320 x 568:** the 14 px overlap is gone, and the label clears the credits, with this machine's fonts and with wider ones.
+- **Channel names give way on phones.** A channel label that touches a town name is hidden. At the opening view on short phones that's Basud and Lidong. Their lines still show, zooming in brings the names back, and the Channels list names them.
+
+## Things to know
+
+- **At 320 x 568 the map is only about 260 px tall.** Camalig and Daraga sit behind the credits there, and so does Legazpi City with wider fonts. They aren't hidden by the label, but one zoom step can't fit them all.
+- **A taller phone shows fewer towns at the opening view.** At 360 x 740 the map stays at the default zoom, so all four of those towns are off the map or cut at its edge. That's the zoom rule you chose, and a change would need your decision.
+- **The zoom rule now looks at the ring, not the label.** The same screens zoom out as before. FR-001, FR-004, US-001/AC-1 and TC-082 say so.

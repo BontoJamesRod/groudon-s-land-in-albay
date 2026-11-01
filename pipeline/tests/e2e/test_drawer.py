@@ -129,6 +129,58 @@ def test_tc082_a_short_phone_opens_one_zoom_step_out_with_the_label_clear(page, 
     assert label["y"] + label["height"] <= credits["y"]
 
 
+# Lists problems with the town names at the opening view: hidden, or with a channel label on top.
+TOWN_PROBLEMS = """(() => {
+  const touch = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  const shown = (label) => label.style.visibility !== 'hidden';
+  const towns = [...document.querySelectorAll('.town-label')];
+  const hidden = towns.filter((town) => !shown(town)).map((town) => town.textContent);
+  const onTop = [...document.querySelectorAll('.channel-label')].filter(shown)
+    .filter((label) => towns.some((town) => touch(town.getBoundingClientRect(), label.getBoundingClientRect())))
+    .map((label) => label.textContent);
+  return [...hidden, ...onTop];
+})()"""
+# Lists the town names that aren't whole on the map, above the credits.
+TOWNS_IN_VIEW = """(() => {
+  const map = document.getElementById('map').getBoundingClientRect();
+  const credits = document.querySelector('.leaflet-control-attribution').getBoundingClientRect();
+  return [...document.querySelectorAll('.town-label')].filter((town) => {
+    const box = town.getBoundingClientRect();
+    return box.left >= map.left && box.right <= map.right && box.top >= map.top && box.bottom <= credits.top;
+  }).map((town) => town.textContent);
+})()"""
+
+
+def label_clears_the_credits(page):
+    label = page.locator(".zone-label").bounding_box()
+    assert label["y"] >= page.locator("#map").bounding_box()["y"]
+    assert label["y"] + label["height"] <= page.locator(".leaflet-control-attribution").bounding_box()["y"]
+
+
+def test_tc082_town_names_win_at_the_opening_view_on_a_short_phone(page, site_url):
+    open_at(page, site_url, 360, 640)
+    assert page.evaluate(TOWN_PROBLEMS) == []
+    assert {"Daraga", "Legazpi City", "Camalig", "Santo Domingo"} <= set(page.evaluate(TOWNS_IN_VIEW))
+    label_clears_the_credits(page)
+    expect(page.locator(".zone-label")).to_have_text("Permanent Danger Zone (6 km)")
+
+
+@pytest.mark.parametrize("letter_spacing", ["0", "0.6px"])
+def test_tc082_the_label_clears_the_credits_on_the_smallest_phone(page, site_url, letter_spacing):
+    """Extra space between letters makes any machine's font as wide as CI's."""
+    page.add_init_script("addEventListener('DOMContentLoaded', () => { const style = document.createElement('style');"
+                         f"style.textContent = '* {{ letter-spacing: {letter_spacing} !important; }}'; document.head.append(style); }});")
+    open_at(page, site_url, 320, 568)
+    label_clears_the_credits(page)
+    assert page.evaluate(TOWN_PROBLEMS) == []
+
+
+def test_tc082_a_desktop_keeps_the_label_below_the_ring(app):
+    expect(app.locator(".zone-label-phone")).to_have_count(0)
+    box = app.locator(".zone-label").bounding_box()
+    assert box["y"] > app.locator("#map").bounding_box()["y"] + app.locator("#map").bounding_box()["height"] / 2
+
+
 @pytest.mark.parametrize("width, height", [(390, 844), (1280, 500)])
 def test_tc082_a_tall_phone_or_a_short_desktop_keeps_the_default_zoom(page, site_url, width, height):
     open_at(page, site_url, width, height)

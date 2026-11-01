@@ -627,6 +627,7 @@ button:disabled { color: #6e7781; }
   .drawer-closed .pair-events { display: none; }
   .drawer-closed .timeline-status:has(#timeline-message:empty):has(#timeline-retry[hidden]) { display: none; }
   .timeline-controls select { padding: 0 4px; }
+  .zone-label-phone { width: 128px; white-space: normal; text-align: center; line-height: 1.2; }
   .leaflet-control-attribution { font-size: 9px; line-height: 1.2; }
   /* FR-049: padding makes the credit link a 44 px target, and the equal negative margin
      keeps the credit bar small, so the extra height doesn't cover more of the map. */

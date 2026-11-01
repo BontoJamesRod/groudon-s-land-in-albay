@@ -66,7 +66,7 @@ As a visitor, I want to open the app and see a map of the Mayon area with town b
 
 **Acceptance criteria**
 
-- **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom, or one zoom step further out on a short phone screen where the danger-zone label wouldn't clear the map credits, and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
+- **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom, or one zoom step further out on a short phone screen where the danger-zone ring wouldn't clear the map credits, and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
 - **US-001/AC-2:** Given background map imagery fails to load, when the map appears, then town borders, the coastline and the danger-zone ring still show and the notice "Background map unavailable" appears.
 - **US-001/AC-3:** Given the site's land file stops at the site's edge, when the map appears, then no coastline or town border is drawn along that edge.
 
@@ -415,10 +415,10 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 
 | FR-ID | Requirement | F-ID | US-ID |
 | --- | --- | --- | --- |
-| FR-001 | The system shall center the map on the selected site's center point at the site's default zoom, or one zoom step further out on a short phone screen where the danger-zone label wouldn't clear the map credits. | F-01 | US-001 |
+| FR-001 | The system shall center the map on the selected site's center point at the site's default zoom, or one zoom step further out on a short phone screen where the danger-zone ring wouldn't clear the map credits. | F-01 | US-001 |
 | FR-002 | The system shall draw town borders and town names for the selected site. | F-01 | US-001 |
 | FR-003 | The system shall draw the coastline from the app's own land data, not from background imagery, and shall not draw a coastline or town border where the data is only clipped to the site's edge. | F-01 | US-001 |
-| FR-004 | The system shall draw a ring of the site's danger-zone radius around the summit, labeled with the site's danger-zone label, when the site defines one. | F-01 | US-001 |
+| FR-004 | The system shall draw a ring of the site's danger-zone radius around the summit, labeled with the site's danger-zone label, when the site defines one. On a phone the label sits inside the ring, so that town names keep their places at the opening view. | F-01 | US-001 |
 | FR-005 | The system shall show "Background map unavailable" when background imagery fails to load, while keeping borders, coastline and the danger-zone ring visible. | F-01 | US-001 |
 | FR-006 | The system shall let the visitor pan and zoom only between the site's minimum and maximum zoom levels. | F-01 | US-002 |
 | FR-007 | The system shall suggest matching town names once the visitor has typed at least 2 letters. | F-02 | US-003 |
