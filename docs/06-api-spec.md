@@ -79,6 +79,7 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 | API-012 | GET | `/data/sites/{site_id}/channel_areas.json` | Flagged area per channel per pair | Visitor, Maintainer | FR-061, FR-062, FR-067, US-024, US-025 | Yes |
 | API-013 | GET | `/data/sites/{site_id}/pairs/{pair_id}/histogram.json` | Distribution of brightness change for a pair | Visitor, Maintainer | FR-072, FR-073, US-027 | Yes |
 | API-014 | GET | `/data/sites/{site_id}/pairs/{pair_id}/channel_histogram.json` | The same distribution for each channel's strip | Visitor, Maintainer | FR-075, US-027 | Yes |
+| API-015 | GET | `/data/sites/{site_id}/relief/{z}/{x}/{y}.webp` | One relief map tile | Visitor | FR-076, US-028 | Yes |
 
 ## 4. Endpoint Details
 
@@ -124,6 +125,11 @@ None (`GET`).
       "danger_zone_label": "Permanent Danger Zone (6 km)",
       "detection_reach_km": 10,
       "channel_strip_half_width_m": 100,
+      "relief_bounds_west": 123.0,
+      "relief_bounds_south": 12.6,
+      "relief_bounds_east": 124.4,
+      "relief_bounds_north": 13.9,
+      "relief_max_native_zoom": 13,
       "wording_set": null,
       "boundary_credit": "Boundaries: NAMRIA and PSA via OCHA COD-AB (CC BY-IGO)",
       "boundary_credit_url": null,
@@ -807,6 +813,15 @@ None (`GET`).
 **Supports:** FR-075, US-027
 
 **Success response:** `200 OK`, with `data` as in TBL-14 and `meta.license` set to the license of `channels.geojson`.
+### API-015: `GET /data/sites/{site_id}/relief/{z}/{x}/{y}.webp`
+
+**Purpose:** One 256 × 256 px tile of the relief background, in the usual web map tile numbering. It's made from Copernicus DEM GLO-30 and is under that licence (`CREDITS.md`).
+**Roles:** Visitor
+**Supports:** FR-076, US-028
+
+**Success response:** `200 OK`, a WebP image.
+
+**Errors:** `404 NOT_FOUND` for a tile that wasn't made. After a run of failures the map says "Background map unavailable" (FR-005), and the app's own layers stay.
 
 **Errors:** `404 NOT_FOUND` when the file is missing, or for a site with no channels: the chart shows without the outline.
 

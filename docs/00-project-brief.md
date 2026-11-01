@@ -60,6 +60,7 @@ Requirement IDs (R1–R8) refer to Section 1 of the challenge checklist. Feature
 | F-19 | Channels and towns | Draw the PHIVOLCS-named channels that drain Mayon and the towns along each; tapping a changed area shows which channel it's in (R8) | Must |
 | F-20 | Channel timeline | A list of the owner-confirmed channels, sorted by how much changed since the last pass. Each has one bar per radar pass showing the flagged area in its channel strip, and opening a channel shows its strip on the map (R4, R8) | Must |
 | F-21 | Brightness histogram | A small chart for the selected pair showing how much the ground's brightness changed, with the flag line and the flagged tails marked, so a visitor can see why a spot counted as changed | Must |
+| F-22 | Field map design | The app's look: a light relief map made to be read outdoors on a phone, flagged change that stays visible at any zoom, and channel areas also given as basketball courts | Must |
 
 ## 6. Out of Scope
 

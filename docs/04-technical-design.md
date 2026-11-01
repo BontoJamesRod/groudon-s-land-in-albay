@@ -303,6 +303,12 @@ mayon-radar-watch/
 - **Decision:** The pipeline buffers each confirmed channel line into a strip of the width set in the site config (`channel_strip_half_width_m`, measured on each side of the line), measures the flagged area inside it in a metric projection, and publishes the results. The browser only draws them.
 - **Alternatives considered:** Computing in the browser from each pair's grid (many downloads, and results could differ from the pipeline's); flow routing from elevation data (out of scope, ADR-008).
 - **Consequences:** A new width or a newly confirmed channel means rerunning this step for all pairs. It needs no radar download, because it reads the published grids. Strips stop at the reach distance (FR-060), so the area of a long channel covers only its upper part, and what lies past it is drawn as "Not checked" (FR-071).
+### ADR-012: Field map relief as static tiles, and radar marks drawn over the image
+
+- **Context:** The owner chose the Field map design. Its relief has to fill the view without a plain band, and flagged cells smaller than a screen pixel have to stay visible on it. No published data may change.
+- **Decision:** `pipeline/mrw/relief.py` downloads whole Copernicus DEM GLO-30 tiles into `raw/`, stopping before it starts if they total 300 MB or more, and logging the size. It renders WebP map tiles into `site/data/sites/{site_id}/relief/`, one set per zoom. The map stays inside the tiles' bounds, and its minimum zoom rises on a very wide screen. In the browser, `site/js/marks.js` reads the pair's existing image and draws each flagged cell on a canvas above it, at no less than a minimum size, with a darker edge.
+- **Alternatives considered:** One large relief image (a heavy decode on a phone, and its contours would blur when zoomed); changing the published image (would change data, and it would be stuck at one size); a CSS shadow on the image (gives an edge, but cells under a pixel still vanish).
+- **Consequences:** The relief adds static files but needs no third-party request at Mayon. A small mark looks larger than the cell it stands for, so the legend says so. Panama keeps Esri imagery (ADR-010) until the owner approves a DEM download for it.
 
 ## 12. Assumptions
 

@@ -427,6 +427,42 @@ As a visitor, I want to see how much the ground's brightness changed and where t
 - **US-027/AC-3:** Given the histogram file can't be loaded, when the panel shows, then the rest of the pair still works and the panel says "Brightness chart not available for this pair".
 - **US-027/AC-4:** Given the visitor reads the help panel, then one line says why there's no way to move the flag line.
 - **US-027/AC-5:** Given a channel is opened where the panel is on screen, when the histogram shows, then the channel's strip is drawn as a thin outline on the same chart.
+### F-22: Field map design
+
+**Priority:** Must
+**Description:** The design the owner chose on 2026-11-02. A light relief map from elevation data, with its controls and channel list beside the map, or under it on a phone. It changes how the data looks and never the data. Panama keeps its imagery background until the owner decides otherwise.
+
+#### US-028: Read the map outdoors
+
+As a resident on a phone outdoors, I want a light, high-contrast map of the ground, so that I can read it in sunlight.
+
+**Acceptance criteria**
+
+- **US-028/AC-1:** Given a site with relief tiles, when the map opens, then the background is the relief, with no plain band at any edge at any zoom or pan the map allows, and the map credits the Copernicus DEM.
+- **US-028/AC-2:** Given the relief tiles can't load, when the map shows, then the borders, coastline and ring stay visible and "Background map unavailable" shows (FR-005).
+- **US-028/AC-3:** Given a site with channels, when it opens, then the channel list is open beside the map, or under it on a phone, without taking the keyboard focus. A phone shorter than 700 px opens on the map instead, with the list one tap away, because too little of the map would show.
+- **US-028/AC-4:** Given a site with no relief tiles, when it opens, then it keeps its imagery background and its map lines stay readable on it.
+
+#### US-029: See small flagged spots
+
+As a visitor, I want flagged change to stand out on the light map at any zoom, so that small spots aren't lost.
+
+**Acceptance criteria**
+
+- **US-029/AC-1:** Given a pair is shown, when a flagged cell would be smaller than the minimum mark on screen, then it's drawn at the minimum mark's size, with a darker edge, in its class colour.
+- **US-029/AC-2:** Given marks are drawn, then there's one for each flagged cell in the pair's image, and no published image, grid or area changes.
+- **US-029/AC-3:** Given the visitor reads the legend, then one line says that small spots are drawn larger than life so they can be seen, and that the areas don't change.
+- **US-029/AC-4:** Given the layer toggle is off, or the compare view is open, then no marks show.
+
+#### US-030: Picture a channel's area
+
+As a resident, I want each channel's area compared with something familiar, so that I can picture its size.
+
+**Acceptance criteria**
+
+- **US-030/AC-1:** Given a channel area is shown in the list or the bars, then "about N basketball courts" is next to it, using 1 court = 28 × 15 m = 420 m², and the km² value stays.
+- **US-030/AC-2:** Given an area of 0, or under half a court, then it reads "0 basketball courts" or "less than 1 basketball court", and a channel with no radar data shows no comparison.
+- **US-030/AC-3:** Given the visitor reads the channel screens, then a note states the size of the court used.
 
 ## 6. Functional Requirements
 
@@ -507,6 +543,10 @@ As a visitor, I want to see how much the ground's brightness changed and where t
 | FR-073 | The system shall show that distribution as a histogram for the selected pair, with a line on each side at the pair's brightness threshold, the flagged tails shaded in the "possible new material" colour, and one plain sentence. | F-21 | US-027 |
 | FR-074 | The system shall not let a visitor move the flag line, and the help panel shall say why. | F-21 | US-027 |
 | FR-075 | The pipeline shall write the same distribution for each channel's strip, and the system shall draw an opened channel's strip as a thin outline on the histogram, each scaled to its own ground. | F-21 | US-027 |
+| FR-076 | The system shall show a site's relief tiles as its background when its config has them, shall keep the view inside the tiles' bounds so that no plain band shows, and shall credit the Copernicus DEM on the map. | F-22 | US-028 |
+| FR-077 | The system shall open a site with channels with the channel list showing, shall put the controls beside the map on a desktop and under it on a phone, and shall load its own open-licensed fonts. | F-22 | US-028 |
+| FR-078 | The system shall draw each flagged cell of the selected pair at no less than a minimum size on screen, with a darker edge, in its class colour, reading them from the pair's image and changing no data. | F-22 | US-029 |
+| FR-079 | The system shall show each channel area in km² and as "about N basketball courts", with 1 court = 28 × 15 m = 420 m². | F-22 | US-030 |
 
 ## 7. Non-Functional Requirements
 

@@ -71,6 +71,11 @@ erDiagram
         string danger_zone_label
         number detection_reach_km
         number channel_strip_half_width_m
+        number relief_bounds_west
+        number relief_bounds_south
+        number relief_bounds_east
+        number relief_bounds_north
+        integer relief_max_native_zoom
         string wording_set
         array change_types
         string created_at
@@ -274,6 +279,11 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `boundary_credit_url` | string | No | `null` | URL | Link for that credit, when the source asks for one |
 | `detection_reach_km` | number | No | `null` | > 0; built from `filters.max_distance_km` in the site config | How far from the summit detections go (FR-060) |
 | `channel_strip_half_width_m` | number | No | `null` | > 0 | How far a channel's strip goes on each side of its line, in metres (FR-064). Set only for a site with channels, and a site with it shows the Channels button (US-024/AC-2) |
+| `relief_bounds_west` | number | No | `null` | −180 to 180; all four set together | West edge of the site's relief tiles (FR-076) |
+| `relief_bounds_south` | number | No | `null` | −90 to 90 | South edge of the relief tiles |
+| `relief_bounds_east` | number | No | `null` | −180 to 180 | East edge of the relief tiles |
+| `relief_bounds_north` | number | No | `null` | −90 to 90 | North edge of the relief tiles |
+| `relief_max_native_zoom` | integer | No | `null` | 0 to 22; needs the four bounds | The highest zoom with its own relief tiles. `null` means the site uses imagery (FR-076) |
 | `change_types` | array of string | Yes | `["new_material"]` | ≥ 1 item; enum `change_type` | Change types published for this site |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |

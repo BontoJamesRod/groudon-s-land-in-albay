@@ -99,6 +99,11 @@ Fixtures used below are listed in §5.
 | TC-085 | US-027/AC-2 | FR-073, SCR-01, API-013 | The chart | 1. Open the panel at 1280 and 360 px. 2. Compare the line's position with the site config's threshold. 3. Run axe. | Lines on both sides at the config's value, tails shaded, one sentence, and no serious or critical axe problem | Positive | High |
 | TC-086 | US-027/AC-3, US-027/AC-4 | FR-073, FR-074, SCR-05 | No file, no slider | 1. Block `histogram.json`. 2. Read the help panel. | The pair still shows with the "not available" message; the help panel says why the line can't move, and the page has no control that moves it | Negative | Medium |
 | TC-087 | US-027/AC-5 | FR-075, SCR-14, API-014 | Channel outline | 1. Open a channel at 1280 px. 2. Go back to the list. | The outline and its name show, and they go when the channel closes | Positive | Medium |
+| TC-088 | US-028/AC-1 | FR-076, API-015 | Relief tiles and limit | 1. Run the download check with a size at the limit. 2. Run `contract_check` with a relief tile missing. 3. Check that the tiles cover the bounds at each zoom. | The download stops before it starts; the check fails; every tile is there | Negative | High |
+| TC-089 | US-028/AC-1, US-028/AC-2, US-028/AC-4 | FR-005, FR-076, SCR-01 | Relief on the map | 1. Open Mayon at 360, 1280 and 2560 px. 2. Zoom out fully and pan to each corner. 3. Block the tiles. 4. Open Panama. | The view stays inside the tiles, with the Copernicus credit and no Esri request; the notice shows and the lines stay; Panama uses imagery | Positive | High |
+| TC-090 | US-028/AC-3 | FR-077, SCR-01, SCR-13 | Layout | 1. Open Mayon at 360 and 1280 px. 2. Read the channel list and the panel. 3. Check the focus and the font. 4. Close the list on a phone. 5. Run axe. | The list is open and the focus hasn't moved; the panel is beside the map on a desktop; the pass controls return on a phone; the site's font is used; no serious or critical axe result | Positive | High |
+| TC-091 | US-029/AC-1, US-029/AC-2, US-029/AC-3, US-029/AC-4 | FR-078 | Radar marks | 1. Count the flagged pixels in a pair's image. 2. Open it at 360 and 1280 px and measure a mark. 3. Read the legend. 4. Turn the layer off, and open compare. | One mark per flagged pixel, none under the minimum, each with its darker edge; the legend line shows; no marks with the layer off or in compare | Positive | High |
+| TC-092 | US-030/AC-1, US-030/AC-2, US-030/AC-3 | FR-079, SCR-13, SCR-14 | Basketball courts | 1. Open the channel list and one channel. 2. Use areas of 0, 0.0001, 0.00042 and 0.12 km², and no data. | km² and the comparison show together, with singular, zero and under-half wording correct; no data shows none; a note gives the court's size | Positive | High |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -160,6 +165,9 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-025 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-067, TC-068, TC-069, TC-070, TC-081 |
 | US-026 | AC-1, AC-2, AC-3 | TC-072, TC-073, TC-074 |
 | US-027 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-083, TC-084, TC-085, TC-086, TC-087 |
+| US-028 | AC-1, AC-2, AC-3, AC-4 | TC-088, TC-089, TC-090 |
+| US-029 | AC-1, AC-2, AC-3, AC-4 | TC-091 |
+| US-030 | AC-1, AC-2, AC-3 | TC-092 |
 
 ## 8. Exit Criteria
 

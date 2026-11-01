@@ -34,6 +34,7 @@
 | F-19 | Channels and towns | US-023 | The link from new material to the people downstream (R8) |
 | F-20 | Channel timeline | US-024, US-025, US-026 | Shows how each channel changes from pass to pass; the owner's chosen feature for the Nov 5–10 build (R4, R8) |
 | F-21 | Brightness histogram | US-027 | Answers "why did this spot count as changed?" for residents and judges |
+| F-22 | Field map design | US-028, US-029, US-030 | The owner's chosen design (2026-11-02), for a resident on a phone outdoors |
 
 ## 4. Deferred
 

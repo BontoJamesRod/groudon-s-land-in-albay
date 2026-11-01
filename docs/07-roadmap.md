@@ -150,6 +150,12 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-104 | Build the `histogram` module and each pair's `histogram.json` and `channel_histogram.json`, and add them to the contract check | F-21, FR-072, FR-075, US-027, TBL-13, TBL-14, API-013, API-014, TC-083, TC-084 | M | T-103, T-074 | TC-083 and TC-084 pass; the published pairs have the files |
 | T-105 | Show the histogram in the panel, with the flag line from the pair's record and the flagged tails shaded, and say in the help panel why there's no slider | F-21, FR-073, FR-074, US-027, SCR-01, SCR-05, TC-085, TC-086 | M | T-104 | TC-085 and TC-086 pass, with axe passing |
 | T-106 | Draw an opened channel's strip as a thin outline on the histogram | F-21, FR-075, US-027, SCR-14, TC-087 | S | T-105 | TC-087 passes |
+| T-107 | Add the Field map design to the docs, with the owner's decisions of 2026-11-02 | F-22, US-028, US-029, US-030 | S | T-103 | The new IDs resolve |
+| T-108 | Download the wider Copernicus DEM, under 300 MB with its size logged, render Mayon's relief tiles, and add the site fields and credits | F-22, FR-076, US-028, API-015, TC-088 | M | T-107 | TC-088 passes; `contract_check` passes; the size is logged |
+| T-109 | Show the relief as Mayon's background, kept inside its bounds, with lines coloured for it; Panama keeps imagery | F-22, FR-076, US-028, SCR-01, TC-089 | M | T-108 | TC-089 passes |
+| T-110 | Build the Field map layout and styles, with its fonts in the site, and open with the channel list | F-22, FR-077, US-028, SCR-01, SCR-13, TC-090 | M | T-109 | TC-090 passes, with axe passing at 360 and 1280 px |
+| T-111 | Draw radar marks with a minimum size and a darker edge, and say so in the legend | F-22, FR-078, US-029, TC-091 | M | T-110 | TC-091 passes, and no published data file changed |
+| T-112 | Show channel areas as basketball courts next to km² | F-22, FR-079, US-030, SCR-13, SCR-14, TC-092 | S | T-110 | TC-092 passes |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 
@@ -290,6 +296,7 @@ None.
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
 | 0.2 | 2026-11-01 | Added the Channel timeline tasks, the done work (T-050 to T-072), milestone 7 and the ID errata. Named Panama for T-036 and T-037. Added T-079 to T-091. |
+| 0.3 | 2026-11-02 | Added T-107 to T-112 for the Field map design. |
 
 ## 11. ID Errata
 
