@@ -28,14 +28,26 @@ def test_the_readme_links_the_license_files():
     assert "(LICENSE)" in README and "(CREDITS.md)" in README and "(NOTICE)" in README
 
 
-def test_notice_names_the_project_and_its_holders():
-    assert (REPO / "NOTICE").read_text(encoding="utf-8").startswith("Mayon Radar Watch. Copyright 2026 James Rod Bonto and ")
+TEAM = ["James Rod B. Bonto", "Ivan Mathew C. Esclanda", "Lloyd Ariel Bajada Deputo", "Andrel Jade Cabria",
+        "Julius Dave Fajardo", "Hugh Benedict O. Abante"]
+
+
+def test_notice_and_the_readme_name_the_same_team():
+    notice = (REPO / "NOTICE").read_text(encoding="utf-8")
+    assert notice.startswith("Copyright 2026 the Mayon Radar Watch team: James Rod B. Bonto (team owner), ")
+    assert "[" not in notice
+    team_section = README.split("## Team")[1].split("## ")[0]
+    for name in TEAM:
+        assert name in notice and name in team_section
 
 
 def test_the_radar_layers_license_is_stated_with_its_credit():
     for text in (CREDITS, README):
-        assert "CC BY 4.0" in text
         assert "Mayon Radar Watch and NASA–ISRO NISAR data via ASF" in text
+    assert "`site/data/sites/mayon/pairs/` | [CC BY 4.0]" in CREDITS
+    assert "`site/data/sites/panama/pairs/` | [CC BY-SA 4.0]" in CREDITS
+    assert "`site/data/sites/mayon/pairs/` are under [CC BY 4.0]" in README
+    assert "`site/data/sites/panama/pairs/` are under [CC BY-SA 4.0]" in README
 
 
 def test_screens_are_not_kept_in_the_repository():

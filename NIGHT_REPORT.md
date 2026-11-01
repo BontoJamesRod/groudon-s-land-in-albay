@@ -900,3 +900,7 @@ It didn't match your list, so I added three rows. They appear in the site's Data
 ## Decision for you
 
 **Share-alike may reach Panama's layers.** They mark sea as no data using Panama's land shape, which is CC BY-SA 4.0 geoBoundaries data. If that makes them adapted material, they'd have to be offered under CC BY-SA, not CC BY 4.0. Mayon's shape is CC BY-IGO, which has no share-alike. I applied CC BY 4.0 to all as you decided, and `CREDITS.md` credits the shapes with their own terms. This is my reading, not legal advice. If you want to be safe, marking Panama's layers CC BY-SA 4.0 is a small change.
+
+# Team names and Panama's license (2026-11-01)
+
+**T-100 is done on `night-1`, not merged.** `NOTICE` now has the team's copyright line, and the README has a Team section with the same six names. This replaces the `[TEAMMATE NAME]` placeholder. Panama's radar layers are marked CC BY-SA 4.0 in `CREDITS.md` and the README, crediting geoBoundaries too, and Mayon's stay CC BY 4.0. This answers the share-alike question from the last section. The license is stated in those two files, not inside each pair's own files, and the site doesn't show it.

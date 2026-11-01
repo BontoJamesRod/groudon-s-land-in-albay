@@ -73,9 +73,18 @@ Publishing only changes files on your computer. A pair reaches the public site w
 
 Until the final thresholds are set, the pipeline refuses every product acquired on or after 2026-10-30 (`BLIND_CUTOFF` in `pipeline/mrw/search.py`), so the thresholds can't be influenced by the eruption data.
 
+## Team
+
+- James Rod B. Bonto (team owner)
+- Ivan Mathew C. Esclanda
+- Lloyd Ariel Bajada Deputo
+- Andrel Jade Cabria
+- Julius Dave Fajardo
+- Hugh Benedict O. Abante
+
 ## License and credits
 
-The code and documentation are under the [Apache-2.0 license](LICENSE), with the copyright notice in [NOTICE](NOTICE). The published radar layers in `site/data/sites/*/pairs/` are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), credited to Mayon Radar Watch and NASA–ISRO NISAR data via ASF. Data files under their own licenses, such as ODbL and CC BY-SA 4.0, aren't covered by either. [CREDITS.md](CREDITS.md) lists every data source, library and tool with its license, and says which files fall under which terms.
+The code and documentation are under the [Apache-2.0 license](LICENSE), with the copyright notice in [NOTICE](NOTICE). The published radar layers in `site/data/sites/mayon/pairs/` are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and those in `site/data/sites/panama/pairs/` are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Credit them to Mayon Radar Watch and NASA–ISRO NISAR data via ASF, adding geoBoundaries for Panama. Data files under their own licenses, such as ODbL and CC BY-SA 4.0, aren't covered by the code license. [CREDITS.md](CREDITS.md) lists every data source, library and tool with its license, and says which files fall under which terms.
 
 ## Data sources
 
