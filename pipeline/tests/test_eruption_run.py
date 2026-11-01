@@ -73,3 +73,17 @@ def test_a_pair_without_coherence_is_skipped(capsys):
         raise AssertionError("processed a pair without coherence")
     assert process([make_pair("2026-10-19", "2026-10-31")], final_config(), runner=no_run) == []
     assert "Skipped" in capsys.readouterr().out
+
+
+def test_check_prints_the_newest_pass_for_each_track_and_frame(capsys):
+    passes = [{"track": 111, "frame": 8, "acquired_start": "2026-10-07T21:13:19Z"},
+              {"track": 111, "frame": 8, "acquired_start": "2026-10-19T21:13:19Z"},
+              {"track": 104, "frame": 82, "acquired_start": "2026-10-19T10:16:00Z"},
+              {"track": 104, "frame": 81, "acquired_start": "2026-09-25T10:16:00Z"}]
+    eruption_run.check([], passes)
+    output = capsys.readouterr().out
+    assert "Track 104 frame 81: 2026-09-25T10:16:00Z" in output
+    assert "Track 104 frame 82: 2026-10-19T10:16:00Z" in output
+    assert "Track 111 frame 8: 2026-10-19T21:13:19Z" in output
+    assert "2026-10-07" not in output
+    assert "Track 104: no new pass on ASF yet" in output

@@ -58,8 +58,21 @@ def find_pairs(config):
     return eruption_pairs(build_track_pairs(SITE_ID, search_gcov(config, SEARCH_START), search_gunw(config, SEARCH_START)))
 
 
-def check(pairs):
+def newest_passes(passes):
+    """Find the newest pass for each track and frame, sorted by track and then frame."""
+    newest = {}
+    for one_pass in passes:
+        key = (one_pass["track"], one_pass["frame"])
+        if key not in newest or one_pass["acquired_start"] > newest[key]["acquired_start"]:
+            newest[key] = one_pass
+    return [newest[key] for key in sorted(newest)]
+
+
+def check(pairs, passes):
     """Print what is available. This reads product names only, not radar data."""
+    print(f"Newest pass on ASF for each track and frame (only passes before {BLIND_CUTOFF:%Y-%m-%d} can be seen):")
+    for one_pass in newest_passes(passes):
+        print(f"  Track {one_pass['track']} frame {one_pass['frame']}: {one_pass['acquired_start']}")
     for track in ERUPTION_TRACKS:
         if not any(pair["after"]["track"] == track for pair in pairs):
             print(f"Track {track}: no new pass on ASF yet. Try again later.")
@@ -107,7 +120,8 @@ def main(argv):
         elif argv[0] == "process":
             process(find_pairs(config), config)
         else:
-            check(find_pairs(config))
+            passes = search_gcov(config, SEARCH_START)
+            check(eruption_pairs(build_track_pairs(SITE_ID, passes, search_gunw(config, SEARCH_START))), passes)
     except NotReady as problem:
         print(problem)
         return 1
