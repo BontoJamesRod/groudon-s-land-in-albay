@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import open_drawer_if_closed, prepare_page, wait_until_ready
+from .conftest import close_list_on_a_phone, open_drawer_if_closed, prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -15,6 +15,7 @@ def phone(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
+    close_list_on_a_phone(page)
     return page
 
 
@@ -181,10 +182,24 @@ def test_tc082_a_desktop_keeps_the_label_below_the_ring(app):
     assert box["y"] > app.locator("#map").bounding_box()["y"] + app.locator("#map").bounding_box()["height"] / 2
 
 
-@pytest.mark.parametrize("width, height", [(390, 844), (1280, 500)])
-def test_tc082_a_tall_phone_or_a_short_desktop_keeps_the_default_zoom(page, site_url, width, height):
-    open_at(page, site_url, width, height)
+def test_tc082_a_short_desktop_keeps_the_default_zoom(page, site_url):
+    open_at(page, site_url, 1280, 500)
     assert page.evaluate("testMap.getZoom()") == DEFAULT_ZOOM
+
+
+def test_tc082_a_tall_phone_shows_the_whole_ring_beside_the_list(page, site_url):
+    open_at(page, site_url, 390, 844)
+    expect(page.locator("#channel-panel")).to_be_visible()
+    label_clears_the_credits(page)
+    assert page.evaluate(TOWN_PROBLEMS) == []
+
+
+def test_a_short_phone_opens_on_the_map_with_the_list_one_tap_away(page, site_url):
+    open_at(page, site_url, 360, 640)
+    expect(page.locator("#channel-panel")).to_be_hidden()
+    expect(page.locator("#pair-list")).to_be_visible()
+    page.click("#channels-button")
+    expect(page.locator("#channel-body .channel-row")).to_have_count(4)
 
 
 def test_helper_opens_only_when_closed(phone):

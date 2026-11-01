@@ -9,10 +9,11 @@ const TILE_FAILURES_FOR_NOTICE = 4;
 const PHONE_LAYOUT = "(max-width: 700px)"; // the same width as in app.css
 const PHONE_LABEL_DROP_PX = 22; // far enough inside the ring to clear the town names beside its top edge
 const RING_ROOM_PX = 26; // the room the ring needs above the map credits to show clearly
-const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false };
-const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
-const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
-const REACH_STYLE = { color: "#ffffff", weight: 2, opacity: 0.9, fill: false, dashArray: "2 6" };
+// These colours are for imagery. On the light relief, app.css recolours each line by its class.
+const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false, className: "line-town" };
+const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false, className: "line-coast" };
+const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6", className: "line-ring" };
+const REACH_STYLE = { color: "#ffffff", weight: 2, opacity: 0.9, fill: false, dashArray: "2 6", className: "line-reach" };
 
 // Radar images go in their own layer, under the borders so that towns stay readable.
 export const RADAR_PANE = "radar";
@@ -20,8 +21,39 @@ export const COMPARE_PANE = "compare";
 export const COMPARE_LINE_PANE = "compareLine";
 export const STRIP_PANE = "channelStrip";
 
-function addBackground(map, notice) {
-  const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
+function reliefBounds(site) {
+  return [[site.relief_bounds_south, site.relief_bounds_west], [site.relief_bounds_north, site.relief_bounds_east]];
+}
+
+// The relief stops at its bounds, so the map does too. A very wide screen can see more than the
+// whole relief at the lowest zoom, so there the lowest zoom rises (FR-076).
+function keepInsideRelief(map, site) {
+  const bounds = reliefBounds(site);
+  map.options.maxBoundsViscosity = 1;
+  map.setMaxBounds(bounds);
+  function update() {
+    map.options.minZoom = site.min_zoom; // otherwise the answer below can never come back down
+    map.setMinZoom(map.getBoundsZoom(bounds, true));
+  }
+  map.on("resize", update);
+  update();
+}
+
+// A site's own relief tiles when it has them, and imagery when it doesn't.
+function backgroundTiles(map, site) {
+  if (site.relief_max_native_zoom == null) {
+    return L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
+  }
+  return L.tileLayer(`data/sites/${site.id}/relief/{z}/{x}/{y}.webp`, {
+    attribution: STRINGS.reliefCredit,
+    maxZoom: map.getMaxZoom(),
+    maxNativeZoom: site.relief_max_native_zoom,
+    bounds: reliefBounds(site),
+  });
+}
+
+function addBackground(map, site, notice) {
+  const tiles = backgroundTiles(map, site);
   let failuresInARow = 0;
   tiles.on("tileload", () => {
     failuresInARow = 0;
@@ -161,7 +193,9 @@ export function createMap(site, siteData, notice) {
   map.createPane(STRIP_PANE).style.zIndex = 345;
   // Above town borders and below the labels (Leaflet's label layer is 650).
   map.createPane(COMPARE_LINE_PANE).style.zIndex = 630;
-  addBackground(map, notice);
+  document.body.classList.toggle("relief-map", site.relief_max_native_zoom != null);
+  addBackground(map, site, notice);
+  if (site.relief_max_native_zoom != null) keepInsideRelief(map, site);
   L.geoJSON(outlinesInsideSite(siteData.land, site), { style: COAST_STYLE, interactive: false }).addTo(map);
   const townLabels = addTowns(map, siteData.towns, site);
   const zoneLabel = addDangerZone(map, site);

@@ -2,13 +2,14 @@
 // and the channel layer with its names and sources.
 
 import { RADAR_PANE } from "./map.js";
+import { createMarks } from "./marks.js";
 import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
 
 // A dark edge keeps a channel line readable on bright imagery, and a dash marks what isn't checked.
-const CHANNEL_EDGE_STYLE = { color: "#0f172a", weight: 5, opacity: 0.55, interactive: false };
-const CHANNEL_STYLE = { color: "#22d3ee", weight: 3, opacity: 1, interactive: false };
-const NOT_CHECKED_STYLE = { color: "#ffffff", weight: 2.5, opacity: 1, dashArray: "6 7", interactive: false };
+const CHANNEL_EDGE_STYLE = { color: "#0f172a", weight: 5, opacity: 0.55, interactive: false, className: "line-channel-edge" };
+const CHANNEL_STYLE = { color: "#22d3ee", weight: 3, opacity: 1, interactive: false, className: "line-channel" };
+const NOT_CHECKED_STYLE = { color: "#ffffff", weight: 2.5, opacity: 1, dashArray: "6 7", interactive: false, className: "line-not-checked" };
 // An invisible, wider line makes a channel easier to tap. Tapping it must not also tap the map.
 const CHANNEL_TAP_STYLE = { opacity: 0, weight: 18, bubblingMouseEvents: false };
 
@@ -21,7 +22,7 @@ function layerBounds(layer) {
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.onload = () => resolve();
+    image.onload = () => resolve(image);
     image.onerror = () => reject(new Error(`Image failed to load: ${url}`));
     image.src = url;
   });
@@ -65,10 +66,14 @@ export function createNewMaterialLayer(map, elements, site) {
   return async function showPair(pair, isCurrent) {
     const layer = pair.layers.find((item) => item.kind === "new_material");
     const url = `${pair.folder}/${layer.image_path}`;
-    await loadImage(url);
+    const image = await loadImage(url);
     if (!isCurrent()) return;
     if (overlay) overlay.remove();
-    overlay = L.imageOverlay(url, layerBounds(layer), { pane: RADAR_PANE, alt: layer.title, className: "radar-image" });
+    const bounds = layerBounds(layer);
+    overlay = L.layerGroup([
+      L.imageOverlay(url, bounds, { pane: RADAR_PANE, alt: layer.title, className: "radar-image" }),
+      createMarks(image, bounds, RADAR_PANE),
+    ]);
     if (elements.toggle.checked) overlay.addTo(map);
     showLegend(elements, layer, pair);
     elements.summary.textContent = summaryText(pair, site);

@@ -951,3 +951,34 @@ The screens and a README are in `pipeline/out/screens/design/`, in `field-map/` 
 - **Tests:** `pytest -q`: 664 passed, 1 skipped, exit code 0. **Contract check:** 0 errors, exit code 0. Axe is passing, including new runs with the chart at 1280 and 360 px.
 - **Commits:** c21b5ba (T-103), 4922807 (T-104, T-105, T-106) and the commit holding this report.
 - **Not done, as the plan said:** no post-eruption product was opened, the cutoff is unchanged, and nothing was merged into `main`.
+
+# Field map design (2026-11-02)
+
+**Field map is built as the app's design on `night-1`, not merged into `main`.** Screens are in `pipeline/out/screens/field-map/`: opening, channel, panel and compare, at 360 and 1280 px.
+
+## Your three changes
+
+1. **Flagged change is clearly visible.** Each flagged cell is now drawn as a mark with a dark edge: at least 5 px at the default zoom and closer, and at least 3 px at zoom 11 and further out, where 5 px marks ran together into big patches. The marks are read from each pair's existing image and drawn on top of it, and no published image, grid or area changed. A test checks one mark per flagged pixel. The legend says "Small spots are drawn larger than life so they can be seen. The areas don't change."
+2. **Basketball courts.** Every channel area in the list and the bars now also reads, for example, "about 57 basketball courts", and km² stays. Both screens state 1 court = 28 × 15 m = 420 m². Areas are published to 3 decimals, which is about 2.4 courts, so the "about" matters for small numbers.
+3. **Wider DEM.** I downloaded 4 Copernicus GLO-30 files before building, **76,579,341 bytes (76.6 MB)** against your 300 MB limit. The size is logged in `pipeline/logs/`, and the files are in `raw/`, not committed. They became 1,387 map tiles, 6.2 MB in the site. The map can't pan past them, and a very wide screen gets a higher lowest zoom, so no band can show. Checked by panning and dragging to all four corners at 360, 1280 and 2560 px.
+
+## Things I decided while building
+
+- **The channel list opens with the site,** as in the mock-up you chose. On a phone that hides the pass controls until Close is tapped. A phone shorter than 700 px opens on the map instead, because the list left too little of the map and cut off Daraga and Legazpi.
+- **The pass list has its own row on a desktop,** because the mock-up cut off its date.
+- **The relief's light was wrong in the mock-ups.** It came from the southeast, which can make ridges look like valleys. It now comes from the northwest, as on a printed map, so the relief looks slightly different from the pictures you saw.
+- **Fonts:** IBM Plex is now in `site/vendor/` with its license, so no font request leaves the site. Mayon no longer calls Esri at all.
+
+## Decision for you
+
+**Panama still uses Esri imagery.** Your DEM approval was about Mayon's bands, so I didn't download anything for Panama. It has the new layout, fonts and marks on imagery, with its map lines in their old colours. If you want relief there too, it needs another DEM download, which I'd keep under the same limit.
+
+## Limits
+
+Checked in a test browser only, not on a real phone or in real sunlight. Axe finds no serious or critical problem on the eight screens, but it can't judge marks and lines against the relief, so I checked those by eye. The channel outline on the histogram stays desktop-only, as you said for now.
+
+## Evidence
+
+- **Tests:** 717 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. It now also fails on a missing relief tile.
+- **Docs:** F-22, US-028 to US-030, FR-076 to FR-079, API-015, ADR-012, TC-088 to TC-092 and T-107 to T-112, plus your three decisions from Plan 7 in `docs/PROGRESS.md`.
+- **Not done:** no NISAR product was opened or downloaded, the cutoff is unchanged, the coverage view isn't started, and nothing was merged into `main`.

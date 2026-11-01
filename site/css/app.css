@@ -1,7 +1,13 @@
+/* T-110: IBM Plex, kept in the site so that no font request leaves it (CREDITS.md). */
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 600; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 700; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-sans-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); }
+
 :root {
-  --ink: #1f2328;
-  --paper: #ffffff;
-  --line: #d0d7de;
+  --ink: #16202a;
+  --paper: #fbfaf5;
+  --line: #b9b4a4;
   --alert: #c2410c;
 }
 
@@ -10,7 +16,7 @@
 html, body {
   height: 100%;
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
   background: var(--paper);
 }
@@ -45,7 +51,22 @@ body {
 #map {
   flex: 1;
   min-height: 300px;
+  background: #e4e2d9;
 }
+
+.leaflet-container { font-family: inherit; }
+
+/* The marks' canvas sits above the radar image, in the same pane. */
+.radar-marks { position: absolute; pointer-events: none; }
+
+/* Field map (F-22): deep colours for the light relief. A site on imagery keeps the lines' own colours. */
+.relief-map .line-town { stroke: #3d4650; stroke-opacity: 0.4; stroke-width: 0.75; }
+.relief-map .line-coast { stroke: #2d6f8f; }
+.relief-map .line-ring { stroke: #6a1b6a; stroke-width: 2.5; }
+.relief-map .line-reach { stroke: #3d4650; stroke-opacity: 0.9; stroke-width: 1.5; }
+.relief-map .line-channel { stroke: #0b5fa5; stroke-width: 3.5; }
+.relief-map .line-channel-edge { stroke: #ffffff; stroke-opacity: 0.9; }
+.relief-map .line-not-checked { stroke: #16202a; stroke-width: 2.5; }
 
 /* Sits above Leaflet's panes and controls (their highest z-index is 1000). */
 .map-notice {
@@ -68,9 +89,18 @@ body {
   padding: 1px 4px;
   border: 0;
   box-shadow: none;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 2px;
+  color: #0b0f14;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.zone-label {
   font-size: 12px;
-  color: var(--paper);
-  background: rgba(31, 35, 40, 0.7);
+  font-weight: 600;
+  color: #ffffff;
+  background: #6a1b6a;
 }
 
 .town-label::before,
@@ -85,8 +115,8 @@ body {
   font-size: 12px;
   font-style: italic;
   font-weight: 600;
-  color: var(--paper);
-  background: rgba(8, 47, 73, 0.85);
+  color: #ffffff;
+  background: #0b4f8a;
 }
 
 .radar-image { image-rendering: pixelated; }
@@ -134,8 +164,8 @@ select {
   padding: 0 12px;
   font: inherit;
   color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--line);
+  background: #ffffff;
+  border: 1px solid #6b6658;
   border-radius: 4px;
 }
 
@@ -254,6 +284,7 @@ button:disabled { color: #6e7781; }
 }
 
 .site-name {
+  background: transparent;
   font-weight: 700;
   border-color: transparent;
   padding-left: 0;
@@ -402,6 +433,7 @@ button:disabled { color: #6e7781; }
 }
 
 .link-button {
+  background: transparent;
   border-color: transparent;
   text-decoration: underline;
   padding: 0 4px;
@@ -546,7 +578,27 @@ button:disabled { color: #6e7781; }
   text-align: left;
 }
 
-.channel-row-name { font-weight: 600; }
+.channel-row-name { font-size: 18px; font-weight: 600; }
+
+/* The area, with the comparison under it. Numbers line up, so the rows can be compared at a glance. */
+.channel-row-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 4px 0;
+  text-align: right;
+}
+
+.channel-row-area {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.channel-row-courts,
+.channel-bar-courts { font-size: 13px; }
+
+.channel-bar-courts { display: block; margin-top: 2px; }
 
 .channel-bars {
   margin: 8px 0;
@@ -567,10 +619,10 @@ button:disabled { color: #6e7781; }
   background: transparent;
 }
 
-.channel-bar:hover { background: #f6f8fa; }
+.channel-bar:hover { background: #f1eee2; }
 
 .channel-bar[aria-current] {
-  background: #f6f8fa;
+  background: #ece7d6;
   box-shadow: inset 3px 0 0 var(--ink);
 }
 
@@ -582,6 +634,7 @@ button:disabled { color: #6e7781; }
 
 .channel-bar-value {
   flex: none;
+  font-family: "IBM Plex Mono", monospace;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -608,8 +661,31 @@ button:disabled { color: #6e7781; }
   display: block;
   height: 100%;
   border-radius: 0 4px 4px 0;
-  background: #b45309;
+  background: #b9460a;
 }
+
+/* On a desktop, the channel list and the pass controls share one column beside the map. */
+.side {
+  flex: 0 0 400px;
+  min-width: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--line);
+}
+
+.side:not(:has(> :not([hidden]))) { display: none; }
+
+@media (min-width: 701px) {
+  .side .channel-panel { width: auto; overflow: visible; border-left: 0; }
+  .side .panel { flex-direction: column; flex-wrap: nowrap; }
+  .side .timeline, .side .histogram { flex: none; max-width: none; min-width: 0; }
+  .side .legend, .side .channel-legend { flex: none; }
+  /* The pass list gets its own row, so that its whole date can be read. */
+  .side .timeline-controls { flex-wrap: wrap; }
+  .side .timeline-controls select { flex: 1 1 100%; order: -1; }
+  .side .timeline-controls button { flex: 1; }
+}
+
+.disclaimer { font-weight: 600; }
 
 /* T-034: on phones the map stays large and the disclaimer stays on screen (FR-037),
    so the pass controls and legend scroll inside their own area. */
@@ -617,12 +693,16 @@ button:disabled { color: #6e7781; }
   .topbar { padding: 4px 16px; gap: 4px; }
   .map-area, #map { min-height: 200px; }
   .map-row { flex-direction: column; min-height: 200px; }
+  /* The column goes away, and the map, the list and the pass controls stack in the map's row. */
+  .side { display: contents; }
   .channel-panel {
-    flex: 0 0 55%;
+    flex: 0 0 44%;
     min-height: 0;
     border-left: 0;
     border-top: 1px solid var(--line);
+    border-radius: 14px 14px 0 0;
   }
+  .channel-rows li button { min-height: 52px; }
   /* The channel panel takes over from the pass controls, so the map and the panel both get room. */
   body.channels-open #panel { display: none; }
   /* A long label wraps inside its button, not onto a new row, so the map keeps its height. */

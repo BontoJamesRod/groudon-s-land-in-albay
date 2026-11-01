@@ -34,7 +34,8 @@ def test_mayon_shows_its_own_credit_and_sources(app):
     expect(attribution).not_to_contain_text("geoBoundaries")
     panel = open_sources(app)
     expect(panel).to_contain_text("Philippine municipal and city boundaries")
-    expect(panel).to_contain_text("Esri")
+    expect(panel).to_contain_text("Copernicus DEM GLO-30")
+    expect(panel).not_to_contain_text("Esri")
     expect(panel).not_to_contain_text("geoBoundaries")
 
 

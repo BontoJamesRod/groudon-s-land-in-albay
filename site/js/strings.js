@@ -1,6 +1,16 @@
 // Every piece of interface text in one place, for review against FR-038 (docs/04 section 3).
 // The wording test in pipeline/tests/test_wording.py reads this file.
 
+const COURT_M2 = 28 * 15; // one basketball court, as the owner set it (FR-079)
+
+// A channel's area as basketball courts, to picture its size.
+function courtsText(km2) {
+  if (km2 === 0) return "0 basketball courts";
+  const courts = Math.round((km2 * 1000000) / COURT_M2);
+  if (courts === 0) return "less than 1 basketball court";
+  return `about ${courts.toLocaleString("en-US")} basketball court${courts === 1 ? "" : "s"}`;
+}
+
 // A share of the ground as words. A tiny share never reads as 0%.
 function shareText(share) {
   if (share > 0 && share < 0.001) return "under 0.1%";
@@ -39,6 +49,8 @@ export const STRINGS = {
   totalArea: (km2) => `Total detected area: ${km2.toFixed(2)} km²`,
   nothingDetected: (before, after) => `No new material detected between ${before} and ${after}`,
   tileAttribution: "Tiles &copy; Esri",
+  reliefCredit: 'Relief: <a href="https://registry.opendata.aws/copernicus-dem/">Copernicus DEM GLO-30</a>',
+  marksNote: "Small spots are drawn larger than life so they can be seen. The areas don't change.",
 
   // Readout card (SCR-02)
   readoutLoading: "Reading radar values…",
@@ -160,6 +172,8 @@ export const STRINGS = {
   histogramChannelNote: (name) => `Thin line: the ${name} strip, scaled to its own ground. Bars: all the checked land.`,
   histogramMissing: "Brightness chart not available for this pair",
   channelArea: (km2) => `${km2.toFixed(3)} km²`,
+  channelCourts: courtsText,
+  channelCourtSize: `1 basketball court = 28 × 15 m = ${COURT_M2} m².`,
   channelNoData: "No radar data",
   channelsHow: (halfWidth, reach) => `This is the area flagged as possible or likely new material in a strip ${halfWidth} m on each side of the line${reach ? `, within ${reach} km of the summit` : ""}.`,
   channelsOnlyConfirmed: "Only channels the project owner has checked are listed. Other channels also drain Mayon.",

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=7861b6928b">
+  <link rel="stylesheet" href="css/app.css?v=8f40c0c730">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
@@ -51,6 +51,7 @@
     </section>
   </main>
 
+  <div class="side">
   <section id="channel-panel" class="channel-panel" data-label="channelsTitle" hidden>
     <header class="channel-header">
       <button id="channel-back" type="button" data-text="channelBack" hidden></button>
@@ -63,12 +64,6 @@
     </p>
     <div id="channel-body"></div>
   </section>
-  </div>
-
-  <div class="app-status" aria-live="polite">
-    <span id="app-message"></span>
-    <button id="app-retry" type="button" data-text="retry" hidden></button>
-  </div>
 
   <section id="panel" class="panel drawer-closed" data-label="panelLabel" hidden>
     <button id="drawer-toggle" class="drawer-toggle" type="button" aria-expanded="false"></button>
@@ -90,6 +85,7 @@
       <label class="layer-toggle"><input id="layer-toggle" type="checkbox" checked> <span id="legend-title"></span></label>
       <ul id="legend-rows" class="legend-rows"></ul>
       <p id="legend-area" class="legend-area"></p>
+      <p class="channel-note" data-text="marksNote"></p>
       <p id="summary" class="summary"></p>
       <p class="legend-actions">
         <button id="compare-button" type="button" data-text="compareButton"></button>
@@ -111,6 +107,13 @@
       <p id="channels-unavailable" class="summary" data-text="channelsUnavailable" hidden></p>
     </div>
   </section>
+  </div>
+  </div>
+
+  <div class="app-status" aria-live="polite">
+    <span id="app-message"></span>
+    <button id="app-retry" type="button" data-text="retry" hidden></button>
+  </div>
 
   <footer class="footer">
     <p class="disclaimer" data-text="disclaimer"></p>
@@ -138,22 +141,23 @@
   <script type="importmap">
 {
   "imports": {
-    "./js/channels.js": "./js/channels.js?v=74db6efa33",
+    "./js/channels.js": "./js/channels.js?v=8ada0dbde0",
     "./js/compare.js": "./js/compare.js?v=992505293c",
     "./js/data.js": "./js/data.js?v=4dcc91f5d5",
     "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
     "./js/histogram.js": "./js/histogram.js?v=c785e7aabb",
-    "./js/layers.js": "./js/layers.js?v=9d3b3edbe4",
-    "./js/main.js": "./js/main.js?v=3b978f87a6",
-    "./js/map.js": "./js/map.js?v=c65916d318",
+    "./js/layers.js": "./js/layers.js?v=d16d734ecf",
+    "./js/main.js": "./js/main.js?v=cef4cc6b1e",
+    "./js/map.js": "./js/map.js?v=5aea4a095b",
+    "./js/marks.js": "./js/marks.js?v=15906ef5e2",
     "./js/panels.js": "./js/panels.js?v=d46d7dd420",
     "./js/readout.js": "./js/readout.js?v=a8efc307b7",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=36748a3817",
+    "./js/strings.js": "./js/strings.js?v=9b38c7c471",
     "./js/timeline.js": "./js/timeline.js?v=f1f56ad0e9"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=3b978f87a6"></script>
+  <script type="module" src="js/main.js?v=cef4cc6b1e"></script>
 </body>
 </html>

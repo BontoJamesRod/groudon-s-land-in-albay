@@ -10,6 +10,8 @@ import { gapNote, pairDates } from "./timeline.js";
 
 const STRIP_STYLE = { color: "#22d3ee", weight: 1.5, opacity: 0.9, fillColor: "#22d3ee", fillOpacity: 0.22, interactive: false };
 const FIT_PADDING_PX = 24;
+// A shorter phone opens on the map: with the list open, too little of the map would show.
+const SHORT_PHONE = "(max-width: 700px) and (max-height: 699px)";
 
 // A label for what lies past the reach, at the middle of its longest stretch (FR-071).
 function notCheckedLabel({ type, coordinates }) {
@@ -62,8 +64,10 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     button.type = "button";
     const area = flaggedArea(channel, latest);
     button.onclick = () => showChannel(channel);
-    button.append(element("span", channel.properties.name, "channel-row-name"),
-      element("span", area === null ? STRINGS.channelNoData : STRINGS.channelArea(area)));
+    const value = element("span", undefined, "channel-row-value");
+    value.append(element("span", area === null ? STRINGS.channelNoData : STRINGS.channelArea(area), "channel-row-area"));
+    if (area !== null) value.append(element("span", STRINGS.channelCourts(area), "channel-row-courts"));
+    button.append(element("span", channel.properties.name, "channel-row-name"), value);
     const row = element("li");
     row.append(button);
     return row;
@@ -107,6 +111,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       element("span", area === null ? STRINGS.channelNoData : STRINGS.channelArea(area), "channel-bar-value"));
     button.append(top);
     if (area !== null) {
+      button.append(element("span", STRINGS.channelCourts(area), "channel-bar-courts"));
       const fill = element("span", undefined, "channel-bar-fill");
       fill.style.width = `${largest ? (area / largest) * 100 : 0}%`;
       const track = element("span", undefined, "channel-bar-track");
@@ -146,12 +151,14 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       bars,
       element("p", STRINGS.channelsHow(site.channel_strip_half_width_m, site.detection_reach_km), "channel-note"),
       element("p", STRINGS.channelBarsScale, "channel-note"),
+      element("p", STRINGS.channelCourtSize, "channel-note"),
     );
     if (channel.properties.not_checked_geometry) {
       elements.body.append(element("p", STRINGS.channelNotCheckedNote(site.detection_reach_km), "channel-note"));
     }
     markSelectedBar();
     elements.panel.scrollTop = 0;
+    elements.panel.parentElement.scrollTop = 0; // on a desktop, the column around the panel scrolls
     drawStrip(channel);
     elements.title.focus();
   }
@@ -186,6 +193,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       list,
       element("p", STRINGS.channelsHow(site.channel_strip_half_width_m, site.detection_reach_km), "channel-note"),
       element("p", STRINGS.channelsOnlyConfirmed, "channel-note"),
+      element("p", STRINGS.channelCourtSize, "channel-note"),
     );
   }
 
@@ -216,10 +224,19 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     onResize();
   }
 
-  function open() {
+  // For when the site opens: the list appears, and the keyboard focus stays put (US-028/AC-3).
+  function showAtStart() {
+    if (!window.matchMedia(SHORT_PHONE).matches) show();
+  }
+
+  function show() {
     setOpen(true);
     if (rows) showList();
     else load();
+  }
+
+  function open() {
+    show();
     elements.title.focus();
   }
 
@@ -252,5 +269,5 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     showStatus(STRINGS.passLoadError, false, true);
   }
 
-  return { open, close, pairChanged, pairFailed };
+  return { showAtStart, open, close, pairChanged, pairFailed };
 }

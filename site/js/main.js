@@ -191,6 +191,8 @@ async function showSite(site, siteData) {
   map.on("click", (event) => readout.open(event.latlng.lat, event.latlng.lng));
   setUpChannelLayer(map, siteData, readout);
   setUpChannels(map, site, siteData);
+  // Before the pairs, because the map's start view has to fit the room the list leaves it.
+  if (app.channels) app.channels.showAtStart();
   setUpSearch(map, site, siteData, readout);
   await setUpPairs(map, site, siteData, readout);
   byId("loading").hidden = true;
