@@ -904,3 +904,50 @@ It didn't match your list, so I added three rows. They appear in the site's Data
 # Team names and Panama's license (2026-11-01)
 
 **T-100 is done on `night-1`, not merged.** `NOTICE` now has the team's copyright line, and the README has a Team section with the same six names. This replaces the `[TEAMMATE NAME]` placeholder. Panama's radar layers are marked CC BY-SA 4.0 in `CREDITS.md` and the README, crediting geoBoundaries too, and Mayon's stay CC BY 4.0. This answers the share-alike question from the last section. The license is stated in those two files, not inside each pair's own files, and the site doesn't show it.
+
+# Plan 7 (2026-11-02)
+
+**The histogram is built on `night-1`, not merged. The two design directions are ready for you to choose from, and I've stopped there: neither is built.** The plan's file was in `docs/`, so I moved it to `plans/` unedited, as T-081 decided.
+
+## Part A: Brightness histogram
+
+Done: T-103 to T-106, with F-21, US-027, FR-072 to FR-075, TBL-13, TBL-14, API-013, API-014 and TC-083 to TC-087 in the docs.
+
+- **Pipeline:** each of the 13 published pairs now has a `histogram.json`, in 0.25 dB bins, for land with a radar value inside the reach. Mayon's pairs also have a `channel_histogram.json`. New pairs get them from the normal run. I made the files for published pairs from the saved crops, with no download and no change to any existing pair file.
+- **It matches the grid.** For all 13 pairs, the cells past the line, the flagged cells in the histogram and the flagged cells in the published grid are the same number. The contract check now fails if they differ. Flagged land runs from 0.23% to 1.29% at Mayon, and from 0.54% to 1.74% in Panama.
+- **App:** the chart shows a line on each side at the pair's threshold, the tails in the "possible new material" colour, and one plain sentence. The line reads the pair's record, and a test compares that with the site config. There's no slider, and the help panel says why.
+- **Square-root scale:** I chose this because the flagged edges are too small to see on a plain scale. A note under the chart says so.
+- **Channel outline:** it's readable, so I kept it. An open channel adds its strip as a thin teal line, each scaled to its own ground.
+- **License:** `histogram.json` sits with the radar layers. `channel_histogram.json` is marked ODbL, like `channel_areas.json`, and `CREDITS.md` lists it.
+- **Screens** (`pipeline/out/screens/`): `histogram-1280.png`, `histogram-360.png` and `histogram-channel-1280.png`.
+
+## Part B: Two design directions
+
+The screens and a README are in `pipeline/out/screens/design/`, in `field-map/` and `night-watch/`, with two contact sheets. There are 12 screens made from the real app and real data, and the app itself is unchanged. Both use a relief made from the cached Copernicus DEM. Axe finds no serious or critical problem on any of them. Axe can't judge lines and labels against the relief, and I checked these by eye in the test browser, not on a real phone or in sunlight.
+
+## Part C: Breadth check
+
+**Yes, it works.** A local test page in a real browser called ASF's public search directly, with no credentials, and ASF also answered a request sent with the site's address as its origin with permission for that origin. Nothing was added to the app or the docs. The test script is `pipeline/out/breadth_check.py`.
+
+- **Speed:** 0.4 to 1.4 s per search, for places with up to 50 GCOV passes (Mayon, Quito, Etna, Reykjanes) and for open ocean with none.
+- **Size:** the GeoJSON output runs up to about 1 MB per point. The `jsonlite` output is much smaller, at about 2 KB for 2 results against about 20 KB per result in GeoJSON, so the view should use it.
+- **Fields that come back:** scene name, start and stop time, track (`pathNumber`), frame, direction, polarization, processing level, footprint, file size and download URLs.
+- **What would break it:**
+  - **Rate limits:** ASF sent no rate-limit headers. A burst of 20 at once all succeeded, but took 13 s, so they seem to be queued. I found no published limit, so a demo crowd is the risk.
+  - **CORS:** the site would depend on ASF continuing to allow it, and I found no promise that it will.
+  - **An outage:** the view would need its own "can't reach ASF" state. The rest of the site wouldn't be affected.
+  - **Results are capped by `maxResults`,** so the view would ask for GCOV only and say how many it's showing.
+- **Estimate:** 6 tasks, about 2 days: the docs, a search module with its states, the tap and results panel, the footprint on the map, the plain wording that change maps are for showcase sites only, and tests with a recorded reply.
+
+## Decisions for you
+
+1. **Which direction: Field map or Night watch?** This is the one I'm stopping for. My recommendation is Field map, because your user is a resident on a phone outdoors, and Night watch's strength is a dark room. The chosen one can't be built until the next plan. Parts of the other could be kept for a demo only.
+2. **Should the coverage view be built, given the blind rule?** A view of "any point on Earth" would list passes at Mayon on or after the cutoff, unless it stops at the cutoff. Listing names isn't opening a product, but it does show the date of a pass that the project has stayed blind to. If you build it, I recommend the same end date as the pipeline until you move `BLIND_CUTOFF`. My test searches all ended on Oct 31.
+3. **Is it fine that a phone can't show the channel outline?** On a phone the channel panel replaces the pass controls and the chart, as T-075 set up. So the outline shows only on a desktop. The sentence and bars on a phone still work. I left it, since changing it means rearranging the sheet, which is better decided with the design.
+4. **The real relief needs a wider DEM.** The cached one stops at the site's box, which shows as a band at the edges of the mock-ups. A wider copy has to be downloaded for the build. The Copernicus credit is already in `CREDITS.md`.
+
+## Evidence
+
+- **Tests:** `pytest -q`: 664 passed, 1 skipped, exit code 0. **Contract check:** 0 errors, exit code 0. Axe is passing, including new runs with the chart at 1280 and 360 px.
+- **Commits:** c21b5ba (T-103), 4922807 (T-104, T-105, T-106) and the commit holding this report.
+- **Not done, as the plan said:** no post-eruption product was opened, the cutoff is unchanged, and nothing was merged into `main`.
