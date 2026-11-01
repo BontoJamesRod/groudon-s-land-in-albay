@@ -400,6 +400,7 @@ As a visitor, I want to open a channel and see its change across every pass, so 
 - **US-025/AC-3:** Given a pair with no valid radar value inside the channel's strip, when its bar would show, then the bar's place says "No radar data" instead of 0 km².
 - **US-025/AC-4:** Given a pair whose gap isn't 12 days, when its bar shows, then the bar is dimmed and has a short note such as "24-day gap, not comparable".
 - **US-025/AC-5:** Given a channel that continues past the reach distance, when it shows on the map, then that part is dashed and labeled "Not checked", and no bar counts it as zero change.
+- **US-025/AC-6:** Given a channel view is open, when it opens or the map's pass changes, then the highlighted bar is the pass the map is showing, it's scrolled into view, and no other bar looks highlighted.
 
 #### US-026: Compute channel areas
 
@@ -547,6 +548,7 @@ As a resident, I want each channel's area compared with something familiar, so t
 | FR-077 | The system shall open a site with channels with the channel list showing, shall put the controls beside the map on a desktop and under it on a phone, and shall load its own open-licensed fonts. | F-22 | US-028 |
 | FR-078 | The system shall draw each flagged cell of the selected pair at no less than a minimum size on screen, with a darker edge, in its class colour, reading them from the pair's image and changing no data. | F-22 | US-029 |
 | FR-079 | The system shall show each channel area in km² and as "about N basketball courts", with 1 court = 28 × 15 m = 420 m². | F-22 | US-030 |
+| FR-080 | The system shall highlight, in a channel's view, only the bar of the pass the map is showing, and shall scroll it into view. | F-20 | US-025 |
 
 ## 7. Non-Functional Requirements
 

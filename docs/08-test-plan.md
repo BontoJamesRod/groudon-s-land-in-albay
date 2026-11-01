@@ -104,6 +104,7 @@ Fixtures used below are listed in §5.
 | TC-090 | US-028/AC-3 | FR-077, SCR-01, SCR-13 | Layout | 1. Open Mayon at 360 and 1280 px. 2. Read the channel list and the panel. 3. Check the focus and the font. 4. Close the list on a phone. 5. Run axe. | The list is open and the focus hasn't moved; the panel is beside the map on a desktop; the pass controls return on a phone; the site's font is used; no serious or critical axe result | Positive | High |
 | TC-091 | US-029/AC-1, US-029/AC-2, US-029/AC-3, US-029/AC-4 | FR-078 | Radar marks | 1. Count the flagged pixels in a pair's image. 2. Open it at 360 and 1280 px and measure a mark. 3. Read the legend. 4. Turn the layer off, and open compare. | One mark per flagged pixel, none under the minimum, each with its darker edge; the legend line shows; no marks with the layer off or in compare | Positive | High |
 | TC-092 | US-030/AC-1, US-030/AC-2, US-030/AC-3 | FR-079, SCR-13, SCR-14 | Basketball courts | 1. Open the channel list and one channel. 2. Use areas of 0, 0.0001, 0.00042 and 0.12 km², and no data. | km² and the comparison show together, with singular, zero and under-half wording correct; no data shows none; a note gives the court's size | Positive | High |
+| TC-093 | US-025/AC-6 | FR-080, SCR-14 | The bar matches the map | 1. Open a channel at 360 and 1280 px. 2. Pick another pass from a bar and with Previous. 3. Read which bar is highlighted and whether it's in view. | Only the bar of the pass on the map is highlighted, and it's fully in view below the panel's header | Positive | High |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -162,7 +163,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-018 | AC-1, AC-2 | TC-042, TC-043 |
 | US-023 | AC-1, AC-2, AC-3 | TC-044, TC-045, TC-046, TC-047 |
 | US-024 | AC-1, AC-2, AC-3 | TC-064, TC-065, TC-066 |
-| US-025 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-067, TC-068, TC-069, TC-070, TC-081 |
+| US-025 | AC-1, AC-2, AC-3, AC-4, AC-5, AC-6 | TC-067, TC-068, TC-069, TC-070, TC-081, TC-093 |
 | US-026 | AC-1, AC-2, AC-3 | TC-072, TC-073, TC-074 |
 | US-027 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-083, TC-084, TC-085, TC-086, TC-087 |
 | US-028 | AC-1, AC-2, AC-3, AC-4 | TC-088, TC-089, TC-090 |

@@ -156,6 +156,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-110 | Build the Field map layout and styles, with its fonts in the site, and open with the channel list | F-22, FR-077, US-028, SCR-01, SCR-13, TC-090 | M | T-109 | TC-090 passes, with axe passing at 360 and 1280 px |
 | T-111 | Draw radar marks with a minimum size and a darker edge, and say so in the legend | F-22, FR-078, US-029, TC-091 | M | T-110 | TC-091 passes, and no published data file changed |
 | T-112 | Show channel areas as basketball courts next to km² | F-22, FR-079, US-030, SCR-13, SCR-14, TC-092 | S | T-110 | TC-092 passes |
+| T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 
@@ -296,7 +297,7 @@ None.
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
 | 0.2 | 2026-11-01 | Added the Channel timeline tasks, the done work (T-050 to T-072), milestone 7 and the ID errata. Named Panama for T-036 and T-037. Added T-079 to T-091. |
-| 0.3 | 2026-11-02 | Added T-107 to T-112 for the Field map design. |
+| 0.3 | 2026-11-02 | Added T-107 to T-113 for the Field map design. |
 
 ## 11. ID Errata
 
