@@ -70,6 +70,36 @@
     "retrieved_on": "2026-10-31"
   },
   {
+    "id": "nisar_asf",
+    "site_id": null,
+    "name": "NISAR radar products (GCOV and GUNW), NASA-ISRO",
+    "provider": "NASA and ISRO, distributed by the Alaska Satellite Facility (ASF DAAC)",
+    "used_for": "radar",
+    "url": "https://nisar-docs.asf.alaska.edu/nisar-intro/",
+    "license": "Free and open NASA Earth science data; no separate license named",
+    "retrieved_on": "2026-10-31"
+  },
+  {
+    "id": "gpm_imerg",
+    "site_id": "mayon",
+    "name": "GPM IMERG Late Run daily rain (GPM_3IMERGDL, version 07), used only in the channel test",
+    "provider": "NASA Goddard, through NASA GES DISC",
+    "used_for": "analysis",
+    "url": "https://gpm.nasa.gov/data/policy",
+    "license": "Free, no license named; the GPM data policy asks for acknowledgement",
+    "retrieved_on": "2026-10-31"
+  },
+  {
+    "id": "osm_analysis",
+    "site_id": "mayon",
+    "name": "OpenStreetMap waterways, places and quarries, used only for candidates and the channel test",
+    "provider": "OpenStreetMap contributors",
+    "used_for": "analysis",
+    "url": "https://www.openstreetmap.org/copyright",
+    "license": "ODbL 1.0",
+    "retrieved_on": "2026-11-01"
+  },
+  {
     "id": "esri_world_imagery",
     "name": "World Imagery background map",
     "provider": "Esri",

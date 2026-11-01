@@ -73,10 +73,14 @@ Publishing only changes files on your computer. A pair reaches the public site w
 
 Until the final thresholds are set, the pipeline refuses every product acquired on or after 2026-10-30 (`BLIND_CUTOFF` in `pipeline/mrw/search.py`), so the thresholds can't be influenced by the eruption data.
 
+## License and credits
+
+The code and documentation are under the [Apache-2.0 license](LICENSE). Data files under their own licenses, such as ODbL and CC BY-SA 4.0, aren't covered by it. [CREDITS.md](CREDITS.md) lists every data source, library and tool with its license, and says which files fall under which terms.
+
 ## Data sources
 
 - **Radar:** NISAR data, NASA–ISRO, distributed by the Alaska Satellite Facility (ASF DAAC). Products are labeled provisional.
-- **Town borders and land:** NAMRIA and PSA via OCHA COD-AB, packaged by [faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps), CC BY-IGO.
+- **Town borders and land:** Mayon: NAMRIA and PSA via OCHA COD-AB, packaged by [faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps), CC BY-IGO. Panama: [geoBoundaries](https://www.geoboundaries.org/), CC BY-SA 4.0.
 - **Background map:** Esri World Imagery.
 - **Map library:** [Leaflet](https://leafletjs.com/) 1.9.4, copied into `site/vendor/`.
 - **Events:** PHIVOLCS, through the news reports linked in `pipeline/context/mayon_events.json`.

@@ -863,3 +863,27 @@ I'm stopping here. Your Google Earth check decides each line, and these need you
 - **At 320 x 568 the map is only about 260 px tall.** Camalig and Daraga sit behind the credits there, and so does Legazpi City with wider fonts. They aren't hidden by the label, but one zoom step can't fit them all.
 - **A taller phone shows fewer towns at the opening view.** At 360 x 740 the map stays at the default zoom, so all four of those towns are off the map or cut at its edge. That's the zoom rule you chose, and a change would need your decision.
 - **The zoom rule now looks at the ring, not the label.** The same screens zoom out as before. FR-001, FR-004, US-001/AC-1 and TC-082 say so.
+
+# License and credits (2026-11-01)
+
+**T-098 is done on `night-1`, not merged.** `LICENSE` is the unedited Apache-2.0 text from apache.org. `CREDITS.md` lists every data source, library, Python package and tool, with a table of which files fall under which terms. It says plainly that Apache-2.0 doesn't cover data under its own license. The README links both, and a new test keeps `CREDITS.md` and `sources.json` in step.
+
+## What `sources.json` was missing
+
+It didn't match your list, so I added three rows. They appear in the site's Data sources panel once this is merged.
+
+- **`nisar_asf`:** this needed a new `radar` value for `used_for`, added to the contract check and docs/05. On the site it appears under the "Context data" heading, beside the radar section that already lists the products.
+- **`gpm_imerg`:** used only in the channel test, and marked as such. None of it is published.
+- **`osm_analysis`:** OpenStreetMap waterways, places and quarries, used only for candidates and the channel test.
+
+## Decisions for you
+
+1. **NISAR and IMERG have no named license, so I didn't give them one.** ASF's guide says "free and open", and the GPM policy says free, with acknowledgement. One catalog labels some IMERG products CC BY 4.0, and I didn't use that label, because NASA's own policy page names none.
+2. **Do you want a license on our radar layers?** The files in `site/data/sites/*/pairs/` are made from NISAR data. `CREDITS.md` says they aren't under Apache-2.0 and have no separate license, so others have no clear statement of what they can do with them.
+3. **The saved screens contain Esri imagery.** `pipeline/reports/screens/` is public in the repository, and Esri's terms apply to those images. `CREDITS.md` says so, but I didn't check whether those terms allow keeping screenshots there.
+4. **No copyright line.** The Apache text is unedited, and no file names a copyright holder. If you want your name or team on it, tell me what to write.
+
+## Things to know
+
+- **Not legal advice:** this is my reading of the terms, and `CREDITS.md` says so too.
+- **Package licenses** are what each package declares in its metadata, at the installed versions, and I didn't review them further. `text-unidecode`, an indirect dependency, offers Artistic or GPL-2.0-or-later. It isn't copied into this repository.

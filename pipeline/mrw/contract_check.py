@@ -42,7 +42,7 @@ GRID_DTYPE_BYTES = {"uint8": 1, "int8": 1, "int16": 2}
 NO_DATA_REASON = {"253": "masked_by_product", "254": "sea", "255": "outside_coverage"}
 CONFIDENCE_LEVEL = {"none", "low", "high"}
 DETECTION_RESULT = {"yes", "no", "not_visible"}
-CONTEXT_USE = {"basemap", "boundaries", "coastline", "channels", "events", "validation", "analysis"}
+CONTEXT_USE = {"basemap", "boundaries", "coastline", "channels", "events", "validation", "analysis", "radar"}
 
 # Every MVP pair has these layers. coherence_loss is added when coherence was used.
 BASE_LAYER_KINDS = {"before_db", "after_db", "change_db", "new_material"}

@@ -457,7 +457,7 @@ A row is one place compared in a validation. Stored in the `items` array of `val
 
 ### TBL-10: `sources`
 
-A row is one context data source. Stored in `site/data/sources.json` (`data` array).
+A row is one data source. Stored in `site/data/sources.json` (`data` array).
 
 | Column | Type | Required | Default | Constraints | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -542,7 +542,7 @@ A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_a
 | `no_data_reason` | `masked_by_product` (stored as 253), `sea` (254), `outside_coverage` (255) | `layers.no_data_codes`; cell values of the `new_material` grid |
 | `confidence_level` | `none`, `low`, `high` | `layers.legend[].confidence` |
 | `detection_result` | `yes`, `no`, `not_visible` | `validation_items.detected` |
-| `context_use` | `basemap`, `boundaries`, `coastline`, `channels`, `events`, `validation`, `analysis` | `sources.used_for` |
+| `context_use` | `basemap`, `boundaries`, `coastline`, `channels`, `events`, `validation`, `analysis`, `radar` | `sources.used_for` |
 
 In the MVP, only the `new_material` layer has a value grid; `before_db` and `after_db` feed the Compare view (FR-019); `change_db` and `coherence_loss` are written for the maintainer's checks and are not shown to visitors.
 
