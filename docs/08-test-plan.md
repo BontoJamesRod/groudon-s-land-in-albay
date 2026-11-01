@@ -94,6 +94,11 @@ Fixtures used below are listed in §5.
 | TC-079 | US-001/AC-3 | FR-003, SCR-01, API-004 | No line along a clipped edge | 1. Build the coast and town lines for each site. | The real lines are there; no segment runs along the site's edge | Negative | Medium |
 | TC-080 | US-017/AC-3 | FR-048, SCR-07, TBL-05, API-008 | A pair's check note | 1. Switch to Panama. 2. Select the quiet pair. 3. Open "How we checked this". | "Used as the 'before' comparison for the earthquake pair", not "Not yet checked" | Positive | Medium |
 | TC-082 | US-001/AC-1 | FR-001, FR-004, SCR-01 | Short phone screen | 1. Open the site at 360 x 640. 2. Open it at 390 x 844 and at 1280 x 500. | At 360 x 640 the map opens one zoom step out, still centered, with the danger-zone label above the credits and Daraga, Legazpi City, Camalig and Santo Domingo visible, with no town name hidden; at 320 x 568 the label also clears the credits; the other two keep the default zoom | Positive | Medium |
+| TC-083 | US-027/AC-1 | FR-072, TBL-13, API-013 | Histogram contract | 1. Run `contract_check` on a fixture with a wrong total, a wrong flagged count and a missing file. | Each one fails the check | Negative | High |
+| TC-084 | US-027/AC-1 | FR-072, FR-075, TBL-13, TBL-14 | Numbers match the grid | 1. For every published pair, compare `flagged_cells` with the value grid, and each channel's with `channel_areas.json`. | They match | Positive | High |
+| TC-085 | US-027/AC-2 | FR-073, SCR-01, API-013 | The chart | 1. Open the panel at 1280 and 360 px. 2. Compare the line's position with the site config's threshold. 3. Run axe. | Lines on both sides at the config's value, tails shaded, one sentence, and no serious or critical axe problem | Positive | High |
+| TC-086 | US-027/AC-3, US-027/AC-4 | FR-073, FR-074, SCR-05 | No file, no slider | 1. Block `histogram.json`. 2. Read the help panel. | The pair still shows with the "not available" message; the help panel says why the line can't move, and the page has no control that moves it | Negative | Medium |
+| TC-087 | US-027/AC-5 | FR-075, SCR-14, API-014 | Channel outline | 1. Open a channel at 1280 px. 2. Go back to the list. | The outline and its name show, and they go when the channel closes | Positive | Medium |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -154,6 +159,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-024 | AC-1, AC-2, AC-3 | TC-064, TC-065, TC-066 |
 | US-025 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-067, TC-068, TC-069, TC-070, TC-081 |
 | US-026 | AC-1, AC-2, AC-3 | TC-072, TC-073, TC-074 |
+| US-027 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-083, TC-084, TC-085, TC-086, TC-087 |
 
 ## 8. Exit Criteria
 

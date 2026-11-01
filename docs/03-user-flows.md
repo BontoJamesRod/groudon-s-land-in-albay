@@ -238,6 +238,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Reach ring | Map layer | Dotted ring at the site's reach distance; the legend title states the limit (US-008/AC-5) |
 | Channels layer | Map layer and toggle | Named channel lines with names (US-023/AC-1); the part past the reach distance is dashed (US-025/AC-5); not shown for a site with no channels |
 | Legend | Panel | Class names, confidence, units, total detected area in km² with 2 decimals, channel sources (US-008/AC-1, US-023/AC-3) |
+| Brightness histogram | Chart | Distribution of brightness change, flag lines, shaded tails and one plain sentence, in the drawer on a phone (US-027/AC-2) |
 | Summary line | Text | "No new material detected between <before date> and <after date>" when the area is 0 km² (US-008/AC-2) |
 | Compare button | Button | Opens SCR-04 (US-007) |
 | Channels button | Button | Opens SCR-13; hidden for a site with no channel data (US-024/AC-2) |

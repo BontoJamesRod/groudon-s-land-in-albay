@@ -411,6 +411,23 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 - **US-026/AC-2:** Given a site with channels whose config has no strip width, when the pipeline runs, then it stops with "Channel strip width missing in site config: <file>".
 - **US-026/AC-3:** Given a channel without a recorded confirmation, or an unconfirmed candidate from `pipeline/context/channel_name_candidates.geojson`, when the contract check runs on the published channel files, then it fails if that channel is in them.
 
+### F-21: Brightness histogram
+
+**Priority:** Must
+**Description:** A small chart for the selected pair showing how the ground's brightness changed, with the flag line and the flagged tails marked. The flag line can't be moved.
+
+#### US-027: See why a spot counted as changed
+
+As a visitor, I want to see how much the ground's brightness changed and where the flag line falls, so that I understand why some spots are flagged.
+
+**Acceptance criteria**
+
+- **US-027/AC-1:** Given a published pair, when the maintainer publishes it, then the pair has a file with the distribution of brightness change for checked land inside the reach distance, in fixed bins, whose flagged cells match the pair's value grid.
+- **US-027/AC-2:** Given a pair is selected, when the visitor reads the panel, then a histogram shows the distribution, a line on each side at the pair's brightness threshold, the flagged tails shaded in the "possible new material" colour, and one plain sentence saying what it means.
+- **US-027/AC-3:** Given the histogram file can't be loaded, when the panel shows, then the rest of the pair still works and the panel says "Brightness chart not available for this pair".
+- **US-027/AC-4:** Given the visitor reads the help panel, then one line says why there's no way to move the flag line.
+- **US-027/AC-5:** Given a channel is opened where the panel is on screen, when the histogram shows, then the channel's strip is drawn as a thin outline on the same chart.
+
 ## 6. Functional Requirements
 
 | FR-ID | Requirement | F-ID | US-ID |
@@ -486,6 +503,10 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-069 | The system shall leave the distance and danger-zone lines out of the readout for a site with no summit. | F-02, F-10 | US-004 |
 | FR-070 | The system shall show a site's own wording for its change layer, limits and official source when its config sets one, and shall title the Panama earthquake pair "Changed after the earthquake", never landslides. | F-10 | US-014 |
 | FR-071 | The system shall draw the part of a channel past the reach distance (FR-060) as "Not checked", and shall never count that part or show it as zero change. | F-20 | US-025 |
+| FR-072 | The pipeline shall write, for each published pair, the distribution of brightness change in dB for checked land inside the reach distance (FR-060), in fixed bins, with the flagged cells and their share, matching the pair's value grid. | F-21 | US-027 |
+| FR-073 | The system shall show that distribution as a histogram for the selected pair, with a line on each side at the pair's brightness threshold, the flagged tails shaded in the "possible new material" colour, and one plain sentence. | F-21 | US-027 |
+| FR-074 | The system shall not let a visitor move the flag line, and the help panel shall say why. | F-21 | US-027 |
+| FR-075 | The pipeline shall write the same distribution for each channel's strip, and the system shall draw an opened channel's strip as a thin outline on the histogram, each scaled to its own ground. | F-21 | US-027 |
 
 ## 7. Non-Functional Requirements
 

@@ -146,6 +146,10 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-100 | Put the team's names in `NOTICE` and the README, and mark Panama's radar layers CC BY-SA 4.0, with Mayon's staying CC BY 4.0 | F-10, F-11, FR-047 | S | T-099 | `NOTICE`, the README and `CREDITS.md` agree; a test checks them |
 | T-101 | Make `eruption_run.py check` print the newest pass it can see for each track and frame | T-038, API-009 | S | T-058 | The test passes; it searches only |
 | T-102 | Add a list-only `check-all` to `eruption_run.py`: every product maturity, including Urgent Response, for Mayon's three tracks, before the cutoff | T-038 | S | T-101 | The test passes; it searches only and the cutoff is unchanged |
+| T-103 | Move Plan 7 into `plans/`, and add the brightness histogram to the docs | F-21, US-027, T-081 | S | — | The plan is in `plans/`, unedited, and the new IDs resolve |
+| T-104 | Build the `histogram` module and each pair's `histogram.json` and `channel_histogram.json`, and add them to the contract check | F-21, FR-072, FR-075, US-027, TBL-13, TBL-14, API-013, API-014, TC-083, TC-084 | M | T-103, T-074 | TC-083 and TC-084 pass; the published pairs have the files |
+| T-105 | Show the histogram in the panel, with the flag line from the pair's record and the flagged tails shaded, and say in the help panel why there's no slider | F-21, FR-073, FR-074, US-027, SCR-01, SCR-05, TC-085, TC-086 | M | T-104 | TC-085 and TC-086 pass, with axe passing |
+| T-106 | Draw an opened channel's strip as a thin outline on the histogram | F-21, FR-075, US-027, SCR-14, TC-087 | S | T-105 | TC-087 passes |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 

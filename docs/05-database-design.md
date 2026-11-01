@@ -24,6 +24,8 @@
 | TBL-10 | `sources` | Context data sources and licenses | FR-040, FR-058 | Yes |
 | TBL-11 | `land_areas` | Land polygons for the coastline and sea mask | FR-003, FR-005, FR-011, FR-024 | Yes |
 | TBL-12 | `channel_areas` | Flagged area per channel per pair | FR-061, FR-062, FR-064, FR-067 | Yes |
+| TBL-13 | `histograms` | Distribution of brightness change for one pair | FR-072, FR-073 | Yes |
+| TBL-14 | `channel_histograms` | The same distribution for each channel's strip in one pair | FR-075 | Yes |
 
 ## 2. ERD
 
@@ -497,6 +499,37 @@ A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_a
 | `checked_area_km2` | number | Yes | `0` | ≥ `flagged_area_km2` | Area of strip cells with a valid radar value, km² (FR-067) |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
+
+### TBL-13: `histograms`
+
+One object per pair. Stored in `site/data/sites/<site_id>/pairs/<pair_id>/histogram.json` (`data` object). It's a separate file so that a pair's record stays small and the chart can fail on its own. The counts come from the same web cells as the value grid, using land with a value inside the reach distance.
+
+| Column | Type | Required | Default | Constraints | Description |
+| --- | --- | --- | --- | --- | --- |
+| `pair_id` | string | Yes | — | FK `pairs.id` | Pair |
+| `site_id` | string | Yes | — | FK `sites.id` | Site |
+| `bin_start_db` | number | Yes | — | < 0 | Lower edge of the first bin, dB |
+| `bin_width_db` | number | Yes | — | > 0 | Width of each bin, dB |
+| `counts` | integer array | Yes | — | ≥ 0 | Cells in each bin. A bin holds its lower edge and not its upper edge |
+| `below` | integer | Yes | `0` | ≥ 0 | Cells below the first bin |
+| `above` | integer | Yes | `0` | ≥ 0 | Cells at or above the end of the last bin |
+| `total_cells` | integer | Yes | — | Equals `counts` + `below` + `above` | Cells counted |
+| `flagged_cells` | integer | Yes | — | Equals the value grid's class 1 and 2 cells | Cells past the flag line |
+| `flagged_share` | number | Yes | — | `flagged_cells` / `total_cells`, or 0 | Share of the cells that are flagged, 0 to 1 |
+
+The flag line isn't repeated here: it's the pair's `brightness_threshold_db` (TBL-05).
+
+### TBL-14: `channel_histograms`
+
+One object per pair, for a site with channels. Stored in `site/data/sites/<site_id>/pairs/<pair_id>/channel_histogram.json` (`data` object), with the license in `meta.license`, like `channel_areas.json`, because the strips are built on OpenStreetMap lines. It's separate from TBL-13 so that the radar layers' license and this one don't mix.
+
+| Column | Type | Required | Default | Constraints | Description |
+| --- | --- | --- | --- | --- | --- |
+| `pair_id` | string | Yes | — | FK `pairs.id` | Pair |
+| `site_id` | string | Yes | — | FK `sites.id` | Site |
+| `bin_start_db` | number | Yes | — | < 0 | As in TBL-13 |
+| `bin_width_db` | number | Yes | — | > 0 | As in TBL-13 |
+| `channels` | array | Yes | — | One item per channel in `channels.geojson` | Each has `channel_id`, `counts`, `below`, `above`, `total_cells` and `flagged_cells`, as in TBL-13, for cells inside its strip |
 
 ## 4. Relationships
 

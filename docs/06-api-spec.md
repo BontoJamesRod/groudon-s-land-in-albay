@@ -77,6 +77,8 @@ A static host doesn't return JSON errors. A missing file returns HTTP 404 with t
 | API-010 | GET | `/data/sites/{site_id}/pairs/{pair_id}/{grid_path}` | Layer value grid | Visitor, Maintainer | FR-010, FR-011, FR-057, FR-060, US-004, US-023 | Yes |
 | API-011 | GET | `/data/sites/{site_id}/pairs/{pair_id}/validation.json` | Validation of one pair | Visitor, Maintainer | FR-048, US-017 | Yes |
 | API-012 | GET | `/data/sites/{site_id}/channel_areas.json` | Flagged area per channel per pair | Visitor, Maintainer | FR-061, FR-062, FR-067, US-024, US-025 | Yes |
+| API-013 | GET | `/data/sites/{site_id}/pairs/{pair_id}/histogram.json` | Distribution of brightness change for a pair | Visitor, Maintainer | FR-072, FR-073, US-027 | Yes |
+| API-014 | GET | `/data/sites/{site_id}/pairs/{pair_id}/channel_histogram.json` | The same distribution for each channel's strip | Visitor, Maintainer | FR-075, US-027 | Yes |
 
 ## 4. Endpoint Details
 
@@ -769,6 +771,44 @@ None (`GET`).
 | 404 | `NOT_FOUND` | File missing; "Couldn't load channel changes. Try again." with Retry. A site with no channel data has no Channels button, so it never asks for this file (US-024/AC-2) |
 | — | `NETWORK_ERROR` | No connection; "Couldn't load channel changes. Try again." with Retry (US-024/AC-3) |
 | 200 | `INVALID_DATA` | A row's `channel_id` or `pair_id` doesn't exist, or `flagged_area_km2` is `null` while `checked_area_km2` is above 0 |
+
+### API-013: `GET /data/sites/{site_id}/pairs/{pair_id}/histogram.json`
+
+**Purpose:** The numbers behind the brightness histogram (TBL-13).
+**Roles:** Visitor, Maintainer
+**Supports:** FR-072, FR-073, US-027
+
+**Success response:** `200 OK` (illustrative values, shortened)
+
+```json
+{
+  "data": {
+    "pair_id": "mayon_A111F008_20261007_20261019",
+    "site_id": "mayon",
+    "bin_start_db": -10.0,
+    "bin_width_db": 0.25,
+    "counts": [0, 1, 4],
+    "below": 0,
+    "above": 0,
+    "total_cells": 5,
+    "flagged_cells": 1,
+    "flagged_share": 0.2
+  },
+  "meta": { "generated_at": "2026-11-05T09:00:00Z", "schema_version": "1.0" }
+}
+```
+
+**Errors:** `404 NOT_FOUND` when the file is missing: the panel says "Brightness chart not available for this pair", and the rest of the pair still works.
+
+### API-014: `GET /data/sites/{site_id}/pairs/{pair_id}/channel_histogram.json`
+
+**Purpose:** The numbers behind a channel's outline on the histogram (TBL-14).
+**Roles:** Visitor, Maintainer
+**Supports:** FR-075, US-027
+
+**Success response:** `200 OK`, with `data` as in TBL-14 and `meta.license` set to the license of `channels.geojson`.
+
+**Errors:** `404 NOT_FOUND` when the file is missing, or for a site with no channels: the chart shows without the outline.
 
 ## 5. Rate Limiting and Security
 
