@@ -27,6 +27,11 @@
     "coherence_loss_threshold": 0.3
   },
   "channel_strip_half_width_m": 200,
+  "relief_bounds_west": 123.0,
+  "relief_bounds_south": 12.6,
+  "relief_bounds_east": 124.4,
+  "relief_bounds_north": 13.9,
+  "relief_max_native_zoom": 13,
   "ground_movement": {
     "min_coherence": 0.3
   },

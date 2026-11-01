@@ -9,6 +9,7 @@ which is what makes CI stop the deploy. It never changes a file.
 """
 import argparse
 import json
+import math
 import re
 import sys
 from datetime import date, datetime
@@ -84,6 +85,11 @@ SITES = {
     "danger_zone_label": field("string", required=False),
     "detection_reach_km": field("number", required=False),
     "channel_strip_half_width_m": field("number", required=False),
+    "relief_bounds_west": field("number", required=False, low=-180, high=180),
+    "relief_bounds_south": field("number", required=False, low=-90, high=90),
+    "relief_bounds_east": field("number", required=False, low=-180, high=180),
+    "relief_bounds_north": field("number", required=False, low=-90, high=90),
+    "relief_max_native_zoom": field("integer", required=False, low=0, high=22),
     "wording_set": field("string", required=False, enum={"plain_change"}),
     "boundary_credit": field("string", required=False),
     "boundary_credit_url": field("url", required=False),
@@ -1121,6 +1127,41 @@ def _check_required_site_files(folder, errors, site_row):
             errors.append(f"{folder / name}: this required file is missing")
 
 
+def relief_tile_range(bounds, zoom):
+    """The first and last web map tiles (x_low, y_low, x_high, y_high) covering (west, south, east, north)."""
+    west, south, east, north = bounds
+    count = 2 ** zoom
+
+    def tile_x(lon):
+        return int((lon + 180) / 360 * count)
+
+    def tile_y(lat):
+        return int((1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * count)
+
+    # An edge exactly on a tile line doesn't need the tile past it.
+    return tile_x(west), tile_y(north), tile_x(east - 1e-9), tile_y(south + 1e-9)
+
+
+def _check_relief(root, row, errors):
+    """A site with a relief needs all its bounds, and a tile everywhere the map can show (FR-076)."""
+    top_zoom = row.get("relief_max_native_zoom")
+    bounds = [row.get(f"relief_bounds_{side}") for side in ("west", "south", "east", "north")]
+    if top_zoom is None:
+        if any(value is not None for value in bounds):
+            errors.append(f"{root / 'sites.json'}: relief bounds need relief_max_native_zoom ({row.get('id')})")
+        return
+    if any(value is None for value in bounds):
+        errors.append(f"{root / 'sites.json'}: relief_max_native_zoom needs all four relief bounds ({row.get('id')})")
+        return
+    folder = root / "sites" / str(row["id"]) / "relief"
+    for zoom in range(row["min_zoom"], top_zoom + 1):
+        x_low, y_low, x_high, y_high = relief_tile_range(bounds, zoom)
+        for x in range(x_low, x_high + 1):
+            for y in range(y_low, y_high + 1):
+                if not (folder / str(zoom) / str(x) / f"{y}.webp").is_file():
+                    errors.append(f"{folder / str(zoom) / str(x) / f'{y}.webp'}: this relief tile is missing")
+
+
 def check_data_dir(root, published=True):
     """Check everything under a data folder and return a list of problems (empty = good)."""
     root = Path(root)
@@ -1140,6 +1181,7 @@ def check_data_dir(root, published=True):
             errors.append(f"{root / 'sites.json'}: site {site_id!r} has no data folder")
         elif site_id and published:
             _check_required_site_files(root / "sites" / str(site_id), errors, row)
+            _check_relief(root, row, errors)
     rows_by_id = {row.get("id"): row for row in site_rows if isinstance(row, dict)}
     for folder in sorted((root / "sites").glob("*")):
         if folder.is_dir():

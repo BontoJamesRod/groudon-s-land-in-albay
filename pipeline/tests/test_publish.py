@@ -5,7 +5,7 @@ import shutil
 import pytest
 
 from mrw.config import SITES_FOLDER
-from mrw.contract_check import check_data_dir
+from mrw.contract_check import check_data_dir, relief_tile_range
 from mrw.context import DATA_FOLDER
 from mrw.publish import PublishError, publish_pair
 from test_export import write_fake
@@ -15,6 +15,19 @@ PAIR = "mayon_A111F008_20261007_20261019"
 
 def read_data(path):
     return json.loads(path.read_text(encoding="utf-8"))["data"]
+
+
+def add_empty_relief_tiles(data):
+    """The contract wants Mayon's relief tiles to be there, and publishing never touches them."""
+    site = json.loads((SITES_FOLDER / "mayon.json").read_text(encoding="utf-8"))
+    bounds = [site[f"relief_bounds_{side}"] for side in ("west", "south", "east", "north")]
+    for zoom in range(site["min_zoom"], site["relief_max_native_zoom"] + 1):
+        x_low, y_low, x_high, y_high = relief_tile_range(bounds, zoom)
+        for x in range(x_low, x_high + 1):
+            folder = data / "sites" / "mayon" / "relief" / str(zoom) / str(x)
+            folder.mkdir(parents=True)
+            for y in range(y_low, y_high + 1):
+                (folder / f"{y}.webp").touch()
 
 
 @pytest.fixture
@@ -28,6 +41,7 @@ def folders(tmp_path):
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
     for name in ("towns.geojson", "land.geojson", "channels.geojson"):
         shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)
+    add_empty_relief_tiles(data)
     return out, data
 
 

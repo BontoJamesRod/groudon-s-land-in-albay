@@ -101,6 +101,7 @@
   },
   {
     "id": "esri_world_imagery",
+    "site_id": "panama",
     "name": "World Imagery background map",
     "provider": "Esri",
     "used_for": "basemap",
@@ -121,11 +122,11 @@
   {
     "id": "copernicus_dem_glo30",
     "site_id": "mayon",
-    "name": "Copernicus DEM GLO-30 elevation, used only as context in the false-alarm study",
+    "name": "Copernicus DEM GLO-30 elevation, for the relief background map and as context in the false-alarm study",
     "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
-    "used_for": "analysis",
+    "used_for": "basemap",
     "url": "https://registry.opendata.aws/copernicus-dem/",
     "license": "Copernicus DEM GLO-30 licence, free with attribution",
-    "retrieved_on": "2026-10-31"
+    "retrieved_on": "2026-11-02"
   }
 ]

@@ -18,6 +18,8 @@ This list is a project record, not legal advice.
 | `channel_histogram.json` in those folders | ODbL 1.0, © OpenStreetMap contributors, because it's counted inside strips built on OpenStreetMap lines. Share-alike applies |
 | `validation.json` in those folders | Not under CC BY 4.0: it cites other people's sources, by name and link, under their own terms |
 | `site/vendor/leaflet-1.9.4/` | BSD-2-Clause, with its own `LICENSE` file |
+| `site/vendor/ibm-plex-5.3.0/` | SIL Open Font License 1.1, IBM Corp., with its own `LICENSE` file |
+| `site/data/sites/mayon/relief/` | Copernicus DEM GLO-30 licence: made from Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018, provided under COPERNICUS by the European Union and ESA |
 | `pipeline/tests/e2e/vendor/axe-core-4.14.0/` | MPL-2.0, with its own `LICENSE` files |
 
 ## Reusing the radar layers
@@ -43,8 +45,8 @@ The ids are the rows in [`site/data/sources.json`](site/data/sources.json).
 | [Philippine boundaries](https://github.com/faeldon/philippines-json-maps) | NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps | CC BY-IGO | Mayon's towns | `ph_admin_boundaries` |
 | [Philippine coastline](https://github.com/faeldon/philippines-json-maps), from the same boundaries | NAMRIA and PSA via OCHA COD-AB, packaged by faeldon/philippines-json-maps | CC BY-IGO | Mayon's coastline | `ph_coastline` |
 | [ESA WorldCover 2021](https://esa-worldcover.org/) | European Space Agency | CC BY 4.0 | The false-alarm study only. Not published | `esa_worldcover_2021` |
-| [Copernicus DEM GLO-30](https://registry.opendata.aws/copernicus-dem/) | European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus) | Copernicus DEM GLO-30 licence, free with attribution | The false-alarm study only. Not published | `copernicus_dem_glo30` |
-| [Esri World Imagery](https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer) | Esri | Esri terms of use, with attribution | The background map, loaded from Esri and not stored here | `esri_world_imagery` |
+| [Copernicus DEM GLO-30](https://registry.opendata.aws/copernicus-dem/) | European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus) | Copernicus DEM GLO-30 licence, free with attribution | Mayon's relief background, published as map tiles, and the false-alarm study | `copernicus_dem_glo30` |
+| [Esri World Imagery](https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer) | Esri | Esri terms of use, with attribution | Panama's background map, loaded from Esri and not stored here | `esri_world_imagery` |
 | [PHIVOLCS advisory of 16 January 2026, by GMA News](https://www.gmanetwork.com/news/topstories/regions/973047/phivolcs-issues-lahar-warning-for-mayon-volcano-amid-ada/story/) | PHIVOLCS | Names only, cited from the source | Channel names | `channel_names` |
 | [PHIVOLCS lahar advisory of 16 January 2026, by DZRH News](https://dzrh.com.ph/post/phivolcs-issues-lahar-warning-at-mayon-volcano-as-tropical-storm-ada-brings-heavy-rains) | PHIVOLCS | Names only, cited from the source | Channel names | `channel_names_dzrh` |
 | [PHIVOLCS Mayon Volcano Bulletin of 24 March 2000](https://wovodat.phivolcs.dost.gov.ph/cm_image/bulletin/MVBU_20000324070000.pdf) | PHIVOLCS | Names only, cited from the source | Channel names | `channel_names_bulletin` |
@@ -58,6 +60,7 @@ Events and validation sources are cited with links, row by row, in each site's `
 | Library | Version | License | Used for |
 | --- | --- | --- | --- |
 | [Leaflet](https://leafletjs.com/) | 1.9.4 | BSD-2-Clause | The map, on the public site |
+| [IBM Plex Sans and Mono](https://github.com/IBM/plex), by way of [Fontsource](https://fontsource.org/) | 5.3.0 | OFL-1.1 | The public site's fonts |
 | [axe-core](https://github.com/dequelabs/axe-core) | 4.14.0 | MPL-2.0 | Accessibility tests only |
 
 ## Python packages
