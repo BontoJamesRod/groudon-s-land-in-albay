@@ -958,7 +958,7 @@ The screens and a README are in `pipeline/out/screens/design/`, in `field-map/` 
 
 ## Your three changes
 
-1. **Flagged change is clearly visible.** Each flagged cell is now drawn as a mark with a dark edge: at least 5 px at the default zoom and closer, and at least 3 px at zoom 11 and further out, where 5 px marks ran together into big patches. The marks are read from each pair's existing image and drawn on top of it, and no published image, grid or area changed. A test checks one mark per flagged pixel. The legend says "Small spots are drawn larger than life so they can be seen. The areas don't change."
+1. **Flagged change is clearly visible.** Each flagged cell is now drawn as a mark with a dark edge. The sizes were changed by T-113, below. The marks are read from each pair's existing image and drawn on top of it, and no published image, grid or area changed. A test checks one mark per flagged pixel. The legend says "Small spots are drawn larger than life so they can be seen. The areas don't change."
 2. **Basketball courts.** Every channel area in the list and the bars now also reads, for example, "about 57 basketball courts", and km² stays. Both screens state 1 court = 28 × 15 m = 420 m². Areas are published to 3 decimals, which is about 2.4 courts, so the "about" matters for small numbers.
 3. **Wider DEM.** I downloaded 4 Copernicus GLO-30 files before building, **76,579,341 bytes (76.6 MB)** against your 300 MB limit. The size is logged in `pipeline/logs/`, and the files are in `raw/`, not committed. They became 1,387 map tiles, 6.2 MB in the site. The map can't pan past them, and a very wide screen gets a higher lowest zoom, so no band can show. Checked by panning and dragging to all four corners at 360, 1280 and 2560 px.
 
@@ -982,3 +982,27 @@ Checked in a test browser only, not on a real phone or in real sunlight. Axe fin
 - **Tests:** 717 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. It now also fails on a missing relief tile.
 - **Docs:** F-22, US-028 to US-030, FR-076 to FR-079, API-015, ADR-012, TC-088 to TC-092 and T-107 to T-112, plus your three decisions from Plan 7 in `docs/PROGRESS.md`.
 - **Not done:** no NISAR product was opened or downloaded, the cutoff is unchanged, the coverage view isn't started, and nothing was merged into `main`.
+
+# Field map fixes (T-113, 2026-11-02)
+
+Both fixes are on `night-1`, not merged into `main`.
+
+## Radar marks
+
+You were right that they overstated the change. At the default zoom on a desktop, the 5 px marks painted about 29 km² of solid colour for 0.75 km² of flagged ground. Marks are now 3 px at zoom 13 and closer, 2 px at the default zoom 12, and 1 px further out, each with a faint half-pixel edge.
+
+- **Solid colour at the default zoom:** about 5 km², down from 29, or about 7 times the real area instead of 39. Counting the faint edges, it's about 13 km².
+- **Why it can't match exactly:** one screen pixel at this zoom covers about 1,400 m², more than three radar cells, so any visible mark is larger than life. The legend note stays.
+- **No data changed.** Still one mark per flagged cell, read from the same image.
+
+## Highlighted bar
+
+The right pass was already marked, but two things hid it: it could sit out of view at the bottom of the list, and the bar under the pointer also got a background, so it looked selected. Now the bar of the pass on the map is scrolled into view when a channel opens and whenever the pass changes, including with Previous and Next. Only that bar has a background, and hovering with a real mouse shows just a thin outline.
+
+On a desktop, the channel panel and the pass controls now scroll separately, with the channel panel taking up to 60% of the column. Otherwise, bringing a bar into view pushed the Previous and Next buttons off screen, just after they were pressed.
+
+## Evidence
+
+- **Tests:** 722 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. New: TC-093, and a limit on how much solid colour the marks paint.
+- **Screens:** `pipeline/out/screens/field-map/`, axe finds no serious or critical problem on the eight screens. Checked in a test browser, not on a real phone or in sunlight.
+- **Panama's relief is still your decision,** from the section above.

@@ -93,10 +93,15 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     map.fitBounds(bounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], animate: false });
   }
 
+  // The highlighted bar is always the pass on the map, and it's brought into view (FR-080).
   function markSelectedBar() {
     elements.body.querySelectorAll(".channel-bar").forEach((bar) => {
-      if (bar.dataset.pair === selectedPairId) bar.setAttribute("aria-current", "true");
-      else bar.removeAttribute("aria-current");
+      if (bar.dataset.pair === selectedPairId) {
+        bar.setAttribute("aria-current", "true");
+        bar.scrollIntoView({ block: "nearest" });
+      } else {
+        bar.removeAttribute("aria-current");
+      }
     });
   }
 
@@ -156,11 +161,10 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     if (channel.properties.not_checked_geometry) {
       elements.body.append(element("p", STRINGS.channelNotCheckedNote(site.detection_reach_km), "channel-note"));
     }
-    markSelectedBar();
     elements.panel.scrollTop = 0;
-    elements.panel.parentElement.scrollTop = 0; // on a desktop, the column around the panel scrolls
     drawStrip(channel);
     elements.title.focus();
+    markSelectedBar();
   }
 
   function showListTitle() {

@@ -619,7 +619,13 @@ button:disabled { color: #6e7781; }
   background: transparent;
 }
 
-.channel-bar:hover { background: #f1eee2; }
+/* Only for a real pointer. On a touch screen, hover stays on the last tap and looks like the selected bar. */
+@media (hover: hover) {
+  .channel-bar:hover { box-shadow: inset 0 0 0 1px var(--line); }
+}
+
+/* Clears the panel's sticky header when a bar is scrolled into view. */
+.channel-bar { scroll-margin-top: 64px; }
 
 .channel-bar[aria-current] {
   background: #ece7d6;
@@ -667,16 +673,19 @@ button:disabled { color: #6e7781; }
 /* On a desktop, the channel list and the pass controls share one column beside the map. */
 .side {
   flex: 0 0 400px;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  overflow-y: auto;
+  min-height: 0;
   border-left: 1px solid var(--line);
 }
 
 .side:not(:has(> :not([hidden]))) { display: none; }
 
 @media (min-width: 701px) {
-  .side .channel-panel { width: auto; overflow: visible; border-left: 0; }
-  .side .panel { flex-direction: column; flex-wrap: nowrap; }
+  /* Each part scrolls by itself, so that bringing a bar into view never moves the Previous and Next buttons. */
+  .side .channel-panel { flex: 0 1 auto; max-height: 60%; border-left: 0; }
+  .side .panel { flex: 1 1 0; flex-direction: column; flex-wrap: nowrap; min-height: 0; overflow-y: auto; }
   .side .timeline, .side .histogram { flex: none; max-width: none; min-width: 0; }
   .side .legend, .side .channel-legend { flex: none; }
   /* The pass list gets its own row, so that its whole date can be read. */

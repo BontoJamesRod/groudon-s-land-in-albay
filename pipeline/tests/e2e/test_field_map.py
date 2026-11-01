@@ -145,7 +145,7 @@ def test_tc091_one_mark_for_each_flagged_cell_in_the_image(page, site_url, width
     assert int(page.locator(".radar-marks").get_attribute("data-cells")) == flagged_pixels(LATEST_PAIR)
 
 
-@pytest.mark.parametrize("zoom,smallest", [(11, 3), (12, 5), (14, 5)])
+@pytest.mark.parametrize("zoom,smallest", [(11, 1), (12, 2), (14, 3)])
 def test_tc091_a_mark_never_goes_under_the_minimum(app, zoom, smallest):
     wait_for_marks(app)
     app.evaluate("(zoom) => testMap.setView([13.2572, 123.6856], zoom, { animate: false })", zoom)
@@ -155,18 +155,36 @@ def test_tc091_a_mark_never_goes_under_the_minimum(app, zoom, smallest):
 
 def test_tc091_a_mark_has_its_class_colour_inside_a_darker_edge(app):
     wait_for_marks(app)
-    # Look along each row of the canvas for the edge's colour with a brighter mark colour beside it.
+    # Look along each row of the canvas for a faint dark edge with a solid, brighter mark beside it.
     found = app.evaluate("""() => {
       const canvas = document.querySelector('.radar-marks');
       const { data, width, height } = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < width * height * 4 - 4; i += 4) {
-        const edge = data[i + 3] === 255 && data[i] === 0x3b && data[i + 1] === 0x1d && data[i + 2] === 0;
+        const edge = data[i + 3] > 0 && data[i + 3] < 200 && data[i] < 90;
         const next = data[i + 7] === 255 && data[i + 4] > 180;
         if (edge && next) return [data[i + 4], data[i + 5], data[i + 6]];
       }
       return null;
     }""")
     assert found is not None
+
+
+def painted_km2(page):
+    """How much ground the marks cover on screen, counting only solid colour."""
+    return page.evaluate("""() => {
+      const canvas = document.querySelector('.radar-marks');
+      const { data } = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+      let solid = 0;
+      for (let i = 3; i < data.length; i += 4) if (data[i] > 200) solid += 1;
+      const middle = testMap.getSize().divideBy(2);
+      const metres = testMap.distance(testMap.containerPointToLatLng(middle), testMap.containerPointToLatLng(middle.add([1, 0])));
+      return solid * metres * metres / 1e6;
+    }""")
+
+
+def test_tc091_at_the_default_zoom_the_marks_stay_small_and_visible(app):
+    wait_for_marks(app)
+    assert 2 < painted_km2(app) < 15  # it was 29 km² at 5 px, for 0.75 km² of flagged ground
 
 
 def test_tc091_the_legend_says_small_spots_are_drawn_larger(app):
@@ -199,6 +217,63 @@ def test_tc091_the_marks_follow_the_selected_pair(app):
     app.wait_for_selector(f'.leaflet-radar-pane img[src*="{first}"]')
     assert int(app.locator(".radar-marks").get_attribute("data-cells")) == flagged_pixels(first)
     expect(app.locator(".radar-marks")).to_have_count(1)
+
+
+def current_bar_state(page):
+    """Which bars are marked as current, the pass on the map, and whether the bar is in view."""
+    return page.evaluate("""() => {
+      const bars = [...document.querySelectorAll('.channel-bar[aria-current]')];
+      const scroller = document.getElementById('channel-panel');
+      const box = bars[0].getBoundingClientRect();
+      const inView = box.top >= document.querySelector('.channel-header').getBoundingClientRect().bottom - 1
+        && box.bottom <= scroller.getBoundingClientRect().bottom + 1;
+      return { pairs: bars.map((bar) => bar.dataset.pair), inView,
+               shown: document.querySelector('.leaflet-radar-pane img').src.split('/').slice(-2)[0] };
+    }""")
+
+
+def expect_bar_matches_the_map(page, pair=None):
+    """Check the bar against the map, once the pass in the list (or `pair`) has reached the map."""
+    wanted = pair or page.locator("#pair-list").input_value()
+    page.wait_for_selector(f'.leaflet-radar-pane img[src*="{wanted}"]')
+    page.wait_for_selector(f'.channel-bar[aria-current][data-pair="{wanted}"]')
+    state = current_bar_state(page)
+    assert state["shown"] == wanted
+    assert state["pairs"] == [state["shown"]]
+    assert state["inView"]
+
+
+@pytest.mark.parametrize("width,height", [(360, 740), (1280, 800)])
+def test_tc093_the_highlighted_bar_is_the_pass_on_the_map_and_in_view(page, site_url, width, height):
+    open_at(page, site_url, width, height)
+    page.wait_for_selector(".radar-marks")
+    page.locator("#channel-body .channel-row", has_text="Mi-isi").click()
+    expect_bar_matches_the_map(page)
+    for bar in (page.locator(".channel-bar").nth(2), page.locator(".channel-bar").last):
+        pair = bar.get_attribute("data-pair")
+        bar.click()
+        expect_bar_matches_the_map(page, pair)
+
+
+def test_tc093_the_bar_follows_the_pass_buttons(app):
+    app.locator("#channel-body .channel-row", has_text="Mi-isi").click()
+    expect_bar_matches_the_map(app)
+    latest = current_bar_state(app)["shown"]
+    for _ in range(4):
+        button = app.locator("#previous").bounding_box()
+        app.click("#previous")
+        expect_bar_matches_the_map(app)
+        assert app.locator("#previous").bounding_box()["y"] == pytest.approx(button["y"], abs=1)  # it stays under the finger
+    assert current_bar_state(app)["shown"] != latest
+
+
+def test_tc093_the_bar_under_the_pointer_doesnt_look_selected(app):
+    app.locator("#channel-body .channel-row", has_text="Mi-isi").click()
+    expect_bar_matches_the_map(app)
+    app.locator(".channel-bar").first.hover()
+    backgrounds = app.evaluate("""[...document.querySelectorAll('.channel-bar:not([aria-current])')]
+      .map((bar) => getComputedStyle(bar).backgroundColor)""")
+    assert set(backgrounds) == {"rgba(0, 0, 0, 0)"}
 
 
 COURTS = [
