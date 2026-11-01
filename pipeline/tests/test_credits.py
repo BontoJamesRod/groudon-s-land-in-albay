@@ -24,8 +24,23 @@ def test_license_is_the_apache_text():
     assert len(text.split()) > 1500
 
 
-def test_the_readme_links_both_files():
-    assert "(LICENSE)" in README and "(CREDITS.md)" in README
+def test_the_readme_links_the_license_files():
+    assert "(LICENSE)" in README and "(CREDITS.md)" in README and "(NOTICE)" in README
+
+
+def test_notice_names_the_project_and_its_holders():
+    assert (REPO / "NOTICE").read_text(encoding="utf-8").startswith("Mayon Radar Watch. Copyright 2026 James Rod Bonto and ")
+
+
+def test_the_radar_layers_license_is_stated_with_its_credit():
+    for text in (CREDITS, README):
+        assert "CC BY 4.0" in text
+        assert "Mayon Radar Watch and NASA–ISRO NISAR data via ASF" in text
+
+
+def test_screens_are_not_kept_in_the_repository():
+    assert not (REPO / "pipeline" / "reports" / "screens").exists()
+    assert "pipeline/out/" in (REPO / ".gitignore").read_text(encoding="utf-8")
 
 
 def test_credits_say_data_is_not_under_the_code_license():

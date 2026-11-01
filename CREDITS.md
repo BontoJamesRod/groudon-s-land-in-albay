@@ -1,6 +1,6 @@
 # Credits and licenses
 
-**The code and documentation in this repository are under the [Apache-2.0 license](LICENSE). The data isn't.** Each data source keeps its own terms, listed here. Apache-2.0 doesn't cover data files under ODbL, CC BY-SA 4.0, CC BY-IGO or any other license below, and it gives you no rights to them. If you reuse those files, follow their terms.
+**The code and documentation in this repository are under the [Apache-2.0 license](LICENSE), with the copyright notice in [NOTICE](NOTICE). The data isn't.** The published radar layers are under CC BY 4.0, and each other data source keeps its own terms, listed here. Apache-2.0 doesn't cover data files under ODbL, CC BY-SA 4.0, CC BY-IGO or any other license below, and it gives you no rights to them. If you reuse those files, follow their terms.
 
 This list is a project record, not legal advice.
 
@@ -13,10 +13,16 @@ This list is a project record, not legal advice.
 | `pipeline/context/`: `channel_name_candidates*`, `channel_test_sites*`, `mayon_waterways_osm_candidate.geojson`, `osm_*.geojson` | ODbL 1.0, © OpenStreetMap contributors. Share-alike applies |
 | `site/data/sites/panama/towns.geojson`, `land.geojson`, and `pipeline/context/panama_boundaries.json` | CC BY-SA 4.0, geoBoundaries. Share-alike applies |
 | `site/data/sites/mayon/towns.geojson`, `land.geojson`, and `pipeline/context/mayon_boundaries.json` | CC BY-IGO, NAMRIA and PSA via OCHA COD-AB |
-| Radar layers and pair records in `site/data/sites/*/pairs/` | Made from NISAR data, which is free and open. Not covered by Apache-2.0, and no separate license is set |
-| Images in `pipeline/reports/screens/` | Screens of the app showing Esri World Imagery, under Esri's terms, and the data above. Not covered by Apache-2.0 |
+| Radar layers (images and value grids) and pair records in `site/data/sites/*/pairs/` | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Credit: Mayon Radar Watch and NASA–ISRO NISAR data via ASF |
+| `validation.json` in those folders | Not under CC BY 4.0: it cites other people's sources, by name and link, under their own terms |
 | `site/vendor/leaflet-1.9.4/` | BSD-2-Clause, with its own `LICENSE` file |
 | `pipeline/tests/e2e/vendor/axe-core-4.14.0/` | MPL-2.0, with its own `LICENSE` files |
+
+## Reusing the radar layers
+
+The radar layers are made from NISAR data, which is free and open. Credit them as: "Mayon Radar Watch and NASA–ISRO NISAR data via ASF, CC BY 4.0." The results are provisional and aren't an official warning.
+
+The layers mark sea as no data, using each site's land shape. Those shapes keep their own terms and credit: CC BY-IGO for Mayon (NAMRIA and PSA via OCHA COD-AB) and CC BY-SA 4.0 for Panama (geoBoundaries).
 
 ## Data sources
 

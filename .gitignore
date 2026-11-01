@@ -9,6 +9,8 @@ __pycache__/
 raw/
 *.h5
 pipeline/out/
+# Screens are saved to pipeline/out/screens, and they show imagery under Esri's terms
+pipeline/reports/screens/
 pipeline/logs/
 .netrc
 _netrc

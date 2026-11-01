@@ -310,11 +310,14 @@ def test_tc032_context_sources(app):
     app.click("#sources-button")
     context = app.locator("#sources-panel h3:has-text('Context data') + ul")
     expect(context).to_be_visible()
+    radar = app.locator("#sources-panel h3:has-text('Radar data') + ul")
+    expect(radar).to_contain_text("NISAR")
     for row in read_data("sources.json"):
         if row.get("site_id") not in (None, "mayon"):
             continue  # another site's source (TC-077)
-        expect(context).to_contain_text(row["name"])
-        expect(context).to_contain_text(row["license"])
+        expect(context if row["used_for"] != "radar" else radar).to_contain_text(row["name"])
+        expect(context if row["used_for"] != "radar" else radar).to_contain_text(row["license"])
+    expect(context).not_to_contain_text("NISAR")
 
 
 def test_tc033_switch_to_the_second_site(app):

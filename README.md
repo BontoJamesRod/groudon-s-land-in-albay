@@ -75,7 +75,7 @@ Until the final thresholds are set, the pipeline refuses every product acquired 
 
 ## License and credits
 
-The code and documentation are under the [Apache-2.0 license](LICENSE). Data files under their own licenses, such as ODbL and CC BY-SA 4.0, aren't covered by it. [CREDITS.md](CREDITS.md) lists every data source, library and tool with its license, and says which files fall under which terms.
+The code and documentation are under the [Apache-2.0 license](LICENSE), with the copyright notice in [NOTICE](NOTICE). The published radar layers in `site/data/sites/*/pairs/` are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), credited to Mayon Radar Watch and NASA–ISRO NISAR data via ASF. Data files under their own licenses, such as ODbL and CC BY-SA 4.0, aren't covered by either. [CREDITS.md](CREDITS.md) lists every data source, library and tool with its license, and says which files fall under which terms.
 
 ## Data sources
 

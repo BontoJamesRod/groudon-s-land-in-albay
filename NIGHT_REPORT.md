@@ -887,3 +887,16 @@ It didn't match your list, so I added three rows. They appear in the site's Data
 
 - **Not legal advice:** this is my reading of the terms, and `CREDITS.md` says so too.
 - **Package licenses** are what each package declares in its metadata, at the installed versions, and I didn't review them further. `text-unidecode`, an indirect dependency, offers Artistic or GPL-2.0-or-later. It isn't copied into this repository.
+
+# Radar license, NOTICE and screens (2026-11-01)
+
+**T-099 is done on `night-1`, not merged.**
+
+- **Radar layers:** CC BY 4.0, credited to "Mayon Radar Watch and NASA–ISRO NISAR data via ASF", stated in `CREDITS.md` and the README. I applied it to the images, value grids and pair records. I left out each pair's `validation.json`, because it cites other people's sources.
+- **Screens:** `pipeline/reports/screens/` is removed in a normal commit, and new ones save to `pipeline/out/screens`, which git ignores. The 44 existing images are still in git history, as you asked, so they stay reachable in the public repository. I moved your local copies to `pipeline/out/screens`.
+- **NOTICE:** added with your exact text. **It still says `[TEAMMATE NAME]`, which needs the real name before merging.**
+- **Data sources panel:** NISAR is now under "Radar data", and no longer under "Context data". FR-040, SCR-06 and TC-032 say so.
+
+## Decision for you
+
+**Share-alike may reach Panama's layers.** They mark sea as no data using Panama's land shape, which is CC BY-SA 4.0 geoBoundaries data. If that makes them adapted material, they'd have to be offered under CC BY-SA, not CC BY 4.0. Mayon's shape is CC BY-IGO, which has no share-alike. I applied CC BY 4.0 to all as you decided, and `CREDITS.md` credits the shapes with their own terms. This is my reading, not legal advice. If you want to be safe, marking Panama's layers CC BY-SA 4.0 is a small change.

@@ -1,7 +1,7 @@
 """Open each main screen at 1280 and 360 px, and take a picture of it.
 
 A normal run keeps the pictures in a temporary folder, so running the tests changes no files.
-To refresh the saved ones, with real map tiles, run in PowerShell:
+To save them to pipeline/out/screens, which git ignores, with real map tiles, run in PowerShell:
     $env:SAVE_SCREENS = "1"; pytest pipeline/tests/e2e/test_screens.py; Remove-Item Env:SAVE_SCREENS
 """
 import json
@@ -14,7 +14,7 @@ from .conftest import ROOT, envelope, open_drawer_if_closed, prepare_page, read_
 
 pytestmark = pytest.mark.e2e
 
-SAVED_FOLDER = ROOT / "pipeline" / "reports" / "screens"
+SAVED_FOLDER = ROOT / "pipeline" / "out" / "screens"
 SAVING = os.environ.get("SAVE_SCREENS") == "1"
 SIZES = {1280: 800, 360: 740}
 

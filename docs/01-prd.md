@@ -454,7 +454,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-037 | The system shall show "This is not an official warning. Follow PHIVOLCS and your LGU." on the main screen whenever a radar layer is shown. | F-08 | US-012 |
 | FR-038 | The system shall not display any text stating that a lahar, eruption or flood will happen. | F-08 | US-012 |
 | FR-039 | The system shall list, for each radar layer of the selected pair, its product type, granule IDs, acquisition dates, maturity and a link to ASF. | F-09 | US-013 |
-| FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
+| FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, with a radar source under "Radar data", and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
 | FR-041 | The system shall let the visitor switch between published sites. | F-10 | US-014 |
 | FR-042 | The system shall show "Couldn't load <site name>. Try again." with a Retry button, keeping the previous site shown, when a site's data fails to load. | F-10 | US-014 |
 | FR-043 | The pipeline shall read each site's settings from one config file per site, with no code changes per site. | F-10 | US-015 |

@@ -409,7 +409,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 
 | Element | Type | Behavior and validation |
 | --- | --- | --- |
-| Radar layers list | List | Product type, granule IDs, acquisition dates, maturity, ASF link per layer (US-013/AC-1) |
+| Radar layers list | List | The radar source with its terms, then product type, granule IDs, acquisition dates, maturity, ASF link per layer (US-013/AC-1) |
 | Context data list | List | Source and license for background map, borders, coastline and channels (US-013/AC-2, US-023/AC-3) |
 | Close | Button | Returns to the map |
 
