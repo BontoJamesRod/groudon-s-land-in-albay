@@ -6,6 +6,7 @@ import { createChannels } from "./channels.js";
 import { createCompare } from "./compare.js";
 import { loadPair, loadSiteData, loadSites } from "./data.js";
 import { createDrawer } from "./drawer.js";
+import { createHistogram } from "./histogram.js";
 import { createChannelLayer, createNewMaterialLayer, showChannelLegend } from "./layers.js";
 import { createMap, RADAR_PANE, showStartView } from "./map.js";
 import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
@@ -17,7 +18,7 @@ import { createTimeline } from "./timeline.js";
 const byId = (id) => document.getElementById(id);
 
 // What is on screen now.
-const app = { sites: [], site: null, map: null, pair: null, compare: null, channels: null, drawer: null, openRequest: 0 };
+const app = { sites: [], site: null, map: null, pair: null, compare: null, channels: null, drawer: null, histogram: null, openRequest: 0 };
 
 function showError(text, retry) {
   byId("app-message").textContent = text;
@@ -95,6 +96,8 @@ function setUpChannels(map, site, siteData) {
     const list = byId("pair-list");
     list.value = pairId;
     list.dispatchEvent(new Event("change"));
+  }, (channel) => {
+    if (app.histogram) app.histogram.setChannel(channel);
   });
   button.onclick = () => app.channels.open();
 }
@@ -125,6 +128,11 @@ function setUpPairs(map, site, siteData, readout) {
     if (!byId("compare-view").hidden) app.drawer.close();
   };
   const siteIsShown = () => app.site === site;
+  app.histogram = createHistogram({
+    chart: byId("histogram-chart"),
+    sentence: byId("histogram-sentence"),
+    note: byId("histogram-note"),
+  }, site);
   return createTimeline({
     list: byId("pair-list"),
     label: byId("pair-label"),
@@ -145,6 +153,8 @@ function setUpPairs(map, site, siteData, readout) {
       if (app.channels) app.channels.pairChanged(pair);
       byId("compare-button").disabled = false;
       readout.setPair(pair);
+      await app.histogram.show(pair);
+      if (!isCurrent()) return;
       // The legend has just filled in, so the panel may have grown and the map shrunk. Leaflet
       // only notices when told, and otherwise the map jumps at some later moment.
       map.invalidateSize({ animate: false });

@@ -1,6 +1,12 @@
 // Every piece of interface text in one place, for review against FR-038 (docs/04 section 3).
 // The wording test in pipeline/tests/test_wording.py reads this file.
 
+// A share of the ground as words. A tiny share never reads as 0%.
+function shareText(share) {
+  if (share > 0 && share < 0.001) return "under 0.1%";
+  return `${(share * 100).toFixed(1)}%`;
+}
+
 export const STRINGS = {
   // Main screen (SCR-01)
   appName: "Mayon Radar Watch",
@@ -90,6 +96,7 @@ export const STRINGS = {
     "High: the brightness changed, and the passes also became less alike in the same place.",
   ],
   helpLimitsTitle: "Limitations",
+  // In the list below and in the Panama list: why the chart's flag line can't be moved (FR-074).
   helpLimits: [
     "A pass usually comes every 12 days, and sometimes the gap is longer. The map can be days old and shows nothing about what happens next. Longer gaps can show more change.",
     "Some colored spots are not new material. Crops, rain and building work can look the same to the radar.",
@@ -97,6 +104,7 @@ export const STRINGS = {
     "Steep slopes facing away from the radar can't be seen, and small deposits can be missed.",
     "The radar products are provisional. The detection thresholds are set, but they haven't been checked against field reports.",
     "Only channels the project owner has checked are drawn. Other channels also drain Mayon, and they aren't on this map.",
+    "The flag line can't be moved here. It was fixed before the eruption data was opened, and letting it move would undo that.",
   ],
   helpOfficialTitle: "Official warnings",
   helpOfficial: "For warnings and advice, follow PHIVOLCS and your LGU.",
@@ -140,6 +148,17 @@ export const STRINGS = {
   channelsError: "Couldn't load channel changes. Try again.",
   channelsEmpty: "No confirmed channels yet for this site",
   channelsLatest: (range, track) => `Most changed first, since the last pass: ${range}, track ${track}`,
+  histogramTitle: "How much the ground's brightness changed",
+  histogramAlt: (threshold, share) => `Chart of brightness change. Most of the ground sits near no change. Flag lines at plus and minus ${threshold} decibels. ${shareText(share)} of the checked land is past them.`,
+  histogramBin: (low, high, share) => `${low} to ${high} dB: ${shareText(share)} of the ground`,
+  histogramDarker: "Darker",
+  histogramNoChange: "No change",
+  histogramBrighter: "Brighter",
+  histogramSentence: (share) => `Most of the ground barely changed. The shaded edges changed by more than the line, so they're flagged: ${shareText(share)} of the checked land.`,
+  histogramNothingFlagged: "All of the checked land stayed inside the lines, so none of it is flagged.",
+  histogramScaleNote: (site) => `${site.detection_reach_km ? `Land within ${site.detection_reach_km} km of the summit.` : "Land in this site."} Bar heights use a square-root scale, so the small edges can be seen.`,
+  histogramChannelNote: (name) => `Thin line: the ${name} strip, scaled to its own ground. Bars: all the checked land.`,
+  histogramMissing: "Brightness chart not available for this pair",
   channelArea: (km2) => `${km2.toFixed(3)} km²`,
   channelNoData: "No radar data",
   channelsHow: (halfWidth, reach) => `This is the area flagged as possible or likely new material in a strip ${halfWidth} m on each side of the line${reach ? `, within ${reach} km of the summit` : ""}.`,
@@ -179,6 +198,7 @@ const PLAIN_CHANGE = {
     "This map shows where the ground changed, not why. Crops, rain and building work can look the same to the radar.",
     "Steep slopes facing away from the radar can't be seen, and small changes can be missed.",
     STRINGS.helpLimits[4],
+    "The flag line can't be moved here. It was fixed before this site was processed, with no tuning for this site, and letting it move would undo that.",
   ],
   helpOfficial: "For warnings and advice, follow SINAPROC and your local authorities.",
   helpOfficialLink: "SINAPROC website",

@@ -15,6 +15,7 @@ This list is a project record, not legal advice.
 | `site/data/sites/mayon/towns.geojson`, `land.geojson`, and `pipeline/context/mayon_boundaries.json` | CC BY-IGO, NAMRIA and PSA via OCHA COD-AB |
 | Radar layers (images and value grids) and pair records in `site/data/sites/mayon/pairs/` | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Credit: Mayon Radar Watch and NASA–ISRO NISAR data via ASF |
 | Radar layers (images and value grids) and pair records in `site/data/sites/panama/pairs/` | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Credit: Mayon Radar Watch and NASA–ISRO NISAR data via ASF; geoBoundaries. Share-alike applies |
+| `channel_histogram.json` in those folders | ODbL 1.0, © OpenStreetMap contributors, because it's counted inside strips built on OpenStreetMap lines. Share-alike applies |
 | `validation.json` in those folders | Not under CC BY 4.0: it cites other people's sources, by name and link, under their own terms |
 | `site/vendor/leaflet-1.9.4/` | BSD-2-Clause, with its own `LICENSE` file |
 | `pipeline/tests/e2e/vendor/axe-core-4.14.0/` | MPL-2.0, with its own `LICENSE` files |

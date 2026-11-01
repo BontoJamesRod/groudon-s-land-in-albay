@@ -157,6 +157,33 @@ button:disabled { color: #6e7781; }
 
 .pair-gap:empty { display: none; }
 
+/* The chart's colours mean one thing each: the flagged tails use the "possible new material" colour. */
+.histogram { flex: 1 1 280px; max-width: 360px; }
+
+/* Room for the whole date in the pass list beside the extra column. */
+@media (min-width: 701px) { .timeline { min-width: 350px; } }
+
+.histogram-title { margin: 12px 0 4px; font-size: 14px; font-weight: 600; }
+
+.histogram-chart { display: block; width: 100%; height: auto; }
+
+.histogram-bar { fill: #8c959f; }
+
+.histogram-flagged { fill: #E69F00; }
+
+.histogram-axis { stroke: #57606a; stroke-width: 1; }
+
+.histogram-line { stroke: #1f2328; stroke-width: 1.5; }
+
+.histogram-outline { fill: none; stroke: #0e7490; stroke-width: 1.25; }
+
+.histogram-label { font-size: 10px; fill: #1f2328; }
+
+.histogram-sentence,
+.histogram-note { margin: 4px 0 0; font-size: 13px; }
+
+.histogram-note { color: #57606a; }
+
 .layer-toggle {
   display: flex;
   align-items: center;
@@ -622,11 +649,13 @@ button:disabled { color: #6e7781; }
   }
   /* Closed: only the handle and the pass controls, so the map gets the room. */
   .drawer-closed .legend,
+  .drawer-closed .histogram,
   .drawer-closed .channel-legend,
   .drawer-closed .pair-label,
   .drawer-closed .pair-events { display: none; }
   .drawer-closed .timeline-status:has(#timeline-message:empty):has(#timeline-retry[hidden]) { display: none; }
   .timeline-controls select { padding: 0 4px; }
+  .histogram { flex: 1 1 100%; max-width: none; }
   .zone-label-phone { width: 128px; white-space: normal; text-align: center; line-height: 1.2; }
   .leaflet-control-attribution { font-size: 9px; line-height: 1.2; }
   /* FR-049: padding makes the credit link a 44 px target, and the equal negative margin

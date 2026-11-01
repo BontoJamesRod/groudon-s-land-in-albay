@@ -32,7 +32,7 @@ function sortChannels(channels, areaOf) {
 
 // `elements`: panel, title, back, close, status, retry, body, opener. `onResize` runs after the map
 // changes size, and `onPickPair(id)` shows a pair on the map.
-export function createChannels(map, elements, site, siteData, onResize, onPickPair) {
+export function createChannels(map, elements, site, siteData, onResize, onPickPair, onChannelChange) {
   const { pairs, towns } = siteData;
   let channels = siteData.channels; // null if the file failed when the site opened: it's tried again here
   let rows = null;
@@ -133,6 +133,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
 
   // SCR-14: one bar per published pair, in order of after date, with the strip on the map.
   function showChannel(channel) {
+    onChannelChange(channel);
     elements.title.textContent = channel.properties.name;
     elements.back.hidden = false;
     showStatus("", false);
@@ -163,6 +164,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
 
   // SCR-13: the channels, most changed first, for the latest pair.
   function showList() {
+    onChannelChange(null);
     showListTitle();
     if (channels.features.length === 0) {
       showStatus(STRINGS.channelsEmpty, false);
@@ -222,6 +224,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
   }
 
   function close() {
+    onChannelChange(null);
     request += 1;
     removeStrip();
     setOpen(false);
