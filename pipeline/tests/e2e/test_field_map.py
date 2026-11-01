@@ -258,13 +258,14 @@ def test_tc093_the_highlighted_bar_is_the_pass_on_the_map_and_in_view(page, site
 def test_tc093_the_bar_follows_the_pass_buttons(app):
     app.locator("#channel-body .channel-row", has_text="Mi-isi").click()
     expect_bar_matches_the_map(app)
-    latest = current_bar_state(app)["shown"]
-    for _ in range(4):
+    pairs = [pair["id"] for pair in read_data("sites/mayon/pairs.json")]
+    for pair in reversed(pairs[-5:-1]):
         button = app.locator("#previous").bounding_box()
         app.click("#previous")
-        expect_bar_matches_the_map(app)
+        expect_bar_matches_the_map(app, pair)
+        # The list moves last, once the pass has loaded, and the next press counts from it.
+        expect(app.locator("#pair-list")).to_have_value(pair)
         assert app.locator("#previous").bounding_box()["y"] == pytest.approx(button["y"], abs=1)  # it stays under the finger
-    assert current_bar_state(app)["shown"] != latest
 
 
 def test_tc093_the_bar_under_the_pointer_doesnt_look_selected(app):
