@@ -159,6 +159,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
 | T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
 | T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-117 | Show a low-detail satellite layer first and a loading count, because EOX's tiles can take over a minute | F-23, FR-083, US-031, TC-095 | S | T-116 | TC-095 passes, and the time to first imagery is measured at 1920 px |
 | T-116 | Build the Relief or Satellite switcher with EOxCloudless, and overlay colours for each background; replace Esri in the credits | F-23, FR-081, FR-082, FR-083, US-031, SCR-01, TC-094, TC-095 | M | T-115 | TC-094 and TC-095 pass, with axe passing on both backgrounds |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
