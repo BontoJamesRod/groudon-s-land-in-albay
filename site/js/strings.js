@@ -50,7 +50,7 @@ export const STRINGS = {
   nothingDetected: (before, after) => `No new material detected between ${before} and ${after}`,
   satelliteCredit: 'Imagery: <a href="https://cloudless.eox.at">EOxCloudless</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024), <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>',
   satelliteUnavailable: "Satellite map unavailable. Showing the relief map.",
-  satelliteLoading: (done, total) => `Loading satellite imagery: ${done} of ${total}`,
+  satelliteLoading: (waiting) => `Loading satellite imagery: ${waiting} ${waiting === 1 ? "tile" : "tiles"} to go`,
   basemapLabel: "Background map",
   basemapRelief: "Relief",
   basemapSatellite: "Satellite",

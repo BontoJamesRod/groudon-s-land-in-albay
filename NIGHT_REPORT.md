@@ -1062,3 +1062,18 @@ This doesn't prove that's what happened in the owner's browser, because I measur
 2. **Is a wait of up to a minute or more acceptable for the demo?** If not, I recommend storing imagery for the two sites' areas in the site, as the relief is, so that it opens at once and doesn't depend on EOX. It needs your approval first, because it means downloading many tiles and republishing them under CC BY-NC-SA 4.0. EOX should be asked first, since a bulk download from their tile service may not be welcome. The same email can ask the two EOX questions above.
 
 **Tests:** 740 passed, 1 skipped, exit code 0. **Contract check:** 0 errors.
+
+# Satellite count and loading order (T-118, 2026-11-02)
+
+**The owner's screenshot showed "Loading satellite imagery: 0 of 244" and no imagery.** In the owner's real Chrome, EOX does answer, so nothing is blocked. Each tile took up to 45 s there, and that view of 32 tiles finished in about 45 s.
+
+- **The count was wrong.** Tiles dropped when the map moved or zoomed stayed in the total, so it grew and looked stuck. It now counts only tiles on the map right now: "Loading satellite imagery: N tiles to go".
+- **The preview competed with the sharp tiles.** A browser only fetches 6 tiles at a time from one server. The sharp tiles now wait until the preview is done, or 10 s at most.
+
+**This still doesn't make EOX faster,** and the wait depends on EOX. I can't measure a slow case on demand, because recent requests seem to come back much faster. So the improvement to the time until the first imagery isn't measured.
+
+## Decision for you
+
+**Store the imagery in the site?** I recommend it, and it's the only fix that removes the wait. It needs your approval because it's a large download from EOX's tile service, republished under CC BY-NC-SA 4.0, and I'd ask EOX first (cloudless@eox.at).
+
+**Tests:** 743 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. On `night-1`, not merged: the live site still has the wrong count until you ask for a merge.

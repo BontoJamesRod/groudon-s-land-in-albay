@@ -7,6 +7,7 @@ import { STRINGS } from "./strings.js";
 const SATELLITE_URL = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg";
 const SATELLITE_NATIVE_ZOOM = 14; // past this, the imagery is enlarged
 const SATELLITE_PREVIEW_ZOOM = 10; // a few tiles, enlarged, cover the view while the sharp ones come
+const SHARP_TILES_WAIT_MS = 10000; // the sharp tiles start then, even if the preview isn't finished
 const BASEMAP_KEY = "mayon-radar-basemap";
 const TILE_FAILURES_FOR_NOTICE = 4;
 const PHONE_LAYOUT = "(max-width: 700px)"; // the same width as in app.css
@@ -70,7 +71,6 @@ function reliefTiles(map, site) {
 
 function satelliteTiles(map) {
   return L.tileLayer(SATELLITE_URL, {
-    attribution: STRINGS.satelliteCredit,
     maxZoom: map.getMaxZoom(),
     maxNativeZoom: SATELLITE_NATIVE_ZOOM,
     zIndex: 3, // above the preview and the relief
@@ -79,30 +79,46 @@ function satelliteTiles(map) {
 
 // EOX's tiles can take over a minute for a whole screen, so a few low-detail ones go first.
 function satellitePreview(map) {
-  return L.tileLayer(SATELLITE_URL, { maxZoom: map.getMaxZoom(), maxNativeZoom: SATELLITE_PREVIEW_ZOOM, zIndex: 2 });
+  return L.tileLayer(SATELLITE_URL, {
+    attribution: STRINGS.satelliteCredit,
+    maxZoom: map.getMaxZoom(),
+    maxNativeZoom: SATELLITE_PREVIEW_ZOOM,
+    zIndex: 2,
+  });
 }
 
-// Say how far the sharp tiles have got, so that slow imagery doesn't look like nothing happened.
-function showLoadingCount(tiles, notice) {
-  let started = 0;
-  let finished = 0;
+// Say how many tiles are still on their way, so that slow imagery doesn't look like nothing happened.
+// It counts what's on the map right now, because moving the map drops tiles that never finish.
+function showLoadingCount(layers, notice) {
   function update() {
     if (notice.textContent === STRINGS.satelliteUnavailable) return;
-    notice.textContent = STRINGS.satelliteLoading(finished, started);
-    notice.hidden = finished >= started;
+    const waiting = layers.reduce((sum, layer) => sum
+      + (layer.getContainer() ? layer.getContainer().querySelectorAll("img:not(.leaflet-tile-loaded)").length : 0), 0);
+    notice.textContent = STRINGS.satelliteLoading(waiting);
+    notice.hidden = waiting === 0;
   }
-  tiles.on("loading", () => {
-    started = 0;
-    finished = 0;
-  });
-  tiles.on("tileloadstart", () => {
-    started += 1;
-    update();
-  });
-  tiles.on("tileload tileerror", () => {
-    finished += 1;
-    update();
-  });
+  // One frame later, because Leaflet adds a batch of new tiles to the page just after announcing them.
+  for (const layer of layers) layer.on("tileloadstart tileload tileerror tileabort tileunload load", () => L.Util.requestAnimFrame(update));
+}
+
+// Show imagery, low detail first. A browser only fetches 6 tiles at a time from one server, so the
+// sharp tiles wait their turn. Otherwise they'd hold up the few tiles that cover the whole view.
+function addSatellite(map, preview, sharp) {
+  let timer = null;
+  function addSharp() {
+    clearTimeout(timer);
+    preview.off("load", addSharp);
+    sharp.addTo(map);
+  }
+  preview.on("load", addSharp);
+  timer = setTimeout(addSharp, SHARP_TILES_WAIT_MS);
+  preview.addTo(map);
+  return () => {
+    clearTimeout(timer);
+    preview.off("load", addSharp);
+    preview.remove();
+    sharp.remove();
+  };
 }
 
 // One failed tile among good ones isn't an outage, so the message waits for a run of failures.
@@ -148,12 +164,12 @@ function addSwitcher(map, choose) {
 // The relief always stays on, so that it shows while imagery is slow to load or if it fails.
 function addBackground(map, site, notice) {
   const sharp = satelliteTiles(map);
+  const preview = satellitePreview(map);
   watchTiles(sharp, notice, STRINGS.satelliteUnavailable);
-  showLoadingCount(sharp, notice);
-  const satellite = L.layerGroup([satellitePreview(map), sharp]);
+  showLoadingCount([preview, sharp], notice);
   if (site.relief_max_native_zoom == null) {
     document.body.classList.remove("relief-map");
-    satellite.addTo(map);
+    addSatellite(map, preview, sharp);
     return;
   }
   const relief = reliefTiles(map, site);
@@ -161,12 +177,14 @@ function addBackground(map, site, notice) {
   relief.addTo(map);
   keepInsideRelief(map, site);
   let buttons = {};
+  let removeSatellite = null;
   function show(choice) {
     document.body.classList.toggle("relief-map", choice === "relief");
+    if (removeSatellite) removeSatellite();
+    removeSatellite = null;
     if (choice === "satellite") {
-      satellite.addTo(map);
+      removeSatellite = addSatellite(map, preview, sharp);
     } else {
-      satellite.remove();
       if (notice.textContent !== STRINGS.backgroundUnavailable) notice.hidden = true;
     }
     for (const [name, button] of Object.entries(buttons)) button.setAttribute("aria-pressed", String(name === choice));
