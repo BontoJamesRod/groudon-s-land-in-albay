@@ -75,11 +75,14 @@ def check_download_size(sizes, limit=DOWNLOAD_LIMIT_BYTES):
 def download_dem(site_id, bounds):
     """Download the height files that aren't saved yet, and log what they weigh."""
     DEM_FOLDER.mkdir(parents=True, exist_ok=True)
-    names = dem_names(bounds)
-    urls = {name: f"{DEM_BASE_URL}/{name}/{name}.tif" for name in names}
-    sizes = {name: int(requests.head(url, timeout=60).headers["Content-Length"]) for name, url in urls.items()}
+    urls = {name: f"{DEM_BASE_URL}/{name}/{name}.tif" for name in dem_names(bounds)}
+    replies = {name: requests.head(url, timeout=60) for name, url in urls.items()}
+    # Open sea has no file, and the map paints what has no height as sea.
+    sizes = {name: int(reply.headers["Content-Length"]) for name, reply in replies.items() if reply.status_code != 404}
+    names = list(sizes)
     total = check_download_size(sizes)
-    for name, url in urls.items():
+    for name in names:
+        url = urls[name]
         path = DEM_FOLDER / f"{name}.tif"
         if path.exists() and path.stat().st_size == sizes[name]:
             continue

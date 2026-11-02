@@ -19,6 +19,10 @@ def mayon():
     return json.loads((DATA / "sites.json").read_text(encoding="utf-8"))["data"][0]
 
 
+def both_sites():
+    return json.loads((DATA / "sites.json").read_text(encoding="utf-8"))["data"]
+
+
 def bounds_of(site):
     return [site[f"relief_bounds_{side}"] for side in ("west", "south", "east", "north")]
 
@@ -82,9 +86,9 @@ def test_100_m_contours_only_show_when_zoomed_in():
     assert (paint(height, 20.0, 12) != paint(height, 20.0, 11)).any()
 
 
-def test_every_tile_the_map_can_show_exists_and_is_a_256_px_webp():
-    site = mayon()
-    folder = DATA / "sites" / "mayon" / "relief"
+@pytest.mark.parametrize("site", both_sites(), ids=lambda site: site["id"])
+def test_every_tile_the_map_can_show_exists_and_is_a_256_px_webp(site):
+    folder = DATA / "sites" / site["id"] / "relief"
     for zoom in range(site["min_zoom"], site["relief_max_native_zoom"] + 1):
         x_low, y_low, x_high, y_high = relief_tile_range(bounds_of(site), zoom)
         for x in range(x_low, x_high + 1):
@@ -94,12 +98,12 @@ def test_every_tile_the_map_can_show_exists_and_is_a_256_px_webp():
         assert tile.format == "WEBP" and tile.size == (256, 256)
 
 
-def colour_at(lat, lon, zoom=12):
+def colour_at(lat, lon, zoom=12, site_id="mayon"):
     """The colour of the published relief at a place, read from its tile."""
     count = 2 ** zoom
     x = (lon + 180) / 360 * count
     y = (1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * count
-    with Image.open(DATA / "sites" / "mayon" / "relief" / str(zoom) / str(int(x)) / f"{int(y)}.webp") as tile:
+    with Image.open(DATA / "sites" / site_id / "relief" / str(zoom) / str(int(x)) / f"{int(y)}.webp") as tile:
         return np.array(tile.convert("RGB").getpixel((int(x % 1 * 256), int(y % 1 * 256))), dtype=float)
 
 
@@ -109,13 +113,19 @@ def test_the_published_tiles_show_the_sea_in_blue_and_the_land_not():
     assert np.abs(colour_at(*inland_near_guinobatan) - SEA).max() > 12
 
 
-def test_the_relief_stays_small_enough_for_the_site():
-    files = list((DATA / "sites" / "mayon" / "relief").rglob("*.webp"))
+def test_panamas_open_sea_has_no_height_file_and_is_still_blue():
+    south_of_the_peninsula = (6.95, -80.7)
+    assert np.abs(colour_at(*south_of_the_peninsula, site_id="panama") - SEA).max() < 12
+
+
+@pytest.mark.parametrize("site", both_sites(), ids=lambda site: site["id"])
+def test_the_relief_stays_small_enough_for_the_site(site):
+    files = list((DATA / "sites" / site["id"] / "relief").rglob("*.webp"))
     assert sum(path.stat().st_size for path in files) < 20_000_000
 
 
-def test_the_relief_covers_the_whole_site():
-    site = mayon()
+@pytest.mark.parametrize("site", both_sites(), ids=lambda site: site["id"])
+def test_the_relief_covers_the_whole_site(site):
     assert site["relief_bounds_west"] < site["bounds_west"] and site["relief_bounds_east"] > site["bounds_east"]
     assert site["relief_bounds_south"] < site["bounds_south"] and site["relief_bounds_north"] > site["bounds_north"]
 
@@ -152,8 +162,8 @@ def test_the_contract_fails_on_half_set_fields(tmp_path):
     assert "relief bounds need relief_max_native_zoom" in errors[0]
 
 
-def test_a_site_on_imagery_needs_no_tiles(tmp_path):
-    panama = json.loads((DATA / "sites.json").read_text(encoding="utf-8"))["data"][1]
+def test_a_site_with_no_relief_settings_needs_no_tiles(tmp_path):
+    no_relief = {f"relief_bounds_{side}": None for side in ("west", "south", "east", "north")}
     errors = []
-    _check_relief(tmp_path, panama, errors)
+    _check_relief(tmp_path, mayon() | no_relief | {"relief_max_native_zoom": None}, errors)
     assert errors == []

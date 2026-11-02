@@ -18,16 +18,17 @@ def read_data(path):
 
 
 def add_empty_relief_tiles(data):
-    """The contract wants Mayon's relief tiles to be there, and publishing never touches them."""
-    site = json.loads((SITES_FOLDER / "mayon.json").read_text(encoding="utf-8"))
-    bounds = [site[f"relief_bounds_{side}"] for side in ("west", "south", "east", "north")]
-    for zoom in range(site["min_zoom"], site["relief_max_native_zoom"] + 1):
-        x_low, y_low, x_high, y_high = relief_tile_range(bounds, zoom)
-        for x in range(x_low, x_high + 1):
-            folder = data / "sites" / "mayon" / "relief" / str(zoom) / str(x)
-            folder.mkdir(parents=True)
-            for y in range(y_low, y_high + 1):
-                (folder / f"{y}.webp").touch()
+    """The contract wants the sites' relief tiles to be there, and publishing never touches them."""
+    for site_id in ("mayon", "panama"):
+        site = json.loads((SITES_FOLDER / f"{site_id}.json").read_text(encoding="utf-8"))
+        bounds = [site[f"relief_bounds_{side}"] for side in ("west", "south", "east", "north")]
+        for zoom in range(site["min_zoom"], site["relief_max_native_zoom"] + 1):
+            x_low, y_low, x_high, y_high = relief_tile_range(bounds, zoom)
+            for x in range(x_low, x_high + 1):
+                folder = data / "sites" / site_id / "relief" / str(zoom) / str(x)
+                folder.mkdir(parents=True)
+                for y in range(y_low, y_high + 1):
+                    (folder / f"{y}.webp").touch()
 
 
 @pytest.fixture
@@ -37,7 +38,8 @@ def folders(tmp_path):
     out.mkdir()
     write_fake(out)
     (data / "sites" / "mayon").mkdir(parents=True)
-    shutil.copytree(DATA_FOLDER / "sites" / "panama", data / "sites" / "panama")  # the other published site
+    # The other published site. Its relief tiles aren't copied one by one: they're made empty below.
+    shutil.copytree(DATA_FOLDER / "sites" / "panama", data / "sites" / "panama", ignore=shutil.ignore_patterns("relief"))
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
     for name in ("towns.geojson", "land.geojson", "channels.geojson"):
         shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)
