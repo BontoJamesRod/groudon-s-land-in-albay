@@ -6,12 +6,14 @@ import pytest
 from PIL import Image
 from playwright.sync_api import expect
 
-from .conftest import SITE, TINY_PNG, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import SITE, TINY_PNG, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
 
-LATEST_PAIR = read_data("sites/mayon/pairs.json")[-1]["id"]
+LATEST_PAIR = latest_pair()["id"]
+# A quiet pair that stays published. Its small flagged area is what these marks are measured against.
+QUIET_PAIR = "mayon_A111F008_20261007_20261019"
 RELIEF_FILES = "**/sites/mayon/relief/**"
 CREDIT = "Relief: Copernicus DEM GLO-30"
 
@@ -186,6 +188,8 @@ def painted_km2(page):
 
 
 def test_tc091_at_the_default_zoom_the_marks_stay_small_and_visible(app):
+    app.select_option("#pair-list", QUIET_PAIR)
+    app.wait_for_function(f"document.querySelector('.radar-marks')?.dataset.cells === '{flagged_pixels(QUIET_PAIR)}'")
     wait_for_marks(app)
     assert 2 < painted_km2(app) < 15  # it was 29 km² at 5 px, for 0.75 km² of flagged ground
 
@@ -543,3 +547,102 @@ def test_tc095_axe_passes_on_satellite(page, site_url, width, height):
     assert problems_on(page) == []
     page.locator("#channel-body .channel-row").first.click()
     assert problems_on(page) == []
+
+
+LABEL = ".product-label"
+LATEST_LABEL = "NISAR {} · before {} · after {}".format(
+    "GCOV + GUNW" if latest_pair()["coherence_used"] else "GCOV", *latest_dates())
+PAIR_WITHOUT_COHERENCE = "mayon_A111F008_20260820_20260901"
+
+
+def assert_label_is_clear(page):
+    """The label is on screen, inside the map, readable, and doesn't touch the credits."""
+    label = page.locator(LABEL).bounding_box()
+    area = page.locator("#map").bounding_box()
+    credits = page.locator(".leaflet-control-attribution").bounding_box()
+    assert label["x"] >= area["x"] and label["x"] + label["width"] <= area["x"] + area["width"]
+    assert label["y"] >= area["y"]
+    assert label["y"] + label["height"] <= credits["y"]
+    assert page.evaluate("parseFloat(getComputedStyle(document.querySelector('.product-label')).fontSize)") >= 12
+
+
+def test_tc096_the_label_names_the_products_and_dates(app):
+    expect(app.locator(LABEL)).to_have_text(LATEST_LABEL)
+    expect(app.locator(LABEL)).to_be_visible()
+
+
+def test_tc096_a_pair_without_coherence_names_gcov_alone(app):
+    app.select_option("#pair-list", PAIR_WITHOUT_COHERENCE)
+    expect(app.locator(LABEL)).to_have_text(re.compile(r"^NISAR GCOV · before .+ · after .+$"))
+    expect(app.locator(LABEL)).not_to_contain_text("GUNW")
+
+
+def test_tc096_the_label_stays_while_compare_is_open(app):
+    app.click("#compare-button")
+    expect(app.locator("#compare-view")).to_be_visible()
+    box = app.locator(LABEL).bounding_box()
+    # The label itself lets taps through, so ask what's drawn there with that switched off for a moment.
+    on_top = app.evaluate("""([x, y]) => {
+      const label = document.querySelector('.product-label');
+      label.style.pointerEvents = 'auto';
+      const found = document.elementFromPoint(x, y);
+      label.style.pointerEvents = '';
+      return found === label;
+    }""", [box["x"] + box["width"] / 2, box["y"] + box["height"] / 2])
+    assert on_top
+
+
+@pytest.mark.parametrize("width, height", [(360, 640), (360, 740), (390, 844), (1280, 500), (1280, 800)])
+@pytest.mark.parametrize("background", ["Relief", "Satellite"])
+def test_tc096_the_label_is_clear_of_the_credits(page, site_url, width, height, background):
+    prepare_page(page, width=width, height=height)
+    page.goto(site_url)
+    wait_until_ready(page)
+    close_list_on_a_phone(page)
+    page.click(f'.basemap-button:has-text("{background}")')
+    expect(page.locator(LABEL)).to_have_text(LATEST_LABEL)
+    assert_label_is_clear(page)
+
+
+def test_tc096_the_label_is_clear_on_panama_on_a_phone(page, site_url):
+    prepare_page(page, width=360, height=740)
+    page.goto(site_url)
+    wait_until_ready(page)
+    close_list_on_a_phone(page)
+    page.click("#site-name")
+    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    expect(page.locator(LABEL)).to_have_text("NISAR GCOV + GUNW · before Sep 27, 2026 · after Oct 9, 2026")
+    assert_label_is_clear(page)
+
+
+def test_tc096_a_tap_on_the_label_reaches_the_map(app):
+    box = app.locator(LABEL).bounding_box()
+    app.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+    expect(app.locator("#readout-card")).to_be_visible()
+
+
+def test_tc096_a_pair_that_fails_keeps_the_label_of_the_pair_on_screen(page, site_url):
+    prepare_page(page)
+    page.route(f"**/{PAIR_WITHOUT_COHERENCE}/pair.json", lambda route: route.abort())
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.select_option("#pair-list", PAIR_WITHOUT_COHERENCE)
+    expect(page.locator("#timeline-message")).not_to_be_empty()
+    expect(page.locator(LABEL)).to_have_text(LATEST_LABEL)
+
+
+@pytest.mark.parametrize("height", [640, 740, 844])
+@pytest.mark.parametrize("background", ["Relief", "Satellite"])
+def test_tc096_the_label_is_clear_of_the_map_buttons_with_the_drawer_open(page, site_url, height, background):
+    prepare_page(page, width=360, height=height)
+    page.goto(site_url)
+    wait_until_ready(page)
+    close_list_on_a_phone(page)
+    page.click(f'.basemap-button:has-text("{background}")')
+    open_drawer_if_closed(page)
+    expect(page.locator(LABEL)).to_have_text(LATEST_LABEL)
+    page.wait_for_timeout(400)  # the drawer slides open, and the map shrinks with it
+    label = page.locator(LABEL).bounding_box()
+    for control in (".basemap-switcher", ".leaflet-control-zoom"):
+        box = page.locator(control).bounding_box()
+        assert box["y"] + box["height"] <= label["y"]

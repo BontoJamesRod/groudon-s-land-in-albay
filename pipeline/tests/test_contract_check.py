@@ -289,6 +289,11 @@ def test_unknown_source_fails(data_dir):
     assert any("not in sources.json" in e for e in check_data_dir(data_dir))
 
 
+def test_tc101_a_validated_pass_is_allowed(data_dir):
+    edit_json(pair_path(data_dir), lambda c: c["data"]["passes"][0].update(maturity="VALIDATED"))
+    assert not any("maturity" in e for e in check_data_dir(data_dir))
+
+
 def test_unpublished_pair_in_list_fails(data_dir):
     path = data_dir / "sites" / "mayon" / "pairs.json"
     edit_json(path, lambda c: c["data"][0].update(status="ready"))

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=05a14177b8">
+  <link rel="stylesheet" href="css/app.css?v=4a3342d2bd">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
@@ -83,6 +83,7 @@
     </div>
     <div class="legend">
       <label class="layer-toggle"><input id="layer-toggle" type="checkbox" checked> <span id="legend-title"></span></label>
+      <p class="legend-colors" data-text="legendColors"></p>
       <ul id="legend-rows" class="legend-rows"></ul>
       <p id="legend-area" class="legend-area"></p>
       <p class="channel-note" data-text="marksNote"></p>
@@ -137,7 +138,25 @@
     <div data-body></div>
   </dialog>
 
-  <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
+  <script>
+    // If a script can't load, the app can't start, and js/strings.js may be the one missing,
+    // so this text has to live here. Retry reloads the page, which asks for the scripts again.
+    function showStartFailure() {
+      document.getElementById("loading").hidden = true;
+      // The other buttons get their text from js/strings.js, and can't do anything without the app.
+      document.querySelectorAll("button").forEach((button) => { button.hidden = true; });
+      document.getElementById("app-message").textContent = "Couldn't load the map. Check your connection and try again.";
+      const retry = document.getElementById("app-retry");
+      retry.textContent = "Retry";
+      retry.hidden = false;
+      retry.onclick = () => location.reload();
+    }
+    // A script that loaded but broke while starting. main.js sets appStarted once they have all run.
+    window.addEventListener("error", () => {
+      if (!window.appStarted) showStartFailure();
+    });
+  </script>
+  <script src="vendor/leaflet-1.9.4/leaflet.js" onerror="showStartFailure()"></script>
   <script type="importmap">
 {
   "imports": {
@@ -146,18 +165,18 @@
     "./js/data.js": "./js/data.js?v=4dcc91f5d5",
     "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
     "./js/histogram.js": "./js/histogram.js?v=c785e7aabb",
-    "./js/layers.js": "./js/layers.js?v=d16d734ecf",
-    "./js/main.js": "./js/main.js?v=cef4cc6b1e",
+    "./js/layers.js": "./js/layers.js?v=7fd82128db",
+    "./js/main.js": "./js/main.js?v=120bc70bb4",
     "./js/map.js": "./js/map.js?v=64aa2e42da",
     "./js/marks.js": "./js/marks.js?v=954090a74a",
     "./js/panels.js": "./js/panels.js?v=d46d7dd420",
     "./js/readout.js": "./js/readout.js?v=a8efc307b7",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=17fc5ae865",
+    "./js/strings.js": "./js/strings.js?v=f1f0b93f06",
     "./js/timeline.js": "./js/timeline.js?v=f1f56ad0e9"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=cef4cc6b1e"></script>
+  <script type="module" src="js/main.js?v=120bc70bb4" onerror="showStartFailure()"></script>
 </body>
 </html>

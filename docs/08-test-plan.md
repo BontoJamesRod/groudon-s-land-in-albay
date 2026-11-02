@@ -43,7 +43,7 @@ Fixtures used below are listed in §5.
 | TC-017 | US-006/AC-2 | FR-018, SCR-01, API-007 | Site with no pairs | 1. On localhost, use the empty-pairs fixture. 2. Open the site. | "No radar passes processed yet for this site"; only base layers show | Edge | Medium |
 | TC-018 | US-007/AC-1 | FR-019, SCR-04, API-009 | Compare before and after | 1. Tap Compare. 2. Drag the divider left and right. | Before image on the left, after image on the right, each labeled with its date | Positive | High |
 | TC-019 | US-007/AC-2 | FR-020, SCR-04, API-009 | Missing image | 1. On localhost, use the missing-image fixture. 2. Tap Compare. | "Before/after images not available for this pair"; the map stays as it was | Negative | Medium |
-| TC-020 | US-008/AC-1 | FR-025, SCR-01, API-008, API-009 | New-material layer and legend | 1. Select the eruption pair. 2. Check the map and legend. | Detected areas shaded; legend lists each class with its confidence and units; total area in km² with 2 decimals equals `new_material_area_km2` | Positive | High |
+| TC-020 | US-008/AC-1 | FR-025, SCR-01, API-008, API-009 | New-material layer and legend | 1. Select the eruption pair. 2. Check the map and legend. | Detected areas shaded; legend says what each color means with its confidence, and that areas are in km² (and where basketball courts are shown), never "Units: class"; total area in km² with 2 decimals equals `new_material_area_km2` | Positive | High |
 | TC-021 | US-008/AC-2 | FR-026, SCR-01 | Pair with nothing detected | 1. On localhost, use the zero-area fixture. | No shading; "No new material detected between <before date> and <after date>" with the real dates | Edge | Medium |
 | TC-022 | US-008/AC-3 | FR-023 | Only brightness passes | 1. Run the `classify` unit tests with test arrays where only brightness passes. | Those cells get class 1 (low), never 2 (high) | Negative | High |
 | TC-023 | US-008/AC-3 | FR-030, TBL-05 | No coherence data | 1. Process a pair whose GUNW is unavailable (fixture). | `coherence_used` is `false`; the grid has no class 2 cells; `high_confidence_area_km2` is 0 | Edge | High |
@@ -87,7 +87,7 @@ Fixtures used below are listed in §5.
 | TC-072 | US-026/AC-1 | FR-064, FR-060, SCR-12, TBL-12, API-012 | Area in a strip | 1. Run the `channel_areas` unit tests with a small grid and a known strip, with flagged cells inside the strip, outside it and beyond the reach. | Only flagged cells inside the strip and the reach count; the area matches a hand calculation; one row per channel and pair | Positive | High |
 | TC-073 | US-026/AC-2 | FR-064, SCR-12, TBL-01 | Strip width missing | 1. Run with a config that has channels and no width. | Stops with "Channel strip width missing in site config: <file>" | Negative | High |
 | TC-074 | US-026/AC-3 | FR-065, TBL-03, API-005 | Confirmed channels only | 1. Run `contract_check` on a fixture with a channel without `confirmed_on`. 2. Check that no unconfirmed candidate from `channel_name_candidates.geojson` is in the published channel files. | The check fails on the fixture; no candidate is drawn or listed | Negative | High |
-| TC-075 | US-012/AC-4 | FR-068 | No legal labels | 1. Search `strings.js`, every page and `site/data/` for "illegal", "unpermitted" and "violation". | No hits | Negative | High |
+| TC-075 | US-012/AC-4 | FR-068 | No legal labels, and no landslide label on Panama | 1. Search every text file in `site/`, including `site/data/`, for "illegal", "unpermitted" and "violation". 2. Search `site/js`, the pages, Panama's site row and Panama's data files for "landslide", leaving out the check panel's description of its source. | No hits | Negative | High |
 | TC-076 | US-004/AC-5 | FR-069, SCR-02, TBL-01 | Site with no summit | 1. Switch to Panama. 2. Tap a land point. | Card shows the town and the result, with no distance or danger-zone line | Edge | High |
 | TC-077 | US-013/AC-3 | FR-040, SCR-01, SCR-06, TBL-10, API-001, API-002 | Credit and sources follow the site | 1. On Mayon, read the map credit and open Data sources. 2. Switch to a second site and do the same. | Each site shows its own boundary credit and sources plus the shared ones, never the other site's | Positive | High |
 | TC-078 | US-014/AC-3 | FR-070, SCR-01, SCR-02, SCR-05, TBL-01, TBL-06, API-001 | A site's own wording | 1. Switch to Panama. 2. Read the legend, a card, the disclaimer, the help panel and the phone handle. 3. Switch back. | Panama says "change", names SINAPROC, titles the earthquake pair "Changed after the earthquake", and never says landslides there; Mayon's text comes back unchanged | Positive | High |
@@ -107,6 +107,12 @@ Fixtures used below are listed in §5.
 | TC-093 | US-025/AC-6 | FR-080, SCR-14 | The bar matches the map | 1. Open a channel at 360 and 1280 px. 2. Pick another pass from a bar and with Previous. 3. Read which bar is highlighted and whether it's in view. | Only the bar of the pass on the map is highlighted, and it's fully in view below the panel's header | Positive | High |
 | TC-094 | US-031/AC-1, US-031/AC-2 | FR-081, SCR-01 | The switcher | 1. Open at 360 and 1280 px. 2. Measure the buttons and read `aria-pressed`. 3. Choose with the keyboard. 4. Reload, and change site. 5. Block the browser's storage. | Relief first; 44 px buttons; the choice works by keyboard and stays; with storage blocked the app opens on Relief and can still switch | Positive | High |
 | TC-095 | US-031/AC-3, US-031/AC-4, US-031/AC-5 | FR-082, FR-083 | Each background | 0. Hold the sharp tiles back and read the loading count. 1. Watch requests on Relief. 2. Read colours and credits on each. 3. Check the marks on each. 4. Block the imagery. 5. Run axe on each at 360 and 1280 px. | No imagery request on Relief; colours and credit follow the choice; marks show on both; the relief stays with the notice; no serious or critical axe result | Positive | High |
+| TC-096 | US-013/AC-4 | FR-084, SCR-01, API-008 | Products and dates on the map | 1. Read the label on a pair with coherence data. 2. Pick a pair without it. 3. Open Compare. 4. Measure the label at 360 and 1280 px, on both backgrounds and both sites. 5. Tap the map through the label. | "NISAR GCOV + GUNW · before <date> · after <date>", or GCOV alone; always visible, inside the map, clear of the credits; a tap there still reaches the map | Positive | High |
+| TC-097 | US-009/AC-1 | ADR-009, FR-059 | A stray file can't block publishing | 1. Put stray JSON files in `pipeline/out/`, outside any pair folder. 2. Run the contract check on it, and publish a pair. 3. Break a file inside a pair folder. | The strays are ignored and the pair publishes; a broken pair folder still stops it | Negative | High |
+| TC-098 | US-009/AC-1 | FR-085, ADR-014 | Hold and look-closer reasons | 1. Run the hold check on measurements that break reasons (a) and (d), and on one with only a large total area. 2. Run it on far-field coherence and far-field area past their limits. 3. Measure where a made-up grid's flagged cells are. 4. Compare two tracks' grids. | (a) and (d) hold; (b) and (c) only say to look closer; a large area alone does neither; the 24-day pair doesn't set the limit for (c); the shares and the agreement are reported | Negative | High |
+| TC-099 | US-017/AC-3 | FR-086, FR-048 | Single-track note | 1. Publish a pair with the single-track option. 2. Read its check note. 3. Publish it without the option. | The note names the track and the pair is otherwise unchanged; without the option there's no note | Positive | Medium |
+| TC-100 | US-001/AC-4 | FR-087, SCR-01 | A script or data file fails to load | 1. Block one script or data file. 2. Open the site. 3. Allow it again and press Retry. | A clear error and a Retry button show, "Loading" goes away, and Retry opens the map | Negative | High |
+| TC-101 | US-009/AC-1 | FR-085, TBL-04 | VALIDATED products | 1. Search with a VALIDATED product. 2. Run the contract check on a pass marked VALIDATED. | The product is kept with that maturity, and the contract accepts it | Positive | Medium |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -147,7 +153,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 
 | US-ID | Acceptance criteria | TC-IDs |
 | --- | --- | --- |
-| US-001 | AC-1, AC-2, AC-3 | TC-001, TC-002, TC-079 |
+| US-001 | AC-1, AC-2, AC-3, AC-4 | TC-001, TC-002, TC-079, TC-100 |
 | US-002 | AC-1, AC-2 | TC-003, TC-004 |
 | US-003 | AC-1, AC-2 | TC-005, TC-007, TC-006 |
 | US-004 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061, TC-076 |
@@ -157,7 +163,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-008 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-020, TC-021, TC-022, TC-023, TC-063, TC-062 |
 | US-009 | AC-1, AC-2, AC-3 | TC-024, TC-027, TC-048, TC-025, TC-026 |
 | US-012 | AC-1, AC-2, AC-3, AC-4 | TC-028, TC-029, TC-030, TC-075 |
-| US-013 | AC-1, AC-2, AC-3 | TC-031, TC-032, TC-077 |
+| US-013 | AC-1, AC-2, AC-3, AC-4 | TC-031, TC-032, TC-077, TC-096 |
 | US-014 | AC-1, AC-2, AC-3 | TC-033, TC-034, TC-078 |
 | US-015 | AC-1, AC-2 | TC-035, TC-036 |
 | US-016 | AC-1, AC-2, AC-3 | TC-037, TC-038, TC-039 |
@@ -179,7 +185,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 - [ ] No open Critical or Major bugs
 - [ ] `contract_check` reports 0 errors (TC-048)
 - [ ] Secret scan finds 0 secrets (TC-052)
-- [ ] Challenge requirements R1–R8 visibly met (checklist §10)
+- [ ] Challenge requirements R1–R8 visibly met (§14)
 
 ## 9. Bug Report Template
 
@@ -218,3 +224,18 @@ None.
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
 | 0.2 | 2026-11-01 | TC-011, TC-022 and TC-024 updated. End-to-end tests are automated. Added TC-061 to TC-082. |
+
+## 14. R1–R8 Evidence
+
+These are the challenge requirements behind the exit criteria in §8. The demo moments use the latest published pair, Oct 8 to Oct 20, 2026 in Asia/Manila time, until an eruption pair is published.
+
+| Requirement | App feature that meets it | Test that checks it | Demo moment |
+| --- | --- | --- | --- |
+| R1 Interactive app | F-01 Interactive map, F-02 Place readout | TC-003, TC-008 | Zoom in, then tap Daraga to open its card. |
+| R2 Radar as the core input | F-05 New-material layer, made from NISAR brightness change | TC-022, TC-027 | Turn the layer on, and say that every mark comes from comparing two radar passes. |
+| R3 NISAR products named on screen | F-09: the product label on the map, and the Data sources panel | TC-031, TC-096 | Point to the label in the map's corner, then open Data sources to show a product name with its link. |
+| R4 Change over time on the same track | F-03 Pass timeline, F-04 Before/after view, F-20 Channel timeline | TC-013, TC-018, TC-025 | Press Previous to step back along track 111, then drag the Compare divider. |
+| R5 Change map with legend and units | F-05 New-material layer, with a legend in plain words | TC-020 | Read "What each color means", then "Areas are in km²" and the total. |
+| R6 The named change type | F-05 New material at Mayon; "change" on Panama's plain map | TC-020, TC-078 | Read "New material, within 10 km of the summit" from the legend. |
+| R7 Two sites on two continents | F-10 Second showcase site | TC-033 | Pick Azuero Peninsula, Panama, and watch the map move from Asia to Central America. |
+| R8 Plain-language explainer | F-08 "What am I looking at?" panel | TC-028, TC-030 | Open "What am I looking at?", and read "How radar sees". |

@@ -288,7 +288,7 @@ mayon-radar-watch/
 - **Context:** Only published pairs may reach visitors (FR-059).
 - **Decision:** The pipeline writes to `pipeline/out/` (not committed); the publish step copies a checked pair into `site/data/`.
 - **Alternatives considered:** Writing straight into `site/data/` with a status flag: unpublished pairs would still be reachable by URL.
-- **Consequences:** One extra step per pair; nothing half-finished ever deploys.
+- **Consequences:** One extra step per pair; nothing half-finished ever deploys. The check on `pipeline/out/` reads only the pair folders under `sites/<site>/pairs/`, so screenshots, reports and scratch folders there can't block publishing.
 
 ### ADR-010: Background tiles with a self-drawn fallback
 
@@ -316,6 +316,24 @@ mayon-radar-watch/
 - **Decision:** Use EOxCloudless (Sentinel-2 cloudless) 2024 from EOX's tile service, under CC BY-NC-SA 4.0 for non-commercial use, with the credit EOX asks for in the map while Satellite is on. The tiles are loaded from EOX and not stored here. The relief stays on under it, as the placeholder and the fallback.
 - **Alternatives considered:** Esri with a subscription (a cost, and against the owner's rule); no imagery (the owner asked for it).
 - **Consequences:** Imagery comes from 10 m data, so it's softer than Esri's at high zoom. Commercial use would need a paid EOX license. EOX's license page doesn't address calling its hosted tiles directly (open question for the owner in `NIGHT_REPORT.md`). `main` still loads Esri until `night-1` is merged.
+
+### ADR-014: A written rule for holding a pair, set before any post-eruption data
+
+- **Context:** The first passes after the eruption could look very different from the quiet ones. Deciding what counts as a bad pair after seeing them would invite choosing the answer. The owner set this rule on 2026-11-03, before any post-eruption product was opened.
+- **Decision:** Hold a pair (don't publish it) automatically if any of these is true:
+  - (a) a product isn't PROVISIONAL or better;
+  - (d) large no-data gaps cover the volcano;
+  - (e) the map shows stripe or edge patterns.
+
+  Two far-field checks say "look closer", and neither holds a pair by itself:
+  - (b) the median coherence change of land far from the summit, where an eruption shouldn't reach, falls outside the range of the same measure on the published pairs that used coherence;
+  - (c) the flagged area far from the summit is above the highest of the published pairs with the usual gap, leaving out the pair with a longer gap.
+
+  To look closer, compare the share of the flagged change near the volcano and far from it with the quiet pairs. If the change is concentrated near the volcano and its channels, publish. If it's spread evenly across the whole scene, hold.
+
+  A large area alone is not a reason to hold. When both tracks (104 and 111) have a pair, report how much they agree next to the quiet pairs' agreement: it supports a decision and never blocks one. If only one track is ready, publish it with a "single track" note.
+- **Alternatives considered:** A limit on total area, which would hold back exactly the result a real eruption should produce. Checking coherence across the whole reach, and holding automatically on it, which could hold a real eruption because of the eruption itself.
+- **Consequences:** The reference numbers are fixed in `pipeline/reports/hold-check-baseline.json`, and the distances and the steps are in `pipeline/RUNBOOK-eruption.md`. Reasons (d) and (e) and the "look closer" judgement need a person to look at the map. No threshold values are written in these docs.
 
 ## 12. Assumptions
 

@@ -7,14 +7,14 @@ from playwright.sync_api import expect
 from shapely import contains_xy
 from shapely.geometry import shape
 
-from .conftest import SITE, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import SITE, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import card, controls_too_small, map_center, map_zoom, tap_at
 
 pytestmark = pytest.mark.e2e
 
 MAYON = SITE / "data" / "sites" / "mayon"
-LATEST_PAIR = "mayon_A111F008_20261007_20261019"
+LATEST_PAIR = latest_pair()["id"]
 
 
 def channels():
@@ -195,7 +195,8 @@ def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
     app.click("#channels-button")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     assert [row.split(" about ")[0] for row in list_rows(app)] == [f"{names[channel_id]} {latest[channel_id]:.3f} km²" for channel_id in wanted]
-    expect(app.locator(".channel-lead")).to_have_text("Most changed first, since the last pass: Oct 8, 2026 to Oct 20, 2026, track 111")
+    expect(app.locator(".channel-lead")).to_have_text(
+        "Most changed first, since the last pass: {} to {}, track {}".format(*latest_dates(), latest_pair()["track"]))
 
 
 def test_the_list_says_how_the_area_is_counted_and_what_is_left_out(app):
@@ -397,7 +398,7 @@ def test_tc067_one_bar_per_pair_in_order_with_its_dates_and_value(app):
     for text, pair in zip(texts, pairs):
         assert f"{rows[pair['id']]['flagged_area_km2']:.3f} km²" in text
         assert f"track {pair['track']}" in text
-    assert texts[-1].startswith("Oct 8, 2026 to Oct 20, 2026, track 111")
+    assert texts[-1].startswith("{} to {}, track {}".format(*latest_dates(), latest_pair()["track"]))
 
 
 def test_tc067_every_bar_uses_the_same_scale(app):

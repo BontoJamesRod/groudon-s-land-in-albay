@@ -113,7 +113,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-075 | Build the channel list in `channels.js`, with empty, loading and error states | US-024, FR-061, FR-067, SCR-01, SCR-13, API-012 | M | T-022, T-074 | TC-064, TC-065 and TC-066 pass |
 | T-076 | Build the channel view: bars, no-data state and the strip on the map | US-025, FR-062, FR-063, FR-067, SCR-14, API-005, API-012 | M | T-075, T-028 | TC-067, TC-068, TC-069 and TC-070 pass |
 | T-077 | Dim pairs with an unequal gap, with a short note, on the pass timeline and the channel timeline | US-005, US-025, FR-066, SCR-01, SCR-14, API-007 | S | T-024, T-076 | TC-070 and TC-071 pass |
-| T-078 | Add the rule against legal labels to the wording test | US-012, FR-068 | S | T-030 | TC-075 passes |
+| T-078 | Add the rule against legal labels to the wording test, and keep "landslide" off Panama's pair, legend, card and help text | US-012, FR-068 | S | T-030 | TC-075 passes |
 
 ### Owner's decisions on the docs run (2026-11-01)
 
@@ -159,6 +159,19 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
 | T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
 | T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-131 | Show a clear error with a Retry button when a script or data file fails to load, instead of a stuck "Loading" | FR-087, US-001, TC-100 | S | T-128 | TC-100 passes |
+| T-130 | Accept VALIDATED products in the search and the data contract | FR-085, ADR-014, TC-101 | S | T-126 | TC-101 passes |
+| T-129 | Change the hold rule: far-field coherence and flagged area become "look closer" checks, with where the change is concentrated printed for comparison | FR-085, ADR-014, TC-098 | S | T-126 | TC-098 passes |
+| T-128 | Stop the test server refusing connections when busy, which left the app stuck on its first screen and made browser tests fail at random | T-052, TC-001 | S | T-122 | 20 runs under heavy load pass |
+| T-127 | Remove the two unused `coherence_loss.png` files from pairs that didn't use coherence | FR-030, T-020 | S | T-122 | The files are gone, and the contract check passes |
+| T-126 | Write the rule for holding a pair before any post-eruption data is opened, and add the single-track note | FR-085, FR-086, ADR-014, TC-098, TC-099 | S | T-122 | TC-098 and TC-099 pass |
+| T-125 | Make the browser tests read the latest pair from the data, so that publishing a pair needs no test edits | T-052, T-038 | M | T-122 | The tests pass with a made-up newer pair in a scratch copy |
+| T-124 | Update the eruption runbook, with a review command, a preview step and a drill option for older pairs | T-038, FR-085, TC-098 | M | T-126 | TC-098 passes, and the runbook's commands run on the drill pair |
+| T-123 | Make the contract check and publish look only at pair folders under `pipeline/out/`, so a stray file can't block publishing | ADR-009, TC-097 | S | T-120 | TC-097 passes |
+| T-122 | Show the pair's NISAR products and dates on the map, and say what the legend's colours and areas mean in plain words | F-05, F-09, FR-025, FR-084, US-008, US-013, TC-020, TC-096 | S | T-121 | TC-020 and TC-096 pass |
+| T-121 | Add the R1–R8 evidence table to the test plan, and point the exit criteria at it | G-01, T-040, 08 §8, 08 §14 | S | T-120 | 08 §14 lists a feature, a test and a demo moment for each requirement |
+| T-120 | Run a fire drill of the eruption runbook on track 111, 2026-10-07 → 2026-10-19, from cached data into a scratch folder under `pipeline/out/`, publishing nothing, and report the timings | T-038, T-059, NFR-009 | S | T-119 | The "Fire drill" section is in `NIGHT_REPORT.md` |
+| T-119 | Record the owner's decision to keep Satellite loading live from EOX, list the newest passes, and bring `docs/PROGRESS.md` up to date | F-23, ADR-013, T-038 | S | T-118 | The report and `docs/PROGRESS.md` say so |
 | T-118 | Fix the satellite loading count, which grew when the map moved, and load the low-detail layer before the sharp tiles | F-23, FR-083, US-031, TC-095 | S | T-117 | TC-095 passes |
 | T-117 | Show a low-detail satellite layer first and a loading count, because EOX's tiles can take over a minute | F-23, FR-083, US-031, TC-095 | S | T-116 | TC-095 passes, and the time to first imagery is measured at 1920 px |
 | T-116 | Build the Relief or Satellite switcher with EOxCloudless, and overlay colours for each background; replace Esri in the credits | F-23, FR-081, FR-082, FR-083, US-031, SCR-01, TC-094, TC-095 | M | T-115 | TC-094 and TC-095 pass, with axe passing on both backgrounds |

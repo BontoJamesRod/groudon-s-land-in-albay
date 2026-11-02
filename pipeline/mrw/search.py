@@ -133,10 +133,10 @@ def maturity_of(props):
     """Read the maturity from the product's collection or link, e.g. ..._PROVISIONAL_V1.
 
     Returns None for anything else, such as Urgent Response products (_UR_ in the name).
-    docs/05 only allows BETA and PROVISIONAL, so those products are left out of the list.
+    docs/05 only allows BETA, PROVISIONAL and VALIDATED, so those products are left out of the list.
     """
     text = f"{props.get('collectionName')} {props.get('url')}"
-    for maturity in ("BETA", "PROVISIONAL"):
+    for maturity in ("BETA", "PROVISIONAL", "VALIDATED"):
         if maturity in text:
             return maturity
     return None

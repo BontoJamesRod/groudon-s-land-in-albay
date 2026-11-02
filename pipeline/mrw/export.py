@@ -278,11 +278,11 @@ def _previous_pass(passes, before):
     return max(same, key=lambda p: p["acquired_start"]) if same else None
 
 
-def _read_gunw(gunw, bounds):
+def _read_gunw(gunw, bounds, reader=read_crop):
     """Read one GUNW's coherence, cropped to the site. None if there is no GUNW."""
     if gunw is None:
         return None
-    return read_crop(gunw["granule_id"], gunw["url"], GUNW_GROUP, GUNW_DATASETS, bounds)
+    return reader(gunw["granule_id"], gunw["url"], GUNW_GROUP, GUNW_DATASETS, bounds)
 
 
 def load_land(site_id, data_folder=DATA_FOLDER):
@@ -292,7 +292,7 @@ def load_land(site_id, data_folder=DATA_FOLDER):
 
 
 def run_pair(site_id, before_granule, after_granule, out_folder=OUT_FOLDER,
-             search_passes=search_gcov, search_products=search_gunw):
+             search_passes=search_gcov, search_products=search_gunw, reader=read_crop):
     """Process one pair from start to finish. Any stop happens before files are written."""
     config = load_site(site_id)
     passes = search_passes(config, SEARCH_START)
@@ -308,9 +308,9 @@ def run_pair(site_id, before_granule, after_granule, out_folder=OUT_FOLDER,
     # With unequal gaps there is no fair baseline, so the pair uses brightness only (FR-030).
     previous_gunw = find_gunw(previous, before, products) if previous and same_gap(previous, before, after) else None
     bounds = site_bounds(config)
-    crops = [read_crop(p["granule_id"], p["url"], GCOV_GROUP, GCOV_DATASETS, bounds) for p in (before, after)]
+    crops = [reader(p["granule_id"], p["url"], GCOV_GROUP, GCOV_DATASETS, bounds) for p in (before, after)]
     gcov_result = process_gcov(crops[0], crops[1], load_land(site_id))
-    loss = compute_coherence_loss(_read_gunw(previous_gunw, bounds), _read_gunw(gunw, bounds),
+    loss = compute_coherence_loss(_read_gunw(previous_gunw, bounds, reader), _read_gunw(gunw, bounds, reader),
                                   gcov_result["x"], gcov_result["y"], gcov_result["epsg"])
     previous_id = pair_id(site_id, previous, before) if previous else None
     return write_pair(gcov_result, loss, before, after, gunw, previous_gunw, previous_id, config, out_folder)

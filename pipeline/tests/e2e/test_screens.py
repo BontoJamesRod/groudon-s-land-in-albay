@@ -140,7 +140,7 @@ def test_screen_not_found(page, site_url, tmp_path, width):
 def no_radar_data_rows():
     """Mi-isi has no radar value in the latest pair, or in the one before it. The rest is real."""
     rows = read_data("sites/mayon/channel_areas.json")
-    missing = {"mayon_A111F008_20261007_20261019", "mayon_D104F082_20261007_20261019"}
+    missing = {pair["id"] for pair in read_data("sites/mayon/pairs.json")[-2:]}
     return [{**row, "flagged_area_km2": None, "checked_area_km2": 0} if row["channel_id"] == "mayon_miisi" and row["pair_id"] in missing else row
             for row in rows]
 

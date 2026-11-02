@@ -126,3 +126,10 @@ def test_gunw_is_matched_to_exactly_its_two_passes():
     assert find_gunw(before, after, [gunw]) is gunw
     assert find_gunw(after, before, [gunw]) is None
     assert find_gunw(before, parse_gcov(GCOV_OTHER), [gunw]) is None
+
+
+def test_tc101_a_validated_product_is_kept():
+    validated = FakeResult(GCOV_1)
+    validated.properties["url"] = "https://example.org/NISAR_VALIDATED_V1/x.h5"
+    passes = search_gcov(load_site("mayon"), "2026-06-17", searcher=lambda **options: [validated])
+    assert [p["maturity"] for p in passes] == ["VALIDATED"]

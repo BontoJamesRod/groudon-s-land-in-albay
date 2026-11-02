@@ -1077,3 +1077,149 @@ This doesn't prove that's what happened in the owner's browser, because I measur
 **Store the imagery in the site?** I recommend it, and it's the only fix that removes the wait. It needs your approval because it's a large download from EOX's tile service, republished under CC BY-NC-SA 4.0, and I'd ask EOX first (cloudless@eox.at).
 
 **Tests:** 743 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. On `night-1`, not merged: the live site still has the wrong count until you ask for a merge.
+
+# Satellite decision and newest passes (T-119, 2026-11-03)
+
+**The owner's decision: Satellite keeps loading live from EOX with the preview layer, and there's no bulk download of imagery.** This closes the question from the T-117 and T-118 sections. Satellite's speed will keep depending on EOX, and Relief stays the default.
+
+## Newest passes
+
+`eruption_run.py check-all`, run on 2026-11-02 at about 17:00 UTC. It lists names only, and nothing was opened or downloaded. It can only see products from before the 2026-11-01 cutoff.
+
+| Track | Frame | Newest GCOV | Newest GUNW | Maturity |
+| --- | --- | --- | --- | --- |
+| 39 | 8 | 2026-10-14 | 2026-10-14 | PROVISIONAL |
+| 104 | 82 | 2026-10-19 | 2026-10-19 | PROVISIONAL |
+| 111 | 8 | 2026-10-19 | 2026-10-19 | PROVISIONAL |
+
+**The Oct 31 passes on tracks 104 and 111 aren't on ASF yet,** so T-038 is still waiting.
+
+# Fire drill (T-120, 2026-11-03)
+
+**The runbook's processing works, but publishing would stop today.** From "pass listed" to "ready for your approval" should take **about 10 minutes** for both eruption pairs, once the blocker below is cleared and both the GCOV and GUNW are on ASF. I ran it on track 111, 2026-10-07 → 2026-10-19, from cached radar data, with downloads switched off. `site/data` and the download log didn't change, and nothing was published.
+
+## Timings
+
+| Runbook step | Measured | Note |
+| --- | --- | --- |
+| 1–3 Thresholds and cutoff | 0 s | Already done on 2026-11-01. Checked only |
+| 4 Republish 11 pairs, with contract check | 103 s | Into a copy. Not needed in the real run, because the thresholds haven't changed |
+| 5 `check` | 6 s | Names only |
+| 6 Process one pair | 13 s | Cached, so this leaves out the download |
+| 6 Contract check | 1 s | On the drill's own folder |
+| 6 Areas and median coherence | 4 s | The median needed my own code |
+| 7 Publish, with contract check | 2 s | Into a copy |
+| Extra: open the copy in a browser | 8 s | Includes copying the site |
+| 8–9 Push, merge, live check | Not run | They'd publish |
+
+The output for all 11 published Mayon pairs matched the published files, apart from the two extra images listed under decision 3. Areas also matched: 0.75 km² for this pair.
+
+## Expected time
+
+| Stretch | Time | Basis |
+| --- | --- | --- |
+| Pass listed → ready for approval, machine time | 3–5 min | Measured steps, plus 1–2 min of download per pair from the gaps in `raw/download_log.jsonl`. That's an estimate, not a timed download |
+| Checking and writing it up for you | About 5 min | My estimate |
+| **Total to ready for approval** | **About 10 min** | |
+| Approval → live, if you approve | About 20 min | Tests 4 min, CI 4–7 min and deploy 5–7 min from recent runs, then the live check |
+
+The clock starts when both products are listed. ASF may list a pass days late, and the GUNW can come after the GCOV. Neither wait is included. Each pair should need under 0.2 GB, and 5.25 GB of the 20 GB budget is used so far.
+
+## What broke
+
+**Publishing is blocked.** `publish.py` checks everything under `pipeline/out/`, including the 3 `axe.json` files my earlier accessibility runs left in `pipeline/out/screens/`. On a real pair it stopped with "Output fails the contract check", and the runbook's step 6 check fails the same way. A scratch folder under `pipeline/out/` causes the same stop, so I removed the drill's after the run. I kept its picture in `pipeline/out/screens/fire-drill/`.
+
+## Gaps in the runbook
+
+- **It's out of date.** It still says the cutoff is 2026-10-30, and it treats steps 1–4 as still to do.
+- **Median coherence:** step 6 asks you to look at it, but no command prints it.
+- **No preview:** nothing shows the map before publishing. Copying the site to a scratch folder worked, but it isn't in the runbook.
+- **Not rehearsed:** the tests after a new pair is published. The runbook names only `LATEST_PAIR`, and this pair's ID appears in 8 test files, so more edits may be needed. The drill also had to bypass `process`, which only accepts eruption pairs.
+
+## Decisions for you
+
+1. **Clear the blocker: how?** I recommend making the contract check skip `pipeline/out/screens/`, because any later accessibility run would otherwise bring it back. Deleting the 3 files would also work for now.
+2. **Update the runbook, with a median printout and a preview step?** I recommend yes, before the passes arrive.
+3. **What would make you refuse a pair?** The runbook only says to look closer above about 8 km², and a real eruption could pass that honestly. I recommend that you judge it from the map, the areas and the median coherence together.
+4. **Remove two unused images from the live site?** `coherence_loss.png` is still in the folders of `mayon_A111F008_20260727_20260820` and `mayon_A111F008_20260820_20260901`. Those pairs didn't use coherence and the site doesn't show the images. I recommend removing them.
+
+**Not changed:** the runbook, the code and `site/data`.
+
+# Wording test and R1–R8 evidence (T-078, T-121, 2026-11-03)
+
+- **Wording test (T-078):** it fails if "illegal", "unpermitted" or "violation" appears in any text file in `site/`, including vendored code and file names, or if "landslide" appears in Panama's pairs, legend, card or help text. The site passes today, so no wording changed.
+- **R1–R8 (T-121):** `docs/08-test-plan.md` §14 now has the evidence table, and the §8 exit criteria point to it. I also widened TC-075 to match the new test.
+- **Fire drill:** not rerun, because it already ran under T-120.
+
+## Decision for you
+
+**How strict is "only in the check panel's citation"?** The word appears in three fields of Panama's check file: the source's name, the method text and two row names ("Cells with no mapped landslides"). All three describe the University of Panama's map, not this pair, and the method text says the pair doesn't show that any one spot is a landslide. I allowed those three fields and no others, because the strict reading would mean rewording a published check. If you want only the source's name to pass, the method text and row names need rewording, and the test changes with them.
+
+**Limits of the evidence table:** TC-020 and TC-031 use the latest pair, because the eruption pair isn't published yet. R3's product names are in the Data sources panel, not on the map itself. TC-033 checks the switch to Panama, not the continents themselves.
+
+# Product label and plain legend (T-122, 2026-11-03)
+
+- **R3:** the map now always shows "NISAR GCOV + GUNW · before [date] · after [date]" for the pair on screen, or GCOV alone when the pair has no coherence data. It sits above the credits, so it can't overlap them even when they wrap, and it stays visible during Compare. A tap on it reaches the map.
+- **R5:** "Units: class" is gone. The legend now says "What each color means:" above its rows, then "Areas are in km²." Mayon adds "Channel areas also show basketball courts." Panama doesn't, because it has no channels. The data files still hold `units: class`, and the site no longer shows it.
+- **Docs:** FR-084, US-013/AC-4 and TC-096 are new. FR-025, US-008/AC-1, TC-020 and R3 and R5 in the evidence table are updated.
+- **Landslide:** the owner decided to keep Panama's check file as it is, which closes the decision in the T-078 section.
+
+**Limits:** checked in a test browser, not on a real phone. At 360 px the label usually fits one line, but some pairs' dates wrap to two. On phones the Relief and Satellite buttons now sit beside the zoom buttons, because the label covered them when the drawer was open. Screens are in `pipeline/out/screens/product-label/`.
+
+# Fire drill decisions (T-123 to T-128, 2026-11-03)
+
+All five are done on `night-1`, not merged. No product from Nov 1 onward was opened, and nothing was published or downloaded: the download log is byte for byte the same.
+
+- **Publish blocker (T-123):** the contract check on `pipeline/out/` now reads only pair folders. Stray files elsewhere can't stop publishing, and a broken pair folder still does (TC-097).
+- **Runbook (T-124):** rewritten with the current cutoff, `review`, `preview` and `process --drill`. All of them ran on real cached pairs.
+- **Tests (T-125):** the browser tests read the latest pair from the data. In a throwaway worktree with a made-up newer track 111 pair, the whole suite passed after one test was hardened. Tests about one specific older pair still name it, because those pairs stay published. A latest pair on track 104 wasn't tried.
+- **Hold rule (T-126):** in the runbook, in ADR-014 and in `mrw/hold_check.py`. The numbers are saved in `pipeline/reports/hold-check-baseline.json`, before any post-eruption data.
+- **Images (T-127):** both `coherence_loss.png` files are gone. The deletion landed in the T-123 commit (ac8feac) because it was already staged, and I didn't rewrite history to move it.
+- **Flaky test (T-128):** no wait was missing. Python's test server queues only 5 waiting connections. On a busy computer, Windows refused the rest (48 `ERR_CONNECTION_REFUSED` seen), one script failed to load, and the page stayed on "Loading" for good. Under heavy load it failed 2 of 20 before the fix and 0 of 20 after. Alone, it passed 20 of 20 before the fix too. The diagnostic's page opens went from at least 5 stuck of the first 16 to 0 of 30.
+
+## The rule's numbers today
+
+| Check | Published pairs | Note |
+| --- | --- | --- |
+| Median coherence change | -0.177 to 0.050 | From 7 of the 11 pairs. The other 4 used no coherence |
+| Flagged beyond 8 km | Highest 3.556 km² | Set by the 24-day pair; the 12-day pairs reach 1.531 km² |
+| Volcano with no data | Highest 0.05% | |
+| Two tracks agree, within about 200 m | 17% and 21% | Same-cell agreement is 5% and 7%, so low agreement is normal here |
+
+## Decisions for you
+
+1. **Is reason (b) meant to be able to hold a real eruption?** The range's top, 0.050, is the latest pair itself. A real eruption should raise coherence loss, so a large event could pass 0.050 and be held, even though a large area alone isn't meant to hold it. The median covers everything inside 10 km, which softens this, but I can't test it without the data. I applied the rule as you wrote it. If it holds a pair, you'd decide from the map.
+2. **Should reason (c) use the 24-day pair's number?** A longer gap shows more change, so that pair sets a looser limit than any 12-day pair. I kept it, because you said the highest of the 11.
+3. **Is 5% right for a "large" no-data gap?** You didn't give a number. The published highest is only 0.05%, so using it would hold a pair over a few cells. I set 5% of the land inside the danger zone, as `LARGE_GAP_SHARE` in `mrw/hold_check.py`, and a person also looks at the map.
+
+## Things to know
+
+- **VALIDATED products:** the hold rule accepts them, but the pipeline's search only recognises BETA and PROVISIONAL, so it would skip one. I left the search alone, since no product is VALIDATED today.
+- **Loading stays stuck on a failed script:** the same stuck "Loading" could reach a visitor if a script fails to load on a bad connection. The page shows no error or retry in that case. I didn't change the site.
+- **Local site command:** `python -m http.server` has the same small queue, so a busy computer could get stuck there too. The preview command uses a larger queue.
+
+# Hold rule changes, VALIDATED and load errors (T-129 to T-131, 2026-11-03)
+
+No product from Nov 1 onward was opened, and the download log is unchanged. This closes the three decisions in the section above.
+
+- **Hold rule (T-129):** automatic holds are now (a), (d) at 5% and (e). (b) now uses land more than 8 km from the summit, and (c) compares only with the 12-day pairs, and both only say "look closer". `review` prints the flagged share inside 6 km, beyond 8 km and in the channels' strips, for this pair and the published pairs, plus what change spread evenly would give. Track agreement prints next to the quiet pairs and never blocks.
+- **VALIDATED (T-130):** the search and the data contract accept it.
+- **Load errors (T-131):** a script or data file that fails to load now shows a clear error with Retry, not a stuck "Loading". TC-100 covers 5 scripts, the site list, 3 site files and the first pass.
+
+## The rule's numbers now
+
+| Check | Published pairs |
+| --- | --- |
+| (b) Median coherence change beyond 8 km | -0.169 to 0.054, from 7 pairs |
+| (c) Flagged area beyond 8 km | Highest 1.531 km², from the 10 pairs with a 12-day gap |
+| Flagged share inside 6 km | 3.3% to 27.5% |
+| Flagged share beyond 8 km | 55.6% to 87.5% |
+
+Change spread evenly would give about 36% inside 6 km and 36% beyond 8 km, on the two pairs checked.
+
+## Things to know
+
+- **The quiet pairs lean outward:** they put more of their change beyond 8 km than an even spread would. So "spread evenly" and "like the quiet pairs" aren't the same thing, and the useful test is a clear rise inside 6 km above the quiet pairs' 3.3% to 27.5%.
+- **VALIDATED wording:** the site's drawer and help text still say the products are PROVISIONAL. If a VALIDATED product is ever published, that wording needs changing.
+- **A request that never answers:** the new error covers failures. A request that hangs without failing still waits until the browser gives up.
+- **Baseline:** I rebuilt `pipeline/reports/hold-check-baseline.json` for the new measures, from the same 11 published pairs, before any post-eruption data.

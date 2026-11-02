@@ -12,12 +12,13 @@ from playwright.sync_api import expect
 
 from mrw.validation import build_record, load_sheet
 
-from .conftest import envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .test_accessibility import problems_on
+from .conftest import envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
 JULY_PAIR = "mayon_A111F008_20260703_20260715"
-LATEST_PAIR = "mayon_A111F008_20261007_20261019"
+LATEST_PAIR = latest_pair()["id"]
 SUMMIT = (13.2572, 123.6856)
 DISCLAIMER = "This is not an official warning. Follow PHIVOLCS and your LGU."
 NO_ERUPTION_PAIR = "No eruption pair: nothing acquired on or after 2026-10-30 may be opened until the thresholds are set."
@@ -45,6 +46,13 @@ def tap_at(page, lat, lon):
 def cell(value):
     """A grid cell with this value, from the fixture list."""
     return next((row for row in read_fixture("grid_cells.json")["cells"] if row["value"] == value), None)
+
+
+def show_cell_pair(page, row):
+    """The fixture's cells belong to one published pair, so put that pair on the map first."""
+    pair = read_data(f"sites/mayon/pairs/{row['pair_id']}/pair.json")
+    page.select_option("#pair-list", row["pair_id"])
+    expect(page.locator(".product-label")).to_contain_text(f"before {local_date(pair['before_acquired_start'])} ")
 
 
 def card(page):
@@ -160,12 +168,14 @@ def test_tc008_land_point_in_daraga(app):
 @pytest.mark.parametrize("value, confidence", [(0, "none"), (1, "low"), (2, "high")])
 def test_tc008_card_reads_each_class_from_the_grid(app, value, confidence):
     row = cell(value)
+    show_cell_pair(app, row)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text(f"Confidence: {confidence}")
 
 
 def test_tc009_sea(app):
     row = cell(254)
+    show_cell_pair(app, row)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text("No radar data here")
     expect(card(app)).to_contain_text("sea")
@@ -183,6 +193,7 @@ def test_tc010_outside_radar_coverage(app):
 
 def test_tc011_flagged_invalid_by_the_product(app):
     row = cell(253)
+    show_cell_pair(app, row)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text("No radar data here")
     expect(card(app)).to_contain_text("the radar product marked this spot as invalid")
@@ -242,7 +253,10 @@ def test_tc020_layer_legend_and_area_on_the_latest_pair(app):
     layer = next(item for item in pair["layers"] if item["kind"] == "new_material")
     rows = [" ".join(row.split()) for row in app.locator("#legend-rows li").all_inner_texts()]
     assert rows == [f"{item['label']}. Confidence: {item['confidence']}" for item in layer["legend"]]
-    expect(app.locator("#legend-area")).to_have_text(f"Units: class. Total detected area: {pair['new_material_area_km2']:.2f} km²")
+    expect(app.locator(".legend")).to_contain_text("What each color means:")
+    expect(app.locator("#legend-area")).to_have_text(
+        f"Areas are in km². Channel areas also show basketball courts. Total detected area: {pair['new_material_area_km2']:.2f} km²")
+    expect(app.locator(".legend")).not_to_contain_text("Units:")
     expect(app.locator("#legend-title")).not_to_contain_text("PROVISIONAL")
 
 
@@ -252,7 +266,7 @@ def test_tc021_pair_with_nothing_detected(page, site_url):
     prepare_page(page)
     page.route(f"**/{LATEST_PAIR}/pair.json", lambda route: route.fulfill(body=envelope(zero), content_type="application/json"))
     page.goto(site_url)
-    expect(page.locator("#summary")).to_have_text("No new material detected between Oct 8, 2026 and Oct 20, 2026")
+    expect(page.locator("#summary")).to_have_text("No new material detected between {} and {}".format(*latest_dates()))
     expect(page.locator("#legend-area")).to_contain_text("0.00 km²")
 
 
@@ -298,7 +312,7 @@ def test_tc031_radar_sources_on_the_latest_pair(app):
     expect(panel).to_contain_text("GCOV")
     expect(panel).to_contain_text("GUNW")
     expect(panel).to_contain_text("PROVISIONAL")
-    expect(panel).to_contain_text("Acquired: Oct 8, 2026")
+    expect(panel).to_contain_text(f"Acquired: {latest_dates()[0]}")
     links = panel.locator('a[href*="search.asf.alaska.edu"]')
     assert links.count() >= 3
     for link in links.all():
@@ -459,3 +473,78 @@ def test_tc043_colors_stay_apart(app, deficiency):
     assert distance > 40, f"{low} and {high} are too close"
     for row in app.locator("#legend-rows li").all_inner_texts():
         assert "Confidence:" in row
+
+
+START_FAILURE = "Couldn't load the map. Check your connection and try again."
+
+
+def fail_then_allow(page, pattern):
+    """Make a file fail to load. Returns what to call so that it loads again."""
+    def fail(route):
+        route.abort()
+    page.route(pattern, fail)
+    return lambda: page.unroute(pattern, fail)
+
+
+def expect_error_with_retry(page, text):
+    expect(page.locator("#app-message")).to_have_text(text, timeout=15000)
+    expect(page.locator("#app-retry")).to_be_visible()
+    expect(page.locator("#app-retry")).to_have_text("Retry")
+    expect(page.locator("#loading")).to_be_hidden()
+
+
+@pytest.mark.parametrize("script", ["**/js/main.js*", "**/js/strings.js*", "**/js/marks.js*", "**/js/data.js*", "**/vendor/leaflet-1.9.4/leaflet.js"])
+def test_tc100_a_script_that_fails_shows_an_error_and_retry_opens_the_map(page, site_url, script):
+    prepare_page(page)
+    allow = fail_then_allow(page, script)
+    page.goto(site_url)
+    expect_error_with_retry(page, START_FAILURE)
+    allow()
+    page.click("#app-retry")
+    wait_until_ready(page)
+    expect(page.locator("#app-message")).to_be_empty()
+    expect(page.locator("#app-retry")).to_be_hidden()
+
+
+def test_tc100_the_site_list_failing_shows_an_error_and_retry_opens_the_map(page, site_url):
+    prepare_page(page)
+    allow = fail_then_allow(page, "**/data/sites.json")
+    page.goto(site_url)
+    expect_error_with_retry(page, "Couldn't load the site list. Try again.")
+    allow()
+    page.click("#app-retry")
+    wait_until_ready(page)
+    expect(page.locator("#app-retry")).to_be_hidden()
+
+
+@pytest.mark.parametrize("name", ["pairs.json", "towns.geojson", "land.geojson"])
+def test_tc100_a_site_file_failing_shows_an_error_and_retry_opens_the_map(page, site_url, name):
+    prepare_page(page)
+    allow = fail_then_allow(page, f"**/sites/mayon/{name}")
+    page.goto(site_url)
+    expect_error_with_retry(page, "Couldn't load Mayon Volcano, Albay. Try again.")
+    allow()
+    page.click("#app-retry")
+    wait_until_ready(page)
+    expect(page.locator("#app-retry")).to_be_hidden()
+
+
+def test_tc100_the_first_pass_failing_shows_an_error_and_retry_shows_it(page, site_url):
+    prepare_page(page)
+    allow = fail_then_allow(page, f"**/{LATEST_PAIR}/pair.json")
+    page.goto(site_url)
+    expect(page.locator("#timeline-message")).to_have_text("Couldn't load this pass. Try again.", timeout=15000)
+    expect(page.locator("#loading")).to_be_hidden()
+    allow()
+    open_drawer_if_closed(page)
+    page.click("#timeline-retry")
+    expect(page.locator("#timeline-message")).to_be_empty()
+    expect(page.locator(".product-label")).not_to_be_empty()
+
+
+def test_tc100_the_error_passes_axe(page, site_url):
+    prepare_page(page)
+    fail_then_allow(page, "**/js/strings.js*")
+    page.goto(site_url)
+    expect_error_with_retry(page, START_FAILURE)
+    assert problems_on(page) == []

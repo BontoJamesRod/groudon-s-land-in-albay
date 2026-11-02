@@ -1,8 +1,8 @@
 # Progress
 
 **Project:** Mayon Radar Watch
-**Current step:** The Channel timeline (T-073, T-010, T-028, T-074 to T-077, T-091) is merged into `main`, with 4 confirmed channels.
-**Last updated:** 2026-11-01
+**Current step:** The Field map design, the Relief or Satellite switcher and the Channel timeline are live on `main`, with 4 confirmed channels. The eruption pairs (T-038) are waiting for their passes to reach ASF.
+**Last updated:** 2026-11-03
 
 Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · `Skipped` · `Reopened`
 
@@ -18,24 +18,24 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | 6 | `05-database-design.md` | Draft ready | 0.2 | — | TBL-12 |
 | 7 | `06-api-spec.md` | Draft ready | 0.2 | — | API-012 |
 | 8 | `reviews/consistency-01.md` | Draft ready | — | — | Checkpoint: 7 issues, 0 structural |
-| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 91 tasks; ID errata in §11 |
-| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 81 test cases |
+| 9 | `07-roadmap.md` | Draft ready | 0.2 | — | 119 tasks; ID errata in §11 |
+| 10 | `08-test-plan.md` | Draft ready | 0.2 | — | 96 test cases |
 | 11 | `reviews/consistency-02.md` | Draft ready | — | — | Checkpoint: 9 issues, 0 structural |
 | 12 | `reviews/consistency-03.md` | Draft ready | — | — | Checkpoint after the 2026-11-01 update |
 
 ## Where Things Stand
 
-| Item | State on 2026-11-01 |
+| Item | State on 2026-11-03 |
 | --- | --- |
 | Gate 1 (channels) | Decided: build only the Channel timeline (F-20), on top of F-19. No quarry hint or rain labels (00 §6) |
 | Gate 2 (rule and thresholds) | Decided before any post-eruption data was opened. The final rule is live on the public site on 11 pairs |
 | Products | NISAR products are still PROVISIONAL |
-| Eruption passes | Not on ASF at the last check (2026-10-31, 16:28 UTC, tracks 104 and 111). Nothing downloaded or published. This docs run made no searches |
-| Second site | Panama, two pairs, same final rule with no per-site tuning, published on `night-1` with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088). Not on the public site until `night-1` is merged |
+| Eruption passes | Not on ASF at the last check (2026-11-02, about 17:00 UTC, `eruption_run.py check-all`, names only). Newest pass: track 39 on Oct 14, track 104 on Oct 19, track 111 on Oct 19, all PROVISIONAL. Nothing downloaded or published |
+| Second site | Panama, two pairs, same final rule with no per-site tuning, live on the public site with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088) |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
 | Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag was then given as not confirmed, and stays off (`pipeline/reports/owner-checks.md`) |
-| Design | Field map and the map switcher built on `night-1` (T-107 to T-116), not merged. `main` still loads Esri imagery |
-| Next | T-078, which wasn't in the owner's request; T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
+| Design | Field map and the Relief or Satellite switcher are live on both sites (T-107 to T-118). Relief is the default and is stored in the site. Satellite loads live from EOX (EOxCloudless 2024), low detail first, with a loading count. Esri is gone. Checked in test browsers, not yet on a real phone |
+| Next | T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
 
 ## After Launch
 
@@ -67,6 +67,9 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-11-02 | Design: Field map, with a minimum mark and darker edge for flagged change, areas also as basketball courts, and a wider Copernicus DEM under 300 MB with its size logged | 01 F-22, 04 ADR-012 |
 | 2026-11-02 | Coverage view: only after the design is built, and only if that's done by Nov 8, with eruption work first. It may show pass dates (metadata only) past the cutoff, because the thresholds are final; the processing cutoff is unchanged | This file |
 | 2026-11-02 | The histogram's channel outline stays desktop-only for now, to revisit with the design | This file |
+| 2026-11-03 | Hold rule changed before any post-eruption data: far-field coherence and flagged area only say to look closer, and track agreement never blocks a decision | 04 ADR-014, 01 FR-085 |
+| 2026-11-03 | Rule for holding a pair set before any post-eruption data: a large area alone is never a reason. A single track is published with a note | 04 ADR-014, 01 FR-085, FR-086 |
+| 2026-11-03 | Satellite keeps loading live from EOX with the preview layer; no bulk download of imagery | `NIGHT_REPORT.md` |
 | 2026-11-02 | Map switcher: Relief by default, or Satellite. Panama's relief approved (under 300 MB, size logged). Esri's terms need Esri software or a subscription, so Satellite uses EOxCloudless | 01 F-23, 04 ADR-013 |
 
 ## Open Questions Carried Forward

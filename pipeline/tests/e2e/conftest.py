@@ -8,7 +8,9 @@ import http.server
 import json
 import threading
 import time
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pytest
 
@@ -51,11 +53,18 @@ class SiteHandler(http.server.SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
 
+class RoomyServer(http.server.ThreadingHTTPServer):
+    """Python's default queue holds 5 waiting connections. On a busy computer Windows refuses the
+    rest, one of the site's scripts fails to load, and the page never leaves "Loading"."""
+
+    request_queue_size = 128
+
+
 @pytest.fixture(scope="session")
 def site_url():
     """Serve site/ on a free local port for the whole test run."""
     handler = functools.partial(SiteHandler, directory=str(SITE))
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    server = RoomyServer(("127.0.0.1", 0), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     yield f"http://127.0.0.1:{server.server_address[1]}/"
     server.shutdown()
@@ -130,3 +139,20 @@ def read_data(relative_path):
 
 def read_fixture(name):
     return json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+
+
+def latest_pair():
+    """The pair the site opens on: the newest published pair in the data, whichever it is."""
+    return read_data("sites/mayon/pairs.json")[-1]
+
+
+def local_date(utc_text, zone="Asia/Manila"):
+    """A UTC time as the site writes the date in the site's time zone, for example "Oct 8, 2026"."""
+    day = datetime.fromisoformat(utc_text.replace("Z", "+00:00")).astimezone(ZoneInfo(zone))
+    return f"{day:%b} {day.day}, {day.year}"
+
+
+def latest_dates():
+    """The latest pair's before and after dates, as the site writes them."""
+    pair = latest_pair()
+    return local_date(pair["before_acquired_start"]), local_date(pair["after_acquired_start"])

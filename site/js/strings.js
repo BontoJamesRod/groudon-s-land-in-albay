@@ -45,7 +45,11 @@ export const STRINGS = {
   optionWithGap: (text, note) => `${text} (${note})`,
   gapNote: (days) => `${days}-day gap, not comparable`,
   eventInPeriod: (names) => `Event in this period: ${names}`,
-  layerUnits: (units) => `Units: ${units}`,
+  legendColors: "What each color means:",
+  areaUnits: "Areas are in km². Channel areas also show basketball courts.",
+  productsWithCoherence: "GCOV + GUNW",
+  productsWithoutCoherence: "GCOV",
+  productLabel: (products, before, after) => `NISAR ${products} · before ${before} · after ${after}`,
   totalArea: (km2) => `Total detected area: ${km2.toFixed(2)} km²`,
   nothingDetected: (before, after) => `No new material detected between ${before} and ${after}`,
   satelliteCredit: 'Imagery: <a href="https://cloudless.eox.at">EOxCloudless</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024), <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>',
@@ -201,6 +205,7 @@ export const STRINGS = {
 const PLAIN_CHANGE = {
   drawerShow: "Show legend and details (PROVISIONAL radar products)",
   disclaimer: "This is not an official warning. Follow SINAPROC and your local authorities.",
+  areaUnits: "Areas are in km².",
   nothingDetected: (before, after) => `No change detected between ${before} and ${after}`,
   noNewMaterial: "No change detected. Confidence: none",
   helpHowRadar: [
