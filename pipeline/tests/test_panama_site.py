@@ -24,8 +24,7 @@ def test_each_site_only_has_its_own_boundary_source():
     rows = {row["id"]: row for row in read(DATA / "sources.json")["data"]}
     assert rows["pa_admin_boundaries"]["site_id"] == "panama"
     assert rows["ph_admin_boundaries"]["site_id"] == "mayon"
-    assert rows["esri_world_imagery"]["site_id"] == "panama"
-    assert rows["copernicus_dem_glo30"]["site_id"] == "mayon"
+    assert "site_id" not in rows["eox_s2cloudless"] and "site_id" not in rows["copernicus_dem_glo30"]
 
 
 def test_panama_has_no_channels_summit_or_reach():

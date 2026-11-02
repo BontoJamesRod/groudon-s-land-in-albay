@@ -59,6 +59,32 @@ body {
 /* The marks' canvas sits above the radar image, in the same pane. */
 .radar-marks { position: absolute; pointer-events: none; }
 
+/* On dark imagery, a pale glow keeps the small marks visible. */
+body:not(.relief-map) .radar-marks { filter: drop-shadow(0 0 1px #ffffff); }
+
+/* FR-081: the map's Relief and Satellite buttons. */
+.basemap-switcher {
+  display: flex;
+  border-radius: 4px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+}
+
+.leaflet-container .basemap-button {
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 0;
+}
+
+.leaflet-container .basemap-button:first-child { border-radius: 4px 0 0 4px; }
+
+.leaflet-container .basemap-button:last-child { border-left: 0; border-radius: 0 4px 4px 0; }
+
+.leaflet-container .basemap-button[aria-pressed="true"] {
+  color: #ffffff;
+  background: var(--ink);
+}
+
 /* Field map (F-22): deep colours for the light relief. A site on imagery keeps the lines' own colours. */
 .relief-map .line-town { stroke: #3d4650; stroke-opacity: 0.4; stroke-width: 0.75; }
 .relief-map .line-coast { stroke: #2d6f8f; }
@@ -92,16 +118,21 @@ body {
   font-size: 13px;
   font-weight: 700;
   border-radius: 2px;
-  color: #0b0f14;
-  background: rgba(255, 255, 255, 0.92);
+  color: #ffffff;
+  background: rgba(31, 35, 40, 0.85);
 }
 
 .zone-label {
   font-size: 12px;
   font-weight: 600;
-  color: #ffffff;
-  background: #6a1b6a;
 }
+
+.relief-map .town-label {
+  color: #0b0f14;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.relief-map .zone-label { background: #6a1b6a; }
 
 .town-label::before,
 .zone-label::before,
@@ -116,8 +147,10 @@ body {
   font-style: italic;
   font-weight: 600;
   color: #ffffff;
-  background: #0b4f8a;
+  background: rgba(8, 47, 73, 0.9);
 }
+
+.relief-map .channel-label { background: #0b4f8a; }
 
 .radar-image { image-rendering: pixelated; }
 

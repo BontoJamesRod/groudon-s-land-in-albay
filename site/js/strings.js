@@ -48,7 +48,11 @@ export const STRINGS = {
   layerUnits: (units) => `Units: ${units}`,
   totalArea: (km2) => `Total detected area: ${km2.toFixed(2)} km²`,
   nothingDetected: (before, after) => `No new material detected between ${before} and ${after}`,
-  tileAttribution: "Tiles &copy; Esri",
+  satelliteCredit: 'Imagery: <a href="https://cloudless.eox.at">EOxCloudless</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024), <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>',
+  satelliteUnavailable: "Satellite map unavailable. Showing the relief map.",
+  basemapLabel: "Background map",
+  basemapRelief: "Relief",
+  basemapSatellite: "Satellite",
   reliefCredit: 'Relief: <a href="https://registry.opendata.aws/copernicus-dem/">Copernicus DEM GLO-30</a>',
   marksNote: "Small spots are drawn larger than life so they can be seen. The areas don't change.",
 

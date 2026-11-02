@@ -90,6 +90,6 @@ The code and documentation are under the [Apache-2.0 license](LICENSE), with the
 
 - **Radar:** NISAR data, NASA–ISRO, distributed by the Alaska Satellite Facility (ASF DAAC). Products are labeled provisional.
 - **Town borders and land:** Mayon: NAMRIA and PSA via OCHA COD-AB, packaged by [faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps), CC BY-IGO. Panama: [geoBoundaries](https://www.geoboundaries.org/), CC BY-SA 4.0.
-- **Background map:** Esri World Imagery.
+- **Background map:** a relief made from Copernicus DEM GLO-30, or EOxCloudless Sentinel-2 imagery (CC BY-NC-SA 4.0, non-commercial).
 - **Map library:** [Leaflet](https://leafletjs.com/) 1.9.4, copied into `site/vendor/`.
 - **Events:** PHIVOLCS, through the news reports linked in `pipeline/context/mayon_events.json`.

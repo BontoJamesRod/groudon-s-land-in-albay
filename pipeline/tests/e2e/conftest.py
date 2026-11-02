@@ -15,7 +15,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[3]
 SITE = ROOT / "site"
 FIXTURES = ROOT / "pipeline" / "tests" / "fixtures"
-TILE_HOST = "https://server.arcgisonline.com/**"
+TILE_HOST = "https://tiles.maps.eox.at/**"
 # A 1 x 1 pixel image, sent back instead of real map tiles.
 TINY_PNG = bytes.fromhex(
     "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c489"

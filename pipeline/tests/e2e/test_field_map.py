@@ -52,7 +52,7 @@ def test_tc089_no_plain_band_at_the_lowest_zoom_or_any_corner(page, site_url, wi
 
 def test_tc089_mayon_uses_its_relief_and_credits_it(page, site_url):
     outside = []
-    page.on("request", lambda request: outside.append(request.url) if "arcgisonline" in request.url else None)
+    page.on("request", lambda request: outside.append(request.url) if "eox.at" in request.url else None)
     relief = []
     page.on("response", lambda response: relief.append(response.status) if "/relief/" in response.url else None)
     open_at(page, site_url, 1280)
@@ -60,7 +60,7 @@ def test_tc089_mayon_uses_its_relief_and_credits_it(page, site_url):
     assert relief and set(relief) == {200}
     assert not outside
     expect(page.locator(".leaflet-control-attribution")).to_contain_text(CREDIT)
-    expect(page.locator(".leaflet-control-attribution")).not_to_contain_text("Esri")
+    expect(page.locator(".leaflet-control-attribution")).not_to_contain_text("EOxCloudless")
 
 
 def test_tc089_tiles_fail_but_the_lines_stay(page, site_url):
@@ -73,14 +73,15 @@ def test_tc089_tiles_fail_but_the_lines_stay(page, site_url):
     expect(page.locator("path.line-coast")).to_have_count(1)
 
 
-def test_tc089_panama_keeps_its_imagery_and_its_line_colours(page, site_url):
+def test_tc089_panama_opens_on_its_own_relief(page, site_url):
+    relief = []
+    page.on("response", lambda response: relief.append(response.url) if "/sites/panama/relief/" in response.url else None)
     open_at(page, site_url, 1280)
     switch_to_panama(page)
-    expect(page.locator(".leaflet-control-attribution")).to_contain_text("Esri")
-    expect(page.locator(".leaflet-control-attribution")).not_to_contain_text(CREDIT)
-    assert not page.evaluate("document.body.classList.contains('relief-map')")
-    stroke = page.evaluate("getComputedStyle(document.querySelector('path.line-coast')).stroke")
-    assert stroke == "rgb(125, 211, 252)"  # the imagery colour, #7dd3fc
+    page.wait_for_function("document.querySelectorAll('.leaflet-tile-loaded').length > 0")
+    expect(page.locator(".leaflet-control-attribution")).to_contain_text(CREDIT)
+    assert page.evaluate("document.body.classList.contains('relief-map')")
+    assert relief
 
 
 def test_tc089_the_lines_change_colour_on_the_relief(app):
@@ -329,5 +330,132 @@ def test_tc092_both_screens_state_the_courts_size(app):
 @pytest.mark.parametrize("width,height", [(360, 740), (1280, 800)])
 def test_tc092_the_channel_view_passes_axe_with_courts(page, site_url, width, height):
     open_at(page, site_url, width, height)
+    page.locator("#channel-body .channel-row").first.click()
+    assert problems_on(page) == []
+
+
+PRESSED = '.basemap-button[aria-pressed="true"]'
+SATELLITE = '.basemap-button:has-text("Satellite")'
+RELIEF = '.basemap-button:has-text("Relief")'
+IMAGERY = "EOxCloudless"
+
+
+def stroke_of(page, line):
+    return page.evaluate(f"getComputedStyle(document.querySelector('path.{line}')).stroke")
+
+
+def label_colours(page, label):
+    return page.evaluate(f"""(() => {{ const style = getComputedStyle(document.querySelector('.{label}'));
+      return [style.color, style.backgroundColor]; }})()""")
+
+
+@pytest.mark.parametrize("width,height", [(360, 740), (1280, 800)])
+def test_tc094_relief_first_with_44_px_buttons_saying_which_is_on(page, site_url, width, height):
+    open_at(page, site_url, width, height)
+    expect(page.locator(PRESSED)).to_have_text("Relief")
+    expect(page.locator(SATELLITE)).to_have_attribute("aria-pressed", "false")
+    for button in (RELIEF, SATELLITE):
+        box = page.locator(button).bounding_box()
+        assert box["width"] >= 44 and box["height"] >= 44
+    expect(page.locator(".basemap-switcher")).to_have_attribute("role", "group")
+
+
+def test_tc094_the_buttons_work_from_the_keyboard(app):
+    app.locator(SATELLITE).focus()
+    app.keyboard.press("Enter")
+    expect(app.locator(PRESSED)).to_have_text("Satellite")
+    app.locator(RELIEF).focus()
+    app.keyboard.press("Space")
+    expect(app.locator(PRESSED)).to_have_text("Relief")
+
+
+def test_tc094_a_tap_on_a_button_doesnt_open_the_readout(app):
+    app.click(SATELLITE)
+    expect(app.locator("#readout-card")).to_be_hidden()
+
+
+def test_tc094_the_choice_stays_after_a_reload_and_a_change_of_site(app):
+    app.click(SATELLITE)
+    app.reload()
+    wait_until_ready(app)
+    expect(app.locator(PRESSED)).to_have_text("Satellite")
+    assert not app.evaluate("document.body.classList.contains('relief-map')")
+    switch_to_panama(app)
+    expect(app.locator(PRESSED)).to_have_text("Satellite")
+    expect(app.locator(".basemap-switcher")).to_have_count(1)
+    expect(app.locator(".leaflet-control-attribution")).to_contain_text(IMAGERY)
+
+
+def test_tc094_blocked_storage_opens_on_relief_and_can_still_switch(page, site_url):
+    page.add_init_script("""Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } });""")
+    errors = []
+    page.on("pageerror", lambda problem: errors.append(problem))
+    open_at(page, site_url, 1280)
+    expect(page.locator(PRESSED)).to_have_text("Relief")
+    page.click(SATELLITE)
+    expect(page.locator(PRESSED)).to_have_text("Satellite")
+    assert not errors
+
+
+def test_tc095_imagery_is_only_requested_on_satellite_and_its_credit_follows(page, site_url):
+    asked = []
+    prepare_page(page)
+    page.on("request", lambda request: asked.append(request.url) if "tiles.maps.eox.at" in request.url else None)
+    page.goto(site_url)
+    wait_until_ready(page)
+    credits_ = page.locator(".leaflet-control-attribution")
+    assert not asked
+    expect(credits_).not_to_contain_text(IMAGERY)
+    page.click(SATELLITE)
+    expect(credits_).to_contain_text("EOxCloudless by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2024)")
+    page.wait_for_function("document.querySelectorAll('.leaflet-tile[src*=\"eox.at\"]').length > 0")
+    assert asked and all("s2cloudless-2024_3857" in url for url in asked)
+    page.click(RELIEF)
+    expect(credits_).not_to_contain_text(IMAGERY)
+    expect(page.locator('.leaflet-tile[src*="eox.at"]')).to_have_count(0)
+
+
+def test_tc095_the_colours_follow_the_background(app):
+    relief = {line: stroke_of(app, line) for line in ("line-ring", "line-channel", "line-coast")}
+    assert relief["line-ring"] == "rgb(106, 27, 106)" and relief["line-channel"] == "rgb(11, 95, 165)"
+    assert label_colours(app, "town-label")[0] == "rgb(11, 15, 20)"
+    app.click(SATELLITE)
+    assert stroke_of(app, "line-ring") == "rgb(251, 146, 60)"  # orange
+    assert stroke_of(app, "line-channel") == "rgb(34, 211, 238)"  # bright cyan
+    colour, box = label_colours(app, "town-label")
+    assert colour == "rgb(255, 255, 255)" and box == "rgba(31, 35, 40, 0.85)"  # white on a dark box
+    app.click(RELIEF)
+    assert stroke_of(app, "line-ring") == relief["line-ring"]
+
+
+def test_tc095_marks_stay_on_both_backgrounds(app):
+    wait_for_marks(app)
+    relief_cells = app.locator(".radar-marks").get_attribute("data-cells")
+    relief_painted = painted_km2(app)
+    assert app.evaluate("getComputedStyle(document.querySelector('.radar-marks')).filter") == "none"
+    app.click(SATELLITE)
+    assert app.locator(".radar-marks").get_attribute("data-cells") == relief_cells
+    assert painted_km2(app) == pytest.approx(relief_painted)
+    assert "drop-shadow" in app.evaluate("getComputedStyle(document.querySelector('.radar-marks')).filter")
+
+
+def test_tc095_failed_imagery_leaves_the_relief_and_says_so(page, site_url):
+    prepare_page(page, tiles="none")
+    page.route("https://tiles.maps.eox.at/**", lambda route: route.abort())
+    page.goto(site_url)
+    wait_until_ready(page)
+    expect(page.locator("#background-notice")).to_be_hidden()
+    page.click(SATELLITE)
+    expect(page.locator("#background-notice")).to_have_text("Satellite map unavailable. Showing the relief map.")
+    assert page.locator('.leaflet-tile[src*="/relief/"]').count() > 0
+    page.click(RELIEF)
+    expect(page.locator("#background-notice")).to_be_hidden()
+
+
+@pytest.mark.parametrize("width,height", [(360, 740), (1280, 800)])
+def test_tc095_axe_passes_on_satellite(page, site_url, width, height):
+    open_at(page, site_url, width, height)
+    page.click(SATELLITE)
+    assert problems_on(page) == []
     page.locator("#channel-body .channel-row").first.click()
     assert problems_on(page) == []

@@ -1006,3 +1006,39 @@ On a desktop, the channel panel and the pass controls now scroll separately, wit
 - **Tests:** 722 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. New: TC-093, and a limit on how much solid colour the marks paint.
 - **Screens:** `pipeline/out/screens/field-map/`, axe finds no serious or critical problem on the eight screens. Checked in a test browser, not on a real phone or in sunlight.
 - **Panama's relief is still your decision,** from the section above.
+
+# Map switcher (T-114 to T-116, 2026-11-02)
+
+**The Relief and Satellite switcher is on `night-1`, on both sites, not merged into `main`.** Screens are in `pipeline/out/screens/map-switcher/`: both maps, both sites, at 360 and 1280 px.
+
+## What was built
+
+- **Switcher:** two 44 px buttons on the map, under the zoom buttons, with `aria-pressed` and keyboard use. Relief is the default. The choice is kept in `localStorage`, wrapped in try/catch, and with storage blocked the app opens on Relief and can still switch.
+- **Colours:** Satellite has the bright cyan channels, white town labels on dark boxes and the orange ring. Relief keeps the Field map colours. The marks are the same on both, with a pale glow added on Satellite so they show on dark ground.
+- **Panama's relief:** 4 files, **123,413,357 bytes (123.4 MB)** against the 300 MB limit, logged in `pipeline/logs/`. It became 1,392 tiles, 7.6 MB. Two all-sea tiles don't exist, and the map paints those parts as sea.
+- **Marks and highlighted bar (your items 5 and 6):** these were already done in T-113 above. I didn't change them again, and their tests still pass.
+
+## The imagery terms: Esri doesn't fit
+
+Esri's terms summary, "Frequently asked questions about items owned by Esri in ArcGIS Online" (April 21, 2025), says to use its content with Esri software, and that without Esri software you must buy an ArcGIS Online subscription. This app uses Leaflet and has no subscription. It's a summary, and I'm not a lawyer, but it doesn't allow this use as you described it, so I followed your fallback.
+
+**Satellite uses EOxCloudless (Sentinel-2 cloudless) 2024,** from EOX's tile service. EOX's license summary gives CC BY-NC-SA 4.0 for non-commercial use, and says commercial use needs a paid license. Its credit shows only while Satellite is on, and it's in `CREDITS.md` and `sources.json`. Esri is gone from `night-1`.
+
+- **The relief stays on under the imagery,** because some EOX tiles took 4 to 18 s in my tests. So the relief's credit also stays on, because the relief can show through. If imagery fails, the map says "Satellite map unavailable. Showing the relief map."
+- **Softer than the first version:** the imagery comes from 10 m data, so it blurs when zoomed in close. Some clouds remain, mostly over the sea.
+
+## Decisions for you
+
+1. **The live site still loads Esri imagery.** `main` uses it on both sites, and by the terms above it shouldn't without a subscription. Merging `night-1` fixes that, but I haven't merged, as you said. I recommend merging soon.
+2. **Does the hackathon count as non-commercial?** The EOX license excludes commercial use. If prizes or anything else could make this commercial, EOX's address is cloudless@eox.at. Relief needs no third-party license of this kind, so turning Satellite off is the fallback.
+3. **Is it fine to call EOX's hosted tiles directly?** Its tile server allows browser requests, but the license pages I could read don't address direct use, and I found no published limit. I'd email EOX to confirm, especially before a demo crowd.
+
+## Limits
+
+Checked in a test browser with real EOX tiles, not on a real phone or in sunlight. Axe finds no serious or critical problem on the eight screens, but it can't judge lines and marks against imagery, so I checked those by eye. On a phone, the switcher covers part of a small map.
+
+## Evidence
+
+- **Tests:** 738 passed, 1 skipped, exit code 0. **Contract check:** 0 errors.
+- **Docs:** F-23, US-031, FR-081 to FR-083, ADR-013, TC-094, TC-095 and T-114 to T-116.
+- **Not done:** no NISAR product was opened or downloaded, the cutoff is unchanged, and nothing was merged into `main`.

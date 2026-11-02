@@ -100,14 +100,13 @@
     "retrieved_on": "2026-11-01"
   },
   {
-    "id": "esri_world_imagery",
-    "site_id": "panama",
-    "name": "World Imagery background map",
-    "provider": "Esri",
+    "id": "eox_s2cloudless",
+    "name": "EOxCloudless (Sentinel-2 cloudless) 2024, the Satellite background map",
+    "provider": "EOX IT Services GmbH, containing modified Copernicus Sentinel data 2024",
     "used_for": "basemap",
-    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
-    "license": "Esri terms of use, with attribution",
-    "retrieved_on": "2026-10-31"
+    "url": "https://cloudless.eox.at",
+    "license": "CC BY-NC-SA 4.0",
+    "retrieved_on": "2026-11-02"
   },
   {
     "id": "esa_worldcover_2021",
@@ -121,7 +120,6 @@
   },
   {
     "id": "copernicus_dem_glo30",
-    "site_id": "mayon",
     "name": "Copernicus DEM GLO-30 elevation, for the relief background map and as context in the false-alarm study",
     "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
     "used_for": "basemap",

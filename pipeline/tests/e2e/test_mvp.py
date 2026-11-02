@@ -349,7 +349,7 @@ def test_tc038_unknown_path(page, site_url):
     response = page.goto(site_url + "no-such-page")
     assert response.status == 404
     expect(page.locator("h1")).to_have_text("Page not found")
-    page.route("https://server.arcgisonline.com/**", lambda route: route.abort())
+    page.route("https://tiles.maps.eox.at/**", lambda route: route.abort())
     page.click("#home")
     page.wait_for_selector("#map")
 
