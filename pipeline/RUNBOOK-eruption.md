@@ -1,8 +1,8 @@
 # Runbook: the first passes after the eruption
 
-Follow this **only after the owner has locked the thresholds**. Until then, no product acquired on or after 2026-10-30 (UTC) may be searched for or opened.
+Run every command in PowerShell from the project folder, after `.venv\Scripts\Activate.ps1`.
 
-Run every command in PowerShell from the project folder. Steps 1–3 are the owner's decisions and edits. An agent shouldn't do them without the owner saying so.
+**Where things stand:** the owner locked the final thresholds on 2026-11-01. `BLIND_CUTOFF` in `pipeline/mrw/search.py` is 2026-11-01, which opens the Oct 31 passes and nothing later. Don't move it unless the owner says so. The 11 published pairs already use the final thresholds, so there's nothing to redo first.
 
 ## What this produces
 
@@ -11,61 +11,9 @@ Run every command in PowerShell from the project folder. Steps 1–3 are the own
 | 104 descending | `mayon_D104F082_20261019_20261031` | 10-07 → 10-19 |
 | 111 ascending | `mayon_A111F008_20261019_20261031` | 10-07 → 10-19 |
 
-Both baselines are already available. The pass times should be about 10:16 UTC on track 104 and 21:13 UTC on track 111, based on earlier passes. ASF may take days to list a pass, and its GUNW can come later than its GCOV.
+Both baselines are already available. The pass times should be about 10:16 UTC on track 104 and 21:13 UTC on track 111. ASF may take days to list a pass, and its GUNW can come later than its GCOV.
 
-## 1. Lock the thresholds
-
-Edit `pipeline/sites/mayon.json`:
-
-- In `thresholds`, set `status` to `"FINAL"` and enter the final `brightness_threshold_db` and `coherence_loss_threshold`.
-- In `provisional_fields`, remove `"thresholds"`.
-
-Don't write threshold values into `docs/`.
-
-**If you choose "brightness leads, coherence confirms":** the site doesn't work that way yet. Today `pipeline/mrw/classify.py` gives low confidence to coherence loss alone. Change that first, with its tests in `pipeline/tests/test_classify.py`, and check the wording on the site that describes "one signal". Do this before step 4.
-
-## 2. Update the wording on the site
-
-The site says the thresholds are provisional in `site/js/strings.js`, in `drawerShow` and in the disclaimer line. The products themselves are still provisional, so keep that part. Then:
-
-```powershell
-.venv\Scripts\Activate.ps1
-python pipeline/mrw/stamp_assets.py
-pytest
-```
-
-## 3. Lift the cutoff
-
-In `pipeline/mrw/search.py`, change this line:
-
-```python
-BLIND_CUTOFF = datetime(2026, 10, 30, tzinfo=timezone.utc)
-```
-
-to this:
-
-```python
-BLIND_CUTOFF = datetime(2026, 11, 1, tzinfo=timezone.utc)
-```
-
-This opens the Oct 31 passes and nothing later. Then update the rule in `CLAUDE.md` that forbids opening these products, because it would otherwise still apply. Commit steps 1–3 together **before opening any eruption data**, so the history shows the thresholds came first:
-
-```powershell
-pytest
-git add pipeline/sites/mayon.json pipeline/mrw pipeline/tests site CLAUDE.md
-git commit -m "T-0NN: lock the final thresholds and lift the blind cutoff"
-```
-
-## 4. Redo the published pairs with the final values
-
-This keeps the whole timeline on one set of thresholds. It reads cached crops and shouldn't download much.
-
-```powershell
-python pipeline/mrw/eruption_run.py republish
-python pipeline/mrw/contract_check.py site/data
-```
-
-## 5. Check for the Oct 31 passes
+## 1. Check for the Oct 31 passes
 
 This reads product names only.
 
@@ -76,43 +24,76 @@ python pipeline/mrw/eruption_run.py check
 - **"no new pass on ASF yet":** stop and try again later.
 - **"NO COHERENCE YET":** wait for the GUNW. Processing now would give a brightness-only result.
 
-## 6. Process
+## 2. Process
 
 ```powershell
 python pipeline/mrw/eruption_run.py process
 python pipeline/mrw/contract_check.py pipeline/out --unpublished
 ```
 
-The download budget in `download.py` counts every byte ever logged in `raw/`, up to 20 GB. Each pair should need under 0.2 GB.
+The contract check here reads only the pair folders, so other files under `pipeline/out/` can't block it. The download budget in `download.py` counts every byte logged in `raw/`, up to 20 GB. Each pair should need under 0.2 GB.
 
-**Before publishing, check the printed areas.** Look at the median coherence of both pairs if the total is far above about 8 km². D104 09-25 → 10-07 showed 102 km² only because its baseline had unusually high coherence, which made the whole scene look changed. The current baseline's median is about 0.29 on track 104. See "A coherence baseline problem" in `pipeline/reports/threshold-study-night-1.md`.
+## 3. Review the numbers
 
-## 7. Publish
+Name the pairs from step 2, one or both. This reads names from ASF and the cached crops, and downloads nothing.
 
-Publish only the pairs from step 6 that were processed and look right:
+```powershell
+python pipeline/mrw/eruption_run.py review mayon_D104F082_20261019_20261031 mayon_A111F008_20261019_20261031
+```
+
+It prints each pair's median coherence change, flagged area beyond 8 km and no-data share next to the 11 published pairs, says if the rule below holds it, and exits with code 1 if it does. With two pairs, it also says how much the tracks agree.
+
+## 4. Preview
+
+This copies the site to `pipeline/out/preview/`, publishes the pairs into the copy, and serves it on this computer only. Nothing changes in `site/`.
+
+```powershell
+python pipeline/mrw/eruption_run.py preview mayon_D104F082_20261019_20261031 mayon_A111F008_20261019_20261031
+```
+
+Open <http://127.0.0.1:8001/>, and press Ctrl+C when finished. Look for reasons (d) and (e) below, on both pairs.
+
+## 5. Apply the rule, and ask the owner
+
+The owner set this rule on 2026-11-03, before any post-eruption product was opened.
+
+**Hold a pair (don't publish it) if any of these is true:**
+
+- **(a)** a product isn't PROVISIONAL or better;
+- **(b)** its median coherence change falls outside the range of the 11 published pairs (only the 7 that used coherence have one);
+- **(c)** its flagged area beyond 8 km from the summit is above the highest of the 11 published pairs, which suggests noise;
+- **(d)** large no-data gaps cover the volcano. `review` calls more than 5% of the land within the danger zone large, and a person also looks at the map;
+- **(e)** the map shows stripe or edge patterns. Only a person can check this.
+
+**A large area alone is NOT a reason to hold.**
+
+**Two tracks or one:** when both tracks have a pair, report how much they agree. If only one track is ready, publish it with the single-track note in step 6.
+
+The reference numbers are saved in `pipeline/reports/hold-check-baseline.json`. Don't rebuild that file after opening a post-eruption product.
+
+Report the numbers and the preview to the owner. **Publish only with the owner's approval.** A held pair stays in `pipeline/out/`.
+
+## 6. Publish
 
 ```powershell
 python pipeline/mrw/publish.py mayon mayon_D104F082_20261019_20261031
 python pipeline/mrw/publish.py mayon mayon_A111F008_20261019_20261031
 python pipeline/mrw/contract_check.py site/data
-```
-
-Each publish undoes itself if the contract check fails.
-
-The newest pair becomes the one the site opens on. `LATEST_PAIR` in `pipeline/tests/e2e/test_mvp.py` names the current one, so update it to the newest pair you published. The newest is the track 111 pair if both are published.
-
-```powershell
 pytest
 ```
 
-## 8. Push and merge
+With only one track ready, add `--single-track` to its publish command. When the other track arrives, publish the first pair again without the option, so that its note goes away.
+
+Each publish undoes itself if the contract check fails. The newest pair becomes the one the site opens on. The tests read the latest pair from the data, so they need no edits.
+
+## 7. Push and merge
 
 Only with the owner's go-ahead for this occasion. Never force-push. Check first that no radar files are staged.
 
 ```powershell
-git add site/data pipeline/tests NIGHT_REPORT.md
+git add site/data NIGHT_REPORT.md
 git status --short
-git commit -m "T-0NN: publish the first passes after the eruption"
+git commit -m "T-038: publish the first passes after the eruption"
 git push origin night-1
 ```
 
@@ -126,16 +107,26 @@ git push origin main
 git switch night-1
 ```
 
-## 9. Check the live site
+## 8. Check the live site
 
 Wait for "Deploy site" to pass, then open https://bontojamesrod.github.io/groudon-s-land-in-albay/ with a hard reload (Ctrl+Shift+R), on a computer and a phone:
 
-- [ ] It opens on the newest pair, with the right dates and track.
-- [ ] The legend no longer says PROVISIONAL about the thresholds.
+- [ ] It opens on the newest pair, with the right dates and track, and the label on the map agrees.
 - [ ] The dotted 10 km ring and the danger zone show, and the 10 km limit is stated.
 - [ ] Compare opens without the map moving, and town labels stay still while dragging.
 - [ ] Older pairs still open.
 - [ ] The browser console shows no errors.
+
+## Practise with a drill
+
+A drill runs steps 2 to 4 on an older pair, from cached data only, in `pipeline/out/drill/`. It refuses any pair from the eruption onward, and it publishes nothing.
+
+```powershell
+python pipeline/mrw/eruption_run.py process --drill mayon_A111F008_20261007_20261019
+python pipeline/mrw/contract_check.py pipeline/out/drill --unpublished
+python pipeline/mrw/eruption_run.py review --drill mayon_A111F008_20261007_20261019
+python pipeline/mrw/eruption_run.py preview --drill mayon_A111F008_20261007_20261019
+```
 
 ## If something goes wrong
 
@@ -145,5 +136,6 @@ Wait for "Deploy site" to pass, then open https://bontojamesrod.github.io/groudo
   python -c "import sys; sys.path.insert(0, 'pipeline'); from pathlib import Path; from mrw.config import utc_now_text; from mrw.publish import rebuild_pairs_list; rebuild_pairs_list(Path('site/data/sites/mayon'), utc_now_text())"
   ```
 
-- **The script says "Stopped":** step 1 or step 3 isn't done. It stops before contacting ASF.
+- **The script says "Stopped":** the thresholds aren't FINAL or the cutoff has been moved back. It stops before contacting ASF. Ask the owner.
+- **"This crop isn't in raw/":** `review` and a drill never download. Run step 2 first, or pick a pair that has been processed.
 - **Earthdata login fails:** don't open or print `~/.netrc` or `~/_netrc`. Stop, and have the owner log in again with `python pipeline/mrw/check_access.py`.

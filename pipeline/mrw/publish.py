@@ -6,6 +6,7 @@ Run from the project folder:
 Only this step puts radar results into site/data/ (docs/04, ADR-009). It changes
 files on your computer: they reach the public site when you push them to main.
 """
+import argparse
 import json
 import shutil
 import sys
@@ -20,6 +21,11 @@ from mrw.config import SITES_FOLDER, build_sites_row, load_site_config, utc_now_
 from mrw.context import DATA_FOLDER, write_json
 from mrw.contract_check import check_data_dir
 from mrw.export import OUT_FOLDER
+
+
+# FR-086: said when only one of the site's tracks has a pair ready.
+SINGLE_TRACK_NOTE = ("Single track: only track {track} has a pair for these dates so far, "
+                     "so this result hasn't been compared with a second viewing angle.")
 
 
 class PublishError(Exception):
@@ -85,7 +91,7 @@ def _restore(target, backup, lists):
 
 
 def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLDER, sites_folder=SITES_FOLDER,
-                 more_to_come=False):
+                 more_to_come=False, single_track=False):
     """Publish one pair, and undo everything if the result fails the contract check.
 
     Use more_to_come=True when replacing pairs that depend on each other: the check on
@@ -114,6 +120,8 @@ def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLD
         content = json.loads((target / "pair.json").read_text(encoding="utf-8"))
         pair = content["data"]
         pair.update(status="published", published_at=now, updated_at=now)
+        if single_track:
+            pair["check_note"] = SINGLE_TRACK_NOTE.format(track=pair["track"])
         write_json(target / "pair.json", pair, now)
         rebuild_pairs_list(site_folder, now)
         rebuild_sites_list(data_folder, now, sites_folder)
@@ -131,5 +139,10 @@ def publish_pair(site_id, pair_key, out_folder=OUT_FOLDER, data_folder=DATA_FOLD
 
 
 if __name__ == "__main__":
-    published = publish_pair(sys.argv[1], sys.argv[2])
+    parser = argparse.ArgumentParser(description="Copy a checked pair to the public site's data folder.")
+    parser.add_argument("site")
+    parser.add_argument("pair")
+    parser.add_argument("--single-track", action="store_true", help="add the note that only one track has a pair ready")
+    args = parser.parse_args()
+    published = publish_pair(args.site, args.pair, single_track=args.single_track)
     print(f"Published {published['id']} at {published['published_at']}")

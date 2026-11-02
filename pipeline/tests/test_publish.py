@@ -153,3 +153,43 @@ def test_invalid_output_stops_and_changes_nothing(folders):
         run(out, data)
     assert not list((data / "sites" / "mayon").glob("pairs/*"))
     assert not (data / "sites.json").exists()
+
+
+@pytest.mark.parametrize("stray", ["screens/design/axe.json", "stray.json", "sites/stray.json", "sites/mayon/stray.json",
+                                   "drill/sites/mayon/pairs/x/pair.json", "preview/data/sites.json"])
+def test_tc097_a_stray_file_outside_the_pair_folders_cant_block_publishing(folders, stray):
+    out, data = folders
+    path = out / stray
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("this is not valid JSON", encoding="utf-8")
+    assert check_data_dir(out, published=False) == []
+    run(out, data)
+    assert check_data_dir(data) == []
+
+
+def test_tc097_a_broken_pair_folder_still_stops_publishing(folders):
+    out, data = folders
+    (out / "sites" / "mayon" / "pairs" / PAIR / "pair.json").write_text("this is not valid JSON", encoding="utf-8")
+    assert check_data_dir(out, published=False)
+    with pytest.raises(Exception):
+        run(out, data)
+    assert not (data / "sites" / "mayon" / "pairs" / PAIR).exists()
+
+
+def test_tc097_a_stray_file_inside_a_pair_folder_still_fails(folders):
+    out, _data = folders
+    (out / "sites" / "mayon" / "pairs" / PAIR / "stray.json").write_text("{}", encoding="utf-8")
+    assert any("not part of the data contract" in error for error in check_data_dir(out, published=False))
+
+
+def test_tc099_the_single_track_note_names_the_track(folders):
+    out, data = folders
+    pair = publish_pair("mayon", PAIR, out_folder=out, data_folder=data, sites_folder=SITES_FOLDER, single_track=True)
+    assert pair["check_note"].startswith("Single track: only track 111 has a pair")
+    assert read_data(data / "sites" / "mayon" / "pairs.json")[0]["check_note"] == pair["check_note"]
+    assert check_data_dir(data) == []
+
+
+def test_tc099_without_the_option_there_is_no_note(folders):
+    out, data = folders
+    assert run(out, data)["check_note"] is None

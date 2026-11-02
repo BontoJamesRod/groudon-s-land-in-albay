@@ -1,0 +1,130 @@
+{
+ "site_id": "mayon",
+ "outer_km": 8,
+ "note": "Saved before any post-eruption product was opened (ADR-014). Don't rebuild it after that.",
+ "pair_count": 11,
+ "pairs_with_coherence": 7,
+ "median_coherence_change_low": -0.17749837040901184,
+ "median_coherence_change_high": 0.04957571625709534,
+ "outer_flagged_km2_high": 3.55616608027688,
+ "volcano_no_data_share_high": 0.000504220580180141,
+ "track_agreement": [
+  {
+   "pairs": [
+    "mayon_D104F082_20260913_20260925",
+    "mayon_A111F008_20260913_20260925"
+   ],
+   "same_cell": 0.07339955849889625,
+   "within_about_200_m": 0.2063854047890536
+  },
+  {
+   "pairs": [
+    "mayon_D104F082_20261007_20261019",
+    "mayon_A111F008_20261007_20261019"
+   ],
+   "same_cell": 0.04677100197877316,
+   "within_about_200_m": 0.17303822937625754
+  }
+ ],
+ "pairs": [
+  {
+   "pair_id": "mayon_A111F008_20260621_20260703",
+   "track": 111,
+   "after": "2026-07-03T21:13:22Z",
+   "total_km2": 2.38,
+   "median_coherence_change": null,
+   "outer_flagged_km2": 1.5306940061736318,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_A111F008_20260703_20260715",
+   "track": 111,
+   "after": "2026-07-15T21:13:21Z",
+   "total_km2": 1.8,
+   "median_coherence_change": null,
+   "outer_flagged_km2": 1.2102780268593443,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_A111F008_20260715_20260727",
+   "track": 111,
+   "after": "2026-07-27T21:13:21Z",
+   "total_km2": 1.76,
+   "median_coherence_change": -0.06244736909866333,
+   "outer_flagged_km2": 1.0958144439801045,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_A111F008_20260727_20260820",
+   "track": 111,
+   "after": "2026-08-20T21:13:19Z",
+   "total_km2": 4.09,
+   "median_coherence_change": null,
+   "outer_flagged_km2": 3.55616608027688,
+   "volcano_no_data_share": 0.0004969656078034483
+  },
+  {
+   "pair_id": "mayon_A111F008_20260820_20260901",
+   "track": 111,
+   "after": "2026-09-01T21:13:19Z",
+   "total_km2": 1.15,
+   "median_coherence_change": null,
+   "outer_flagged_km2": 0.8533485748703173,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_A111F008_20260901_20260913",
+   "track": 111,
+   "after": "2026-09-13T21:13:19Z",
+   "total_km2": 1.26,
+   "median_coherence_change": 0.03773665428161621,
+   "outer_flagged_km2": 0.9481194983294727,
+   "volcano_no_data_share": 0.000504220580180141
+  },
+  {
+   "pair_id": "mayon_A111F008_20260913_20260925",
+   "track": 111,
+   "after": "2026-09-25T21:13:19Z",
+   "total_km2": 0.77,
+   "median_coherence_change": -0.0834837257862091,
+   "outer_flagged_km2": 0.5226760021080694,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_A111F008_20260925_20261007",
+   "track": 111,
+   "after": "2026-10-07T21:13:19Z",
+   "total_km2": 0.86,
+   "median_coherence_change": -0.026350080966949463,
+   "outer_flagged_km2": 0.652729607028209,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_A111F008_20261007_20261019",
+   "track": 111,
+   "after": "2026-10-19T21:13:19Z",
+   "total_km2": 0.75,
+   "median_coherence_change": 0.04957571625709534,
+   "outer_flagged_km2": 0.4759059359853693,
+   "volcano_no_data_share": 0.0005005930939917946
+  },
+  {
+   "pair_id": "mayon_D104F082_20260913_20260925",
+   "track": 104,
+   "after": "2026-09-25T10:16:11Z",
+   "total_km2": 0.81,
+   "median_coherence_change": -0.17749837040901184,
+   "outer_flagged_km2": 0.6006261123125696,
+   "volcano_no_data_share": 0.00011970704421542915
+  },
+  {
+   "pair_id": "mayon_D104F082_20261007_20261019",
+   "track": 104,
+   "after": "2026-10-19T10:16:12Z",
+   "total_km2": 1.65,
+   "median_coherence_change": 0.023108571767807007,
+   "outer_flagged_km2": 0.9177599817235096,
+   "volcano_no_data_share": 0.00011970704421542915
+  }
+ ]
+}

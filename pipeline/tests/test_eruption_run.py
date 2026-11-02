@@ -125,3 +125,55 @@ def test_check_prints_the_newest_pass_for_each_track_and_frame(capsys):
     assert "Track 111 frame 8: 2026-10-19T21:13:19Z" in output
     assert "2026-10-07" not in output
     assert "Track 104: no new pass on ASF yet" in output
+
+
+def test_a_drill_refuses_a_pair_after_the_eruption():
+    pair = make_pair("2026-10-19", "2026-10-31")
+    with pytest.raises(NotReady, match="only for older pairs"):
+        eruption_run.process_drill(pair["id"], [pair], final_config(), runner=None)
+
+
+def test_a_drill_needs_a_known_pair():
+    with pytest.raises(NotReady, match="isn't a pair on ASF"):
+        eruption_run.process_drill("no_such_pair", [], final_config(), runner=None)
+
+
+def test_a_drill_reads_the_cache_only_and_writes_to_its_own_folder(capsys):
+    earlier = make_pair("2026-09-25", "2026-10-07")
+    pair = make_pair("2026-10-07", "2026-10-19", previous=earlier)
+    calls = []
+
+    def runner(site, before, after, out_folder, reader):
+        calls.append((out_folder, reader))
+        return {"id": pair["id"], "status": "ready", "coherence_used": True, "high_confidence_area_km2": 0.0,
+                "low_confidence_area_km2": 0.0, "new_material_area_km2": 0.0,
+                "layers": [{"kind": "new_material", "source_granule_ids": []}]}
+    assert eruption_run.process_drill(pair["id"], [pair], final_config(), runner=runner) == [pair["id"]]
+    assert calls == [(eruption_run.DRILL_FOLDER, eruption_run.cached_crop)]
+
+
+@pytest.mark.parametrize("words", [["review"], ["preview"], ["process", "--drill"], ["check", "extra"], ["nonsense"], []])
+def test_a_wrong_command_prints_the_help(words, capsys):
+    assert eruption_run.main(words) == 1
+    assert "eruption_run.py" in capsys.readouterr().out
+
+
+def test_the_preview_uses_a_copy_and_leaves_the_real_site_alone(tmp_path):
+    site = tmp_path / "site"
+    (site / "data").mkdir(parents=True)
+    (site / "index.html").write_text("real", encoding="utf-8")
+    calls = []
+    preview = eruption_run.build_preview(["a_pair"], "the_out_folder", tmp_path / "preview", site,
+                                         lambda site_id, pair, out_folder, data_folder: calls.append((pair, out_folder, data_folder)))
+    assert (preview / "index.html").read_text(encoding="utf-8") == "real"
+    assert calls == [("a_pair", "the_out_folder", tmp_path / "preview" / "data")]
+    assert sorted(path.name for path in site.iterdir()) == ["data", "index.html"]
+
+
+def test_the_preview_server_has_room_for_a_burst_of_files():
+    assert eruption_run.RoomyServer.request_queue_size > 5
+
+
+def test_reviewing_a_pair_that_wasnt_processed_says_so(tmp_path):
+    with pytest.raises(NotReady, match="hasn't been processed"):
+        eruption_run.review(["no_such_pair"], final_config(), tmp_path, {})
