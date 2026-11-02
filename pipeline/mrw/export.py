@@ -27,6 +27,7 @@ from mrw.contract_check import check_data_dir
 from mrw.context import DATA_FOLDER, write_json
 from mrw.download import read_crop
 from mrw.filters import apply_filters
+from mrw.histogram import read_channels, write_histograms
 from mrw.gcov import GCOV_DATASETS, GCOV_GROUP, HAS_VALUE, MASKED_BY_PRODUCT, OUTSIDE_COVERAGE, SEA, process_gcov
 from mrw.pairs import check_consecutive, check_same_track, find_gunw, same_gap, pair_id, pass_id, require_product
 from mrw.search import search_gcov, search_gunw, vertex_url
@@ -233,6 +234,17 @@ def distance_from_summit(gcov_result, config):
     return np.hypot(xs - x0, ys - y0) / 1000
 
 
+def web_cells_of(gcov_result, config):
+    """Return the change in dB for each web cell, and which web cells are inside the reach, if the site has one."""
+    rows, columns, inside = lookup_web_cells(gcov_result["x"], gcov_result["y"], gcov_result["epsg"], site_bounds(config))
+    web_change = gcov_result["change_db"][rows, columns].astype("float64")
+    web_change[~inside] = np.nan
+    distance = distance_from_summit(gcov_result, config)
+    if distance is None:
+        return web_change, inside
+    return web_change, inside & (distance[rows, columns] <= config["filters"]["max_distance_km"])
+
+
 def write_pair(gcov_result, loss, before, after, gunw, previous_gunw, previous_id, config, out_folder):
     """Classify a processed pair and write all its files. Returns the pair record."""
     thresholds = config["thresholds"]
@@ -251,6 +263,10 @@ def write_pair(gcov_result, loss, before, after, gunw, previous_gunw, previous_i
     layers = write_layers(folder, gcov_result, loss, classes, config, pair["id"], granules, now)
     passes = [pass_record(p, config["id"], gcov_result["spacing_x_m"], now) for p in (before, after)]
     write_json(folder / "pair.json", {**pair, "passes": passes, "layers": layers}, now)
+    grid_layer = next(layer for layer in layers if layer["kind"] == "new_material")
+    web_classes = np.fromfile(folder / grid_layer["grid_path"], dtype="uint8").reshape(grid_layer["grid_height"], grid_layer["grid_width"])
+    web_change, in_reach = web_cells_of(gcov_result, config)
+    write_histograms(folder, pair["id"], config["id"], web_change, web_classes, in_reach, grid_layer, read_channels(config["id"]), now)
     return {**pair, "layers": layers}
 
 

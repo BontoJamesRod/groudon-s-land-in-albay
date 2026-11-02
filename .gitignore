@@ -9,6 +9,8 @@ __pycache__/
 raw/
 *.h5
 pipeline/out/
+# Screens are saved to pipeline/out/screens, and they can show imagery under its own license
+pipeline/reports/screens/
 pipeline/logs/
 .netrc
 _netrc

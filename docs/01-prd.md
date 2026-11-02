@@ -66,7 +66,7 @@ As a visitor, I want to open the app and see a map of the Mayon area with town b
 
 **Acceptance criteria**
 
-- **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom, or one zoom step further out on a short phone screen where the danger-zone label wouldn't clear the map credits, and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
+- **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom, or one zoom step further out on a short phone screen where the danger-zone ring wouldn't clear the map credits, and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
 - **US-001/AC-2:** Given background map imagery fails to load, when the map appears, then town borders, the coastline and the danger-zone ring still show and the notice "Background map unavailable" appears.
 - **US-001/AC-3:** Given the site's land file stops at the site's edge, when the map appears, then no coastline or town border is drawn along that edge.
 
@@ -400,6 +400,7 @@ As a visitor, I want to open a channel and see its change across every pass, so 
 - **US-025/AC-3:** Given a pair with no valid radar value inside the channel's strip, when its bar would show, then the bar's place says "No radar data" instead of 0 km².
 - **US-025/AC-4:** Given a pair whose gap isn't 12 days, when its bar shows, then the bar is dimmed and has a short note such as "24-day gap, not comparable".
 - **US-025/AC-5:** Given a channel that continues past the reach distance, when it shows on the map, then that part is dashed and labeled "Not checked", and no bar counts it as zero change.
+- **US-025/AC-6:** Given a channel view is open, when it opens or the map's pass changes, then the highlighted bar is the pass the map is showing, it's scrolled into view, and no other bar looks highlighted.
 
 #### US-026: Compute channel areas
 
@@ -411,14 +412,84 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 - **US-026/AC-2:** Given a site with channels whose config has no strip width, when the pipeline runs, then it stops with "Channel strip width missing in site config: <file>".
 - **US-026/AC-3:** Given a channel without a recorded confirmation, or an unconfirmed candidate from `pipeline/context/channel_name_candidates.geojson`, when the contract check runs on the published channel files, then it fails if that channel is in them.
 
+### F-21: Brightness histogram
+
+**Priority:** Must
+**Description:** A small chart for the selected pair showing how the ground's brightness changed, with the flag line and the flagged tails marked. The flag line can't be moved.
+
+#### US-027: See why a spot counted as changed
+
+As a visitor, I want to see how much the ground's brightness changed and where the flag line falls, so that I understand why some spots are flagged.
+
+**Acceptance criteria**
+
+- **US-027/AC-1:** Given a published pair, when the maintainer publishes it, then the pair has a file with the distribution of brightness change for checked land inside the reach distance, in fixed bins, whose flagged cells match the pair's value grid.
+- **US-027/AC-2:** Given a pair is selected, when the visitor reads the panel, then a histogram shows the distribution, a line on each side at the pair's brightness threshold, the flagged tails shaded in the "possible new material" colour, and one plain sentence saying what it means.
+- **US-027/AC-3:** Given the histogram file can't be loaded, when the panel shows, then the rest of the pair still works and the panel says "Brightness chart not available for this pair".
+- **US-027/AC-4:** Given the visitor reads the help panel, then one line says why there's no way to move the flag line.
+- **US-027/AC-5:** Given a channel is opened where the panel is on screen, when the histogram shows, then the channel's strip is drawn as a thin outline on the same chart.
+### F-22: Field map design
+
+**Priority:** Must
+**Description:** The design the owner chose on 2026-11-02. A light relief map from elevation data, with its controls and channel list beside the map, or under it on a phone. It changes how the data looks and never the data. The owner approved Panama's relief on 2026-11-02, so both sites open on it.
+
+#### US-028: Read the map outdoors
+
+As a resident on a phone outdoors, I want a light, high-contrast map of the ground, so that I can read it in sunlight.
+
+**Acceptance criteria**
+
+- **US-028/AC-1:** Given a site with relief tiles, when the map opens, then the background is the relief, with no plain band at any edge at any zoom or pan the map allows, and the map credits the Copernicus DEM.
+- **US-028/AC-2:** Given the relief tiles can't load, when the map shows, then the borders, coastline and ring stay visible and "Background map unavailable" shows (FR-005).
+- **US-028/AC-3:** Given a site with channels, when it opens, then the channel list is open beside the map, or under it on a phone, without taking the keyboard focus. A phone shorter than 700 px opens on the map instead, with the list one tap away, because too little of the map would show.
+- **US-028/AC-4:** Given a site config with no relief tiles, when it opens, then it uses the Satellite background with no switcher, and its map lines stay readable on it.
+
+#### US-029: See small flagged spots
+
+As a visitor, I want flagged change to stand out on the light map at any zoom, so that small spots aren't lost.
+
+**Acceptance criteria**
+
+- **US-029/AC-1:** Given a pair is shown, when a flagged cell would be smaller than the minimum mark on screen, then it's drawn at the minimum mark's size, with a darker edge, in its class colour.
+- **US-029/AC-2:** Given marks are drawn, then there's one for each flagged cell in the pair's image, and no published image, grid or area changes.
+- **US-029/AC-3:** Given the visitor reads the legend, then one line says that small spots are drawn larger than life so they can be seen, and that the areas don't change.
+- **US-029/AC-4:** Given the layer toggle is off, or the compare view is open, then no marks show.
+
+#### US-030: Picture a channel's area
+
+As a resident, I want each channel's area compared with something familiar, so that I can picture its size.
+
+**Acceptance criteria**
+
+- **US-030/AC-1:** Given a channel area is shown in the list or the bars, then "about N basketball courts" is next to it, using 1 court = 28 × 15 m = 420 m², and the km² value stays.
+- **US-030/AC-2:** Given an area of 0, or under half a court, then it reads "0 basketball courts" or "less than 1 basketball court", and a channel with no radar data shows no comparison.
+- **US-030/AC-3:** Given the visitor reads the channel screens, then a note states the size of the court used.
+
+### F-23: Map switcher
+
+**Priority:** Must
+**Description:** A small Relief or Satellite choice on the map. Relief is the default. Satellite shows real imagery under the same channels, radar marks, rings and labels.
+
+#### US-031: Choose the background
+
+As a visitor, I want to switch between a relief map and real imagery, so that I can recognise the ground.
+
+**Acceptance criteria**
+
+- **US-031/AC-1:** Given a site with both backgrounds, when the map shows, then "Relief" and "Satellite" buttons of at least 44 px are on it, usable by keyboard, with `aria-pressed` saying which is on, and Relief is on for a first visit.
+- **US-031/AC-2:** Given the visitor chooses a background, when they reload or change site, then the same one is on. If the browser's storage can't be used, the app still works and opens on Relief.
+- **US-031/AC-3:** Given Satellite is on, then channels, marks, rings and labels use the bright colours made for imagery, the imagery's credit shows, and no imagery is requested while Relief is on. Given Relief is on, then the Field map colours show and the imagery's credit doesn't.
+- **US-031/AC-4:** Given the radar marks show, then they're visible on both backgrounds.
+- **US-031/AC-5:** Given Satellite is on and its tiles are slow or fail, then the relief shows under it, and after a run of failures the map says "Satellite map unavailable. Showing the relief map."
+
 ## 6. Functional Requirements
 
 | FR-ID | Requirement | F-ID | US-ID |
 | --- | --- | --- | --- |
-| FR-001 | The system shall center the map on the selected site's center point at the site's default zoom, or one zoom step further out on a short phone screen where the danger-zone label wouldn't clear the map credits. | F-01 | US-001 |
+| FR-001 | The system shall center the map on the selected site's center point at the site's default zoom, or one zoom step further out on a short phone screen where the danger-zone ring wouldn't clear the map credits. | F-01 | US-001 |
 | FR-002 | The system shall draw town borders and town names for the selected site. | F-01 | US-001 |
 | FR-003 | The system shall draw the coastline from the app's own land data, not from background imagery, and shall not draw a coastline or town border where the data is only clipped to the site's edge. | F-01 | US-001 |
-| FR-004 | The system shall draw a ring of the site's danger-zone radius around the summit, labeled with the site's danger-zone label, when the site defines one. | F-01 | US-001 |
+| FR-004 | The system shall draw a ring of the site's danger-zone radius around the summit, labeled with the site's danger-zone label, when the site defines one. On a phone the label sits inside the ring, so that town names keep their places at the opening view. | F-01 | US-001 |
 | FR-005 | The system shall show "Background map unavailable" when background imagery fails to load, while keeping borders, coastline and the danger-zone ring visible. | F-01 | US-001 |
 | FR-006 | The system shall let the visitor pan and zoom only between the site's minimum and maximum zoom levels. | F-01 | US-002 |
 | FR-007 | The system shall suggest matching town names once the visitor has typed at least 2 letters. | F-02 | US-003 |
@@ -454,7 +525,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-037 | The system shall show "This is not an official warning. Follow PHIVOLCS and your LGU." on the main screen whenever a radar layer is shown. | F-08 | US-012 |
 | FR-038 | The system shall not display any text stating that a lahar, eruption or flood will happen. | F-08 | US-012 |
 | FR-039 | The system shall list, for each radar layer of the selected pair, its product type, granule IDs, acquisition dates, maturity and a link to ASF. | F-09 | US-013 |
-| FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
+| FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, with a radar source under "Radar data", and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
 | FR-041 | The system shall let the visitor switch between published sites. | F-10 | US-014 |
 | FR-042 | The system shall show "Couldn't load <site name>. Try again." with a Retry button, keeping the previous site shown, when a site's data fails to load. | F-10 | US-014 |
 | FR-043 | The pipeline shall read each site's settings from one config file per site, with no code changes per site. | F-10 | US-015 |
@@ -486,6 +557,18 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | FR-069 | The system shall leave the distance and danger-zone lines out of the readout for a site with no summit. | F-02, F-10 | US-004 |
 | FR-070 | The system shall show a site's own wording for its change layer, limits and official source when its config sets one, and shall title the Panama earthquake pair "Changed after the earthquake", never landslides. | F-10 | US-014 |
 | FR-071 | The system shall draw the part of a channel past the reach distance (FR-060) as "Not checked", and shall never count that part or show it as zero change. | F-20 | US-025 |
+| FR-072 | The pipeline shall write, for each published pair, the distribution of brightness change in dB for checked land inside the reach distance (FR-060), in fixed bins, with the flagged cells and their share, matching the pair's value grid. | F-21 | US-027 |
+| FR-073 | The system shall show that distribution as a histogram for the selected pair, with a line on each side at the pair's brightness threshold, the flagged tails shaded in the "possible new material" colour, and one plain sentence. | F-21 | US-027 |
+| FR-074 | The system shall not let a visitor move the flag line, and the help panel shall say why. | F-21 | US-027 |
+| FR-075 | The pipeline shall write the same distribution for each channel's strip, and the system shall draw an opened channel's strip as a thin outline on the histogram, each scaled to its own ground. | F-21 | US-027 |
+| FR-076 | The system shall show a site's relief tiles as its background when its config has them, shall keep the view inside the tiles' bounds so that no plain band shows, and shall credit the Copernicus DEM on the map. | F-22 | US-028 |
+| FR-077 | The system shall open a site with channels with the channel list showing, shall put the controls beside the map on a desktop and under it on a phone, and shall load its own open-licensed fonts. | F-22 | US-028 |
+| FR-078 | The system shall draw each flagged cell of the selected pair at no less than a minimum size on screen, with a darker edge, in its class colour, reading them from the pair's image and changing no data. | F-22 | US-029 |
+| FR-079 | The system shall show each channel area in km² and as "about N basketball courts", with 1 court = 28 × 15 m = 420 m². | F-22 | US-030 |
+| FR-080 | The system shall highlight, in a channel's view, only the bar of the pass the map is showing, and shall scroll it into view. | F-20 | US-025 |
+| FR-081 | The system shall offer a Relief or Satellite choice on the map, with Relief as the default, and shall remember each visitor's choice in the browser, working normally if that storage is blocked. | F-23 | US-031 |
+| FR-082 | The system shall use bright overlay colours on Satellite and the Field map colours on Relief, and shall keep radar marks visible on both. | F-23 | US-031 |
+| FR-083 | The system shall request imagery only while Satellite is on, shall show its credit only then, and shall show the relief under it while it loads or if it fails. | F-23 | US-031 |
 
 ## 7. Non-Functional Requirements
 
@@ -507,7 +590,7 @@ As the maintainer, I want the pipeline to compute each channel's flagged area fo
 | --- | --- | --- |
 | ASF DAAC (Vertex, ASF Search API, `asf_search`) | Find and download NISAR GCOV and GUNW products; product links for visitors | F-03, F-05, F-06, F-07, F-09, F-17 |
 | NASA Earthdata Login | Authentication for downloading NISAR data (maintainer only) | F-05, F-06, F-07, F-17 |
-| Background map imagery (Esri tiles, per the progress notes) | Visual base map under the radar layers (terms of use: verify) | F-01 |
+| Background map imagery (EOxCloudless tiles, ADR-013) | Satellite background under the radar layers, CC BY-NC-SA 4.0 for non-commercial use | F-01, F-23 |
 | Albay municipal boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through GitHub `faeldon/philippines-json-maps`) | Town borders, town names, land mask and coastline for Mayon | F-01, F-02, F-05 |
 | PHIVOLCS bulletins (read by the maintainer) | Channel names, event dates, validation records | F-03, F-12, F-19, F-20 |
 | Channel line data: OpenStreetMap candidates, confirmed by the owner (`pipeline/context/channel_name_candidates.geojson`) | Lines for the named channels | F-19, F-20 |

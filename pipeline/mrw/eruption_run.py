@@ -2,6 +2,7 @@
 
 Run from the project folder:
     python pipeline/mrw/eruption_run.py check       list the new passes, reading names only
+    python pipeline/mrw/eruption_run.py check-all   list every product maturity on Mayon's tracks, names only
     python pipeline/mrw/eruption_run.py process     process them into pipeline/out/
     python pipeline/mrw/eruption_run.py republish   redo the published pairs with the final values
 
@@ -21,11 +22,12 @@ from mrw.context import DATA_FOLDER
 from mrw.export import OUT_FOLDER, SEARCH_START, print_summary, run_pair
 from mrw.pairs import build_track_pairs, same_gap
 from mrw.publish import publish_pair
-from mrw.search import BLIND_CUTOFF, search_gcov, search_gunw
+from mrw.search import BLIND_CUTOFF, list_all_maturities, search_gcov, search_gunw
 
 SITE_ID = "mayon"
 ERUPTION_START = "2026-10-30"
 ERUPTION_TRACKS = (104, 111)
+MAYON_TRACKS = (39, 104, 111)
 
 
 class NotReady(Exception):
@@ -58,14 +60,40 @@ def find_pairs(config):
     return eruption_pairs(build_track_pairs(SITE_ID, search_gcov(config, SEARCH_START), search_gunw(config, SEARCH_START)))
 
 
-def check(pairs):
+def newest_passes(passes):
+    """Find the newest pass for each track and frame, sorted by track and then frame."""
+    newest = {}
+    for one_pass in passes:
+        key = (one_pass["track"], one_pass["frame"])
+        if key not in newest or one_pass["acquired_start"] > newest[key]["acquired_start"]:
+            newest[key] = one_pass
+    return [newest[key] for key in sorted(newest)]
+
+
+def check(pairs, passes):
     """Print what is available. This reads product names only, not radar data."""
+    print(f"Newest pass on ASF for each track and frame (only passes before {BLIND_CUTOFF:%Y-%m-%d} can be seen):")
+    for one_pass in newest_passes(passes):
+        print(f"  Track {one_pass['track']} frame {one_pass['frame']}: {one_pass['acquired_start']}")
     for track in ERUPTION_TRACKS:
         if not any(pair["after"]["track"] == track for pair in pairs):
             print(f"Track {track}: no new pass on ASF yet. Try again later.")
     for pair in pairs:
         note = "coherence ready" if has_coherence(pair) else "NO COHERENCE YET: wait for the GUNW"
         print(f"{pair['id']}: {note}")
+
+
+def check_all(rows):
+    """Print how many products of each kind there are, and the newest. Names only: nothing is opened."""
+    print(f"Every product maturity on tracks {MAYON_TRACKS} (only products before {BLIND_CUTOFF:%Y-%m-%d} can be seen):")
+    groups = {}
+    for row in rows:
+        groups.setdefault((row["track"], row["frame"], row["level"], row["maturity"]), []).append(row)
+    for (track, frame, level, maturity), group in sorted(groups.items()):
+        newest = max(group, key=lambda row: row["acquired"])
+        print(f"  Track {track} frame {frame} {level} {maturity}: {len(group)}, newest {newest['acquired']}  {newest['granule_id']}")
+    if not rows:
+        print("  None found.")
 
 
 def process(pairs, config, runner=run_pair):
@@ -96,7 +124,7 @@ def republish(config, pairs, data_folder=DATA_FOLDER, out_folder=OUT_FOLDER, run
 
 def main(argv):
     """Command-line entry point. Returns 1 if it had to stop."""
-    if len(argv) != 1 or argv[0] not in ("check", "process", "republish"):
+    if len(argv) != 1 or argv[0] not in ("check", "check-all", "process", "republish"):
         print(__doc__)
         return 1
     config = load_site(SITE_ID)
@@ -104,10 +132,13 @@ def main(argv):
         require_owner_go_ahead(config)
         if argv[0] == "republish":
             republish(config, build_track_pairs(SITE_ID, search_gcov(config, SEARCH_START), search_gunw(config, SEARCH_START)))
+        elif argv[0] == "check-all":
+            check_all(list_all_maturities(config, SEARCH_START, MAYON_TRACKS))
         elif argv[0] == "process":
             process(find_pairs(config), config)
         else:
-            check(find_pairs(config))
+            passes = search_gcov(config, SEARCH_START)
+            check(eruption_pairs(build_track_pairs(SITE_ID, passes, search_gunw(config, SEARCH_START))), passes)
     except NotReady as problem:
         print(problem)
         return 1

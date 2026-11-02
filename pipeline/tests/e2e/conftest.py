@@ -15,7 +15,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[3]
 SITE = ROOT / "site"
 FIXTURES = ROOT / "pipeline" / "tests" / "fixtures"
-TILE_HOST = "https://server.arcgisonline.com/**"
+TILE_HOST = "https://tiles.maps.eox.at/**"
 # A 1 x 1 pixel image, sent back instead of real map tiles.
 TINY_PNG = bytes.fromhex(
     "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c489"
@@ -92,10 +92,18 @@ def prepare_page(page, width=1280, height=800, tiles="fake"):
         page.route(TILE_HOST, lambda route: route.fulfill(body=TINY_PNG, content_type="image/png"))
     elif tiles == "blocked":
         page.route(TILE_HOST, lambda route: route.abort())
+        page.route("**/relief/**", lambda route: route.abort())
+
+
+def close_list_on_a_phone(page):
+    """On a phone the channel list opens first, and the pass controls are behind it."""
+    if page.viewport_size["width"] <= 700 and page.locator("#channel-panel").is_visible():
+        page.click("#channel-close")
 
 
 def open_drawer_if_closed(page):
     """On a phone the Compare button is inside the drawer. On a desktop this does nothing."""
+    close_list_on_a_phone(page)
     toggle = page.locator("#drawer-toggle")
     if toggle.is_visible() and toggle.get_attribute("aria-expanded") == "false":
         toggle.click()

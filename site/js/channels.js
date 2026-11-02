@@ -10,6 +10,8 @@ import { gapNote, pairDates } from "./timeline.js";
 
 const STRIP_STYLE = { color: "#22d3ee", weight: 1.5, opacity: 0.9, fillColor: "#22d3ee", fillOpacity: 0.22, interactive: false };
 const FIT_PADDING_PX = 24;
+// A shorter phone opens on the map: with the list open, too little of the map would show.
+const SHORT_PHONE = "(max-width: 700px) and (max-height: 699px)";
 
 // A label for what lies past the reach, at the middle of its longest stretch (FR-071).
 function notCheckedLabel({ type, coordinates }) {
@@ -32,7 +34,7 @@ function sortChannels(channels, areaOf) {
 
 // `elements`: panel, title, back, close, status, retry, body, opener. `onResize` runs after the map
 // changes size, and `onPickPair(id)` shows a pair on the map.
-export function createChannels(map, elements, site, siteData, onResize, onPickPair) {
+export function createChannels(map, elements, site, siteData, onResize, onPickPair, onChannelChange) {
   const { pairs, towns } = siteData;
   let channels = siteData.channels; // null if the file failed when the site opened: it's tried again here
   let rows = null;
@@ -62,8 +64,10 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     button.type = "button";
     const area = flaggedArea(channel, latest);
     button.onclick = () => showChannel(channel);
-    button.append(element("span", channel.properties.name, "channel-row-name"),
-      element("span", area === null ? STRINGS.channelNoData : STRINGS.channelArea(area)));
+    const value = element("span", undefined, "channel-row-value");
+    value.append(element("span", area === null ? STRINGS.channelNoData : STRINGS.channelArea(area), "channel-row-area"));
+    if (area !== null) value.append(element("span", STRINGS.channelCourts(area), "channel-row-courts"));
+    button.append(element("span", channel.properties.name, "channel-row-name"), value);
     const row = element("li");
     row.append(button);
     return row;
@@ -89,10 +93,15 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     map.fitBounds(bounds, { padding: [FIT_PADDING_PX, FIT_PADDING_PX], animate: false });
   }
 
+  // The highlighted bar is always the pass on the map, and it's brought into view (FR-080).
   function markSelectedBar() {
     elements.body.querySelectorAll(".channel-bar").forEach((bar) => {
-      if (bar.dataset.pair === selectedPairId) bar.setAttribute("aria-current", "true");
-      else bar.removeAttribute("aria-current");
+      if (bar.dataset.pair === selectedPairId) {
+        bar.setAttribute("aria-current", "true");
+        bar.scrollIntoView({ block: "nearest" });
+      } else {
+        bar.removeAttribute("aria-current");
+      }
     });
   }
 
@@ -107,6 +116,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       element("span", area === null ? STRINGS.channelNoData : STRINGS.channelArea(area), "channel-bar-value"));
     button.append(top);
     if (area !== null) {
+      button.append(element("span", STRINGS.channelCourts(area), "channel-bar-courts"));
       const fill = element("span", undefined, "channel-bar-fill");
       fill.style.width = `${largest ? (area / largest) * 100 : 0}%`;
       const track = element("span", undefined, "channel-bar-track");
@@ -133,6 +143,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
 
   // SCR-14: one bar per published pair, in order of after date, with the strip on the map.
   function showChannel(channel) {
+    onChannelChange(channel);
     elements.title.textContent = channel.properties.name;
     elements.back.hidden = false;
     showStatus("", false);
@@ -145,14 +156,15 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       bars,
       element("p", STRINGS.channelsHow(site.channel_strip_half_width_m, site.detection_reach_km), "channel-note"),
       element("p", STRINGS.channelBarsScale, "channel-note"),
+      element("p", STRINGS.channelCourtSize, "channel-note"),
     );
     if (channel.properties.not_checked_geometry) {
       elements.body.append(element("p", STRINGS.channelNotCheckedNote(site.detection_reach_km), "channel-note"));
     }
-    markSelectedBar();
     elements.panel.scrollTop = 0;
     drawStrip(channel);
     elements.title.focus();
+    markSelectedBar();
   }
 
   function showListTitle() {
@@ -163,6 +175,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
 
   // SCR-13: the channels, most changed first, for the latest pair.
   function showList() {
+    onChannelChange(null);
     showListTitle();
     if (channels.features.length === 0) {
       showStatus(STRINGS.channelsEmpty, false);
@@ -184,6 +197,7 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
       list,
       element("p", STRINGS.channelsHow(site.channel_strip_half_width_m, site.detection_reach_km), "channel-note"),
       element("p", STRINGS.channelsOnlyConfirmed, "channel-note"),
+      element("p", STRINGS.channelCourtSize, "channel-note"),
     );
   }
 
@@ -214,14 +228,24 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     onResize();
   }
 
-  function open() {
+  // For when the site opens: the list appears, and the keyboard focus stays put (US-028/AC-3).
+  function showAtStart() {
+    if (!window.matchMedia(SHORT_PHONE).matches) show();
+  }
+
+  function show() {
     setOpen(true);
     if (rows) showList();
     else load();
+  }
+
+  function open() {
+    show();
     elements.title.focus();
   }
 
   function close() {
+    onChannelChange(null);
     request += 1;
     removeStrip();
     setOpen(false);
@@ -249,5 +273,5 @@ export function createChannels(map, elements, site, siteData, onResize, onPickPa
     showStatus(STRINGS.passLoadError, false, true);
   }
 
-  return { open, close, pairChanged, pairFailed };
+  return { showAtStart, open, close, pairChanged, pairFailed };
 }

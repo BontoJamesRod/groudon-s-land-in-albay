@@ -34,6 +34,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Second site | Panama, two pairs, same final rule with no per-site tuning, published on `night-1` with borders under CC BY-SA 4.0 and a check against the University of Panama map (T-037, T-088). Not on the public site until `night-1` is merged |
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
 | Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag was then given as not confirmed, and stays off (`pipeline/reports/owner-checks.md`) |
+| Design | Field map and the map switcher built on `night-1` (T-107 to T-116), not merged. `main` still loads Esri imagery |
 | Next | T-078, which wasn't in the owner's request; T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
 
 ## After Launch
@@ -63,6 +64,10 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-11-01 | Blind cutoff lifted for the Oct 31 passes only | 04 ADR-006, `CLAUDE.md` |
 | 2026-11-01 | Pair D104 2026-09-25 → 2026-10-07 stays off the map by owner decision, because its baseline's coherence is unusually high | This file |
 | 2026-11-01 | Channel lines confirmed by the owner in Google Earth Pro; only those are published. Change is counted within the reach distance, and what lies past it is drawn as not checked | `pipeline/reports/owner-checks.md`, 01 FR-065, FR-071 |
+| 2026-11-02 | Design: Field map, with a minimum mark and darker edge for flagged change, areas also as basketball courts, and a wider Copernicus DEM under 300 MB with its size logged | 01 F-22, 04 ADR-012 |
+| 2026-11-02 | Coverage view: only after the design is built, and only if that's done by Nov 8, with eruption work first. It may show pass dates (metadata only) past the cutoff, because the thresholds are final; the processing cutoff is unchanged | This file |
+| 2026-11-02 | The histogram's channel outline stays desktop-only for now, to revisit with the design | This file |
+| 2026-11-02 | Map switcher: Relief by default, or Satellite. Panama's relief approved (under 300 MB, size logged). Esri's terms need Esri software or a subscription, so Satellite uses EOxCloudless | 01 F-23, 04 ADR-013 |
 
 ## Open Questions Carried Forward
 

@@ -73,10 +73,23 @@ Publishing only changes files on your computer. A pair reaches the public site w
 
 Until the final thresholds are set, the pipeline refuses every product acquired on or after 2026-10-30 (`BLIND_CUTOFF` in `pipeline/mrw/search.py`), so the thresholds can't be influenced by the eruption data.
 
+## Team
+
+- James Rod B. Bonto (team owner)
+- Ivan Mathew C. Esclanda
+- Lloyd Ariel Bajada Deputo
+- Andrel Jade Cabria
+- Julius Dave Fajardo
+- Hugh Benedict O. Abante
+
+## License and credits
+
+The code and documentation are under the [Apache-2.0 license](LICENSE), with the copyright notice in [NOTICE](NOTICE). The published radar layers in `site/data/sites/mayon/pairs/` are under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and those in `site/data/sites/panama/pairs/` are under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Credit them to Mayon Radar Watch and NASA–ISRO NISAR data via ASF, adding geoBoundaries for Panama. Data files under their own licenses, such as ODbL and CC BY-SA 4.0, aren't covered by the code license. [CREDITS.md](CREDITS.md) lists every data source, library and tool with its license, and says which files fall under which terms.
+
 ## Data sources
 
 - **Radar:** NISAR data, NASA–ISRO, distributed by the Alaska Satellite Facility (ASF DAAC). Products are labeled provisional.
-- **Town borders and land:** NAMRIA and PSA via OCHA COD-AB, packaged by [faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps), CC BY-IGO.
-- **Background map:** Esri World Imagery.
+- **Town borders and land:** Mayon: NAMRIA and PSA via OCHA COD-AB, packaged by [faeldon/philippines-json-maps](https://github.com/faeldon/philippines-json-maps), CC BY-IGO. Panama: [geoBoundaries](https://www.geoboundaries.org/), CC BY-SA 4.0.
+- **Background map:** a relief made from Copernicus DEM GLO-30, or EOxCloudless Sentinel-2 imagery (CC BY-NC-SA 4.0, non-commercial).
 - **Map library:** [Leaflet](https://leafletjs.com/) 1.9.4, copied into `site/vendor/`.
 - **Events:** PHIVOLCS, through the news reports linked in `pipeline/context/mayon_events.json`.

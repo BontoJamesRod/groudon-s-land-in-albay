@@ -70,13 +70,43 @@
     "retrieved_on": "2026-10-31"
   },
   {
-    "id": "esri_world_imagery",
-    "name": "World Imagery background map",
-    "provider": "Esri",
-    "used_for": "basemap",
-    "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
-    "license": "Esri terms of use, with attribution",
+    "id": "nisar_asf",
+    "site_id": null,
+    "name": "NISAR radar products (GCOV and GUNW), NASA-ISRO",
+    "provider": "NASA and ISRO, distributed by the Alaska Satellite Facility (ASF DAAC)",
+    "used_for": "radar",
+    "url": "https://nisar-docs.asf.alaska.edu/nisar-intro/",
+    "license": "Free and open NASA Earth science data; no separate license named",
     "retrieved_on": "2026-10-31"
+  },
+  {
+    "id": "gpm_imerg",
+    "site_id": "mayon",
+    "name": "GPM IMERG Late Run daily rain (GPM_3IMERGDL, version 07), used only in the channel test",
+    "provider": "NASA Goddard, through NASA GES DISC",
+    "used_for": "analysis",
+    "url": "https://gpm.nasa.gov/data/policy",
+    "license": "Free, no license named; the GPM data policy asks for acknowledgement",
+    "retrieved_on": "2026-10-31"
+  },
+  {
+    "id": "osm_analysis",
+    "site_id": "mayon",
+    "name": "OpenStreetMap waterways, places and quarries, used only for candidates and the channel test",
+    "provider": "OpenStreetMap contributors",
+    "used_for": "analysis",
+    "url": "https://www.openstreetmap.org/copyright",
+    "license": "ODbL 1.0",
+    "retrieved_on": "2026-11-01"
+  },
+  {
+    "id": "eox_s2cloudless",
+    "name": "EOxCloudless (Sentinel-2 cloudless) 2024, the Satellite background map",
+    "provider": "EOX IT Services GmbH, containing modified Copernicus Sentinel data 2024",
+    "used_for": "basemap",
+    "url": "https://cloudless.eox.at",
+    "license": "CC BY-NC-SA 4.0",
+    "retrieved_on": "2026-11-02"
   },
   {
     "id": "esa_worldcover_2021",
@@ -90,12 +120,11 @@
   },
   {
     "id": "copernicus_dem_glo30",
-    "site_id": "mayon",
-    "name": "Copernicus DEM GLO-30 elevation, used only as context in the false-alarm study",
+    "name": "Copernicus DEM GLO-30 elevation, for the relief background map and as context in the false-alarm study",
     "provider": "European Space Agency, Copernicus programme (produced using Copernicus WorldDEM-30, DLR and Airbus)",
-    "used_for": "analysis",
+    "used_for": "basemap",
     "url": "https://registry.opendata.aws/copernicus-dem/",
     "license": "Copernicus DEM GLO-30 licence, free with attribution",
-    "retrieved_on": "2026-10-31"
+    "retrieved_on": "2026-11-02"
   }
 ]

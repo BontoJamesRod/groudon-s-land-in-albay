@@ -1,7 +1,7 @@
 """Open each main screen at 1280 and 360 px, and take a picture of it.
 
 A normal run keeps the pictures in a temporary folder, so running the tests changes no files.
-To refresh the saved ones, with real map tiles, run in PowerShell:
+To save them to pipeline/out/screens, which git ignores, with real map tiles, run in PowerShell:
     $env:SAVE_SCREENS = "1"; pytest pipeline/tests/e2e/test_screens.py; Remove-Item Env:SAVE_SCREENS
 """
 import json
@@ -10,11 +10,11 @@ from pathlib import Path
 
 import pytest
 
-from .conftest import ROOT, envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import ROOT, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
-SAVED_FOLDER = ROOT / "pipeline" / "reports" / "screens"
+SAVED_FOLDER = ROOT / "pipeline" / "out" / "screens"
 SAVING = os.environ.get("SAVE_SCREENS") == "1"
 SIZES = {1280: 800, 360: 740}
 
@@ -113,6 +113,9 @@ def test_screen(page, site_url, tmp_path, name, width):
     prepare_page(page, width=width, height=SIZES[width], tiles="real" if SAVING else "fake")
     page.goto(site_url)
     wait_until_ready(page)
+    # The main screen shows what opens first. The others start from the pass controls.
+    if name != "main":
+        close_list_on_a_phone(page)
     SCREENS[name](page)
     save(page, name, width, tmp_path)
 
@@ -170,15 +173,12 @@ def test_screen_channels_empty(page, site_url, tmp_path, width):
 @pytest.mark.parametrize("width", SIZES)
 def test_screen_channels_loading_and_error(page, site_url, tmp_path, width):
     prepare_page(page, width=width, height=SIZES[width], tiles="real" if SAVING else "fake")
-    page.goto(site_url)
-    wait_until_ready(page)
-    if SAVING:
-        page.wait_for_load_state("networkidle")
     release = []
     # The file doesn't answer until the picture is taken, and then it fails. So this picture can't
     # wait for the network to go quiet: the request would time out, and it would show the error.
     page.route("**/sites/mayon/channel_areas.json", lambda route: release.append(route))
-    page.click("#channels-button")
+    page.goto(site_url)
+    wait_until_ready(page)
     page.locator("#channel-status:has-text('Loading')").wait_for()
     page.wait_for_timeout(300)
     save(page, "channels-loading", width, tmp_path, settle=False)

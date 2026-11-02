@@ -117,6 +117,12 @@ def land_feature():
     }
 
 
+def histogram_row():
+    """The histogram for the small grid below: 9 cells with a value, 2 of them flagged."""
+    return {"pair_id": PAIR_ID, "site_id": "mayon", "bin_start_db": -10.0, "bin_width_db": 0.25,
+            "counts": [1, 7, 1], "below": 0, "above": 0, "total_cells": 9, "flagged_cells": 2, "flagged_share": 0.222222}
+
+
 @pytest.fixture
 def data_dir(tmp_path):
     """Build one small data folder that fully follows the contract."""
@@ -137,6 +143,7 @@ def data_dir(tmp_path):
     for _kind, path in LOOPS:
         Image.new("RGBA", (4, 3)).save(folder / path)
     (folder / "new_material.bin").write_bytes(bytes([0, 1, 2, 253, 254, 255, 0, 0, 0, 0, 0, 0]))
+    write(folder / "histogram.json", envelope(histogram_row()))
     return root
 
 
@@ -506,6 +513,32 @@ def test_another_published_file_can_cite_an_unconfirmed_name_as_a_place(data_dir
 def test_a_file_that_is_not_utf8_is_reported_not_a_crash(data_dir):
     (data_dir / "sites" / "mayon" / "events.json").write_bytes(b"\xff\xfe not text")
     assert any("events.json" in e for e in check_data_dir(data_dir))
+
+
+@pytest.mark.parametrize("change, message", [
+    ({"total_cells": 8}, "total_cells must equal"),
+    ({"flagged_cells": 3}, "the value grid has 2"),
+    ({"flagged_share": 0.5}, "flagged_share must be"),
+    ({"counts": [1, 7, -1]}, "whole numbers"),
+    ({"pair_id": "other"}, "pair_id should be"),
+])
+def test_tc083_a_wrong_histogram_fails(data_dir, change, message):
+    path = data_dir / "sites" / "mayon" / "pairs" / PAIR_ID / "histogram.json"
+    edit_json(path, lambda content: content["data"].update(change))
+    assert any(message in e for e in check_data_dir(data_dir))
+
+
+def test_tc083_a_published_pair_needs_its_histogram(data_dir):
+    (data_dir / "sites" / "mayon" / "pairs" / PAIR_ID / "histogram.json").unlink()
+    assert any("histogram.json is missing" in e for e in check_data_dir(data_dir))
+
+
+def test_tc083_a_channel_histogram_must_list_the_sites_channels(data_dir):
+    add_channels(data_dir, channel_feature())
+    row = {key: value for key, value in histogram_row().items() if key not in ("counts", "below", "above", "total_cells", "flagged_cells", "flagged_share")}
+    channel = {"channel_id": "someone_else", "counts": [1], "below": 0, "above": 0, "total_cells": 1, "flagged_cells": 0}
+    write(data_dir / "sites" / "mayon" / "pairs" / PAIR_ID / "channel_histogram.json", envelope({**row, "channels": [channel]}))
+    assert any("one item per channel" in e for e in check_data_dir(data_dir))
 
 
 def test_a_channel_needs_a_town(data_dir):

@@ -9,6 +9,7 @@ which is what makes CI stop the deploy. It never changes a file.
 """
 import argparse
 import json
+import math
 import re
 import sys
 from datetime import date, datetime
@@ -42,7 +43,7 @@ GRID_DTYPE_BYTES = {"uint8": 1, "int8": 1, "int16": 2}
 NO_DATA_REASON = {"253": "masked_by_product", "254": "sea", "255": "outside_coverage"}
 CONFIDENCE_LEVEL = {"none", "low", "high"}
 DETECTION_RESULT = {"yes", "no", "not_visible"}
-CONTEXT_USE = {"basemap", "boundaries", "coastline", "channels", "events", "validation", "analysis"}
+CONTEXT_USE = {"basemap", "boundaries", "coastline", "channels", "events", "validation", "analysis", "radar"}
 
 # Every MVP pair has these layers. coherence_loss is added when coherence was used.
 BASE_LAYER_KINDS = {"before_db", "after_db", "change_db", "new_material"}
@@ -84,6 +85,11 @@ SITES = {
     "danger_zone_label": field("string", required=False),
     "detection_reach_km": field("number", required=False),
     "channel_strip_half_width_m": field("number", required=False),
+    "relief_bounds_west": field("number", required=False, low=-180, high=180),
+    "relief_bounds_south": field("number", required=False, low=-90, high=90),
+    "relief_bounds_east": field("number", required=False, low=-180, high=180),
+    "relief_bounds_north": field("number", required=False, low=-90, high=90),
+    "relief_max_native_zoom": field("integer", required=False, low=0, high=22),
     "wording_set": field("string", required=False, enum={"plain_change"}),
     "boundary_credit": field("string", required=False),
     "boundary_credit_url": field("url", required=False),
@@ -119,6 +125,24 @@ CHANNELS = {
     "strip_geometry": field("object"),
     "checked_geometry": field("object"),
     "not_checked_geometry": field("object", required=False),
+}
+HISTOGRAMS = {
+    "pair_id": field("string"),
+    "site_id": field("string"),
+    "bin_start_db": field("number"),
+    "bin_width_db": field("number"),
+    "counts": field("array"),
+    "below": field("integer"),
+    "above": field("integer"),
+    "total_cells": field("integer"),
+    "flagged_cells": field("integer"),
+    "flagged_share": field("number"),
+}
+CHANNEL_HISTOGRAMS = {
+    "pair_id": field("string"),
+    "site_id": field("string"),
+    "bin_start_db": field("number"),
+    "bin_width_db": field("number"),
 }
 CHANNEL_AREAS = {
     "id": field("string"),
@@ -823,6 +847,75 @@ def check_layer(layer, pair, folder, where, errors):
     _check_grid(layer, folder, where, errors, pair.get("coherence_used") is not False)
 
 
+def _check_bins(row, where, errors):
+    """The counts must add up, or the chart and the sentence under it would disagree."""
+    counts = row.get("counts")
+    if not isinstance(counts, list) or not all(isinstance(n, int) and n >= 0 for n in counts):
+        errors.append(f"{where}: counts must be a list of whole numbers")
+        return
+    if sum(counts) + row.get("below", 0) + row.get("above", 0) != row.get("total_cells"):
+        errors.append(f"{where}: total_cells must equal counts + below + above")
+    if not 0 <= row.get("flagged_cells", -1) <= row.get("total_cells", 0):
+        errors.append(f"{where}: flagged_cells must be between 0 and total_cells")
+
+
+def _grid_flagged_cells(pair, folder):
+    """Count the value grid's flagged cells, or None if the grid has already been reported."""
+    layer = next((item for item in pair.get("layers", []) if isinstance(item, dict) and item.get("kind") == "new_material"), None)
+    path = folder / str((layer or {}).get("grid_path"))
+    if layer is None or not path.is_file():
+        return None
+    content = path.read_bytes()
+    return content.count(1) + content.count(2)
+
+
+def check_histogram(path, pair, folder, errors):
+    """Check a pair's histogram.json (docs/05 TBL-13) against its value grid."""
+    row = load_json_file(path, errors)
+    if not isinstance(row, dict):
+        errors.append(f"{path}: 'data' must be an object")
+        return
+    check_row(row, HISTOGRAMS, path, errors)
+    if row.get("pair_id") != pair.get("id"):
+        errors.append(f"{path}: pair_id should be {pair.get('id')!r}")
+    _check_bins(row, path, errors)
+    flagged = _grid_flagged_cells(pair, folder)
+    if flagged is not None and row.get("flagged_cells") != flagged:
+        errors.append(f"{path}: flagged_cells is {row.get('flagged_cells')}, the value grid has {flagged} (FR-072)")
+    if row.get("total_cells") and abs(row.get("flagged_share", -1) - row.get("flagged_cells", 0) / row["total_cells"]) > 1e-5:
+        errors.append(f"{path}: flagged_share must be flagged_cells / total_cells")
+
+
+def check_channel_histogram(path, pair, channel_ids, errors):
+    """Check a pair's channel_histogram.json (docs/05 TBL-14)."""
+    row = load_json_file(path, errors)
+    if not isinstance(row, dict):
+        errors.append(f"{path}: 'data' must be an object")
+        return
+    check_row({k: v for k, v in row.items() if k != "channels"}, CHANNEL_HISTOGRAMS, path, errors)
+    if row.get("pair_id") != pair.get("id"):
+        errors.append(f"{path}: pair_id should be {pair.get('id')!r}")
+    channels = row.get("channels")
+    if not isinstance(channels, list):
+        errors.append(f"{path}: channels must be a list")
+        return
+    # A processed pair waiting in pipeline/out has no channels.geojson beside it to compare with.
+    if channel_ids is not None and {item.get("channel_id") for item in channels if isinstance(item, dict)} != set(channel_ids):
+        errors.append(f"{path}: channels must have one item per channel in channels.geojson. Rerun mrw/histogram.py")
+        return
+    for number, item in enumerate(channels):
+        _check_bins(item, f"{path} channel {number}", errors)
+
+
+def _channel_ids(site_folder):
+    """Read the ids in a site's channels.geojson, or None without one. That file is checked on its own."""
+    path = site_folder / "channels.geojson"
+    try:
+        return [item["id"] for item in json.loads(path.read_text(encoding="utf-8"))["features"]]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 def check_pair_folder(folder, site_id, errors, published=True):
     """Check one pair folder: pair.json, its 2 passes, its layers and their files."""
     path = folder / "pair.json"
@@ -995,6 +1088,12 @@ def check_site_folder(folder, source_ids, errors, published=True, site_row=None)
         pair = check_pair_folder(pair_folder, site_id, errors, published)
         if published and pair_folder.name not in listed:
             errors.append(f"{pair_folder}: this folder is not listed in pairs.json (FR-059)")
+        if pair and (pair_folder / "histogram.json").is_file():
+            check_histogram(pair_folder / "histogram.json", pair, pair_folder, errors)
+        elif pair and published:
+            errors.append(f"{pair_folder}: histogram.json is missing (FR-072). Run mrw/histogram.py")
+        if pair and (pair_folder / "channel_histogram.json").is_file():
+            check_channel_histogram(pair_folder / "channel_histogram.json", pair, _channel_ids(folder), errors)
         if pair and (pair_folder / "validation.json").is_file():
             check_validation(pair_folder / "validation.json", pair.get("id"), errors, published)
     return _known_files(folder)
@@ -1005,7 +1104,8 @@ def _known_files(folder):
     names = ["towns.geojson", "land.geojson", "channels.geojson", "channel_areas.json", "events.json", "pairs.json"]
     known = {folder / name for name in names}
     for pair_folder in (folder / "pairs").glob("*"):
-        known |= {pair_folder / "pair.json", pair_folder / "validation.json"}
+        known |= {pair_folder / "pair.json", pair_folder / "validation.json", pair_folder / "histogram.json",
+                  pair_folder / "channel_histogram.json"}
     return known
 
 
@@ -1027,6 +1127,41 @@ def _check_required_site_files(folder, errors, site_row):
             errors.append(f"{folder / name}: this required file is missing")
 
 
+def relief_tile_range(bounds, zoom):
+    """The first and last web map tiles (x_low, y_low, x_high, y_high) covering (west, south, east, north)."""
+    west, south, east, north = bounds
+    count = 2 ** zoom
+
+    def tile_x(lon):
+        return int((lon + 180) / 360 * count)
+
+    def tile_y(lat):
+        return int((1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * count)
+
+    # An edge exactly on a tile line doesn't need the tile past it.
+    return tile_x(west), tile_y(north), tile_x(east - 1e-9), tile_y(south + 1e-9)
+
+
+def _check_relief(root, row, errors):
+    """A site with a relief needs all its bounds, and a tile everywhere the map can show (FR-076)."""
+    top_zoom = row.get("relief_max_native_zoom")
+    bounds = [row.get(f"relief_bounds_{side}") for side in ("west", "south", "east", "north")]
+    if top_zoom is None:
+        if any(value is not None for value in bounds):
+            errors.append(f"{root / 'sites.json'}: relief bounds need relief_max_native_zoom ({row.get('id')})")
+        return
+    if any(value is None for value in bounds):
+        errors.append(f"{root / 'sites.json'}: relief_max_native_zoom needs all four relief bounds ({row.get('id')})")
+        return
+    folder = root / "sites" / str(row["id"]) / "relief"
+    for zoom in range(row["min_zoom"], top_zoom + 1):
+        x_low, y_low, x_high, y_high = relief_tile_range(bounds, zoom)
+        for x in range(x_low, x_high + 1):
+            for y in range(y_low, y_high + 1):
+                if not (folder / str(zoom) / str(x) / f"{y}.webp").is_file():
+                    errors.append(f"{folder / str(zoom) / str(x) / f'{y}.webp'}: this relief tile is missing")
+
+
 def check_data_dir(root, published=True):
     """Check everything under a data folder and return a list of problems (empty = good)."""
     root = Path(root)
@@ -1046,6 +1181,7 @@ def check_data_dir(root, published=True):
             errors.append(f"{root / 'sites.json'}: site {site_id!r} has no data folder")
         elif site_id and published:
             _check_required_site_files(root / "sites" / str(site_id), errors, row)
+            _check_relief(root, row, errors)
     rows_by_id = {row.get("id"): row for row in site_rows if isinstance(row, dict)}
     for folder in sorted((root / "sites").glob("*")):
         if folder.is_dir():

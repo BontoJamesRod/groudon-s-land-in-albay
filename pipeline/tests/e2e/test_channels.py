@@ -7,7 +7,7 @@ from playwright.sync_api import expect
 from shapely import contains_xy
 from shapely.geometry import shape
 
-from .conftest import SITE, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import SITE, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import card, controls_too_small, map_center, map_zoom, tap_at
 
@@ -170,7 +170,11 @@ def area_rows(latest_areas):
 
 
 def serve_areas(page, rows):
+    """Replace the areas file, opening the page again if it has already read the real one."""
     page.route("**/sites/mayon/channel_areas.json", lambda route: route.fulfill(body=envelope(rows), content_type="application/json"))
+    if page.url != "about:blank":
+        page.reload()
+        wait_until_ready(page)
 
 
 def list_rows(page):
@@ -181,7 +185,7 @@ def test_tc064_the_channels_are_sorted_with_no_data_last(app):
     serve_areas(app, area_rows({"mayon_padang": 0.12, "mayon_miisi": 0.03, "mayon_basud": 0.03, "mayon_lidong": None}))
     app.click("#channels-button")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
-    assert list_rows(app) == ["Padang 0.120 km²", "Basud 0.030 km²", "Mi-isi 0.030 km²", "Lidong No radar data"]
+    assert list_rows(app) == ["Padang 0.120 km² about 286 basketball courts", "Basud 0.030 km² about 71 basketball courts", "Mi-isi 0.030 km² about 71 basketball courts", "Lidong No radar data"]
 
 
 def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
@@ -190,7 +194,7 @@ def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
     wanted = sorted(latest, key=lambda channel_id: (-latest[channel_id], names[channel_id]))
     app.click("#channels-button")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
-    assert list_rows(app) == [f"{names[channel_id]} {latest[channel_id]:.3f} km²" for channel_id in wanted]
+    assert [row.split(" about ")[0] for row in list_rows(app)] == [f"{names[channel_id]} {latest[channel_id]:.3f} km²" for channel_id in wanted]
     expect(app.locator(".channel-lead")).to_have_text("Most changed first, since the last pass: Oct 8, 2026 to Oct 20, 2026, track 111")
 
 
@@ -249,7 +253,7 @@ def test_tc065_a_site_with_no_channel_data_has_no_button(app):
 
 def test_tc066_loading_then_the_list(app, slow_files):
     slow_files["channel_areas.json"] = 1.0
-    app.click("#channels-button")
+    app.reload()
     expect(app.locator("#channel-status")).to_have_text("Loading channel changes…")
     expect(app.locator("#channel-title")).to_have_text("Channels")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
@@ -259,7 +263,8 @@ def test_tc066_loading_then_the_list(app, slow_files):
 def test_tc066_a_failed_load_offers_retry_and_the_map_stays(app):
     center, zoom = map_center(app), map_zoom(app)
     app.route("**/sites/mayon/channel_areas.json", lambda route: route.abort())
-    app.click("#channels-button")
+    app.reload()
+    wait_until_ready(app)
     expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
     expect(app.locator("#channel-title")).to_have_text("Channels")
     expect(app.locator("#channel-retry")).to_be_visible()
@@ -292,22 +297,24 @@ def test_a_broken_areas_file_gives_the_error_state(app, change):
     expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
 
 
-def test_closing_the_list_gives_the_map_its_room_back(app):
-    width = app.locator("#map").bounding_box()["width"]
-    app.click("#channels-button")
-    expect(app.locator("#channel-panel")).to_be_visible()
-    assert app.locator("#map").bounding_box()["width"] < width
-    assert app.evaluate("testMap.getSize().x") == pytest.approx(app.locator("#map").bounding_box()["width"], abs=1)
-    app.click("#channel-close")
-    expect(app.locator("#channel-panel")).to_be_hidden()
-    assert app.locator("#map").bounding_box()["width"] == pytest.approx(width)
-    assert app.evaluate("testMap.getSize().x") == pytest.approx(width, abs=1)
+def test_closing_the_list_gives_the_map_its_room_back(page, site_url):
+    open_phone(page, site_url)
+    height = page.locator("#map").bounding_box()["height"]
+    page.click("#channels-button")
+    expect(page.locator("#channel-panel")).to_be_visible()
+    assert page.locator("#map").bounding_box()["height"] < height
+    assert page.evaluate("testMap.getSize().y") == pytest.approx(page.locator("#map").bounding_box()["height"], abs=1)
+    page.click("#channel-close")
+    expect(page.locator("#channel-panel")).to_be_hidden()
+    assert page.locator("#map").bounding_box()["height"] == pytest.approx(height)
+    assert page.evaluate("testMap.getSize().y") == pytest.approx(height, abs=1)
 
 
 def open_phone(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
+    close_list_on_a_phone(page)
 
 
 def test_the_list_fits_a_phone(page, site_url):

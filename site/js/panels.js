@@ -114,7 +114,7 @@ function radarSources(pair, timeZone) {
   return groups;
 }
 
-function contextSources(rows) {
+function sourceList(rows) {
   return list(rows.map((row) => {
     const line = element("span", `${STRINGS.sourcesContextLine(row.name, row.provider, row.license)} `);
     line.append(externalLink(STRINGS.sourcesContextLink, row.url));
@@ -122,19 +122,23 @@ function contextSources(rows) {
   }));
 }
 
-// SCR-06: radar data for the selected pair, and context data from sources.json: this site's
-// sources and the shared ones, which have no site_id.
+// SCR-06: radar data for the selected pair, and the rows of sources.json: this site's sources and
+// the shared ones, which have no site_id. A radar source goes under the radar heading.
 export async function fillSources(body, getPair, site) {
   const pair = getPair();
   const radar = pair ? radarSources(pair, site.time_zone) : [element("p", STRINGS.sourcesEmpty)];
-  body.replaceChildren(element("h3", STRINGS.sourcesRadarTitle), ...radar,
+  const radarHolder = element("div");
+  body.replaceChildren(element("h3", STRINGS.sourcesRadarTitle), radarHolder, ...radar,
     element("h3", STRINGS.sourcesContextTitle), element("p", STRINGS.sourcesLoading));
   const contextHolder = body.lastChild;
   try {
     const rows = await loadJson("data/sources.json");
-    contextHolder.replaceWith(contextSources(rows.filter((row) => !row.site_id || row.site_id === site.id)));
+    const shown = rows.filter((row) => !row.site_id || row.site_id === site.id);
+    radarHolder.replaceWith(sourceList(shown.filter((row) => row.used_for === "radar")));
+    contextHolder.replaceWith(sourceList(shown.filter((row) => row.used_for !== "radar")));
   } catch (problem) {
     console.error(problem.message);
+    radarHolder.remove();
     const failed = element("p", `${STRINGS.sourcesError} `);
     failed.append(retryButton(() => fillSources(body, getPair, site)));
     contextHolder.replaceWith(failed);

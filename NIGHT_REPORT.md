@@ -813,3 +813,233 @@ Your five answers are in. T-092 to T-095 are the new tasks.
 
 - **One step isn't always enough.** With wider fonts at 320 x 568, the label is still 14 px behind the credits. On this machine's fonts at that size, it clears by 1 px.
 - **Three town names give way on short phones.** At the opening view at 360 x 640, Daraga, Legazpi City and Camalig are hidden because they touch the danger-zone label, the existing rule when zoomed out. They return one zoom step in. The channel labels and Santo Domingo also sit close together at that zoom.
+
+# Channel names, second try (2026-11-01)
+
+**T-096 is done on `night-1` and nothing is published. 16 names now have a line: 1 high, 5 medium and 10 low match confidence.** Open `pipeline/context/channel_name_candidates_v2.kml` in Google Earth. The evidence for each line is in its popup and in `pipeline/reports/channel-names-v2.md`. The colours are match confidence, NOT hazard level, and they deliberately avoid green, yellow and red.
+
+- **High:** Bulawan.
+- **Medium:** Maninila, Anoling, Buang, Upper Nasisi, Upper Nabonton.
+- **Low:** Bonga, Mabinit, Matanag, Buyuan, Masarawag, Salugan, Quirangay, Tumpa, Busay, San Vicente.
+
+## What the network showed
+
+- **Bonga and Mabinit look swapped in the first try.** The new lines share no OSM way with the old ones. The two branches join just north of Mabinit, with Bogña to the east of the east branch and Mabinit to the west of the west branch. But each barangay is 558 to 663 m from both branches, so distance doesn't settle it, and both stay low.
+- **Masarawag was on the wrong river.** There are three parallel rivers, not two. The northern one is now Masarawag's, the southern one Maninila's, and the middle one, tagged San Francisco River, has no name of its own here.
+- **Buyuan has its own evidence now.** OSM spells the barangay Buyoan, with Barangay 51 and Buyuan as alternate names, which is why the first try missed it. The nearer upper branch isn't the one the first try used. The line still passes closer to Padang (522 m) than to Buyoan (552 m), so it stays low.
+- **Below each join is its own grey line,** given to neither name: Pawa-Burabod and Yawa below Bonga and Mabinit, and San Francisco and Cabilogan below the western rivers.
+
+## Decisions for you
+
+I'm stopping here. Your Google Earth check decides each line, and these need your eye most:
+
+1. **Bonga or Mabinit: which branch is which?** The west branch starts higher (2.0 km against 3.6 km out), and PHIVOLCS reports new deposits in the Bonga Gully. That could mean the west branch is Bonga, which is the opposite of what the barangay positions suggest.
+2. **Is OSM's Bogña (Barangay 53) the Bonga PHIVOLCS means?** That's my reading. OSM has no Legazpi place spelled Bonga.
+3. **Matanag is the exact line you rejected on 2026-11-01.** No better line exists in OSM. If it's still wrong, the true gully isn't in OSM and would need drawing by hand.
+4. **Your confirmed Mi-isi line runs along the same lower Yawa River** that the split now treats as a shared river. It's published that way. Should it stop at its join, as the new names do? I didn't change it.
+5. **Salugan and Busay come only from your hint list.** I gave them lines, but I found no PHIVOLCS source naming them as channels here. Busay's branch stops at a join 888 m short of the barangay, so nothing above the join passes it.
+6. **Masarawag isn't in docs/05 section 8.** It came from the first candidate list. It still has a line, the farthest from its barangay of any at 765 m.
+
+## Things to know
+
+- **Hints:** Matanag is Barangay 52 (yes), Buyuan is 51, and Padang is 50, by OSM alternate names. Anoling, Salugan, Tumpa and Quirangay are in Camalig, and a Busay is near Cagsawa in Daraga. OSM's Anoling Elementary School is about 12 km out, far from the Anoling point, so that point may be off.
+- **Not resolved:** Binaan, reported from the 2026 advisory for Daraga, has no place or waterway in OSM, so it has no line. It isn't in docs/05 section 8.
+- **Hand choices:** I chose each top segment and fork by hand, by looking at the network, so the rules grade those choices but don't make them.
+- **Unbridged gaps:** Matanag, Quirangay and Tumpa start 5 to 6 km out, partly because OSM's lines do. I didn't join gaps.
+- **Old verdicts:** the record in `mayon_channels.json` still lists these names as not confirmed. It stays that way until you give a verdict on the new lines.
+
+**Evidence:** see the CI page for `night-1`. A new test file checks the splitting, that no name uses another place's evidence, the KML legend, and that nothing is published.
+
+# Town names on phones (2026-11-01)
+
+**T-097 is done on `night-1`, not merged.** On phones, the danger-zone label now sits inside the ring near its north edge, on two lines, with its full wording. It no longer touches a town name or the credits. Desktop is unchanged.
+
+- **At 360 x 640:** Daraga, Legazpi City, Camalig and Santo Domingo all show whole, and no town name is hidden.
+- **At 320 x 568:** the 14 px overlap is gone, and the label clears the credits, with this machine's fonts and with wider ones.
+- **Channel names give way on phones.** A channel label that touches a town name is hidden. At the opening view on short phones that's Basud and Lidong. Their lines still show, zooming in brings the names back, and the Channels list names them.
+
+## Things to know
+
+- **At 320 x 568 the map is only about 260 px tall.** Camalig and Daraga sit behind the credits there, and so does Legazpi City with wider fonts. They aren't hidden by the label, but one zoom step can't fit them all.
+- **A taller phone shows fewer towns at the opening view.** At 360 x 740 the map stays at the default zoom, so all four of those towns are off the map or cut at its edge. That's the zoom rule you chose, and a change would need your decision.
+- **The zoom rule now looks at the ring, not the label.** The same screens zoom out as before. FR-001, FR-004, US-001/AC-1 and TC-082 say so.
+
+# License and credits (2026-11-01)
+
+**T-098 is done on `night-1`, not merged.** `LICENSE` is the unedited Apache-2.0 text from apache.org. `CREDITS.md` lists every data source, library, Python package and tool, with a table of which files fall under which terms. It says plainly that Apache-2.0 doesn't cover data under its own license. The README links both, and a new test keeps `CREDITS.md` and `sources.json` in step.
+
+## What `sources.json` was missing
+
+It didn't match your list, so I added three rows. They appear in the site's Data sources panel once this is merged.
+
+- **`nisar_asf`:** this needed a new `radar` value for `used_for`, added to the contract check and docs/05. On the site it appears under the "Context data" heading, beside the radar section that already lists the products.
+- **`gpm_imerg`:** used only in the channel test, and marked as such. None of it is published.
+- **`osm_analysis`:** OpenStreetMap waterways, places and quarries, used only for candidates and the channel test.
+
+## Decisions for you
+
+1. **NISAR and IMERG have no named license, so I didn't give them one.** ASF's guide says "free and open", and the GPM policy says free, with acknowledgement. One catalog labels some IMERG products CC BY 4.0, and I didn't use that label, because NASA's own policy page names none.
+2. **Do you want a license on our radar layers?** The files in `site/data/sites/*/pairs/` are made from NISAR data. `CREDITS.md` says they aren't under Apache-2.0 and have no separate license, so others have no clear statement of what they can do with them.
+3. **The saved screens contain Esri imagery.** `pipeline/reports/screens/` is public in the repository, and Esri's terms apply to those images. `CREDITS.md` says so, but I didn't check whether those terms allow keeping screenshots there.
+4. **No copyright line.** The Apache text is unedited, and no file names a copyright holder. If you want your name or team on it, tell me what to write.
+
+## Things to know
+
+- **Not legal advice:** this is my reading of the terms, and `CREDITS.md` says so too.
+- **Package licenses** are what each package declares in its metadata, at the installed versions, and I didn't review them further. `text-unidecode`, an indirect dependency, offers Artistic or GPL-2.0-or-later. It isn't copied into this repository.
+
+# Radar license, NOTICE and screens (2026-11-01)
+
+**T-099 is done on `night-1`, not merged.**
+
+- **Radar layers:** CC BY 4.0, credited to "Mayon Radar Watch and NASA–ISRO NISAR data via ASF", stated in `CREDITS.md` and the README. I applied it to the images, value grids and pair records. I left out each pair's `validation.json`, because it cites other people's sources.
+- **Screens:** `pipeline/reports/screens/` is removed in a normal commit, and new ones save to `pipeline/out/screens`, which git ignores. The 44 existing images are still in git history, as you asked, so they stay reachable in the public repository. I moved your local copies to `pipeline/out/screens`.
+- **NOTICE:** added with your exact text. **It still says `[TEAMMATE NAME]`, which needs the real name before merging.**
+- **Data sources panel:** NISAR is now under "Radar data", and no longer under "Context data". FR-040, SCR-06 and TC-032 say so.
+
+## Decision for you
+
+**Share-alike may reach Panama's layers.** They mark sea as no data using Panama's land shape, which is CC BY-SA 4.0 geoBoundaries data. If that makes them adapted material, they'd have to be offered under CC BY-SA, not CC BY 4.0. Mayon's shape is CC BY-IGO, which has no share-alike. I applied CC BY 4.0 to all as you decided, and `CREDITS.md` credits the shapes with their own terms. This is my reading, not legal advice. If you want to be safe, marking Panama's layers CC BY-SA 4.0 is a small change.
+
+# Team names and Panama's license (2026-11-01)
+
+**T-100 is done on `night-1`, not merged.** `NOTICE` now has the team's copyright line, and the README has a Team section with the same six names. This replaces the `[TEAMMATE NAME]` placeholder. Panama's radar layers are marked CC BY-SA 4.0 in `CREDITS.md` and the README, crediting geoBoundaries too, and Mayon's stay CC BY 4.0. This answers the share-alike question from the last section. The license is stated in those two files, not inside each pair's own files, and the site doesn't show it.
+
+# Plan 7 (2026-11-02)
+
+**The histogram is built on `night-1`, not merged. The two design directions are ready for you to choose from, and I've stopped there: neither is built.** The plan's file was in `docs/`, so I moved it to `plans/` unedited, as T-081 decided.
+
+## Part A: Brightness histogram
+
+Done: T-103 to T-106, with F-21, US-027, FR-072 to FR-075, TBL-13, TBL-14, API-013, API-014 and TC-083 to TC-087 in the docs.
+
+- **Pipeline:** each of the 13 published pairs now has a `histogram.json`, in 0.25 dB bins, for land with a radar value inside the reach. Mayon's pairs also have a `channel_histogram.json`. New pairs get them from the normal run. I made the files for published pairs from the saved crops, with no download and no change to any existing pair file.
+- **It matches the grid.** For all 13 pairs, the cells past the line, the flagged cells in the histogram and the flagged cells in the published grid are the same number. The contract check now fails if they differ. Flagged land runs from 0.23% to 1.29% at Mayon, and from 0.54% to 1.74% in Panama.
+- **App:** the chart shows a line on each side at the pair's threshold, the tails in the "possible new material" colour, and one plain sentence. The line reads the pair's record, and a test compares that with the site config. There's no slider, and the help panel says why.
+- **Square-root scale:** I chose this because the flagged edges are too small to see on a plain scale. A note under the chart says so.
+- **Channel outline:** it's readable, so I kept it. An open channel adds its strip as a thin teal line, each scaled to its own ground.
+- **License:** `histogram.json` sits with the radar layers. `channel_histogram.json` is marked ODbL, like `channel_areas.json`, and `CREDITS.md` lists it.
+- **Screens** (`pipeline/out/screens/`): `histogram-1280.png`, `histogram-360.png` and `histogram-channel-1280.png`.
+
+## Part B: Two design directions
+
+The screens and a README are in `pipeline/out/screens/design/`, in `field-map/` and `night-watch/`, with two contact sheets. There are 12 screens made from the real app and real data, and the app itself is unchanged. Both use a relief made from the cached Copernicus DEM. Axe finds no serious or critical problem on any of them. Axe can't judge lines and labels against the relief, and I checked these by eye in the test browser, not on a real phone or in sunlight.
+
+## Part C: Breadth check
+
+**Yes, it works.** A local test page in a real browser called ASF's public search directly, with no credentials, and ASF also answered a request sent with the site's address as its origin with permission for that origin. Nothing was added to the app or the docs. The test script is `pipeline/out/breadth_check.py`.
+
+- **Speed:** 0.4 to 1.4 s per search, for places with up to 50 GCOV passes (Mayon, Quito, Etna, Reykjanes) and for open ocean with none.
+- **Size:** the GeoJSON output runs up to about 1 MB per point. The `jsonlite` output is much smaller, at about 2 KB for 2 results against about 20 KB per result in GeoJSON, so the view should use it.
+- **Fields that come back:** scene name, start and stop time, track (`pathNumber`), frame, direction, polarization, processing level, footprint, file size and download URLs.
+- **What would break it:**
+  - **Rate limits:** ASF sent no rate-limit headers. A burst of 20 at once all succeeded, but took 13 s, so they seem to be queued. I found no published limit, so a demo crowd is the risk.
+  - **CORS:** the site would depend on ASF continuing to allow it, and I found no promise that it will.
+  - **An outage:** the view would need its own "can't reach ASF" state. The rest of the site wouldn't be affected.
+  - **Results are capped by `maxResults`,** so the view would ask for GCOV only and say how many it's showing.
+- **Estimate:** 6 tasks, about 2 days: the docs, a search module with its states, the tap and results panel, the footprint on the map, the plain wording that change maps are for showcase sites only, and tests with a recorded reply.
+
+## Decisions for you
+
+1. **Which direction: Field map or Night watch?** This is the one I'm stopping for. My recommendation is Field map, because your user is a resident on a phone outdoors, and Night watch's strength is a dark room. The chosen one can't be built until the next plan. Parts of the other could be kept for a demo only.
+2. **Should the coverage view be built, given the blind rule?** A view of "any point on Earth" would list passes at Mayon on or after the cutoff, unless it stops at the cutoff. Listing names isn't opening a product, but it does show the date of a pass that the project has stayed blind to. If you build it, I recommend the same end date as the pipeline until you move `BLIND_CUTOFF`. My test searches all ended on Oct 31.
+3. **Is it fine that a phone can't show the channel outline?** On a phone the channel panel replaces the pass controls and the chart, as T-075 set up. So the outline shows only on a desktop. The sentence and bars on a phone still work. I left it, since changing it means rearranging the sheet, which is better decided with the design.
+4. **The real relief needs a wider DEM.** The cached one stops at the site's box, which shows as a band at the edges of the mock-ups. A wider copy has to be downloaded for the build. The Copernicus credit is already in `CREDITS.md`.
+
+## Evidence
+
+- **Tests:** `pytest -q`: 664 passed, 1 skipped, exit code 0. **Contract check:** 0 errors, exit code 0. Axe is passing, including new runs with the chart at 1280 and 360 px.
+- **Commits:** c21b5ba (T-103), 4922807 (T-104, T-105, T-106) and the commit holding this report.
+- **Not done, as the plan said:** no post-eruption product was opened, the cutoff is unchanged, and nothing was merged into `main`.
+
+# Field map design (2026-11-02)
+
+**Field map is built as the app's design on `night-1`, not merged into `main`.** Screens are in `pipeline/out/screens/field-map/`: opening, channel, panel and compare, at 360 and 1280 px.
+
+## Your three changes
+
+1. **Flagged change is clearly visible.** Each flagged cell is now drawn as a mark with a dark edge. The sizes were changed by T-113, below. The marks are read from each pair's existing image and drawn on top of it, and no published image, grid or area changed. A test checks one mark per flagged pixel. The legend says "Small spots are drawn larger than life so they can be seen. The areas don't change."
+2. **Basketball courts.** Every channel area in the list and the bars now also reads, for example, "about 57 basketball courts", and km² stays. Both screens state 1 court = 28 × 15 m = 420 m². Areas are published to 3 decimals, which is about 2.4 courts, so the "about" matters for small numbers.
+3. **Wider DEM.** I downloaded 4 Copernicus GLO-30 files before building, **76,579,341 bytes (76.6 MB)** against your 300 MB limit. The size is logged in `pipeline/logs/`, and the files are in `raw/`, not committed. They became 1,387 map tiles, 6.2 MB in the site. The map can't pan past them, and a very wide screen gets a higher lowest zoom, so no band can show. Checked by panning and dragging to all four corners at 360, 1280 and 2560 px.
+
+## Things I decided while building
+
+- **The channel list opens with the site,** as in the mock-up you chose. On a phone that hides the pass controls until Close is tapped. A phone shorter than 700 px opens on the map instead, because the list left too little of the map and cut off Daraga and Legazpi.
+- **The pass list has its own row on a desktop,** because the mock-up cut off its date.
+- **The relief's light was wrong in the mock-ups.** It came from the southeast, which can make ridges look like valleys. It now comes from the northwest, as on a printed map, so the relief looks slightly different from the pictures you saw.
+- **Fonts:** IBM Plex is now in `site/vendor/` with its license, so no font request leaves the site. Mayon no longer calls Esri at all.
+
+## Decision for you
+
+**Panama still uses Esri imagery.** Your DEM approval was about Mayon's bands, so I didn't download anything for Panama. It has the new layout, fonts and marks on imagery, with its map lines in their old colours. If you want relief there too, it needs another DEM download, which I'd keep under the same limit.
+
+## Limits
+
+Checked in a test browser only, not on a real phone or in real sunlight. Axe finds no serious or critical problem on the eight screens, but it can't judge marks and lines against the relief, so I checked those by eye. The channel outline on the histogram stays desktop-only, as you said for now.
+
+## Evidence
+
+- **Tests:** 717 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. It now also fails on a missing relief tile.
+- **Docs:** F-22, US-028 to US-030, FR-076 to FR-079, API-015, ADR-012, TC-088 to TC-092 and T-107 to T-112, plus your three decisions from Plan 7 in `docs/PROGRESS.md`.
+- **Not done:** no NISAR product was opened or downloaded, the cutoff is unchanged, the coverage view isn't started, and nothing was merged into `main`.
+
+# Field map fixes (T-113, 2026-11-02)
+
+Both fixes are on `night-1`, not merged into `main`.
+
+## Radar marks
+
+You were right that they overstated the change. At the default zoom on a desktop, the 5 px marks painted about 29 km² of solid colour for 0.75 km² of flagged ground. Marks are now 3 px at zoom 13 and closer, 2 px at the default zoom 12, and 1 px further out, each with a faint half-pixel edge.
+
+- **Solid colour at the default zoom:** about 5 km², down from 29, or about 7 times the real area instead of 39. Counting the faint edges, it's about 13 km².
+- **Why it can't match exactly:** one screen pixel at this zoom covers about 1,400 m², more than three radar cells, so any visible mark is larger than life. The legend note stays.
+- **No data changed.** Still one mark per flagged cell, read from the same image.
+
+## Highlighted bar
+
+The right pass was already marked, but two things hid it: it could sit out of view at the bottom of the list, and the bar under the pointer also got a background, so it looked selected. Now the bar of the pass on the map is scrolled into view when a channel opens and whenever the pass changes, including with Previous and Next. Only that bar has a background, and hovering with a real mouse shows just a thin outline.
+
+On a desktop, the channel panel and the pass controls now scroll separately, with the channel panel taking up to 60% of the column. Otherwise, bringing a bar into view pushed the Previous and Next buttons off screen, just after they were pressed.
+
+## Evidence
+
+- **Tests:** 722 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. New: TC-093, and a limit on how much solid colour the marks paint.
+- **Screens:** `pipeline/out/screens/field-map/`, axe finds no serious or critical problem on the eight screens. Checked in a test browser, not on a real phone or in sunlight.
+- **Panama's relief is still your decision,** from the section above.
+
+# Map switcher (T-114 to T-116, 2026-11-02)
+
+**The Relief and Satellite switcher is on `night-1`, on both sites, not merged into `main`.** Screens are in `pipeline/out/screens/map-switcher/`: both maps, both sites, at 360 and 1280 px.
+
+## What was built
+
+- **Switcher:** two 44 px buttons on the map, under the zoom buttons, with `aria-pressed` and keyboard use. Relief is the default. The choice is kept in `localStorage`, wrapped in try/catch, and with storage blocked the app opens on Relief and can still switch.
+- **Colours:** Satellite has the bright cyan channels, white town labels on dark boxes and the orange ring. Relief keeps the Field map colours. The marks are the same on both, with a pale glow added on Satellite so they show on dark ground.
+- **Panama's relief:** 4 files, **123,413,357 bytes (123.4 MB)** against the 300 MB limit, logged in `pipeline/logs/`. It became 1,392 tiles, 7.6 MB. Two all-sea tiles don't exist, and the map paints those parts as sea.
+- **Marks and highlighted bar (your items 5 and 6):** these were already done in T-113 above. I didn't change them again, and their tests still pass.
+
+## The imagery terms: Esri doesn't fit
+
+Esri's terms summary, "Frequently asked questions about items owned by Esri in ArcGIS Online" (April 21, 2025), says to use its content with Esri software, and that without Esri software you must buy an ArcGIS Online subscription. This app uses Leaflet and has no subscription. It's a summary, and I'm not a lawyer, but it doesn't allow this use as you described it, so I followed your fallback.
+
+**Satellite uses EOxCloudless (Sentinel-2 cloudless) 2024,** from EOX's tile service. EOX's license summary gives CC BY-NC-SA 4.0 for non-commercial use, and says commercial use needs a paid license. Its credit shows only while Satellite is on, and it's in `CREDITS.md` and `sources.json`. Esri is gone from `night-1`.
+
+- **The relief stays on under the imagery,** because some EOX tiles took 4 to 18 s in my tests. So the relief's credit also stays on, because the relief can show through. If imagery fails, the map says "Satellite map unavailable. Showing the relief map."
+- **Softer than the first version:** the imagery comes from 10 m data, so it blurs when zoomed in close. Some clouds remain, mostly over the sea.
+
+## Decisions for you
+
+1. **The live site still loads Esri imagery.** `main` uses it on both sites, and by the terms above it shouldn't without a subscription. Merging `night-1` fixes that, but I haven't merged, as you said. I recommend merging soon.
+2. **Does the hackathon count as non-commercial?** The EOX license excludes commercial use. If prizes or anything else could make this commercial, EOX's address is cloudless@eox.at. Relief needs no third-party license of this kind, so turning Satellite off is the fallback.
+3. **Is it fine to call EOX's hosted tiles directly?** Its tile server allows browser requests, but the license pages I could read don't address direct use, and I found no published limit. I'd email EOX to confirm, especially before a demo crowd.
+4. **The repository and the live site answer 404 to anyone not signed in, because the owner made the repository private (2026-11-02).** Nothing to fix. Both need to be public again before anyone else has to open them.
+
+## Limits
+
+Checked in a test browser with real EOX tiles, not on a real phone or in sunlight. Axe finds no serious or critical problem on the eight screens, but it can't judge lines and marks against imagery, so I checked those by eye. On a phone, the switcher covers part of a small map.
+
+## Evidence
+
+- **Tests:** 738 passed, 1 skipped, exit code 0. **Contract check:** 0 errors.
+- **Docs:** F-23, US-031, FR-081 to FR-083, ADR-013, TC-094, TC-095 and T-114 to T-116.
+- **Not done:** no NISAR product was opened or downloaded, the cutoff is unchanged, and nothing was merged into `main`.

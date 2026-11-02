@@ -4,13 +4,18 @@
 
 import { STRINGS } from "./strings.js";
 
-const TILE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const SATELLITE_URL = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg";
+const SATELLITE_NATIVE_ZOOM = 14; // past this, the imagery is enlarged
+const BASEMAP_KEY = "mayon-radar-basemap";
 const TILE_FAILURES_FOR_NOTICE = 4;
 const PHONE_LAYOUT = "(max-width: 700px)"; // the same width as in app.css
-const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false };
-const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false };
-const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6" };
-const REACH_STYLE = { color: "#ffffff", weight: 2, opacity: 0.9, fill: false, dashArray: "2 6" };
+const PHONE_LABEL_DROP_PX = 22; // far enough inside the ring to clear the town names beside its top edge
+const RING_ROOM_PX = 26; // the room the ring needs above the map credits to show clearly
+// These colours are for Satellite. On the light relief, app.css recolours each line by its class.
+const TOWN_STYLE = { color: "#ffffff", weight: 1, opacity: 0.8, fill: false, className: "line-town" };
+const COAST_STYLE = { color: "#7dd3fc", weight: 2, fill: false, className: "line-coast" };
+const RING_STYLE = { color: "#fb923c", weight: 2, fill: false, dashArray: "6 6", className: "line-ring" };
+const REACH_STYLE = { color: "#ffffff", weight: 2, opacity: 0.9, fill: false, dashArray: "2 6", className: "line-reach" };
 
 // Radar images go in their own layer, under the borders so that towns stay readable.
 export const RADAR_PANE = "radar";
@@ -18,19 +23,128 @@ export const COMPARE_PANE = "compare";
 export const COMPARE_LINE_PANE = "compareLine";
 export const STRIP_PANE = "channelStrip";
 
-function addBackground(map, notice) {
-  const tiles = L.tileLayer(TILE_URL, { attribution: STRINGS.tileAttribution, maxZoom: map.getMaxZoom() });
+function reliefBounds(site) {
+  return [[site.relief_bounds_south, site.relief_bounds_west], [site.relief_bounds_north, site.relief_bounds_east]];
+}
+
+// The relief stops at its bounds, so the map does too. A very wide screen can see more than the
+// whole relief at the lowest zoom, so there the lowest zoom rises (FR-076).
+function keepInsideRelief(map, site) {
+  const bounds = reliefBounds(site);
+  map.options.maxBoundsViscosity = 1;
+  map.setMaxBounds(bounds);
+  function update() {
+    map.options.minZoom = site.min_zoom; // otherwise the answer below can never come back down
+    map.setMinZoom(map.getBoundsZoom(bounds, true));
+  }
+  map.on("resize", update);
+  update();
+}
+
+// The visitor's choice, kept in this browser. The storage can be blocked, and then Relief opens.
+function savedBasemap() {
+  try {
+    return localStorage.getItem(BASEMAP_KEY) === "satellite" ? "satellite" : "relief";
+  } catch {
+    return "relief";
+  }
+}
+
+function saveBasemap(choice) {
+  try {
+    localStorage.setItem(BASEMAP_KEY, choice);
+  } catch {
+    // The choice still applies until the page closes.
+  }
+}
+
+function reliefTiles(map, site) {
+  return L.tileLayer(`data/sites/${site.id}/relief/{z}/{x}/{y}.webp`, {
+    attribution: STRINGS.reliefCredit,
+    maxZoom: map.getMaxZoom(),
+    maxNativeZoom: site.relief_max_native_zoom,
+    bounds: reliefBounds(site),
+  });
+}
+
+function satelliteTiles(map) {
+  return L.tileLayer(SATELLITE_URL, {
+    attribution: STRINGS.satelliteCredit,
+    maxZoom: map.getMaxZoom(),
+    maxNativeZoom: SATELLITE_NATIVE_ZOOM,
+    zIndex: 2, // above the relief
+  });
+}
+
+// One failed tile among good ones isn't an outage, so the message waits for a run of failures.
+function watchTiles(tiles, notice, message) {
   let failuresInARow = 0;
   tiles.on("tileload", () => {
     failuresInARow = 0;
-    notice.hidden = true;
+    if (notice.textContent === message) notice.hidden = true;
   });
-  // One failed tile among good ones isn't an outage, so the message waits for a run of failures.
   tiles.on("tileerror", () => {
     failuresInARow += 1;
-    if (failuresInARow >= TILE_FAILURES_FOR_NOTICE) notice.hidden = false;
+    if (failuresInARow >= TILE_FAILURES_FOR_NOTICE) {
+      notice.textContent = message;
+      notice.hidden = false;
+    }
   });
-  tiles.addTo(map);
+}
+
+// The Relief and Satellite buttons (FR-081). `choose` runs with the visitor's choice.
+function addSwitcher(map, choose) {
+  const buttons = {};
+  const Switcher = L.Control.extend({
+    onAdd() {
+      const group = L.DomUtil.create("div", "basemap-switcher");
+      group.setAttribute("role", "group");
+      group.setAttribute("aria-label", STRINGS.basemapLabel);
+      for (const [choice, text] of [["relief", STRINGS.basemapRelief], ["satellite", STRINGS.basemapSatellite]]) {
+        const button = L.DomUtil.create("button", "basemap-button", group);
+        button.type = "button";
+        button.textContent = text;
+        button.onclick = () => choose(choice);
+        buttons[choice] = button;
+      }
+      // A tap here must not also tap the map.
+      L.DomEvent.disableClickPropagation(group);
+      return group;
+    },
+  });
+  new Switcher({ position: "topleft" }).addTo(map);
+  return buttons;
+}
+
+// The relief always stays on, so that it shows while imagery is slow to load or if it fails.
+function addBackground(map, site, notice) {
+  const satellite = satelliteTiles(map);
+  watchTiles(satellite, notice, STRINGS.satelliteUnavailable);
+  if (site.relief_max_native_zoom == null) {
+    document.body.classList.remove("relief-map");
+    satellite.addTo(map);
+    return;
+  }
+  const relief = reliefTiles(map, site);
+  watchTiles(relief, notice, STRINGS.backgroundUnavailable);
+  relief.addTo(map);
+  keepInsideRelief(map, site);
+  let buttons = {};
+  function show(choice) {
+    document.body.classList.toggle("relief-map", choice === "relief");
+    if (choice === "satellite") {
+      satellite.addTo(map);
+    } else {
+      satellite.remove();
+      if (notice.textContent === STRINGS.satelliteUnavailable) notice.hidden = true;
+    }
+    for (const [name, button] of Object.entries(buttons)) button.setAttribute("aria-pressed", String(name === choice));
+  }
+  buttons = addSwitcher(map, (choice) => {
+    saveBasemap(choice);
+    show(choice);
+  });
+  show(savedBasemap());
 }
 
 function addTowns(map, towns, site) {
@@ -58,12 +172,18 @@ function addDangerZone(map, site) {
     L.circle(center, { ...REACH_STYLE, radius: site.detection_reach_km * 1000, interactive: false }).addTo(map);
   }
   const ring = L.circle(center, { ...RING_STYLE, radius: site.danger_zone_radius_km * 1000, interactive: false }).addTo(map);
-  // The label sits just outside the ring's southern edge. At Mayon the northern edge
-  // puts it on top of Tabaco City.
-  return L.tooltip({ permanent: true, direction: "bottom", className: "zone-label", interactive: false })
-    .setLatLng([ring.getBounds().getSouth(), site.summit_lon])
+  // The label sits just outside the ring's southern edge. At Mayon the northern edge puts it on
+  // top of Tabaco City. A phone has no room for it there beside the towns and the map credits, so
+  // it hangs inside the northern edge on two lines, and the town names keep their places.
+  const onPhone = window.matchMedia(PHONE_LAYOUT).matches;
+  return L.tooltip({ permanent: true, direction: "bottom", offset: [0, onPhone ? PHONE_LABEL_DROP_PX : 0], className: onPhone ? "zone-label zone-label-phone" : "zone-label", interactive: false })
+    .setLatLng([onPhone ? ring.getBounds().getNorth() : ring.getBounds().getSouth(), site.summit_lon])
     .setContent(escapeText(site.danger_zone_label))
     .addTo(map);
+}
+
+function boxesTouch(a, b) {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
 }
 
 // Zoomed out, labels crowd together. The danger zone matters most, so a town's name
@@ -72,13 +192,26 @@ function keepZoneLabelClear(map, zoneLabel, townLabels) {
   function update() {
     const zone = zoneLabel.getElement().getBoundingClientRect();
     for (const town of townLabels) {
-      const box = town.getElement().getBoundingClientRect();
-      const touches = box.left < zone.right && box.right > zone.left && box.top < zone.bottom && box.bottom > zone.top;
+      const touches = boxesTouch(town.getElement().getBoundingClientRect(), zone);
       town.getElement().style.visibility = touches ? "hidden" : "";
     }
   }
   map.on("zoomend moveend resize", update);
   update();
+}
+
+// On a phone a town's name matters more than a channel's, and the Channels list still names them all.
+function keepTownLabelsClear(map, townLabels) {
+  function update() {
+    const towns = townLabels.map((town) => town.getElement())
+      .filter((town) => town.style.visibility !== "hidden")
+      .map((town) => town.getBoundingClientRect());
+    for (const label of map.getContainer().querySelectorAll(".channel-label")) {
+      const touches = towns.some((town) => boxesTouch(town, label.getBoundingClientRect()));
+      label.style.visibility = touches ? "hidden" : "";
+    }
+  }
+  map.on("zoomend moveend resize layeradd", update);
 }
 
 // A file's polygon outlines as lines, leaving out any stretch along the site's edge. Land and
@@ -117,14 +250,15 @@ function boundaryCredit(site) {
 }
 
 // Open at the site's own view. On a short phone screen the danger-zone ring runs behind the map
-// credits and takes its label with it, so the map opens one zoom step further out (FR-001).
+// credits, so the map opens one zoom step further out (FR-001).
 export function showStartView(map, site) {
   const center = [site.center_lat, site.center_lon];
   map.setView(center, site.default_zoom, { animate: false });
-  const label = map.getContainer().querySelector(".zone-label");
-  if (!label || !window.matchMedia(PHONE_LAYOUT).matches) return;
-  const credits = map.attributionControl.getContainer();
-  if (label.getBoundingClientRect().bottom > credits.getBoundingClientRect().top) {
+  if (site.danger_zone_radius_km == null || !window.matchMedia(PHONE_LAYOUT).matches) return;
+  const ring = L.latLng(site.summit_lat, site.summit_lon).toBounds(site.danger_zone_radius_km * 2000);
+  const ringBottom = map.latLngToContainerPoint([ring.getSouth(), site.summit_lon]).y;
+  const creditsTop = map.getSize().y - map.attributionControl.getContainer().offsetHeight;
+  if (ringBottom + RING_ROOM_PX > creditsTop) {
     map.setView(center, site.default_zoom - 1, { animate: false });
   }
 }
@@ -139,10 +273,11 @@ export function createMap(site, siteData, notice) {
   map.createPane(STRIP_PANE).style.zIndex = 345;
   // Above town borders and below the labels (Leaflet's label layer is 650).
   map.createPane(COMPARE_LINE_PANE).style.zIndex = 630;
-  addBackground(map, notice);
+  addBackground(map, site, notice);
   L.geoJSON(outlinesInsideSite(siteData.land, site), { style: COAST_STYLE, interactive: false }).addTo(map);
   const townLabels = addTowns(map, siteData.towns, site);
   const zoneLabel = addDangerZone(map, site);
   if (zoneLabel) keepZoneLabelClear(map, zoneLabel, townLabels);
+  if (window.matchMedia(PHONE_LAYOUT).matches) keepTownLabelsClear(map, townLabels);
   return map;
 }

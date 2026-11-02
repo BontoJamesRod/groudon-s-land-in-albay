@@ -139,6 +139,27 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-093 | Narrow the unconfirmed-name rule to drawing or listing a channel, so a validation can cite such a place name | FR-065, US-026, TC-074 | S | T-074 | TC-074 passes; a cited name in a validation passes the contract check |
 | T-094 | Show channel areas with 3 decimals | FR-061, FR-064, US-024, TBL-12, API-012, SCR-13, SCR-14, TC-064 | S | T-076 | TC-064 passes; all rows are rebuilt from the final rule |
 | T-095 | On a short phone screen, open the map one zoom step further out when the danger-zone label wouldn't clear the map credits | FR-001, FR-004, US-001, TBL-01, TC-001, TC-082 | S | T-023 | TC-001 and TC-082 pass |
+| T-096 | Rebuild the channel name candidates: one line per name from the OSM network, split where branches join, each with its own barangay as evidence; write `channel_name_candidates_v2` as GeoJSON and KML. Publish nothing | F-19, FR-065, TBL-03, T-065, T-073 | M | T-073 | Every name is resolved or reported as unresolved; no name uses another place's evidence; nothing new is under `site/data/` |
+| T-097 | On phones, let town names win at the opening view: put the danger-zone label inside the ring's north edge on two lines, and let channel labels give way to town names | FR-001, FR-002, FR-004, FR-049, FR-056, US-001, SCR-01, TC-082 | S | T-095 | TC-082 passes; no town name is hidden at the opening view at phone sizes, and the label clears the credits |
+| T-098 | Add the Apache-2.0 `LICENSE` and `CREDITS.md`, say that data under its own license isn't covered by it, link both from the README, and add the missing rows to `sources.json` | F-09, F-11, FR-040, FR-047, TBL-10, API-002, TC-032 | S | T-086 | A test keeps `CREDITS.md` and `sources.json` in step; `LICENSE` is the unedited Apache-2.0 text |
+| T-099 | License the published radar layers under CC BY 4.0, add `NOTICE`, stop committing screenshots, and show NISAR under "Radar data" in the Data sources panel | F-09, F-11, FR-040, US-013, SCR-06, API-002, TC-032 | S | T-098 | `CREDITS.md` and the README state the license; `pipeline/reports/screens/` is gone from the repository, without rewriting history; TC-032 passes |
+| T-100 | Put the team's names in `NOTICE` and the README, and mark Panama's radar layers CC BY-SA 4.0, with Mayon's staying CC BY 4.0 | F-10, F-11, FR-047 | S | T-099 | `NOTICE`, the README and `CREDITS.md` agree; a test checks them |
+| T-101 | Make `eruption_run.py check` print the newest pass it can see for each track and frame | T-038, API-009 | S | T-058 | The test passes; it searches only |
+| T-102 | Add a list-only `check-all` to `eruption_run.py`: every product maturity, including Urgent Response, for Mayon's three tracks, before the cutoff | T-038 | S | T-101 | The test passes; it searches only and the cutoff is unchanged |
+| T-103 | Move Plan 7 into `plans/`, and add the brightness histogram to the docs | F-21, US-027, T-081 | S | — | The plan is in `plans/`, unedited, and the new IDs resolve |
+| T-104 | Build the `histogram` module and each pair's `histogram.json` and `channel_histogram.json`, and add them to the contract check | F-21, FR-072, FR-075, US-027, TBL-13, TBL-14, API-013, API-014, TC-083, TC-084 | M | T-103, T-074 | TC-083 and TC-084 pass; the published pairs have the files |
+| T-105 | Show the histogram in the panel, with the flag line from the pair's record and the flagged tails shaded, and say in the help panel why there's no slider | F-21, FR-073, FR-074, US-027, SCR-01, SCR-05, TC-085, TC-086 | M | T-104 | TC-085 and TC-086 pass, with axe passing |
+| T-106 | Draw an opened channel's strip as a thin outline on the histogram | F-21, FR-075, US-027, SCR-14, TC-087 | S | T-105 | TC-087 passes |
+| T-107 | Add the Field map design to the docs, with the owner's decisions of 2026-11-02 | F-22, US-028, US-029, US-030 | S | T-103 | The new IDs resolve |
+| T-108 | Download the wider Copernicus DEM, under 300 MB with its size logged, render Mayon's relief tiles, and add the site fields and credits | F-22, FR-076, US-028, API-015, TC-088 | M | T-107 | TC-088 passes; `contract_check` passes; the size is logged |
+| T-109 | Show the relief as Mayon's background, kept inside its bounds, with lines coloured for it; Panama keeps imagery | F-22, FR-076, US-028, SCR-01, TC-089 | M | T-108 | TC-089 passes |
+| T-110 | Build the Field map layout and styles, with its fonts in the site, and open with the channel list | F-22, FR-077, US-028, SCR-01, SCR-13, TC-090 | M | T-109 | TC-090 passes, with axe passing at 360 and 1280 px |
+| T-111 | Draw radar marks with a minimum size and a darker edge, and say so in the legend | F-22, FR-078, US-029, TC-091 | M | T-110 | TC-091 passes, and no published data file changed |
+| T-112 | Show channel areas as basketball courts next to km² | F-22, FR-079, US-030, SCR-13, SCR-14, TC-092 | S | T-110 | TC-092 passes |
+| T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
+| T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
+| T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-116 | Build the Relief or Satellite switcher with EOxCloudless, and overlay colours for each background; replace Esri in the credits | F-23, FR-081, FR-082, FR-083, US-031, SCR-01, TC-094, TC-095 | M | T-115 | TC-094 and TC-095 pass, with axe passing on both backgrounds |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 
@@ -279,6 +300,7 @@ None.
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
 | 0.2 | 2026-11-01 | Added the Channel timeline tasks, the done work (T-050 to T-072), milestone 7 and the ID errata. Named Panama for T-036 and T-037. Added T-079 to T-091. |
+| 0.3 | 2026-11-02 | Added T-107 to T-116 for the Field map design and the map switcher. |
 
 ## 11. ID Errata
 

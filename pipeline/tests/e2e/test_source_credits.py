@@ -34,7 +34,9 @@ def test_mayon_shows_its_own_credit_and_sources(app):
     expect(attribution).not_to_contain_text("geoBoundaries")
     panel = open_sources(app)
     expect(panel).to_contain_text("Philippine municipal and city boundaries")
-    expect(panel).to_contain_text("Esri")
+    expect(panel).to_contain_text("Copernicus DEM GLO-30")
+    expect(panel).to_contain_text("EOxCloudless")
+    expect(panel).not_to_contain_text("Esri")
     expect(panel).not_to_contain_text("geoBoundaries")
 
 
@@ -49,7 +51,8 @@ def test_panama_shows_its_own_credit_and_sources(page, site_url):
     expect(panel).to_contain_text("geoBoundaries")
     expect(panel).to_contain_text("License: CC BY-SA 4.0")
     expect(panel.locator('a[href="https://www.geoboundaries.org/"]')).to_have_count(1)
-    expect(panel).to_contain_text("Esri")
+    expect(panel).to_contain_text("Copernicus DEM GLO-30")
+    expect(panel).to_contain_text("EOxCloudless")
     expect(panel).not_to_contain_text("Philippine")
 
 

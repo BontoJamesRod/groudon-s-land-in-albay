@@ -24,6 +24,8 @@
 | TBL-10 | `sources` | Context data sources and licenses | FR-040, FR-058 | Yes |
 | TBL-11 | `land_areas` | Land polygons for the coastline and sea mask | FR-003, FR-005, FR-011, FR-024 | Yes |
 | TBL-12 | `channel_areas` | Flagged area per channel per pair | FR-061, FR-062, FR-064, FR-067 | Yes |
+| TBL-13 | `histograms` | Distribution of brightness change for one pair | FR-072, FR-073 | Yes |
+| TBL-14 | `channel_histograms` | The same distribution for each channel's strip in one pair | FR-075 | Yes |
 
 ## 2. ERD
 
@@ -69,6 +71,11 @@ erDiagram
         string danger_zone_label
         number detection_reach_km
         number channel_strip_half_width_m
+        number relief_bounds_west
+        number relief_bounds_south
+        number relief_bounds_east
+        number relief_bounds_north
+        integer relief_max_native_zoom
         string wording_set
         array change_types
         string created_at
@@ -272,6 +279,11 @@ A row is one showcase site. Stored in `site/data/sites.json` as the `data` array
 | `boundary_credit_url` | string | No | `null` | URL | Link for that credit, when the source asks for one |
 | `detection_reach_km` | number | No | `null` | > 0; built from `filters.max_distance_km` in the site config | How far from the summit detections go (FR-060) |
 | `channel_strip_half_width_m` | number | No | `null` | > 0 | How far a channel's strip goes on each side of its line, in metres (FR-064). Set only for a site with channels, and a site with it shows the Channels button (US-024/AC-2) |
+| `relief_bounds_west` | number | No | `null` | −180 to 180; all four set together | West edge of the site's relief tiles (FR-076) |
+| `relief_bounds_south` | number | No | `null` | −90 to 90 | South edge of the relief tiles |
+| `relief_bounds_east` | number | No | `null` | −180 to 180 | East edge of the relief tiles |
+| `relief_bounds_north` | number | No | `null` | −90 to 90 | North edge of the relief tiles |
+| `relief_max_native_zoom` | integer | No | `null` | 0 to 22; needs the four bounds | The highest zoom with its own relief tiles. `null` means the site uses imagery (FR-076) |
 | `change_types` | array of string | Yes | `["new_material"]` | ≥ 1 item; enum `change_type` | Change types published for this site |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
@@ -457,7 +469,7 @@ A row is one place compared in a validation. Stored in the `items` array of `val
 
 ### TBL-10: `sources`
 
-A row is one context data source. Stored in `site/data/sources.json` (`data` array).
+A row is one data source. Stored in `site/data/sources.json` (`data` array).
 
 | Column | Type | Required | Default | Constraints | Description |
 | --- | --- | --- | --- | --- | --- |
@@ -497,6 +509,37 @@ A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_a
 | `checked_area_km2` | number | Yes | `0` | ≥ `flagged_area_km2` | Area of strip cells with a valid radar value, km² (FR-067) |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
+
+### TBL-13: `histograms`
+
+One object per pair. Stored in `site/data/sites/<site_id>/pairs/<pair_id>/histogram.json` (`data` object). It's a separate file so that a pair's record stays small and the chart can fail on its own. The counts come from the same web cells as the value grid, using land with a value inside the reach distance.
+
+| Column | Type | Required | Default | Constraints | Description |
+| --- | --- | --- | --- | --- | --- |
+| `pair_id` | string | Yes | — | FK `pairs.id` | Pair |
+| `site_id` | string | Yes | — | FK `sites.id` | Site |
+| `bin_start_db` | number | Yes | — | < 0 | Lower edge of the first bin, dB |
+| `bin_width_db` | number | Yes | — | > 0 | Width of each bin, dB |
+| `counts` | integer array | Yes | — | ≥ 0 | Cells in each bin. A bin holds its lower edge and not its upper edge |
+| `below` | integer | Yes | `0` | ≥ 0 | Cells below the first bin |
+| `above` | integer | Yes | `0` | ≥ 0 | Cells at or above the end of the last bin |
+| `total_cells` | integer | Yes | — | Equals `counts` + `below` + `above` | Cells counted |
+| `flagged_cells` | integer | Yes | — | Equals the value grid's class 1 and 2 cells | Cells past the flag line |
+| `flagged_share` | number | Yes | — | `flagged_cells` / `total_cells`, or 0 | Share of the cells that are flagged, 0 to 1 |
+
+The flag line isn't repeated here: it's the pair's `brightness_threshold_db` (TBL-05).
+
+### TBL-14: `channel_histograms`
+
+One object per pair, for a site with channels. Stored in `site/data/sites/<site_id>/pairs/<pair_id>/channel_histogram.json` (`data` object), with the license in `meta.license`, like `channel_areas.json`, because the strips are built on OpenStreetMap lines. It's separate from TBL-13 so that the radar layers' license and this one don't mix.
+
+| Column | Type | Required | Default | Constraints | Description |
+| --- | --- | --- | --- | --- | --- |
+| `pair_id` | string | Yes | — | FK `pairs.id` | Pair |
+| `site_id` | string | Yes | — | FK `sites.id` | Site |
+| `bin_start_db` | number | Yes | — | < 0 | As in TBL-13 |
+| `bin_width_db` | number | Yes | — | > 0 | As in TBL-13 |
+| `channels` | array | Yes | — | One item per channel in `channels.geojson` | Each has `channel_id`, `counts`, `below`, `above`, `total_cells` and `flagged_cells`, as in TBL-13, for cells inside its strip |
 
 ## 4. Relationships
 
@@ -542,7 +585,7 @@ A row is one channel in one pair. Stored in `site/data/sites/<site_id>/channel_a
 | `no_data_reason` | `masked_by_product` (stored as 253), `sea` (254), `outside_coverage` (255) | `layers.no_data_codes`; cell values of the `new_material` grid |
 | `confidence_level` | `none`, `low`, `high` | `layers.legend[].confidence` |
 | `detection_result` | `yes`, `no`, `not_visible` | `validation_items.detected` |
-| `context_use` | `basemap`, `boundaries`, `coastline`, `channels`, `events`, `validation`, `analysis` | `sources.used_for` |
+| `context_use` | `basemap`, `boundaries`, `coastline`, `channels`, `events`, `validation`, `analysis`, `radar` | `sources.used_for` |
 
 In the MVP, only the `new_material` layer has a value grid; `before_db` and `after_db` feed the Compare view (FR-019); `change_db` and `coherence_loss` are written for the maintainer's checks and are not shown to visitors.
 

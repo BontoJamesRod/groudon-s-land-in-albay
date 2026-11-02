@@ -5,7 +5,7 @@ import shutil
 import pytest
 
 from mrw.config import SITES_FOLDER
-from mrw.contract_check import check_data_dir
+from mrw.contract_check import check_data_dir, relief_tile_range
 from mrw.context import DATA_FOLDER
 from mrw.publish import PublishError, publish_pair
 from test_export import write_fake
@@ -17,6 +17,20 @@ def read_data(path):
     return json.loads(path.read_text(encoding="utf-8"))["data"]
 
 
+def add_empty_relief_tiles(data):
+    """The contract wants the sites' relief tiles to be there, and publishing never touches them."""
+    for site_id in ("mayon", "panama"):
+        site = json.loads((SITES_FOLDER / f"{site_id}.json").read_text(encoding="utf-8"))
+        bounds = [site[f"relief_bounds_{side}"] for side in ("west", "south", "east", "north")]
+        for zoom in range(site["min_zoom"], site["relief_max_native_zoom"] + 1):
+            x_low, y_low, x_high, y_high = relief_tile_range(bounds, zoom)
+            for x in range(x_low, x_high + 1):
+                folder = data / "sites" / site_id / "relief" / str(zoom) / str(x)
+                folder.mkdir(parents=True)
+                for y in range(y_low, y_high + 1):
+                    (folder / f"{y}.webp").touch()
+
+
 @pytest.fixture
 def folders(tmp_path):
     """A processed pair in out/, and a data folder holding only the context files."""
@@ -24,10 +38,12 @@ def folders(tmp_path):
     out.mkdir()
     write_fake(out)
     (data / "sites" / "mayon").mkdir(parents=True)
-    shutil.copytree(DATA_FOLDER / "sites" / "panama", data / "sites" / "panama")  # the other published site
+    # The other published site. Its relief tiles aren't copied one by one: they're made empty below.
+    shutil.copytree(DATA_FOLDER / "sites" / "panama", data / "sites" / "panama", ignore=shutil.ignore_patterns("relief"))
     shutil.copy(DATA_FOLDER / "sources.json", data / "sources.json")
     for name in ("towns.geojson", "land.geojson", "channels.geojson"):
         shutil.copy(DATA_FOLDER / "sites" / "mayon" / name, data / "sites" / "mayon" / name)
+    add_empty_relief_tiles(data)
     return out, data
 
 
