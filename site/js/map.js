@@ -6,6 +6,7 @@ import { STRINGS } from "./strings.js";
 
 const SATELLITE_URL = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg";
 const SATELLITE_NATIVE_ZOOM = 14; // past this, the imagery is enlarged
+const SATELLITE_PREVIEW_ZOOM = 10; // a few tiles, enlarged, cover the view while the sharp ones come
 const BASEMAP_KEY = "mayon-radar-basemap";
 const TILE_FAILURES_FOR_NOTICE = 4;
 const PHONE_LAYOUT = "(max-width: 700px)"; // the same width as in app.css
@@ -72,7 +73,35 @@ function satelliteTiles(map) {
     attribution: STRINGS.satelliteCredit,
     maxZoom: map.getMaxZoom(),
     maxNativeZoom: SATELLITE_NATIVE_ZOOM,
-    zIndex: 2, // above the relief
+    zIndex: 3, // above the preview and the relief
+  });
+}
+
+// EOX's tiles can take over a minute for a whole screen, so a few low-detail ones go first.
+function satellitePreview(map) {
+  return L.tileLayer(SATELLITE_URL, { maxZoom: map.getMaxZoom(), maxNativeZoom: SATELLITE_PREVIEW_ZOOM, zIndex: 2 });
+}
+
+// Say how far the sharp tiles have got, so that slow imagery doesn't look like nothing happened.
+function showLoadingCount(tiles, notice) {
+  let started = 0;
+  let finished = 0;
+  function update() {
+    if (notice.textContent === STRINGS.satelliteUnavailable) return;
+    notice.textContent = STRINGS.satelliteLoading(finished, started);
+    notice.hidden = finished >= started;
+  }
+  tiles.on("loading", () => {
+    started = 0;
+    finished = 0;
+  });
+  tiles.on("tileloadstart", () => {
+    started += 1;
+    update();
+  });
+  tiles.on("tileload tileerror", () => {
+    finished += 1;
+    update();
   });
 }
 
@@ -118,8 +147,10 @@ function addSwitcher(map, choose) {
 
 // The relief always stays on, so that it shows while imagery is slow to load or if it fails.
 function addBackground(map, site, notice) {
-  const satellite = satelliteTiles(map);
-  watchTiles(satellite, notice, STRINGS.satelliteUnavailable);
+  const sharp = satelliteTiles(map);
+  watchTiles(sharp, notice, STRINGS.satelliteUnavailable);
+  showLoadingCount(sharp, notice);
+  const satellite = L.layerGroup([satellitePreview(map), sharp]);
   if (site.relief_max_native_zoom == null) {
     document.body.classList.remove("relief-map");
     satellite.addTo(map);
@@ -136,7 +167,7 @@ function addBackground(map, site, notice) {
       satellite.addTo(map);
     } else {
       satellite.remove();
-      if (notice.textContent === STRINGS.satelliteUnavailable) notice.hidden = true;
+      if (notice.textContent !== STRINGS.backgroundUnavailable) notice.hidden = true;
     }
     for (const [name, button] of Object.entries(buttons)) button.setAttribute("aria-pressed", String(name === choice));
   }

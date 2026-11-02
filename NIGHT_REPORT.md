@@ -1043,3 +1043,22 @@ Checked in a test browser with real EOX tiles, not on a real phone or in sunligh
 - **Tests:** 738 passed, 1 skipped, exit code 0. **Contract check:** 0 errors.
 - **Docs:** F-23, US-031, FR-081 to FR-083, ADR-013, TC-094, TC-095 and T-114 to T-116.
 - **Not done:** no NISAR product was opened or downloaded, the cutoff is unchanged, and nothing was merged into `main`.
+
+# Satellite looked broken on the live site (T-117, 2026-11-02)
+
+**The owner's 1920 px screenshot showed Satellite selected, with its colours and credit, and only the relief behind it.** My earlier check was too weak: it waited 15 s on a smaller window. On the live site at 1920 x 970, EOX took 102 s to send all 28 tiles, and only 5 had arrived after 10 s. Nothing failed and no message showed, and the relief underneath hid the wait.
+
+This doesn't prove that's what happened in the owner's browser, because I measured in a test browser. It's the only cause I could reproduce.
+
+## The fix, on `night-1`, not merged
+
+- A low-detail layer of 4 tiles loads first, and the map says "Loading satellite imagery: N of M" until the sharp tiles are in.
+- **Measured after the fix, at 1920 px with real EOX tiles:** the message appears within 3 s, with the first imagery at 3 s, the 4 preview tiles by 34 s, and all sharp tiles by 94 s. EOX's speed varies a lot: the same kind of tile took from 1 s to 27 s.
+- **This doesn't make EOX faster.** It makes the wait visible. Browsers keep the tiles for 7 days, so a second visit to the same view should be quicker. I didn't measure that.
+
+## Decisions for you
+
+1. **Merge this fix to the live site?** The live site still has the silent wait until `night-1` is merged.
+2. **Is a wait of up to a minute or more acceptable for the demo?** If not, I recommend storing imagery for the two sites' areas in the site, as the relief is, so that it opens at once and doesn't depend on EOX. It needs your approval first, because it means downloading many tiles and republishing them under CC BY-NC-SA 4.0. EOX should be asked first, since a bulk download from their tile service may not be welcome. The same email can ask the two EOX questions above.
+
+**Tests:** 740 passed, 1 skipped, exit code 0. **Contract check:** 0 errors.
