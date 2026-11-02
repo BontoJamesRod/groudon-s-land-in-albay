@@ -35,7 +35,7 @@ Status values: `Not started` · `In progress` · `Draft ready` · `Approved` · 
 | Held pair | D104 2026-09-25 → 2026-10-07 stays off the map |
 | Channels | The owner checked the lines in Google Earth Pro on 2026-11-01: Basud, Lidong, Mi-isi and Padang are confirmed; 5 others must never be shown; Matanag was then given as not confirmed, and stays off (`pipeline/reports/owner-checks.md`) |
 | Design | Field map and the Relief or Satellite switcher are live on both sites (`main` at 34d1c19, T-107 to T-118). Relief is the default and is stored in the site. Satellite loads live from EOX (EOxCloudless 2024), low detail first, with a loading count. Esri is gone. Checked in test browsers, not yet on a real phone |
-| Next | T-038 as soon as the eruption passes are on ASF, which also adds their channel rows. T-078 is still open, and T-040 depends on it |
+| Next | T-038 as soon as the eruption passes are on ASF, which also adds their channel rows |
 
 ## After Launch
 

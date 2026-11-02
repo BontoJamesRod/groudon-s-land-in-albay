@@ -113,7 +113,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-075 | Build the channel list in `channels.js`, with empty, loading and error states | US-024, FR-061, FR-067, SCR-01, SCR-13, API-012 | M | T-022, T-074 | TC-064, TC-065 and TC-066 pass |
 | T-076 | Build the channel view: bars, no-data state and the strip on the map | US-025, FR-062, FR-063, FR-067, SCR-14, API-005, API-012 | M | T-075, T-028 | TC-067, TC-068, TC-069 and TC-070 pass |
 | T-077 | Dim pairs with an unequal gap, with a short note, on the pass timeline and the channel timeline | US-005, US-025, FR-066, SCR-01, SCR-14, API-007 | S | T-024, T-076 | TC-070 and TC-071 pass |
-| T-078 | Add the rule against legal labels to the wording test | US-012, FR-068 | S | T-030 | TC-075 passes |
+| T-078 | Add the rule against legal labels to the wording test, and keep "landslide" off Panama's pair, legend, card and help text | US-012, FR-068 | S | T-030 | TC-075 passes |
 
 ### Owner's decisions on the docs run (2026-11-01)
 
@@ -159,6 +159,7 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
 | T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
 | T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-121 | Add the R1–R8 evidence table to the test plan, and point the exit criteria at it | G-01, T-040, 08 §8, 08 §14 | S | T-120 | 08 §14 lists a feature, a test and a demo moment for each requirement |
 | T-120 | Run a fire drill of the eruption runbook on track 111, 2026-10-07 → 2026-10-19, from cached data into a scratch folder under `pipeline/out/`, publishing nothing, and report the timings | T-038, T-059, NFR-009 | S | T-119 | The "Fire drill" section is in `NIGHT_REPORT.md` |
 | T-119 | Record the owner's decision to keep Satellite loading live from EOX, list the newest passes, and bring `docs/PROGRESS.md` up to date | F-23, ADR-013, T-038 | S | T-118 | The report and `docs/PROGRESS.md` say so |
 | T-118 | Fix the satellite loading count, which grew when the map moved, and load the low-detail layer before the sharp tiles | F-23, FR-083, US-031, TC-095 | S | T-117 | TC-095 passes |
