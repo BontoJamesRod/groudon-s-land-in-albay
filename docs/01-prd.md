@@ -480,7 +480,7 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 - **US-031/AC-2:** Given the visitor chooses a background, when they reload or change site, then the same one is on. If the browser's storage can't be used, the app still works and opens on Relief.
 - **US-031/AC-3:** Given Satellite is on, then channels, marks, rings and labels use the bright colours made for imagery, the imagery's credit shows, and no imagery is requested while Relief is on. Given Relief is on, then the Field map colours show and the imagery's credit doesn't.
 - **US-031/AC-4:** Given the radar marks show, then they're visible on both backgrounds.
-- **US-031/AC-5:** Given Satellite is on and its tiles are slow or fail, then the relief shows under it, a low-detail layer covers the view first, the map says "Loading satellite imagery: N of M" until the sharp tiles are in, and after a run of failures it says "Satellite map unavailable. Showing the relief map."
+- **US-031/AC-5:** Given Satellite is on and its tiles are slow or fail, then the relief shows under it, a low-detail layer covers the view first, the map says "Loading satellite imagery: N tiles to go" until the sharp tiles are in, and after a run of failures it says "Satellite map unavailable. Showing the relief map."
 
 ## 6. Functional Requirements
 
