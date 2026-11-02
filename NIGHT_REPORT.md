@@ -1032,7 +1032,7 @@ Esri's terms summary, "Frequently asked questions about items owned by Esri in A
 1. **The live site still loads Esri imagery.** `main` uses it on both sites, and by the terms above it shouldn't without a subscription. Merging `night-1` fixes that, but I haven't merged, as you said. I recommend merging soon.
 2. **Does the hackathon count as non-commercial?** The EOX license excludes commercial use. If prizes or anything else could make this commercial, EOX's address is cloudless@eox.at. Relief needs no third-party license of this kind, so turning Satellite off is the fallback.
 3. **Is it fine to call EOX's hosted tiles directly?** Its tile server allows browser requests, but the license pages I could read don't address direct use, and I found no published limit. I'd email EOX to confirm, especially before a demo crowd.
-4. **The repository and the live site now answer 404 to anyone not signed in.** I found this at the end of this run: the repository's page and API, and `https://bontojamesrod.github.io/groudon-s-land-in-albay/`. It still opens when signed in, and pushes work, so it looks like the repository was made private, which can also take the site down. I didn't change any repository setting and I can't see who or what did. Please check it in the repository's settings, because judges couldn't open the site like this.
+4. **The repository and the live site answer 404 to anyone not signed in, because the owner made the repository private (2026-11-02).** Nothing to fix. Both need to be public again before anyone else has to open them.
 
 ## Limits
 
