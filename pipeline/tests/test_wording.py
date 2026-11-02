@@ -105,3 +105,114 @@ def test_exact_messages_from_the_prd_are_present():
                     "This is not an official warning. Follow PHIVOLCS and your LGU.",
                     "Not yet checked against an independent source"):
         assert message in strings
+
+
+# FR-068, TC-075: no change is ever labelled in legal terms, anywhere in the site.
+LEGAL_WORDS = ("illegal", "unpermitted", "violation")
+# Pictures, radar grids and fonts hold no words a visitor can read.
+NOT_TEXT = {".png", ".webp", ".jpg", ".jpeg", ".gif", ".ico", ".bin", ".woff", ".woff2"}
+# The check panel may say what its source maps, so only these fields can use the word "landslide".
+PANAMA_CHECK_FIELDS = ("source_name", "method", "place_name")
+
+
+def text_files(folder):
+    """List every file in a folder, however deep, except pictures, grids and fonts."""
+    return [path for path in sorted(Path(folder).rglob("*")) if path.is_file() and path.suffix.lower() not in NOT_TEXT]
+
+
+def legal_words_in(folder):
+    """Return (file, word) for each legal word in a file's name or its text."""
+    found = []
+    for path in text_files(folder):
+        text = (path.name + " " + path.read_text(encoding="utf-8", errors="replace")).lower()
+        found += [(path.name, word) for word in LEGAL_WORDS if word in text]
+    return found
+
+
+def check_panel_strings_outside_its_fields(value):
+    """Yield the text in a validation file that isn't in one of the allowed fields."""
+    if isinstance(value, dict):
+        for name, item in value.items():
+            if name not in PANAMA_CHECK_FIELDS:
+                yield from check_panel_strings_outside_its_fields(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from check_panel_strings_outside_its_fields(item)
+    elif isinstance(value, str):
+        yield value
+
+
+def panama_landslide_hits(site_folder):
+    """Find "landslide" in Panama's pairs, legend, card and help text. Returns where it was found."""
+    site_folder = Path(site_folder)
+    hits = []
+    shared = sorted((site_folder / "js").glob("*.js")) + sorted(site_folder.glob("*.html"))
+    panama = [path for path in text_files(site_folder / "data" / "sites" / "panama") if path.name != "validation.json"]
+    for path in shared + panama:
+        if "landslide" in path.read_text(encoding="utf-8", errors="replace").lower():
+            hits.append(path.name)
+    rows = json.loads((site_folder / "data" / "sites.json").read_text(encoding="utf-8"))["data"]
+    if any("landslide" in text.lower() for row in rows if row["id"] == "panama" for text in json_strings(row)):
+        hits.append("sites.json")
+    for path in sorted((site_folder / "data" / "sites" / "panama").rglob("validation.json")):
+        content = json.loads(path.read_text(encoding="utf-8"))
+        if any("landslide" in text.lower() for text in check_panel_strings_outside_its_fields(content)):
+            hits.append(path.name)
+    return hits
+
+
+def make_small_site(folder):
+    """Build the few files the two checks read, all with clean wording."""
+    pair = folder / "data" / "sites" / "panama" / "pairs" / "one"
+    pair.mkdir(parents=True)
+    (folder / "js").mkdir()
+    (folder / "js" / "strings.js").write_text('const help = "How radar sees";', encoding="utf-8")
+    (folder / "index.html").write_text("<p>Radar change</p>", encoding="utf-8")
+    (folder / "data" / "sites.json").write_text('{"data": [{"id": "panama", "name": "Azuero"}]}', encoding="utf-8")
+    (pair / "pair.json").write_text('{"data": {"title": "Radar change"}}', encoding="utf-8")
+    (pair / "validation.json").write_text('{"data": {"source_name": "A landslide map", "items": [{"note": "Change"}]}}', encoding="utf-8")
+    return folder
+
+
+def test_tc075_no_legal_words_anywhere_in_the_site():
+    assert legal_words_in(SITE) == []
+
+
+def test_tc075_the_search_really_covers_the_site():
+    names = {path.name for path in text_files(SITE)}
+    assert {"strings.js", "index.html", "404.html", "app.css", "leaflet.js", "sites.json", "pairs.json", "validation.json"} <= names
+    assert not any(path.suffix == ".webp" for path in text_files(SITE))
+
+
+def test_tc075_no_landslide_label_on_panama():
+    assert panama_landslide_hits(SITE) == []
+
+
+@pytest.mark.parametrize("word", ["illegal", "Unpermitted", "VIOLATION"])
+def test_tc075_a_legal_word_is_caught_deep_in_the_data(tmp_path, word):
+    site = make_small_site(tmp_path)
+    assert legal_words_in(site) == []
+    (site / "data" / "sites" / "panama" / "pairs" / "one" / "pair.json").write_text(f'{{"note": "{word} change"}}', encoding="utf-8")
+    assert legal_words_in(site) == [("pair.json", word.lower())]
+
+
+@pytest.mark.parametrize("relative_path, content, expected", [
+    ("data/sites/panama/pairs/one/pair.json", '{"data": {"title": "Landslides"}}', "pair.json"),
+    ("js/strings.js", 'const legend = "Landslide";', "strings.js"),
+    ("index.html", "<p>Landslide</p>", "index.html"),
+    ("data/sites.json", '{"data": [{"id": "panama", "name": "Landslides"}]}', "sites.json"),
+    ("data/sites/panama/pairs/one/validation.json", '{"data": {"source_name": "A map", "items": [{"note": "A landslide"}]}}', "validation.json"),
+])
+def test_tc075_landslide_is_caught_outside_the_check_panels_source(tmp_path, relative_path, content, expected):
+    site = make_small_site(tmp_path)
+    assert panama_landslide_hits(site) == []
+    (site / relative_path).write_text(content, encoding="utf-8")
+    assert panama_landslide_hits(site) == [expected]
+
+
+def test_tc075_another_sites_data_may_use_the_word_landslide(tmp_path):
+    site = make_small_site(tmp_path)
+    other = site / "data" / "sites" / "mayon"
+    other.mkdir()
+    (other / "events.json").write_text('{"data": "A landslide in the news"}', encoding="utf-8")
+    assert panama_landslide_hits(site) == []

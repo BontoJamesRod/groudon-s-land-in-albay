@@ -1144,3 +1144,15 @@ The clock starts when both products are listed. ASF may list a pass days late, a
 4. **Remove two unused images from the live site?** `coherence_loss.png` is still in the folders of `mayon_A111F008_20260727_20260820` and `mayon_A111F008_20260820_20260901`. Those pairs didn't use coherence and the site doesn't show the images. I recommend removing them.
 
 **Not changed:** the runbook, the code and `site/data`.
+
+# Wording test and R1–R8 evidence (T-078, T-121, 2026-11-03)
+
+- **Wording test (T-078):** it fails if "illegal", "unpermitted" or "violation" appears in any text file in `site/`, including vendored code and file names, or if "landslide" appears in Panama's pairs, legend, card or help text. The site passes today, so no wording changed.
+- **R1–R8 (T-121):** `docs/08-test-plan.md` §14 now has the evidence table, and the §8 exit criteria point to it. I also widened TC-075 to match the new test.
+- **Fire drill:** not rerun, because it already ran under T-120.
+
+## Decision for you
+
+**How strict is "only in the check panel's citation"?** The word appears in three fields of Panama's check file: the source's name, the method text and two row names ("Cells with no mapped landslides"). All three describe the University of Panama's map, not this pair, and the method text says the pair doesn't show that any one spot is a landslide. I allowed those three fields and no others, because the strict reading would mean rewording a published check. If you want only the source's name to pass, the method text and row names need rewording, and the test changes with them.
+
+**Limits of the evidence table:** TC-020 and TC-031 use the latest pair, because the eruption pair isn't published yet. R3's product names are in the Data sources panel, not on the map itself. TC-033 checks the switch to Panama, not the continents themselves.
