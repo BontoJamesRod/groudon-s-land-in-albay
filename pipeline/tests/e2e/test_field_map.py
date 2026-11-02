@@ -1,10 +1,12 @@
 """TC-089 to TC-092: the Field map design in the browser (F-22)."""
+import re
+
 import numpy as np
 import pytest
 from PIL import Image
 from playwright.sync_api import expect
 
-from .conftest import SITE, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import SITE, TINY_PNG, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
@@ -437,6 +439,43 @@ def test_tc095_marks_stay_on_both_backgrounds(app):
     assert app.locator(".radar-marks").get_attribute("data-cells") == relief_cells
     assert painted_km2(app) == pytest.approx(relief_painted)
     assert "drop-shadow" in app.evaluate("getComputedStyle(document.querySelector('.radar-marks')).filter")
+
+
+def test_tc095_slow_imagery_shows_a_preview_and_a_count(page, site_url):
+    prepare_page(page, tiles="none")
+    held = []
+
+    def answer(route):
+        # Zoom 10 answers at once. Anything sharper waits, as it can on the real service.
+        if "/g/10/" in route.request.url:
+            route.fulfill(body=TINY_PNG, content_type="image/png")
+        else:
+            held.append(route)
+    page.route("https://tiles.maps.eox.at/**", answer)
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click(SATELLITE)
+    notice = page.locator("#background-notice")
+    expect(notice).to_be_visible()
+    expect(notice).to_have_text(re.compile(r"^Loading satellite imagery: 0 of \d+$"))
+    page.wait_for_selector('.leaflet-tile-loaded[src*="/g/10/"]')
+    # Only a few tiles are needed for the preview, far fewer than the sharp ones.
+    previews = page.locator('.leaflet-tile[src*="/g/10/"]').count()
+    assert 0 < previews < page.locator('.leaflet-tile[src*="/g/12/"]').count()
+    for route in list(held):
+        route.fulfill(body=TINY_PNG, content_type="image/png")
+    expect(notice).to_be_hidden()
+
+
+def test_tc095_going_back_to_relief_clears_the_count(page, site_url):
+    prepare_page(page, tiles="none")
+    page.route("https://tiles.maps.eox.at/**", lambda route: None)  # never answers
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click(SATELLITE)
+    expect(page.locator("#background-notice")).to_be_visible()
+    page.click(RELIEF)
+    expect(page.locator("#background-notice")).to_be_hidden()
 
 
 def test_tc095_failed_imagery_leaves_the_relief_and_says_so(page, site_url):

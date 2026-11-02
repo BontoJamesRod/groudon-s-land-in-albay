@@ -151,7 +151,7 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | ASF DAAC (Vertex, ASF Search API) | Finding and downloading NISAR products | Free with an Earthdata account (verify); search results can be incomplete at times (seen in the progress notes) | Re-run the search later; use cached products in `raw/` |
 | NASA Earthdata Login | Download authentication | Free account (verify) | None: downloads wait until login works |
-| EOxCloudless tiles | Satellite background | Free for non-commercial use with attribution; no published rate limit found; some tiles took 4 to 18 s in testing | The relief stays under it; borders, coastline and danger-zone ring drawn from the app's own data (FR-003, FR-005) |
+| EOxCloudless tiles | Satellite background | Free for non-commercial use with attribution; no published rate limit found; a 1920 px view took 102 s in testing, so a low-detail layer and a loading count come first | The relief stays under it; borders, coastline and danger-zone ring drawn from the app's own data (FR-003, FR-005) |
 | GitHub (repository and Actions) | Public code, CI checks, deploys | Actions minutes for public repositories (verify) | Build and check locally; push again later |
 | GitHub Pages | Public static hosting | Site size about 1 GB and soft bandwidth about 100 GB per month (verify) | Netlify or Vercel serving the same `site/` folder |
 | Google Colab | Running the pipeline | Session time and memory limits (verify) | Run locally on Windows with the same requirements |
