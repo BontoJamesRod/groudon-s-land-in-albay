@@ -12,12 +12,12 @@ from playwright.sync_api import expect
 
 from mrw.validation import build_record, load_sheet
 
-from .conftest import envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
 JULY_PAIR = "mayon_A111F008_20260703_20260715"
-LATEST_PAIR = "mayon_A111F008_20261007_20261019"
+LATEST_PAIR = latest_pair()["id"]
 SUMMIT = (13.2572, 123.6856)
 DISCLAIMER = "This is not an official warning. Follow PHIVOLCS and your LGU."
 NO_ERUPTION_PAIR = "No eruption pair: nothing acquired on or after 2026-10-30 may be opened until the thresholds are set."
@@ -45,6 +45,13 @@ def tap_at(page, lat, lon):
 def cell(value):
     """A grid cell with this value, from the fixture list."""
     return next((row for row in read_fixture("grid_cells.json")["cells"] if row["value"] == value), None)
+
+
+def show_cell_pair(page, row):
+    """The fixture's cells belong to one published pair, so put that pair on the map first."""
+    pair = read_data(f"sites/mayon/pairs/{row['pair_id']}/pair.json")
+    page.select_option("#pair-list", row["pair_id"])
+    expect(page.locator(".product-label")).to_contain_text(f"before {local_date(pair['before_acquired_start'])} ")
 
 
 def card(page):
@@ -160,12 +167,14 @@ def test_tc008_land_point_in_daraga(app):
 @pytest.mark.parametrize("value, confidence", [(0, "none"), (1, "low"), (2, "high")])
 def test_tc008_card_reads_each_class_from_the_grid(app, value, confidence):
     row = cell(value)
+    show_cell_pair(app, row)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text(f"Confidence: {confidence}")
 
 
 def test_tc009_sea(app):
     row = cell(254)
+    show_cell_pair(app, row)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text("No radar data here")
     expect(card(app)).to_contain_text("sea")
@@ -183,6 +192,7 @@ def test_tc010_outside_radar_coverage(app):
 
 def test_tc011_flagged_invalid_by_the_product(app):
     row = cell(253)
+    show_cell_pair(app, row)
     tap_at(app, row["lat"], row["lon"])
     expect(card(app)).to_contain_text("No radar data here")
     expect(card(app)).to_contain_text("the radar product marked this spot as invalid")
@@ -255,7 +265,7 @@ def test_tc021_pair_with_nothing_detected(page, site_url):
     prepare_page(page)
     page.route(f"**/{LATEST_PAIR}/pair.json", lambda route: route.fulfill(body=envelope(zero), content_type="application/json"))
     page.goto(site_url)
-    expect(page.locator("#summary")).to_have_text("No new material detected between Oct 8, 2026 and Oct 20, 2026")
+    expect(page.locator("#summary")).to_have_text("No new material detected between {} and {}".format(*latest_dates()))
     expect(page.locator("#legend-area")).to_contain_text("0.00 km²")
 
 
@@ -301,7 +311,7 @@ def test_tc031_radar_sources_on_the_latest_pair(app):
     expect(panel).to_contain_text("GCOV")
     expect(panel).to_contain_text("GUNW")
     expect(panel).to_contain_text("PROVISIONAL")
-    expect(panel).to_contain_text("Acquired: Oct 8, 2026")
+    expect(panel).to_contain_text(f"Acquired: {latest_dates()[0]}")
     links = panel.locator('a[href*="search.asf.alaska.edu"]')
     assert links.count() >= 3
     for link in links.all():

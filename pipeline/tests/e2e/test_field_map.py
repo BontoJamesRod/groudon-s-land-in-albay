@@ -6,12 +6,14 @@ import pytest
 from PIL import Image
 from playwright.sync_api import expect
 
-from .conftest import SITE, TINY_PNG, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import SITE, TINY_PNG, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
 
-LATEST_PAIR = read_data("sites/mayon/pairs.json")[-1]["id"]
+LATEST_PAIR = latest_pair()["id"]
+# A quiet pair that stays published. Its small flagged area is what these marks are measured against.
+QUIET_PAIR = "mayon_A111F008_20261007_20261019"
 RELIEF_FILES = "**/sites/mayon/relief/**"
 CREDIT = "Relief: Copernicus DEM GLO-30"
 
@@ -186,6 +188,8 @@ def painted_km2(page):
 
 
 def test_tc091_at_the_default_zoom_the_marks_stay_small_and_visible(app):
+    app.select_option("#pair-list", QUIET_PAIR)
+    app.wait_for_function(f"document.querySelector('.radar-marks')?.dataset.cells === '{flagged_pixels(QUIET_PAIR)}'")
     wait_for_marks(app)
     assert 2 < painted_km2(app) < 15  # it was 29 km² at 5 px, for 0.75 km² of flagged ground
 
@@ -546,7 +550,8 @@ def test_tc095_axe_passes_on_satellite(page, site_url, width, height):
 
 
 LABEL = ".product-label"
-LATEST_LABEL = "NISAR GCOV + GUNW · before Oct 8, 2026 · after Oct 20, 2026"
+LATEST_LABEL = "NISAR {} · before {} · after {}".format(
+    "GCOV + GUNW" if latest_pair()["coherence_used"] else "GCOV", *latest_dates())
 PAIR_WITHOUT_COHERENCE = "mayon_A111F008_20260820_20260901"
 
 

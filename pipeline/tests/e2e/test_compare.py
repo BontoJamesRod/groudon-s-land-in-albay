@@ -4,7 +4,7 @@ import re
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import prepare_page, wait_until_ready
+from .conftest import latest_dates, prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -48,8 +48,8 @@ def test_tc018_compare_stays_open_drags_and_closes(app):
     app.click("#compare-button")
     app.wait_for_timeout(1000)
     expect_compare_open(app)
-    expect(app.locator("#compare-before")).to_have_text("Before: Oct 8, 2026")
-    expect(app.locator("#compare-after")).to_have_text("After: Oct 20, 2026")
+    expect(app.locator("#compare-before")).to_have_text(f"Before: {latest_dates()[0]}")
+    expect(app.locator("#compare-after")).to_have_text(f"After: {latest_dates()[1]}")
     assert radar_layer_is_shown(app) is False
 
     box = app.locator("#map").bounding_box()
