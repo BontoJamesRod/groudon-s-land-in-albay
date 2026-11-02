@@ -1077,3 +1077,19 @@ This doesn't prove that's what happened in the owner's browser, because I measur
 **Store the imagery in the site?** I recommend it, and it's the only fix that removes the wait. It needs your approval because it's a large download from EOX's tile service, republished under CC BY-NC-SA 4.0, and I'd ask EOX first (cloudless@eox.at).
 
 **Tests:** 743 passed, 1 skipped, exit code 0. **Contract check:** 0 errors. On `night-1`, not merged: the live site still has the wrong count until you ask for a merge.
+
+# Satellite decision and newest passes (T-119, 2026-11-03)
+
+**The owner's decision: Satellite keeps loading live from EOX with the preview layer, and there's no bulk download of imagery.** This closes the question from the T-117 and T-118 sections. Satellite's speed will keep depending on EOX, and Relief stays the default.
+
+## Newest passes
+
+`eruption_run.py check-all`, run on 2026-11-02 at about 17:00 UTC. It lists names only, and nothing was opened or downloaded. It can only see products from before the 2026-11-01 cutoff.
+
+| Track | Frame | Newest GCOV | Newest GUNW | Maturity |
+| --- | --- | --- | --- | --- |
+| 39 | 8 | 2026-10-14 | 2026-10-14 | PROVISIONAL |
+| 104 | 82 | 2026-10-19 | 2026-10-19 | PROVISIONAL |
+| 111 | 8 | 2026-10-19 | 2026-10-19 | PROVISIONAL |
+
+**The Oct 31 passes on tracks 104 and 111 aren't on ASF yet,** so T-038 is still waiting.
