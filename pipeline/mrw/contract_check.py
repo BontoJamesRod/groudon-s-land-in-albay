@@ -4,6 +4,9 @@ Run from the project folder:
     python pipeline/mrw/contract_check.py              (checks site/data)
     python pipeline/mrw/contract_check.py pipeline/out --unpublished
 
+With --unpublished it reads only the pair folders, sites/<site>/pairs/<pair>/, so screenshots,
+reports and scratch folders elsewhere under pipeline/out/ can't block publishing.
+
 The check prints one line per problem and exits with code 1 if it finds any,
 which is what makes CI stop the deploy. It never changes a file.
 """
@@ -1062,6 +1065,9 @@ def check_channel_areas(path, site_id, channel_ids, pair_ids, errors):
                 errors.append(f"{path}: no row for channel {channel_id!r} in pair {pair_id!r} (US-026/AC-1)")
 
 
+PAIR_FILES = ("pair.json", "validation.json", "histogram.json", "channel_histogram.json")
+
+
 def check_site_folder(folder, source_ids, errors, published=True, site_row=None):
     """Check the files of one site. Which ones must exist is decided in check_data_dir."""
     site_id = folder.name
@@ -1082,10 +1088,16 @@ def check_site_folder(folder, source_ids, errors, published=True, site_row=None)
         listed = check_pairs_list(folder / "pairs.json", site_id, folder, errors)
     if (folder / "channel_areas.json").is_file():
         check_channel_areas(folder / "channel_areas.json", site_id, channel_ids, listed, errors)
+    _check_pair_folders(folder, errors, published, listed)
+    return _known_files(folder)
+
+
+def _check_pair_folders(folder, errors, published, listed=()):
+    """Check every pair folder of one site."""
     for pair_folder in sorted((folder / "pairs").glob("*")):
         if not pair_folder.is_dir():
             continue
-        pair = check_pair_folder(pair_folder, site_id, errors, published)
+        pair = check_pair_folder(pair_folder, folder.name, errors, published)
         if published and pair_folder.name not in listed:
             errors.append(f"{pair_folder}: this folder is not listed in pairs.json (FR-059)")
         if pair and (pair_folder / "histogram.json").is_file():
@@ -1096,7 +1108,19 @@ def check_site_folder(folder, source_ids, errors, published=True, site_row=None)
             check_channel_histogram(pair_folder / "channel_histogram.json", pair, _channel_ids(folder), errors)
         if pair and (pair_folder / "validation.json").is_file():
             check_validation(pair_folder / "validation.json", pair.get("id"), errors, published)
-    return _known_files(folder)
+        for pattern in ("*.json", "*.geojson"):
+            for path in sorted(pair_folder.glob(pattern)):
+                if path.name not in PAIR_FILES:
+                    errors.append(f"{path}: this file is not part of the data contract")
+
+
+def _check_output_dir(root):
+    """Check unpublished output: only the pair folders, because only those can be published."""
+    errors = []
+    for folder in sorted((root / "sites").glob("*")):
+        if folder.is_dir():
+            _check_pair_folders(folder, errors, published=False)
+    return errors
 
 
 def _known_files(folder):
@@ -1104,8 +1128,7 @@ def _known_files(folder):
     names = ["towns.geojson", "land.geojson", "channels.geojson", "channel_areas.json", "events.json", "pairs.json"]
     known = {folder / name for name in names}
     for pair_folder in (folder / "pairs").glob("*"):
-        known |= {pair_folder / "pair.json", pair_folder / "validation.json", pair_folder / "histogram.json",
-                  pair_folder / "channel_histogram.json"}
+        known |= {pair_folder / name for name in PAIR_FILES}
     return known
 
 
@@ -1165,10 +1188,11 @@ def _check_relief(root, row, errors):
 def check_data_dir(root, published=True):
     """Check everything under a data folder and return a list of problems (empty = good)."""
     root = Path(root)
+    if not published:
+        return _check_output_dir(root)
     errors = []
     known = {root / "sites.json", root / "sources.json"}
-    if published:
-        _check_required_top_files(root, errors)
+    _check_required_top_files(root, errors)
     source_ids = set()
     if (root / "sources.json").is_file():
         source_ids = check_sources(root / "sources.json", errors)
@@ -1179,19 +1203,18 @@ def check_data_dir(root, published=True):
         site_id = row.get("id") if isinstance(row, dict) else None
         if site_id and not (root / "sites" / str(site_id)).is_dir():
             errors.append(f"{root / 'sites.json'}: site {site_id!r} has no data folder")
-        elif site_id and published:
+        elif site_id:
             _check_required_site_files(root / "sites" / str(site_id), errors, row)
             _check_relief(root, row, errors)
     rows_by_id = {row.get("id"): row for row in site_rows if isinstance(row, dict)}
     for folder in sorted((root / "sites").glob("*")):
         if folder.is_dir():
-            known |= check_site_folder(folder, source_ids, errors, published, rows_by_id.get(folder.name))
-    if published:
-        check_no_unconfirmed_names(root, errors)
-    # Every data file must be one the contract describes. Drafts have their own folder in pipeline/out.
+            known |= check_site_folder(folder, source_ids, errors, True, rows_by_id.get(folder.name))
+    check_no_unconfirmed_names(root, errors)
+    # Every data file must be one the contract describes.
     for pattern in ("*.json", "*.geojson"):
         for path in sorted(root.rglob(pattern)):
-            if path not in known and "validation_drafts" not in path.parts and "reports" not in path.parts:
+            if path not in known:
                 errors.append(f"{path}: this file is not part of the data contract")
     return errors
 
