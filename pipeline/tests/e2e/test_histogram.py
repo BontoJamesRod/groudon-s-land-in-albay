@@ -62,7 +62,10 @@ def test_tc085_the_sentence_gives_the_share_from_the_data(app):
 def test_tc085_the_chart_follows_the_selected_pass(app):
     expect(app.locator(CHART)).to_be_visible()
     before = app.locator("#histogram-sentence").inner_text()
-    app.click("#previous")
+    # The pair with the most different area, so that its sentence can't round to the same percentage.
+    pairs = read_data("sites/mayon/pairs.json")
+    other = max(pairs, key=lambda pair: abs(pair["new_material_area_km2"] - pairs[-1]["new_material_area_km2"]))
+    app.select_option("#pair-list", other["id"])
     expect(app.locator("#histogram-sentence")).not_to_have_text(before)
 
 

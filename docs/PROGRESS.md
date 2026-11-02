@@ -67,6 +67,7 @@ Add one row per enhancement proposal (`EP-001` …) when it starts.
 | 2026-11-02 | Design: Field map, with a minimum mark and darker edge for flagged change, areas also as basketball courts, and a wider Copernicus DEM under 300 MB with its size logged | 01 F-22, 04 ADR-012 |
 | 2026-11-02 | Coverage view: only after the design is built, and only if that's done by Nov 8, with eruption work first. It may show pass dates (metadata only) past the cutoff, because the thresholds are final; the processing cutoff is unchanged | This file |
 | 2026-11-02 | The histogram's channel outline stays desktop-only for now, to revisit with the design | This file |
+| 2026-11-03 | Rule for holding a pair set before any post-eruption data: a large area alone is never a reason. A single track is published with a note | 04 ADR-014, 01 FR-085, FR-086 |
 | 2026-11-03 | Satellite keeps loading live from EOX with the preview layer; no bulk download of imagery | `NIGHT_REPORT.md` |
 | 2026-11-02 | Map switcher: Relief by default, or Satellite. Panama's relief approved (under 300 MB, size logged). Esri's terms need Esri software or a subscription, so Satellite uses EOxCloudless | 01 F-23, 04 ADR-013 |
 

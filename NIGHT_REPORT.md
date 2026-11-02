@@ -1165,3 +1165,35 @@ The clock starts when both products are listed. ASF may list a pass days late, a
 - **Landslide:** the owner decided to keep Panama's check file as it is, which closes the decision in the T-078 section.
 
 **Limits:** checked in a test browser, not on a real phone. At 360 px the label usually fits one line, but some pairs' dates wrap to two. On phones the Relief and Satellite buttons now sit beside the zoom buttons, because the label covered them when the drawer was open. Screens are in `pipeline/out/screens/product-label/`.
+
+# Fire drill decisions (T-123 to T-128, 2026-11-03)
+
+All five are done on `night-1`, not merged. No product from Nov 1 onward was opened, and nothing was published or downloaded: the download log is byte for byte the same.
+
+- **Publish blocker (T-123):** the contract check on `pipeline/out/` now reads only pair folders. Stray files elsewhere can't stop publishing, and a broken pair folder still does (TC-097).
+- **Runbook (T-124):** rewritten with the current cutoff, `review`, `preview` and `process --drill`. All of them ran on real cached pairs.
+- **Tests (T-125):** the browser tests read the latest pair from the data. In a throwaway worktree with a made-up newer track 111 pair, the whole suite passed after one test was hardened. Tests about one specific older pair still name it, because those pairs stay published. A latest pair on track 104 wasn't tried.
+- **Hold rule (T-126):** in the runbook, in ADR-014 and in `mrw/hold_check.py`. The numbers are saved in `pipeline/reports/hold-check-baseline.json`, before any post-eruption data.
+- **Images (T-127):** both `coherence_loss.png` files are gone. The deletion landed in the T-123 commit (ac8feac) because it was already staged, and I didn't rewrite history to move it.
+- **Flaky test (T-128):** no wait was missing. Python's test server queues only 5 waiting connections. On a busy computer, Windows refused the rest (48 `ERR_CONNECTION_REFUSED` seen), one script failed to load, and the page stayed on "Loading" for good. Under heavy load it failed 2 of 20 before the fix and 0 of 20 after. Alone, it passed 20 of 20 before the fix too. The diagnostic's page opens went from at least 5 stuck of the first 16 to 0 of 30.
+
+## The rule's numbers today
+
+| Check | Published pairs | Note |
+| --- | --- | --- |
+| Median coherence change | -0.177 to 0.050 | From 7 of the 11 pairs. The other 4 used no coherence |
+| Flagged beyond 8 km | Highest 3.556 km² | Set by the 24-day pair; the 12-day pairs reach 1.531 km² |
+| Volcano with no data | Highest 0.05% | |
+| Two tracks agree, within about 200 m | 17% and 21% | Same-cell agreement is 5% and 7%, so low agreement is normal here |
+
+## Decisions for you
+
+1. **Is reason (b) meant to be able to hold a real eruption?** The range's top, 0.050, is the latest pair itself. A real eruption should raise coherence loss, so a large event could pass 0.050 and be held, even though a large area alone isn't meant to hold it. The median covers everything inside 10 km, which softens this, but I can't test it without the data. I applied the rule as you wrote it. If it holds a pair, you'd decide from the map.
+2. **Should reason (c) use the 24-day pair's number?** A longer gap shows more change, so that pair sets a looser limit than any 12-day pair. I kept it, because you said the highest of the 11.
+3. **Is 5% right for a "large" no-data gap?** You didn't give a number. The published highest is only 0.05%, so using it would hold a pair over a few cells. I set 5% of the land inside the danger zone, as `LARGE_GAP_SHARE` in `mrw/hold_check.py`, and a person also looks at the map.
+
+## Things to know
+
+- **VALIDATED products:** the hold rule accepts them, but the pipeline's search only recognises BETA and PROVISIONAL, so it would skip one. I left the search alone, since no product is VALIDATED today.
+- **Loading stays stuck on a failed script:** the same stuck "Loading" could reach a visitor if a script fails to load on a bad connection. The page shows no error or retry in that case. I didn't change the site.
+- **Local site command:** `python -m http.server` has the same small queue, so a busy computer could get stuck there too. The preview command uses a larger queue.
