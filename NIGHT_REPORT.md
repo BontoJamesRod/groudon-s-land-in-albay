@@ -1093,3 +1093,54 @@ This doesn't prove that's what happened in the owner's browser, because I measur
 | 111 | 8 | 2026-10-19 | 2026-10-19 | PROVISIONAL |
 
 **The Oct 31 passes on tracks 104 and 111 aren't on ASF yet,** so T-038 is still waiting.
+
+# Fire drill (T-120, 2026-11-03)
+
+**The runbook's processing works, but publishing would stop today.** From "pass listed" to "ready for your approval" should take **about 10 minutes** for both eruption pairs, once the blocker below is cleared and both the GCOV and GUNW are on ASF. I ran it on track 111, 2026-10-07 → 2026-10-19, from cached radar data, with downloads switched off. `site/data` and the download log didn't change, and nothing was published.
+
+## Timings
+
+| Runbook step | Measured | Note |
+| --- | --- | --- |
+| 1–3 Thresholds and cutoff | 0 s | Already done on 2026-11-01. Checked only |
+| 4 Republish 11 pairs, with contract check | 103 s | Into a copy. Not needed in the real run, because the thresholds haven't changed |
+| 5 `check` | 6 s | Names only |
+| 6 Process one pair | 13 s | Cached, so this leaves out the download |
+| 6 Contract check | 1 s | On the drill's own folder |
+| 6 Areas and median coherence | 4 s | The median needed my own code |
+| 7 Publish, with contract check | 2 s | Into a copy |
+| Extra: open the copy in a browser | 8 s | Includes copying the site |
+| 8–9 Push, merge, live check | Not run | They'd publish |
+
+The output for all 11 published Mayon pairs matched the published files, apart from the two extra images listed under decision 3. Areas also matched: 0.75 km² for this pair.
+
+## Expected time
+
+| Stretch | Time | Basis |
+| --- | --- | --- |
+| Pass listed → ready for approval, machine time | 3–5 min | Measured steps, plus 1–2 min of download per pair from the gaps in `raw/download_log.jsonl`. That's an estimate, not a timed download |
+| Checking and writing it up for you | About 5 min | My estimate |
+| **Total to ready for approval** | **About 10 min** | |
+| Approval → live, if you approve | About 20 min | Tests 4 min, CI 4–7 min and deploy 5–7 min from recent runs, then the live check |
+
+The clock starts when both products are listed. ASF may list a pass days late, and the GUNW can come after the GCOV. Neither wait is included. Each pair should need under 0.2 GB, and 5.25 GB of the 20 GB budget is used so far.
+
+## What broke
+
+**Publishing is blocked.** `publish.py` checks everything under `pipeline/out/`, including the 3 `axe.json` files my earlier accessibility runs left in `pipeline/out/screens/`. On a real pair it stopped with "Output fails the contract check", and the runbook's step 6 check fails the same way. A scratch folder under `pipeline/out/` causes the same stop, so I removed the drill's after the run. I kept its picture in `pipeline/out/screens/fire-drill/`.
+
+## Gaps in the runbook
+
+- **It's out of date.** It still says the cutoff is 2026-10-30, and it treats steps 1–4 as still to do.
+- **Median coherence:** step 6 asks you to look at it, but no command prints it.
+- **No preview:** nothing shows the map before publishing. Copying the site to a scratch folder worked, but it isn't in the runbook.
+- **Not rehearsed:** the tests after a new pair is published. The runbook names only `LATEST_PAIR`, and this pair's ID appears in 8 test files, so more edits may be needed. The drill also had to bypass `process`, which only accepts eruption pairs.
+
+## Decisions for you
+
+1. **Clear the blocker: how?** I recommend making the contract check skip `pipeline/out/screens/`, because any later accessibility run would otherwise bring it back. Deleting the 3 files would also work for now.
+2. **Update the runbook, with a median printout and a preview step?** I recommend yes, before the passes arrive.
+3. **What would make you refuse a pair?** The runbook only says to look closer above about 8 km², and a real eruption could pass that honestly. I recommend that you judge it from the map, the areas and the median coherence together.
+4. **Remove two unused images from the live site?** `coherence_loss.png` is still in the folders of `mayon_A111F008_20260727_20260820` and `mayon_A111F008_20260820_20260901`. Those pairs didn't use coherence and the site doesn't show the images. I recommend removing them.
+
+**Not changed:** the runbook, the code and `site/data`.
