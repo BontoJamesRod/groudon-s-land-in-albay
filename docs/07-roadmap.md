@@ -157,6 +157,9 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-111 | Draw radar marks with a minimum size and a darker edge, and say so in the legend | F-22, FR-078, US-029, TC-091 | M | T-110 | TC-091 passes, and no published data file changed |
 | T-112 | Show channel areas as basketball courts next to km² | F-22, FR-079, US-030, SCR-13, SCR-14, TC-092 | S | T-110 | TC-092 passes |
 | T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
+| T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
+| T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-116 | Build the Relief or Satellite switcher with EOxCloudless, and overlay colours for each background; replace Esri in the credits | F-23, FR-081, FR-082, FR-083, US-031, SCR-01, TC-094, TC-095 | M | T-115 | TC-094 and TC-095 pass, with axe passing on both backgrounds |
 
 T-010 and T-074 to T-077 follow T-073, in that order, with T-028 after T-010 because T-076 needs it. T-078 wasn't part of the owner's request of 2026-11-01.
 
@@ -297,7 +300,7 @@ None.
 | --- | --- | --- |
 | 0.1 | 2026-10-31 | First draft |
 | 0.2 | 2026-11-01 | Added the Channel timeline tasks, the done work (T-050 to T-072), milestone 7 and the ID errata. Named Panama for T-036 and T-037. Added T-079 to T-091. |
-| 0.3 | 2026-11-02 | Added T-107 to T-113 for the Field map design. |
+| 0.3 | 2026-11-02 | Added T-107 to T-116 for the Field map design and the map switcher. |
 
 ## 11. ID Errata
 

@@ -33,7 +33,7 @@ flowchart LR
 | Hosting | Suggestion: GitHub Pages, deployed by GitHub Actions | — | Free for public repositories (verify); the code must be public anyway (F-11) (ADR-005) |
 | Email / notifications | Not applicable in the MVP | — | Automatic updates (F-17) are deferred to v1.2 |
 | Testing | Suggestion: `pytest` for the pipeline, a Python data-contract check for published files, manual browser checks | `pytest` latest (verify) | Tests the parts most likely to be wrong (math and file format) with the least setup (see 08) |
-| Background map tiles | Esri tiles (from the progress notes: work without a key) | — | Terms of use and attribution: verify (ADR-010) |
+| Background map tiles | The site's own relief tiles, and EOxCloudless for Satellite | — | ADR-012, ADR-013 |
 
 **Stack decision gate.** Two layers are still undecided. Pick one option for each:
 
@@ -151,7 +151,7 @@ sequenceDiagram
 | --- | --- | --- | --- |
 | ASF DAAC (Vertex, ASF Search API) | Finding and downloading NISAR products | Free with an Earthdata account (verify); search results can be incomplete at times (seen in the progress notes) | Re-run the search later; use cached products in `raw/` |
 | NASA Earthdata Login | Download authentication | Free account (verify) | None: downloads wait until login works |
-| Esri background tiles | Visual base map | Terms of use and attribution (verify) | Borders, coastline and danger-zone ring drawn from the app's own data (FR-003, FR-005) |
+| EOxCloudless tiles | Satellite background | Free for non-commercial use with attribution; no published rate limit found; some tiles took 4 to 18 s in testing | The relief stays under it; borders, coastline and danger-zone ring drawn from the app's own data (FR-003, FR-005) |
 | GitHub (repository and Actions) | Public code, CI checks, deploys | Actions minutes for public repositories (verify) | Build and check locally; push again later |
 | GitHub Pages | Public static hosting | Site size about 1 GB and soft bandwidth about 100 GB per month (verify) | Netlify or Vercel serving the same `site/` folder |
 | Google Colab | Running the pipeline | Session time and memory limits (verify) | Run locally on Windows with the same requirements |
@@ -308,7 +308,14 @@ mayon-radar-watch/
 - **Context:** The owner chose the Field map design. Its relief has to fill the view without a plain band, and flagged cells smaller than a screen pixel have to stay visible on it. No published data may change.
 - **Decision:** `pipeline/mrw/relief.py` downloads whole Copernicus DEM GLO-30 tiles into `raw/`, stopping before it starts if they total 300 MB or more, and logging the size. It renders WebP map tiles into `site/data/sites/{site_id}/relief/`, one set per zoom. The map stays inside the tiles' bounds, and its minimum zoom rises on a very wide screen. In the browser, `site/js/marks.js` reads the pair's existing image and draws each flagged cell on a canvas above it, at no less than a minimum size, with a darker edge.
 - **Alternatives considered:** One large relief image (a heavy decode on a phone, and its contours would blur when zoomed); changing the published image (would change data, and it would be stuck at one size); a CSS shadow on the image (gives an edge, but cells under a pixel still vanish).
-- **Consequences:** The relief adds static files but needs no third-party request at Mayon. A small mark looks larger than the cell it stands for, so the legend says so. Panama keeps Esri imagery (ADR-010) until the owner approves a DEM download for it.
+- **Consequences:** The relief adds static files and needs no third-party request. A small mark looks larger than the cell it stands for, so the legend says so. The owner approved Panama's relief on 2026-11-02.
+
+### ADR-013: EOxCloudless for the Satellite background, replacing Esri
+
+- **Context:** The owner asked for a Relief or Satellite choice, and for the imagery's terms to be checked first. Esri's "Frequently asked questions about items owned by Esri in ArcGIS Online" (April 21, 2025) says to use its content with Esri software, and that without Esri software an ArcGIS Online subscription must be bought. This app uses Leaflet and has no subscription. So this supersedes ADR-010's choice of Esri tiles.
+- **Decision:** Use EOxCloudless (Sentinel-2 cloudless) 2024 from EOX's tile service, under CC BY-NC-SA 4.0 for non-commercial use, with the credit EOX asks for in the map while Satellite is on. The tiles are loaded from EOX and not stored here. The relief stays on under it, as the placeholder and the fallback.
+- **Alternatives considered:** Esri with a subscription (a cost, and against the owner's rule); no imagery (the owner asked for it).
+- **Consequences:** Imagery comes from 10 m data, so it's softer than Esri's at high zoom. Commercial use would need a paid EOX license. EOX's license page doesn't address calling its hosted tiles directly (open question for the owner in `NIGHT_REPORT.md`). `main` still loads Esri until `night-1` is merged.
 
 ## 12. Assumptions
 
@@ -323,7 +330,7 @@ mayon-radar-watch/
 | 1 | Frontend: plain JavaScript (Suggestion), or a framework? | §2, ADR-004 |
 | 2 | Hosting: GitHub Pages (Suggestion), Netlify or Vercel? | §2, §7, ADR-005 |
 | 3 | Closed on 2026-11-01: OpenStreetMap, with the lines the owner confirmed. | ADR-008, F-19 |
-| 4 | Do Esri's terms allow this use, and what attribution is required? (verify) | ADR-010, F-01 |
+| 4 | Answered on 2026-11-02: Esri's terms summary requires Esri software or an ArcGIS Online subscription, which this app doesn't have, so EOxCloudless replaces it (ADR-013) | ADR-010, ADR-013, F-01 |
 | 5 | Is GUNW coherence at about 80 m fine enough, or should coherence come from GSLC later? | ADR-006 |
 
 ## 14. Conflicts with Earlier Documents

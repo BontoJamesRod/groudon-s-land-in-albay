@@ -431,7 +431,7 @@ As a visitor, I want to see how much the ground's brightness changed and where t
 ### F-22: Field map design
 
 **Priority:** Must
-**Description:** The design the owner chose on 2026-11-02. A light relief map from elevation data, with its controls and channel list beside the map, or under it on a phone. It changes how the data looks and never the data. Panama keeps its imagery background until the owner decides otherwise.
+**Description:** The design the owner chose on 2026-11-02. A light relief map from elevation data, with its controls and channel list beside the map, or under it on a phone. It changes how the data looks and never the data. The owner approved Panama's relief on 2026-11-02, so both sites open on it.
 
 #### US-028: Read the map outdoors
 
@@ -442,7 +442,7 @@ As a resident on a phone outdoors, I want a light, high-contrast map of the grou
 - **US-028/AC-1:** Given a site with relief tiles, when the map opens, then the background is the relief, with no plain band at any edge at any zoom or pan the map allows, and the map credits the Copernicus DEM.
 - **US-028/AC-2:** Given the relief tiles can't load, when the map shows, then the borders, coastline and ring stay visible and "Background map unavailable" shows (FR-005).
 - **US-028/AC-3:** Given a site with channels, when it opens, then the channel list is open beside the map, or under it on a phone, without taking the keyboard focus. A phone shorter than 700 px opens on the map instead, with the list one tap away, because too little of the map would show.
-- **US-028/AC-4:** Given a site with no relief tiles, when it opens, then it keeps its imagery background and its map lines stay readable on it.
+- **US-028/AC-4:** Given a site config with no relief tiles, when it opens, then it uses the Satellite background with no switcher, and its map lines stay readable on it.
 
 #### US-029: See small flagged spots
 
@@ -464,6 +464,23 @@ As a resident, I want each channel's area compared with something familiar, so t
 - **US-030/AC-1:** Given a channel area is shown in the list or the bars, then "about N basketball courts" is next to it, using 1 court = 28 × 15 m = 420 m², and the km² value stays.
 - **US-030/AC-2:** Given an area of 0, or under half a court, then it reads "0 basketball courts" or "less than 1 basketball court", and a channel with no radar data shows no comparison.
 - **US-030/AC-3:** Given the visitor reads the channel screens, then a note states the size of the court used.
+
+### F-23: Map switcher
+
+**Priority:** Must
+**Description:** A small Relief or Satellite choice on the map. Relief is the default. Satellite shows real imagery under the same channels, radar marks, rings and labels.
+
+#### US-031: Choose the background
+
+As a visitor, I want to switch between a relief map and real imagery, so that I can recognise the ground.
+
+**Acceptance criteria**
+
+- **US-031/AC-1:** Given a site with both backgrounds, when the map shows, then "Relief" and "Satellite" buttons of at least 44 px are on it, usable by keyboard, with `aria-pressed` saying which is on, and Relief is on for a first visit.
+- **US-031/AC-2:** Given the visitor chooses a background, when they reload or change site, then the same one is on. If the browser's storage can't be used, the app still works and opens on Relief.
+- **US-031/AC-3:** Given Satellite is on, then channels, marks, rings and labels use the bright colours made for imagery, the imagery's credit shows, and no imagery is requested while Relief is on. Given Relief is on, then the Field map colours show and the imagery's credit doesn't.
+- **US-031/AC-4:** Given the radar marks show, then they're visible on both backgrounds.
+- **US-031/AC-5:** Given Satellite is on and its tiles are slow or fail, then the relief shows under it, and after a run of failures the map says "Satellite map unavailable. Showing the relief map."
 
 ## 6. Functional Requirements
 
@@ -549,6 +566,9 @@ As a resident, I want each channel's area compared with something familiar, so t
 | FR-078 | The system shall draw each flagged cell of the selected pair at no less than a minimum size on screen, with a darker edge, in its class colour, reading them from the pair's image and changing no data. | F-22 | US-029 |
 | FR-079 | The system shall show each channel area in km² and as "about N basketball courts", with 1 court = 28 × 15 m = 420 m². | F-22 | US-030 |
 | FR-080 | The system shall highlight, in a channel's view, only the bar of the pass the map is showing, and shall scroll it into view. | F-20 | US-025 |
+| FR-081 | The system shall offer a Relief or Satellite choice on the map, with Relief as the default, and shall remember each visitor's choice in the browser, working normally if that storage is blocked. | F-23 | US-031 |
+| FR-082 | The system shall use bright overlay colours on Satellite and the Field map colours on Relief, and shall keep radar marks visible on both. | F-23 | US-031 |
+| FR-083 | The system shall request imagery only while Satellite is on, shall show its credit only then, and shall show the relief under it while it loads or if it fails. | F-23 | US-031 |
 
 ## 7. Non-Functional Requirements
 
@@ -570,7 +590,7 @@ As a resident, I want each channel's area compared with something familiar, so t
 | --- | --- | --- |
 | ASF DAAC (Vertex, ASF Search API, `asf_search`) | Find and download NISAR GCOV and GUNW products; product links for visitors | F-03, F-05, F-06, F-07, F-09, F-17 |
 | NASA Earthdata Login | Authentication for downloading NISAR data (maintainer only) | F-05, F-06, F-07, F-17 |
-| Background map imagery (Esri tiles, per the progress notes) | Visual base map under the radar layers (terms of use: verify) | F-01 |
+| Background map imagery (EOxCloudless tiles, ADR-013) | Satellite background under the radar layers, CC BY-NC-SA 4.0 for non-commercial use | F-01, F-23 |
 | Albay municipal boundaries (NAMRIA/PSA via OCHA COD-AB, CC BY-IGO, through GitHub `faeldon/philippines-json-maps`) | Town borders, town names, land mask and coastline for Mayon | F-01, F-02, F-05 |
 | PHIVOLCS bulletins (read by the maintainer) | Channel names, event dates, validation records | F-03, F-12, F-19, F-20 |
 | Channel line data: OpenStreetMap candidates, confirmed by the owner (`pipeline/context/channel_name_candidates.geojson`) | Lines for the named channels | F-19, F-20 |

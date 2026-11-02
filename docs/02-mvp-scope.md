@@ -35,6 +35,7 @@
 | F-20 | Channel timeline | US-024, US-025, US-026 | Shows how each channel changes from pass to pass; the owner's chosen feature for the Nov 5–10 build (R4, R8) |
 | F-21 | Brightness histogram | US-027 | Answers "why did this spot count as changed?" for residents and judges |
 | F-22 | Field map design | US-028, US-029, US-030 | The owner's chosen design (2026-11-02), for a resident on a phone outdoors |
+| F-23 | Map switcher | US-031 | The owner's request (2026-11-02): real imagery under the same layers, without losing the Field map |
 
 ## 4. Deferred
 
