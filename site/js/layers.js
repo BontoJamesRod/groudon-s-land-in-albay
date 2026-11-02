@@ -39,10 +39,25 @@ function legendRow(item) {
   return row;
 }
 
-function showLegend(elements, layer, pair) {
+function showLegend(elements, layer, pair, site) {
   elements.title.textContent = layer.title;
   elements.rows.replaceChildren(...layer.legend.map(legendRow));
-  elements.area.textContent = `${STRINGS.layerUnits(layer.units)}. ${STRINGS.totalArea(pair.new_material_area_km2)}`;
+  elements.area.textContent = `${textFor(site).areaUnits} ${STRINGS.totalArea(pair.new_material_area_km2)}`;
+}
+
+// The label on the map saying which radar products made this pair, and from which dates (FR-084).
+// Without coherence data, only the brightness product (GCOV) went into the map.
+function productText(pair, site) {
+  const products = pair.coherence_used ? STRINGS.productsWithCoherence : STRINGS.productsWithoutCoherence;
+  return STRINGS.productLabel(products, localDate(pair.before_acquired_start, site.time_zone),
+    localDate(pair.after_acquired_start, site.time_zone));
+}
+
+function createProductLabel(map) {
+  const label = L.DomUtil.create("p", "product-label");
+  const Label = L.Control.extend({ onAdd: () => label });
+  new Label({ position: "bottomright" }).addTo(map);
+  return label;
 }
 
 function summaryText(pair, site) {
@@ -56,6 +71,7 @@ function summaryText(pair, site) {
 // Set up the layer's toggle. Returns the function that shows a pair on the map.
 export function createNewMaterialLayer(map, elements, site) {
   let overlay = null;
+  const productLabel = createProductLabel(map);
 
   elements.toggle.onchange = () => {
     if (!overlay) return;
@@ -75,7 +91,8 @@ export function createNewMaterialLayer(map, elements, site) {
       createMarks(image, bounds, RADAR_PANE),
     ]);
     if (elements.toggle.checked) overlay.addTo(map);
-    showLegend(elements, layer, pair);
+    showLegend(elements, layer, pair, site);
+    productLabel.textContent = productText(pair, site);
     elements.summary.textContent = summaryText(pair, site);
   };
 }

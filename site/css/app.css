@@ -213,6 +213,24 @@ button:disabled { color: #6e7781; }
 
 .pair-events { font-weight: 600; }
 
+.legend-colors { margin: 6px 0 2px; }
+
+/* FR-084: the pair's products and dates. Leaflet stacks it above the credits, however they wrap.
+   A tap on it goes through to the map. */
+.leaflet-container .leaflet-control.product-label {
+  max-width: calc(100% - 20px);
+  margin-bottom: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--ink);
+  text-align: right;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
 /* A pair with an unequal gap: dimmed, and always with its note, so it never depends on color. */
 .pair-dim { color: #57606a; }
 
@@ -779,6 +797,9 @@ button:disabled { color: #6e7781; }
   .timeline-controls select { padding: 0 4px; }
   .histogram { flex: 1 1 100%; max-width: none; }
   .zone-label-phone { width: 128px; white-space: normal; text-align: center; line-height: 1.2; }
+  /* The open drawer leaves a short map, so the switcher sits beside the zoom buttons, clear of the label. */
+  .leaflet-left .basemap-switcher { clear: none; }
+  .leaflet-container .leaflet-control.product-label { max-width: calc(100% - 8px); margin-right: 4px; padding: 2px 4px; }
   .leaflet-control-attribution { font-size: 9px; line-height: 1.2; }
   /* FR-049: padding makes the credit link a 44 px target, and the equal negative margin
      keeps the credit bar small, so the extra height doesn't cover more of the map. */

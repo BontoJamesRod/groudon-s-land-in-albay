@@ -242,7 +242,10 @@ def test_tc020_layer_legend_and_area_on_the_latest_pair(app):
     layer = next(item for item in pair["layers"] if item["kind"] == "new_material")
     rows = [" ".join(row.split()) for row in app.locator("#legend-rows li").all_inner_texts()]
     assert rows == [f"{item['label']}. Confidence: {item['confidence']}" for item in layer["legend"]]
-    expect(app.locator("#legend-area")).to_have_text(f"Units: class. Total detected area: {pair['new_material_area_km2']:.2f} km²")
+    expect(app.locator(".legend")).to_contain_text("What each color means:")
+    expect(app.locator("#legend-area")).to_have_text(
+        f"Areas are in km². Channel areas also show basketball courts. Total detected area: {pair['new_material_area_km2']:.2f} km²")
+    expect(app.locator(".legend")).not_to_contain_text("Units:")
     expect(app.locator("#legend-title")).not_to_contain_text("PROVISIONAL")
 
 

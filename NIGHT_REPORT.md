@@ -1156,3 +1156,12 @@ The clock starts when both products are listed. ASF may list a pass days late, a
 **How strict is "only in the check panel's citation"?** The word appears in three fields of Panama's check file: the source's name, the method text and two row names ("Cells with no mapped landslides"). All three describe the University of Panama's map, not this pair, and the method text says the pair doesn't show that any one spot is a landslide. I allowed those three fields and no others, because the strict reading would mean rewording a published check. If you want only the source's name to pass, the method text and row names need rewording, and the test changes with them.
 
 **Limits of the evidence table:** TC-020 and TC-031 use the latest pair, because the eruption pair isn't published yet. R3's product names are in the Data sources panel, not on the map itself. TC-033 checks the switch to Panama, not the continents themselves.
+
+# Product label and plain legend (T-122, 2026-11-03)
+
+- **R3:** the map now always shows "NISAR GCOV + GUNW · before [date] · after [date]" for the pair on screen, or GCOV alone when the pair has no coherence data. It sits above the credits, so it can't overlap them even when they wrap, and it stays visible during Compare. A tap on it reaches the map.
+- **R5:** "Units: class" is gone. The legend now says "What each color means:" above its rows, then "Areas are in km²." Mayon adds "Channel areas also show basketball courts." Panama doesn't, because it has no channels. The data files still hold `units: class`, and the site no longer shows it.
+- **Docs:** FR-084, US-013/AC-4 and TC-096 are new. FR-025, US-008/AC-1, TC-020 and R3 and R5 in the evidence table are updated.
+- **Landslide:** the owner decided to keep Panama's check file as it is, which closes the decision in the T-078 section.
+
+**Limits:** checked in a test browser, not on a real phone. At 360 px the label usually fits one line, but some pairs' dates wrap to two. On phones the Relief and Satellite buttons now sit beside the zoom buttons, because the label covered them when the drawer was open. Screens are in `pipeline/out/screens/product-label/`.
