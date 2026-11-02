@@ -155,7 +155,7 @@ As a visitor, I want to see where new material was detected between two passes, 
 
 **Acceptance criteria**
 
-- **US-008/AC-1:** Given a pair is selected and the new-material layer is on, when the map shows, then areas classed as new material show in the layer colors, and the legend names each class, its confidence level and units, plus the total detected area in km² with 2 decimals.
+- **US-008/AC-1:** Given a pair is selected and the new-material layer is on, when the map shows, then areas classed as new material show in the layer colors, and the legend says in plain words what each color means and its confidence level, that areas are in km² (and where basketball courts are shown), plus the total detected area in km² with 2 decimals.
 - **US-008/AC-2:** Given the pair's detected area is 0 km², when the layer is on, then no shading shows and "No new material detected between <before date> and <after date>" appears.
 - **US-008/AC-3:** Given a pixel whose brightness change passes its threshold while its coherence loss doesn't, or a flagged pixel in a pair with no coherence data, when the layer shows, then that pixel is shown as low confidence, never high.
 - **US-008/AC-4:** Given a pixel where only coherence loss passes its threshold, when the layer shows, then that pixel isn't shaded and adds no area.
@@ -228,6 +228,7 @@ As a visitor or judge, I want to see exactly which NISAR products made each laye
 
 - **US-013/AC-1:** Given a pair is selected, when the visitor opens "Data sources", then each radar layer lists its product type, granule IDs, acquisition dates, maturity (for example PROVISIONAL) and a link to the product on ASF.
 - **US-013/AC-2:** Given context data is used (background map, borders, coastline, channels), when the panel shows, then it is listed separately under "Context data" with its source and license.
+- **US-013/AC-4:** Given a pair is on the map, then a small label on the map always says "NISAR GCOV + GUNW · before <date> · after <date>", or GCOV alone when the pair has no coherence data. It stays readable on a phone and never covers the map credits.
 - **US-013/AC-3:** Given a site is selected, when the visitor opens "Data sources" or reads the map credit, then only that site's sources and the shared ones are listed, and the map credit names that site's boundary source.
 
 ### F-10: Second showcase site
@@ -510,7 +511,7 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 | FR-022 | The pipeline shall compute coherence loss as the coherence of the previous pair on the same track minus the coherence of the current pair, only when both pairs span the same number of days. Otherwise it shall treat the pair as having no coherence data (FR-030). | F-05 | US-009 |
 | FR-023 | The pipeline shall flag a pixel by its brightness change alone. A flagged pixel is high confidence when coherence loss also passes its threshold, and low confidence when it doesn't or no coherence data exists; every other pixel is none. Coherence loss never adds area. The thresholds are final, set on 2026-11-01 before the post-eruption passes were opened, and their values live in the site config. | F-05 | US-008 |
 | FR-024 | The pipeline shall mark sea pixels, pixels outside radar coverage, and pixels flagged invalid by the product as no data, each with its reason. | F-05 | US-008 |
-| FR-025 | The system shall show the new-material layer with a legend naming each class, its confidence and units, and the total detected area in km² with 2 decimals. | F-05 | US-008 |
+| FR-025 | The system shall show the new-material layer with a legend saying in plain words what each color means and its confidence, that areas are in km² (and where basketball courts are shown), and the total detected area in km² with 2 decimals. | F-05 | US-008 |
 | FR-026 | The system shall show "No new material detected between <before date> and <after date>" when a pair's detected area is 0 km². | F-05 | US-008 |
 | FR-027 | The pipeline shall stop with "Passes are not from the same track, frame and direction" and write no files when two passes differ in track, frame or orbit direction. | F-05 | US-009 |
 | FR-028 | The pipeline shall stop with "Product not available yet: <granule_id>" and write no files when a needed GCOV product can't be found on ASF. | F-05 | US-009 |
@@ -568,6 +569,7 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 | FR-080 | The system shall highlight, in a channel's view, only the bar of the pass the map is showing, and shall scroll it into view. | F-20 | US-025 |
 | FR-081 | The system shall offer a Relief or Satellite choice on the map, with Relief as the default, and shall remember each visitor's choice in the browser, working normally if that storage is blocked. | F-23 | US-031 |
 | FR-082 | The system shall use bright overlay colours on Satellite and the Field map colours on Relief, and shall keep radar marks visible on both. | F-23 | US-031 |
+| FR-084 | The system shall always show, on the map, the selected pair's NISAR products and its before and after dates, naming GCOV alone when the pair has no coherence data, and shall keep that label clear of the map credits. | F-09 | US-013 |
 | FR-083 | The system shall request imagery only while Satellite is on, shall show its credit only then, and shall show the relief under it while it loads or if it fails. | F-23 | US-031 |
 
 ## 7. Non-Functional Requirements

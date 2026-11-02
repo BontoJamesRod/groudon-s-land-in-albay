@@ -43,7 +43,7 @@ Fixtures used below are listed in §5.
 | TC-017 | US-006/AC-2 | FR-018, SCR-01, API-007 | Site with no pairs | 1. On localhost, use the empty-pairs fixture. 2. Open the site. | "No radar passes processed yet for this site"; only base layers show | Edge | Medium |
 | TC-018 | US-007/AC-1 | FR-019, SCR-04, API-009 | Compare before and after | 1. Tap Compare. 2. Drag the divider left and right. | Before image on the left, after image on the right, each labeled with its date | Positive | High |
 | TC-019 | US-007/AC-2 | FR-020, SCR-04, API-009 | Missing image | 1. On localhost, use the missing-image fixture. 2. Tap Compare. | "Before/after images not available for this pair"; the map stays as it was | Negative | Medium |
-| TC-020 | US-008/AC-1 | FR-025, SCR-01, API-008, API-009 | New-material layer and legend | 1. Select the eruption pair. 2. Check the map and legend. | Detected areas shaded; legend lists each class with its confidence and units; total area in km² with 2 decimals equals `new_material_area_km2` | Positive | High |
+| TC-020 | US-008/AC-1 | FR-025, SCR-01, API-008, API-009 | New-material layer and legend | 1. Select the eruption pair. 2. Check the map and legend. | Detected areas shaded; legend says what each color means with its confidence, and that areas are in km² (and where basketball courts are shown), never "Units: class"; total area in km² with 2 decimals equals `new_material_area_km2` | Positive | High |
 | TC-021 | US-008/AC-2 | FR-026, SCR-01 | Pair with nothing detected | 1. On localhost, use the zero-area fixture. | No shading; "No new material detected between <before date> and <after date>" with the real dates | Edge | Medium |
 | TC-022 | US-008/AC-3 | FR-023 | Only brightness passes | 1. Run the `classify` unit tests with test arrays where only brightness passes. | Those cells get class 1 (low), never 2 (high) | Negative | High |
 | TC-023 | US-008/AC-3 | FR-030, TBL-05 | No coherence data | 1. Process a pair whose GUNW is unavailable (fixture). | `coherence_used` is `false`; the grid has no class 2 cells; `high_confidence_area_km2` is 0 | Edge | High |
@@ -107,6 +107,7 @@ Fixtures used below are listed in §5.
 | TC-093 | US-025/AC-6 | FR-080, SCR-14 | The bar matches the map | 1. Open a channel at 360 and 1280 px. 2. Pick another pass from a bar and with Previous. 3. Read which bar is highlighted and whether it's in view. | Only the bar of the pass on the map is highlighted, and it's fully in view below the panel's header | Positive | High |
 | TC-094 | US-031/AC-1, US-031/AC-2 | FR-081, SCR-01 | The switcher | 1. Open at 360 and 1280 px. 2. Measure the buttons and read `aria-pressed`. 3. Choose with the keyboard. 4. Reload, and change site. 5. Block the browser's storage. | Relief first; 44 px buttons; the choice works by keyboard and stays; with storage blocked the app opens on Relief and can still switch | Positive | High |
 | TC-095 | US-031/AC-3, US-031/AC-4, US-031/AC-5 | FR-082, FR-083 | Each background | 0. Hold the sharp tiles back and read the loading count. 1. Watch requests on Relief. 2. Read colours and credits on each. 3. Check the marks on each. 4. Block the imagery. 5. Run axe on each at 360 and 1280 px. | No imagery request on Relief; colours and credit follow the choice; marks show on both; the relief stays with the notice; no serious or critical axe result | Positive | High |
+| TC-096 | US-013/AC-4 | FR-084, SCR-01, API-008 | Products and dates on the map | 1. Read the label on a pair with coherence data. 2. Pick a pair without it. 3. Open Compare. 4. Measure the label at 360 and 1280 px, on both backgrounds and both sites. 5. Tap the map through the label. | "NISAR GCOV + GUNW · before <date> · after <date>", or GCOV alone; always visible, inside the map, clear of the credits; a tap there still reaches the map | Positive | High |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -157,7 +158,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-008 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-020, TC-021, TC-022, TC-023, TC-063, TC-062 |
 | US-009 | AC-1, AC-2, AC-3 | TC-024, TC-027, TC-048, TC-025, TC-026 |
 | US-012 | AC-1, AC-2, AC-3, AC-4 | TC-028, TC-029, TC-030, TC-075 |
-| US-013 | AC-1, AC-2, AC-3 | TC-031, TC-032, TC-077 |
+| US-013 | AC-1, AC-2, AC-3, AC-4 | TC-031, TC-032, TC-077, TC-096 |
 | US-014 | AC-1, AC-2, AC-3 | TC-033, TC-034, TC-078 |
 | US-015 | AC-1, AC-2 | TC-035, TC-036 |
 | US-016 | AC-1, AC-2, AC-3 | TC-037, TC-038, TC-039 |
@@ -227,9 +228,9 @@ These are the challenge requirements behind the exit criteria in §8. The demo m
 | --- | --- | --- | --- |
 | R1 Interactive app | F-01 Interactive map, F-02 Place readout | TC-003, TC-008 | Zoom in, then tap Daraga to open its card. |
 | R2 Radar as the core input | F-05 New-material layer, made from NISAR brightness change | TC-022, TC-027 | Turn the layer on, and say that every mark comes from comparing two radar passes. |
-| R3 NISAR products named on screen | F-09 Data sources panel | TC-031 | Open Data sources, and show GCOV, GUNW and a product name with its link. |
+| R3 NISAR products named on screen | F-09: the product label on the map, and the Data sources panel | TC-031, TC-096 | Point to the label in the map's corner, then open Data sources to show a product name with its link. |
 | R4 Change over time on the same track | F-03 Pass timeline, F-04 Before/after view, F-20 Channel timeline | TC-013, TC-018, TC-025 | Press Previous to step back along track 111, then drag the Compare divider. |
-| R5 Change map with legend and units | F-05 New-material layer | TC-020 | Point to the legend's two confidence levels and the total area in km². |
+| R5 Change map with legend and units | F-05 New-material layer, with a legend in plain words | TC-020 | Read "What each color means", then "Areas are in km²" and the total. |
 | R6 The named change type | F-05 New material at Mayon; "change" on Panama's plain map | TC-020, TC-078 | Read "New material, within 10 km of the summit" from the legend. |
 | R7 Two sites on two continents | F-10 Second showcase site | TC-033 | Pick Azuero Peninsula, Panama, and watch the map move from Asia to Central America. |
 | R8 Plain-language explainer | F-08 "What am I looking at?" panel | TC-028, TC-030 | Open "What am I looking at?", and read "How radar sees". |
