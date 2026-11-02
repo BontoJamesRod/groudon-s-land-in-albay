@@ -350,7 +350,7 @@ A row is one NISAR GCOV acquisition used by a pair. Stored inside each pair's `p
 | `acquired_end` | string (date-time) | Yes | — | ≥ `acquired_start` | End of the acquisition |
 | `polarizations` | array of string | Yes | — | ≥ 1 item | Covariance terms in the product, e.g. `["HHHH", "HVHV"]` |
 | `pixel_spacing_m` | number | Yes | — | 10, 20 or 80 | GCOV pixel spacing in m |
-| `maturity` | string | Yes | — | enum `maturity` | BETA or PROVISIONAL |
+| `maturity` | string | Yes | — | enum `maturity` | BETA, PROVISIONAL or VALIDATED |
 | `vertex_url` | string | Yes | — | URL | Link to the product in ASF Vertex (URL format: verify) |
 | `created_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was created |
 | `updated_at` | string (date-time) | Yes | pipeline run time | UTC | When the row was last changed |
@@ -576,7 +576,7 @@ One object per pair, for a site with channels. Stored in `site/data/sites/<site_
 | `town_kind` | `city`, `municipality`, `other` | `towns.kind` |
 | `orbit_direction` | `ascending`, `descending` | `passes.orbit_direction`, `pairs.orbit_direction` |
 | `product_type` | `GCOV`, `GUNW` | `passes.product_type` |
-| `maturity` | `BETA`, `PROVISIONAL` | `passes.maturity` |
+| `maturity` | `BETA`, `PROVISIONAL`, `VALIDATED` | `passes.maturity` |
 | `pair_status` | `processing`, `ready`, `published`, `failed` | `pairs.status` |
 | `layer_kind` | `before_db`, `after_db`, `change_db`, `coherence_loss`, `new_material` (MVP); `movement_cm`, `flood_water` (later) | `layers.kind` |
 | `image_format` | `png`, `webp` | `layers.image_format` |

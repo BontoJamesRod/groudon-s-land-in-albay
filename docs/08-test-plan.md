@@ -109,8 +109,10 @@ Fixtures used below are listed in §5.
 | TC-095 | US-031/AC-3, US-031/AC-4, US-031/AC-5 | FR-082, FR-083 | Each background | 0. Hold the sharp tiles back and read the loading count. 1. Watch requests on Relief. 2. Read colours and credits on each. 3. Check the marks on each. 4. Block the imagery. 5. Run axe on each at 360 and 1280 px. | No imagery request on Relief; colours and credit follow the choice; marks show on both; the relief stays with the notice; no serious or critical axe result | Positive | High |
 | TC-096 | US-013/AC-4 | FR-084, SCR-01, API-008 | Products and dates on the map | 1. Read the label on a pair with coherence data. 2. Pick a pair without it. 3. Open Compare. 4. Measure the label at 360 and 1280 px, on both backgrounds and both sites. 5. Tap the map through the label. | "NISAR GCOV + GUNW · before <date> · after <date>", or GCOV alone; always visible, inside the map, clear of the credits; a tap there still reaches the map | Positive | High |
 | TC-097 | US-009/AC-1 | ADR-009, FR-059 | A stray file can't block publishing | 1. Put stray JSON files in `pipeline/out/`, outside any pair folder. 2. Run the contract check on it, and publish a pair. 3. Break a file inside a pair folder. | The strays are ignored and the pair publishes; a broken pair folder still stops it | Negative | High |
-| TC-098 | US-009/AC-1 | FR-085, ADR-014 | Hold reasons | 1. Run the hold check on measurements that break each of reasons (a) to (d), and on one with only a large total area. 2. Compare two tracks' grids. | Each reason is named; a large area alone holds nothing; the agreement is reported | Negative | High |
+| TC-098 | US-009/AC-1 | FR-085, ADR-014 | Hold and look-closer reasons | 1. Run the hold check on measurements that break reasons (a) and (d), and on one with only a large total area. 2. Run it on far-field coherence and far-field area past their limits. 3. Measure where a made-up grid's flagged cells are. 4. Compare two tracks' grids. | (a) and (d) hold; (b) and (c) only say to look closer; a large area alone does neither; the 24-day pair doesn't set the limit for (c); the shares and the agreement are reported | Negative | High |
 | TC-099 | US-017/AC-3 | FR-086, FR-048 | Single-track note | 1. Publish a pair with the single-track option. 2. Read its check note. 3. Publish it without the option. | The note names the track and the pair is otherwise unchanged; without the option there's no note | Positive | Medium |
+| TC-100 | US-001/AC-4 | FR-087, SCR-01 | A script or data file fails to load | 1. Block one script or data file. 2. Open the site. 3. Allow it again and press Retry. | A clear error and a Retry button show, "Loading" goes away, and Retry opens the map | Negative | High |
+| TC-101 | US-009/AC-1 | FR-085, TBL-04 | VALIDATED products | 1. Search with a VALIDATED product. 2. Run the contract check on a pass marked VALIDATED. | The product is kept with that maturity, and the contract accepts it | Positive | Medium |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
 ## 4. Non-Functional Tests
@@ -151,7 +153,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 
 | US-ID | Acceptance criteria | TC-IDs |
 | --- | --- | --- |
-| US-001 | AC-1, AC-2, AC-3 | TC-001, TC-002, TC-079 |
+| US-001 | AC-1, AC-2, AC-3, AC-4 | TC-001, TC-002, TC-079, TC-100 |
 | US-002 | AC-1, AC-2 | TC-003, TC-004 |
 | US-003 | AC-1, AC-2 | TC-005, TC-007, TC-006 |
 | US-004 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-008, TC-009, TC-010, TC-011, TC-012, TC-061, TC-076 |

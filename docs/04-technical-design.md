@@ -320,16 +320,20 @@ mayon-radar-watch/
 ### ADR-014: A written rule for holding a pair, set before any post-eruption data
 
 - **Context:** The first passes after the eruption could look very different from the quiet ones. Deciding what counts as a bad pair after seeing them would invite choosing the answer. The owner set this rule on 2026-11-03, before any post-eruption product was opened.
-- **Decision:** Hold a pair (don't publish it) if any of these is true:
+- **Decision:** Hold a pair (don't publish it) automatically if any of these is true:
   - (a) a product isn't PROVISIONAL or better;
-  - (b) its median coherence change falls outside the range of the published pairs that used coherence, at the time the rule was set;
-  - (c) its flagged area in the outer part of the reach is above the highest of the published pairs, which suggests noise;
   - (d) large no-data gaps cover the volcano;
   - (e) the map shows stripe or edge patterns.
 
-  A large area alone is not a reason to hold. When both tracks (104 and 111) have a pair, compare where each flags change and report how much they agree. If only one track is ready, publish it with a "single track" note.
-- **Alternatives considered:** A limit on total area, which would hold back exactly the result a real eruption should produce.
-- **Consequences:** The reference numbers are fixed in `pipeline/reports/hold-check-baseline.json`, and the distance and the steps are in `pipeline/RUNBOOK-eruption.md`. Reasons (d) and (e) also need a person to look at the map. No threshold values are written in these docs.
+  Two far-field checks say "look closer", and neither holds a pair by itself:
+  - (b) the median coherence change of land far from the summit, where an eruption shouldn't reach, falls outside the range of the same measure on the published pairs that used coherence;
+  - (c) the flagged area far from the summit is above the highest of the published pairs with the usual gap, leaving out the pair with a longer gap.
+
+  To look closer, compare the share of the flagged change near the volcano and far from it with the quiet pairs. If the change is concentrated near the volcano and its channels, publish. If it's spread evenly across the whole scene, hold.
+
+  A large area alone is not a reason to hold. When both tracks (104 and 111) have a pair, report how much they agree next to the quiet pairs' agreement: it supports a decision and never blocks one. If only one track is ready, publish it with a "single track" note.
+- **Alternatives considered:** A limit on total area, which would hold back exactly the result a real eruption should produce. Checking coherence across the whole reach, and holding automatically on it, which could hold a real eruption because of the eruption itself.
+- **Consequences:** The reference numbers are fixed in `pipeline/reports/hold-check-baseline.json`, and the distances and the steps are in `pipeline/RUNBOOK-eruption.md`. Reasons (d) and (e) and the "look closer" judgement need a person to look at the map. No threshold values are written in these docs.
 
 ## 12. Assumptions
 

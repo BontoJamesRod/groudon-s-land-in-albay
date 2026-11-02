@@ -159,6 +159,9 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
 | T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
 | T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-131 | Show a clear error with a Retry button when a script or data file fails to load, instead of a stuck "Loading" | FR-087, US-001, TC-100 | S | T-128 | TC-100 passes |
+| T-130 | Accept VALIDATED products in the search and the data contract | FR-085, ADR-014, TC-101 | S | T-126 | TC-101 passes |
+| T-129 | Change the hold rule: far-field coherence and flagged area become "look closer" checks, with where the change is concentrated printed for comparison | FR-085, ADR-014, TC-098 | S | T-126 | TC-098 passes |
 | T-128 | Stop the test server refusing connections when busy, which left the app stuck on its first screen and made browser tests fail at random | T-052, TC-001 | S | T-122 | 20 runs under heavy load pass |
 | T-127 | Remove the two unused `coherence_loss.png` files from pairs that didn't use coherence | FR-030, T-020 | S | T-122 | The files are gone, and the contract check passes |
 | T-126 | Write the rule for holding a pair before any post-eruption data is opened, and add the single-track note | FR-085, FR-086, ADR-014, TC-098, TC-099 | S | T-122 | TC-098 and TC-099 pass |

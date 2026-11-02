@@ -67,6 +67,7 @@ As a visitor, I want to open the app and see a map of the Mayon area with town b
 **Acceptance criteria**
 
 - **US-001/AC-1:** Given the app loads the Mayon site, when the map appears, then it is centered on the site's center point at its default zoom, or one zoom step further out on a short phone screen where the danger-zone ring wouldn't clear the map credits, and shows town borders, town names, the coastline, and a 6 km ring around the summit labeled "Permanent Danger Zone (6 km)".
+- **US-001/AC-4:** Given a script or data file the map needs fails to load, when the page opens, then a clear error and a Retry button appear, the loading message goes away, and Retry tries again.
 - **US-001/AC-2:** Given background map imagery fails to load, when the map appears, then town borders, the coastline and the danger-zone ring still show and the notice "Background map unavailable" appears.
 - **US-001/AC-3:** Given the site's land file stops at the site's edge, when the map appears, then no coastline or town border is drawn along that edge.
 
@@ -570,7 +571,8 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 | FR-081 | The system shall offer a Relief or Satellite choice on the map, with Relief as the default, and shall remember each visitor's choice in the browser, working normally if that storage is blocked. | F-23 | US-031 |
 | FR-082 | The system shall use bright overlay colours on Satellite and the Field map colours on Relief, and shall keep radar marks visible on both. | F-23 | US-031 |
 | FR-086 | When only one of a site's two tracks has a pair ready, the publish step shall be able to add a "single track" note, which the check panel shows for that pair. | F-05 | US-017 |
-| FR-085 | The pipeline shall report, before a pair is published, whether any of the hold reasons in ADR-014 applies. A held pair isn't published, and a large area alone is never a reason to hold. When both tracks have a pair, it shall report how much they agree on where change is flagged. | F-05 | US-009 |
+| FR-085 | The pipeline shall report, before a pair is published, whether any automatic hold reason in ADR-014 applies, and whether a far-field check says to look closer. It shall print where the flagged change is concentrated, for the pair and the published pairs. A held pair isn't published, and a large area alone is never a reason to hold. When both tracks have a pair, it shall report how much they agree, which never blocks a decision. | F-05 | US-009 |
+| FR-087 | The system shall show a clear error with a Retry button, not a stuck loading message, when a script or data file the map needs fails to load. | F-01 | US-001 |
 | FR-084 | The system shall always show, on the map, the selected pair's NISAR products and its before and after dates, naming GCOV alone when the pair has no coherence data, and shall keep that label clear of the map credits. | F-09 | US-013 |
 | FR-083 | The system shall request imagery only while Satellite is on, shall show its credit only then, and shall show the relief under it while it loads or if it fails. | F-23 | US-031 |
 
