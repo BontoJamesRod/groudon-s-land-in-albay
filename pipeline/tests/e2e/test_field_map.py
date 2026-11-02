@@ -457,14 +457,59 @@ def test_tc095_slow_imagery_shows_a_preview_and_a_count(page, site_url):
     page.click(SATELLITE)
     notice = page.locator("#background-notice")
     expect(notice).to_be_visible()
-    expect(notice).to_have_text(re.compile(r"^Loading satellite imagery: 0 of \d+$"))
     page.wait_for_selector('.leaflet-tile-loaded[src*="/g/10/"]')
     # Only a few tiles are needed for the preview, far fewer than the sharp ones.
+    expect(notice).to_have_text(re.compile(r"^Loading satellite imagery: \d+ tiles to go$"))
+    page.wait_for_function("document.querySelectorAll('.leaflet-tile[src*=\"/g/12/\"]').length > 0")
     previews = page.locator('.leaflet-tile[src*="/g/10/"]').count()
     assert 0 < previews < page.locator('.leaflet-tile[src*="/g/12/"]').count()
     for route in list(held):
         route.fulfill(body=TINY_PNG, content_type="image/png")
     expect(notice).to_be_hidden()
+
+
+def tiles_to_go(page):
+    return int(re.search(r"(\d+) tile", page.locator("#background-notice").inner_text()).group(1))
+
+
+def test_tc095_the_sharp_tiles_wait_for_the_preview(page, site_url):
+    prepare_page(page, tiles="none")
+    held = []
+    page.route("https://tiles.maps.eox.at/**", lambda route: held.append(route))
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click(SATELLITE)
+    page.wait_for_timeout(500)
+    assert held and all("/g/10/" in route.request.url for route in held)
+    for route in list(held):
+        route.fulfill(body=TINY_PNG, content_type="image/png")
+    page.wait_for_function("document.querySelectorAll('.leaflet-tile[src*=\"/g/12/\"]').length > 0")
+
+
+def test_tc095_moving_the_map_doesnt_inflate_the_count(page, site_url):
+    prepare_page(page, tiles="none")
+    page.route("https://tiles.maps.eox.at/**", lambda route: None)  # never answers
+    page.goto(site_url)
+    wait_until_ready(page)
+    page.click(SATELLITE)
+    expect(page.locator("#background-notice")).to_be_visible()
+    for zoom in (13, 11, 14, 12, 13, 12, 13, 12):
+        page.evaluate("(zoom) => testMap.setZoom(zoom, { animate: false })", zoom)
+        page.wait_for_timeout(100)
+    on_screen = page.evaluate("document.querySelectorAll('.leaflet-tile[src*=\"eox.at\"]:not(.leaflet-tile-loaded)').length")
+    assert tiles_to_go(page) == on_screen
+    assert on_screen < 100
+
+
+def test_tc095_opening_on_a_saved_satellite_counts_only_whats_on_the_map(page, site_url):
+    prepare_page(page, tiles="none")
+    page.route("https://tiles.maps.eox.at/**", lambda route: None)  # never answers
+    page.add_init_script("localStorage.setItem('mayon-radar-basemap', 'satellite')")
+    page.goto(site_url)
+    wait_until_ready(page)
+    expect(page.locator(PRESSED)).to_have_text("Satellite")
+    page.wait_for_timeout(300)
+    assert tiles_to_go(page) == page.evaluate("document.querySelectorAll('.leaflet-tile[src*=\"eox.at\"]:not(.leaflet-tile-loaded)').length")
 
 
 def test_tc095_going_back_to_relief_clears_the_count(page, site_url):
