@@ -41,7 +41,7 @@ Name the pairs from step 2, one or both. This reads names from ASF and the cache
 python pipeline/mrw/eruption_run.py review mayon_D104F082_20261019_20261031 mayon_A111F008_20261019_20261031
 ```
 
-It prints each pair's median coherence change, flagged area beyond 8 km and no-data share next to the 11 published pairs, says if the rule below holds it, and exits with code 1 if it does. With two pairs, it also says how much the tracks agree.
+It prints each pair's far-field coherence change, flagged area beyond 8 km, no-data share and where its change is, next to the published pairs. It says HOLD or LOOK CLOSER where the rule below applies, and exits with code 1 only on a hold. With two pairs, it also says how much the tracks agree.
 
 ## 4. Preview
 
@@ -57,17 +57,22 @@ Open <http://127.0.0.1:8001/>, and press Ctrl+C when finished. Look for reasons 
 
 The owner set this rule on 2026-11-03, before any post-eruption product was opened.
 
-**Hold a pair (don't publish it) if any of these is true:**
+**Hold a pair (don't publish it) automatically if any of these is true:**
 
 - **(a)** a product isn't PROVISIONAL or better;
-- **(b)** its median coherence change falls outside the range of the 11 published pairs (only the 7 that used coherence have one);
-- **(c)** its flagged area beyond 8 km from the summit is above the highest of the 11 published pairs, which suggests noise;
 - **(d)** large no-data gaps cover the volcano. `review` calls more than 5% of the land within the danger zone large, and a person also looks at the map;
 - **(e)** the map shows stripe or edge patterns. Only a person can check this.
 
+**Look closer if either far-field check is out of range. Neither holds a pair by itself:**
+
+- **(b)** the median coherence change of land more than 8 km from the summit, where an eruption shouldn't reach, falls outside the range of the same measure on the published pairs that used coherence;
+- **(c)** the flagged area beyond 8 km from the summit is above the highest of the published 12-day pairs. The 24-day pair is left out.
+
+**To look closer:** `review` prints this pair's flagged share inside 6 km, beyond 8 km and in the channels' strips, next to the published pairs and to what change spread evenly would give. If the change is concentrated near the volcano and its channels compared with the quiet pairs, publish. If it's spread evenly across the whole scene, hold.
+
 **A large area alone is NOT a reason to hold.**
 
-**Two tracks or one:** when both tracks have a pair, report how much they agree. If only one track is ready, publish it with the single-track note in step 6.
+**Two tracks or one:** when both tracks have a pair, `review` reports how much they agree, next to the quiet pairs' 17–21% within about 200 m. This supports a decision and never blocks one. If only one track is ready, publish it with the single-track note in step 6.
 
 The reference numbers are saved in `pipeline/reports/hold-check-baseline.json`. Don't rebuild that file after opening a post-eruption product.
 

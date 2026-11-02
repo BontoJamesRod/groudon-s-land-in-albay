@@ -17,6 +17,9 @@ import { createTimeline } from "./timeline.js";
 
 const byId = (id) => document.getElementById(id);
 
+// Every script has loaded and run, so errors from here on are handled by the app (see index.html).
+window.appStarted = true;
+
 // What is on screen now.
 const app = { sites: [], site: null, map: null, pair: null, compare: null, channels: null, drawer: null, histogram: null, openRequest: 0 };
 
@@ -254,6 +257,9 @@ async function start() {
   await openSite(app.sites[0]);
 }
 
-applyPageStrings();
-setUpPanels();
-start();
+// Without Leaflet there's no map to open, and index.html has already said so.
+if (typeof L !== "undefined") {
+  applyPageStrings();
+  setUpPanels();
+  start();
+}

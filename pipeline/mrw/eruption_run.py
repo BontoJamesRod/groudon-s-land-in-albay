@@ -31,7 +31,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from mrw.config import load_site, thresholds_are_provisional
 from mrw.context import DATA_FOLDER
 from mrw.export import OUT_FOLDER, SEARCH_START, load_land, print_summary, run_pair
-from mrw.hold_check import BASELINE_PATH, build_baseline, cached_crop, hold_reasons, measure_pair, print_review, read_pair, track_agreement
+from mrw.hold_check import (BASELINE_PATH, build_baseline, cached_crop, hold_reasons, look_closer_reasons, measure_pair,
+                            print_review, read_pair, track_agreement)
 from mrw.pairs import build_track_pairs, same_gap
 from mrw.publish import publish_pair
 from mrw.search import BLIND_CUTOFF, list_all_maturities, search_gcov, search_gunw
@@ -138,18 +139,24 @@ def review(pair_ids, config, out_folder, maturities):
     """Print the hold rule's numbers for each pair and, with two tracks, how much they agree."""
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     land = load_land(SITE_ID)
+    channels = read_channel_features()
     folders = {pair_id: Path(out_folder) / "sites" / SITE_ID / "pairs" / pair_id for pair_id in pair_ids}
     held = []
     for pair_id, folder in folders.items():
         if not (folder / "pair.json").is_file():
             raise NotReady(f"Stopped: {pair_id} hasn't been processed into {out_folder}.")
-        measured = measure_pair(folder, config, land)
-        reasons = hold_reasons(measured, maturities, baseline)
-        print_review(measured, reasons, baseline)
+        measured = measure_pair(folder, config, land, channels)
+        reasons = hold_reasons(measured, maturities)
+        print_review(measured, reasons, look_closer_reasons(measured, baseline), baseline)
         if reasons:
             held.append(pair_id)
     print_tracks(pair_ids, folders, baseline)
     return held
+
+
+def read_channel_features():
+    """Read the site's published channels, for their strips."""
+    return json.loads((Path(DATA_FOLDER) / "sites" / SITE_ID / "channels.geojson").read_text(encoding="utf-8"))["features"]
 
 
 def print_tracks(pair_ids, folders, baseline):
@@ -159,10 +166,10 @@ def print_tracks(pair_ids, folders, baseline):
         return
     first, second = (read_pair(folders[pair_id])[2] for pair_id in pair_ids[:2])
     agreement = track_agreement(first, second)
-    print("The two tracks agree on this share of everything either one flagged:")
+    print("The two tracks agree on this share of everything either one flagged. This supports a decision and never blocks one.")
     print(f"  Same grid cell: {_percent(agreement['same_cell'])}. Within about 200 m: {_percent(agreement['within_about_200_m'])}.")
     for row in baseline["track_agreement"]:
-        print(f"  For comparison, {row['pairs'][0]} and {row['pairs'][1]}: "
+        print(f"  Quiet pairs {row['pairs'][0]} and {row['pairs'][1]}: "
               f"{_percent(row['same_cell'])} and {_percent(row['within_about_200_m'])}.")
 
 
@@ -243,7 +250,7 @@ def main(argv):
         elif command == "preview":
             serve_preview(build_preview(rest, DRILL_FOLDER if drill else OUT_FOLDER))
         elif command == "baseline":
-            baseline = build_baseline(DATA_FOLDER, config, load_land(SITE_ID))
+            baseline = build_baseline(DATA_FOLDER, config, load_land(SITE_ID), read_channel_features())
             BASELINE_PATH.write_text(json.dumps(baseline, indent=1) + "\n", encoding="utf-8")
             print(f"Saved {baseline['pair_count']} pairs to {BASELINE_PATH}")
         elif argv[0] == "republish":

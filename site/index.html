@@ -138,7 +138,25 @@
     <div data-body></div>
   </dialog>
 
-  <script src="vendor/leaflet-1.9.4/leaflet.js"></script>
+  <script>
+    // If a script can't load, the app can't start, and js/strings.js may be the one missing,
+    // so this text has to live here. Retry reloads the page, which asks for the scripts again.
+    function showStartFailure() {
+      document.getElementById("loading").hidden = true;
+      // The other buttons get their text from js/strings.js, and can't do anything without the app.
+      document.querySelectorAll("button").forEach((button) => { button.hidden = true; });
+      document.getElementById("app-message").textContent = "Couldn't load the map. Check your connection and try again.";
+      const retry = document.getElementById("app-retry");
+      retry.textContent = "Retry";
+      retry.hidden = false;
+      retry.onclick = () => location.reload();
+    }
+    // A script that loaded but broke while starting. main.js sets appStarted once they have all run.
+    window.addEventListener("error", () => {
+      if (!window.appStarted) showStartFailure();
+    });
+  </script>
+  <script src="vendor/leaflet-1.9.4/leaflet.js" onerror="showStartFailure()"></script>
   <script type="importmap">
 {
   "imports": {
@@ -148,7 +166,7 @@
     "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
     "./js/histogram.js": "./js/histogram.js?v=c785e7aabb",
     "./js/layers.js": "./js/layers.js?v=7fd82128db",
-    "./js/main.js": "./js/main.js?v=cef4cc6b1e",
+    "./js/main.js": "./js/main.js?v=120bc70bb4",
     "./js/map.js": "./js/map.js?v=64aa2e42da",
     "./js/marks.js": "./js/marks.js?v=954090a74a",
     "./js/panels.js": "./js/panels.js?v=d46d7dd420",
@@ -159,6 +177,6 @@
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=cef4cc6b1e"></script>
+  <script type="module" src="js/main.js?v=120bc70bb4" onerror="showStartFailure()"></script>
 </body>
 </html>

@@ -1197,3 +1197,29 @@ All five are done on `night-1`, not merged. No product from Nov 1 onward was ope
 - **VALIDATED products:** the hold rule accepts them, but the pipeline's search only recognises BETA and PROVISIONAL, so it would skip one. I left the search alone, since no product is VALIDATED today.
 - **Loading stays stuck on a failed script:** the same stuck "Loading" could reach a visitor if a script fails to load on a bad connection. The page shows no error or retry in that case. I didn't change the site.
 - **Local site command:** `python -m http.server` has the same small queue, so a busy computer could get stuck there too. The preview command uses a larger queue.
+
+# Hold rule changes, VALIDATED and load errors (T-129 to T-131, 2026-11-03)
+
+No product from Nov 1 onward was opened, and the download log is unchanged. This closes the three decisions in the section above.
+
+- **Hold rule (T-129):** automatic holds are now (a), (d) at 5% and (e). (b) now uses land more than 8 km from the summit, and (c) compares only with the 12-day pairs, and both only say "look closer". `review` prints the flagged share inside 6 km, beyond 8 km and in the channels' strips, for this pair and the published pairs, plus what change spread evenly would give. Track agreement prints next to the quiet pairs and never blocks.
+- **VALIDATED (T-130):** the search and the data contract accept it.
+- **Load errors (T-131):** a script or data file that fails to load now shows a clear error with Retry, not a stuck "Loading". TC-100 covers 5 scripts, the site list, 3 site files and the first pass.
+
+## The rule's numbers now
+
+| Check | Published pairs |
+| --- | --- |
+| (b) Median coherence change beyond 8 km | -0.169 to 0.054, from 7 pairs |
+| (c) Flagged area beyond 8 km | Highest 1.531 km², from the 10 pairs with a 12-day gap |
+| Flagged share inside 6 km | 3.3% to 27.5% |
+| Flagged share beyond 8 km | 55.6% to 87.5% |
+
+Change spread evenly would give about 36% inside 6 km and 36% beyond 8 km, on the two pairs checked.
+
+## Things to know
+
+- **The quiet pairs lean outward:** they put more of their change beyond 8 km than an even spread would. So "spread evenly" and "like the quiet pairs" aren't the same thing, and the useful test is a clear rise inside 6 km above the quiet pairs' 3.3% to 27.5%.
+- **VALIDATED wording:** the site's drawer and help text still say the products are PROVISIONAL. If a VALIDATED product is ever published, that wording needs changing.
+- **A request that never answers:** the new error covers failures. A request that hangs without failing still waits until the browser gives up.
+- **Baseline:** I rebuilt `pipeline/reports/hold-check-baseline.json` for the new measures, from the same 11 published pairs, before any post-eruption data.

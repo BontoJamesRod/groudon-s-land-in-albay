@@ -12,6 +12,7 @@ from playwright.sync_api import expect
 
 from mrw.validation import build_record, load_sheet
 
+from .test_accessibility import problems_on
 from .conftest import envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
@@ -472,3 +473,78 @@ def test_tc043_colors_stay_apart(app, deficiency):
     assert distance > 40, f"{low} and {high} are too close"
     for row in app.locator("#legend-rows li").all_inner_texts():
         assert "Confidence:" in row
+
+
+START_FAILURE = "Couldn't load the map. Check your connection and try again."
+
+
+def fail_then_allow(page, pattern):
+    """Make a file fail to load. Returns what to call so that it loads again."""
+    def fail(route):
+        route.abort()
+    page.route(pattern, fail)
+    return lambda: page.unroute(pattern, fail)
+
+
+def expect_error_with_retry(page, text):
+    expect(page.locator("#app-message")).to_have_text(text, timeout=15000)
+    expect(page.locator("#app-retry")).to_be_visible()
+    expect(page.locator("#app-retry")).to_have_text("Retry")
+    expect(page.locator("#loading")).to_be_hidden()
+
+
+@pytest.mark.parametrize("script", ["**/js/main.js*", "**/js/strings.js*", "**/js/marks.js*", "**/js/data.js*", "**/vendor/leaflet-1.9.4/leaflet.js"])
+def test_tc100_a_script_that_fails_shows_an_error_and_retry_opens_the_map(page, site_url, script):
+    prepare_page(page)
+    allow = fail_then_allow(page, script)
+    page.goto(site_url)
+    expect_error_with_retry(page, START_FAILURE)
+    allow()
+    page.click("#app-retry")
+    wait_until_ready(page)
+    expect(page.locator("#app-message")).to_be_empty()
+    expect(page.locator("#app-retry")).to_be_hidden()
+
+
+def test_tc100_the_site_list_failing_shows_an_error_and_retry_opens_the_map(page, site_url):
+    prepare_page(page)
+    allow = fail_then_allow(page, "**/data/sites.json")
+    page.goto(site_url)
+    expect_error_with_retry(page, "Couldn't load the site list. Try again.")
+    allow()
+    page.click("#app-retry")
+    wait_until_ready(page)
+    expect(page.locator("#app-retry")).to_be_hidden()
+
+
+@pytest.mark.parametrize("name", ["pairs.json", "towns.geojson", "land.geojson"])
+def test_tc100_a_site_file_failing_shows_an_error_and_retry_opens_the_map(page, site_url, name):
+    prepare_page(page)
+    allow = fail_then_allow(page, f"**/sites/mayon/{name}")
+    page.goto(site_url)
+    expect_error_with_retry(page, "Couldn't load Mayon Volcano, Albay. Try again.")
+    allow()
+    page.click("#app-retry")
+    wait_until_ready(page)
+    expect(page.locator("#app-retry")).to_be_hidden()
+
+
+def test_tc100_the_first_pass_failing_shows_an_error_and_retry_shows_it(page, site_url):
+    prepare_page(page)
+    allow = fail_then_allow(page, f"**/{LATEST_PAIR}/pair.json")
+    page.goto(site_url)
+    expect(page.locator("#timeline-message")).to_have_text("Couldn't load this pass. Try again.", timeout=15000)
+    expect(page.locator("#loading")).to_be_hidden()
+    allow()
+    open_drawer_if_closed(page)
+    page.click("#timeline-retry")
+    expect(page.locator("#timeline-message")).to_be_empty()
+    expect(page.locator(".product-label")).not_to_be_empty()
+
+
+def test_tc100_the_error_passes_axe(page, site_url):
+    prepare_page(page)
+    fail_then_allow(page, "**/js/strings.js*")
+    page.goto(site_url)
+    expect_error_with_retry(page, START_FAILURE)
+    assert problems_on(page) == []

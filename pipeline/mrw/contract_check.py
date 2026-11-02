@@ -37,7 +37,7 @@ CHANGE_TYPE = {"new_material", "ground_movement", "flood"}
 TOWN_KIND = {"city", "municipality", "other"}
 ORBIT_DIRECTION = {"ascending", "descending"}
 PRODUCT_TYPE = {"GCOV", "GUNW"}
-MATURITY = {"BETA", "PROVISIONAL"}
+MATURITY = {"BETA", "PROVISIONAL", "VALIDATED"}
 PAIR_STATUS = {"processing", "ready", "published", "failed"}
 LAYER_KIND = {"before_db", "after_db", "change_db", "coherence_loss", "new_material",
               "movement_cm", "flood_water"}

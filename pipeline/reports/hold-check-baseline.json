@@ -1,12 +1,14 @@
 {
  "site_id": "mayon",
  "outer_km": 8,
+ "near_km": 6,
  "note": "Saved before any post-eruption product was opened (ADR-014). Don't rebuild it after that.",
  "pair_count": 11,
  "pairs_with_coherence": 7,
- "median_coherence_change_low": -0.17749837040901184,
- "median_coherence_change_high": 0.04957571625709534,
- "outer_flagged_km2_high": 3.55616608027688,
+ "usual_gap_pairs": 10,
+ "far_median_coherence_change_low": -0.16861945390701294,
+ "far_median_coherence_change_high": 0.05405956506729126,
+ "outer_flagged_km2_high": 1.5306940061736318,
  "volcano_no_data_share_high": 0.000504220580180141,
  "track_agreement": [
   {
@@ -31,100 +33,243 @@
    "pair_id": "mayon_A111F008_20260621_20260703",
    "track": 111,
    "after": "2026-07-03T21:13:22Z",
+   "gap_days": 12,
    "total_km2": 2.38,
-   "median_coherence_change": null,
+   "far_median_coherence_change": null,
    "outer_flagged_km2": 1.5306940061736318,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.13291030697993483,
+     "far": 0.6398559423769508,
+     "channels": 0.03892985765734865
+    },
+    "even": {
+     "near": 0.36001599287115155,
+     "far": 0.35984744055264256,
+     "channels": 0.04395034370300298
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260703_20260715",
    "track": 111,
    "after": "2026-07-15T21:13:21Z",
+   "gap_days": 12,
    "total_km2": 1.8,
-   "median_coherence_change": null,
+   "far_median_coherence_change": null,
    "outer_flagged_km2": 1.2102780268593443,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.11986143187066975,
+     "far": 0.6812933025404158,
+     "channels": 0.029099307159353348
+    },
+    "even": {
+     "near": 0.36001599287115155,
+     "far": 0.35984744055264256,
+     "channels": 0.04394903709588275
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260715_20260727",
    "track": 111,
    "after": "2026-07-27T21:13:21Z",
+   "gap_days": 12,
    "total_km2": 1.76,
-   "median_coherence_change": -0.06244736909866333,
+   "far_median_coherence_change": -0.06310892105102539,
    "outer_flagged_km2": 1.0958144439801045,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.12707051585423568,
+     "far": 0.6320397539044014,
+     "channels": 0.024136299100804542
+    },
+    "even": {
+     "near": 0.36001599287115155,
+     "far": 0.35984744055264256,
+     "channels": 0.04394903709588275
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260727_20260820",
    "track": 111,
    "after": "2026-08-20T21:13:19Z",
+   "gap_days": 24,
    "total_km2": 4.09,
-   "median_coherence_change": null,
+   "far_median_coherence_change": null,
    "outer_flagged_km2": 3.55616608027688,
-   "volcano_no_data_share": 0.0004969656078034483
+   "volcano_no_data_share": 0.0004969656078034483,
+   "where": {
+    "flagged": {
+     "near": 0.033407347597900684,
+     "far": 0.8748486071861122,
+     "channels": 0.016855066612838112
+    },
+    "even": {
+     "near": 0.3600168290777195,
+     "far": 0.35984697037402885,
+     "channels": 0.043948979671832984
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260820_20260901",
    "track": 111,
    "after": "2026-09-01T21:13:19Z",
+   "gap_days": 12,
    "total_km2": 1.15,
-   "median_coherence_change": null,
+   "far_median_coherence_change": null,
    "outer_flagged_km2": 0.8533485748703173,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.05654338549075391,
+     "far": 0.7396870554765291,
+     "channels": 0.0387624466571835
+    },
+    "even": {
+     "near": 0.36001599287115155,
+     "far": 0.35984744055264256,
+     "channels": 0.04394903709588275
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260901_20260913",
    "track": 111,
    "after": "2026-09-13T21:13:19Z",
+   "gap_days": 12,
    "total_km2": 1.26,
-   "median_coherence_change": 0.03773665428161621,
+   "far_median_coherence_change": 0.05405956506729126,
    "outer_flagged_km2": 0.9481194983294727,
-   "volcano_no_data_share": 0.000504220580180141
+   "volcano_no_data_share": 0.000504220580180141,
+   "where": {
+    "flagged": {
+     "near": 0.05054871965414034,
+     "far": 0.7685400731626205,
+     "channels": 0.03292317924842035
+    },
+    "even": {
+     "near": 0.3600151566623984,
+     "far": 0.3598479107324849,
+     "channels": 0.043949094520082575
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260913_20260925",
    "track": 111,
    "after": "2026-09-25T21:13:19Z",
+   "gap_days": 12,
    "total_km2": 0.77,
-   "median_coherence_change": -0.0834837257862091,
+   "far_median_coherence_change": -0.0628921389579773,
    "outer_flagged_km2": 0.5226760021080694,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.08173076923076923,
+     "far": 0.6805555555555556,
+     "channels": 0.07532051282051282
+    },
+    "even": {
+     "near": 0.3600155224723065,
+     "far": 0.3598482769794419,
+     "channels": 0.043948979671832984
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20260925_20261007",
    "track": 111,
    "after": "2026-10-07T21:13:19Z",
+   "gap_days": 12,
    "total_km2": 0.86,
-   "median_coherence_change": -0.026350080966949463,
+   "far_median_coherence_change": -0.025123775005340576,
    "outer_flagged_km2": 0.652729607028209,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.047988366456616575,
+     "far": 0.7712069801260301,
+     "channels": 0.046049442559379546
+    },
+    "even": {
+     "near": 0.36001599287115155,
+     "far": 0.35984744055264256,
+     "channels": 0.04394903709588275
+    }
+   }
   },
   {
    "pair_id": "mayon_A111F008_20261007_20261019",
    "track": 111,
    "after": "2026-10-19T21:13:19Z",
+   "gap_days": 12,
    "total_km2": 0.75,
-   "median_coherence_change": 0.04957571625709534,
+   "far_median_coherence_change": 0.029599368572235107,
    "outer_flagged_km2": 0.4759059359853693,
-   "volcano_no_data_share": 0.0005005930939917946
+   "volcano_no_data_share": 0.0005005930939917946,
+   "where": {
+    "flagged": {
+     "near": 0.0773511407902059,
+     "far": 0.6455203116304953,
+     "channels": 0.07178631051752922
+    },
+    "even": {
+     "near": 0.36001599287115155,
+     "far": 0.35984744055264256,
+     "channels": 0.04394903709588275
+    }
+   }
   },
   {
    "pair_id": "mayon_D104F082_20260913_20260925",
    "track": 104,
    "after": "2026-09-25T10:16:11Z",
+   "gap_days": 12,
    "total_km2": 0.81,
-   "median_coherence_change": -0.17749837040901184,
+   "far_median_coherence_change": -0.16861945390701294,
    "outer_flagged_km2": 0.6006261123125696,
-   "volcano_no_data_share": 0.00011970704421542915
+   "volcano_no_data_share": 0.00011970704421542915,
+   "where": {
+    "flagged": {
+     "near": 0.06293359762140734,
+     "far": 0.7254707631318137,
+     "channels": 0.07581764122893954
+    },
+    "even": {
+     "near": 0.36010660535117056,
+     "far": 0.35981135033444817,
+     "channels": 0.043936820652173914
+    }
+   }
   },
   {
    "pair_id": "mayon_D104F082_20261007_20261019",
    "track": 104,
    "after": "2026-10-19T10:16:12Z",
+   "gap_days": 12,
    "total_km2": 1.65,
-   "median_coherence_change": 0.023108571767807007,
+   "far_median_coherence_change": -0.006385326385498047,
    "outer_flagged_km2": 0.9177599817235096,
-   "volcano_no_data_share": 0.00011970704421542915
+   "volcano_no_data_share": 0.00011970704421542915,
+   "where": {
+    "flagged": {
+     "near": 0.27548483341621083,
+     "far": 0.5561909497762307,
+     "channels": 0.06837394331178519
+    },
+    "even": {
+     "near": 0.36010613489478616,
+     "far": 0.35981088026379565,
+     "channels": 0.04393676325151122
+    }
+   }
   }
  ]
 }
