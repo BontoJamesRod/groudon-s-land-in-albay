@@ -159,6 +159,11 @@ No calendar is given, because weekly hours aren't known yet (02 Open Question 1)
 | T-113 | Make the radar marks smaller and lighter at the default zoom, and keep a channel's highlighted bar on the pass the map shows, scrolled into view | F-20, F-22, FR-078, FR-080, US-025, US-029, SCR-14, TC-091, TC-093 | S | T-111 | TC-091 and TC-093 pass, and no published data file changed |
 | T-114 | Add the map switcher, Panama's relief and the imagery decision to the docs | F-23, US-031, ADR-013 | S | T-113 | The new IDs resolve |
 | T-115 | Download Panama's relief data, under 300 MB with its size logged, and make its tiles | F-22, FR-076, US-028, API-015, TC-088 | S | T-114 | TC-088 passes for both sites; the size is logged |
+| T-136 | Say in the docs that the disclaimer stays always visible in short form | FR-037, US-012, SCR-01, TC-029 | S | T-131 | The docs say so, and TC-029 checks the short form |
+| T-135 | Show the full map credits at first and fold them into one line after the first map move or 5 seconds, keeping EOX visible on Satellite, and add the Copernicus notices | FR-091, US-013, TC-105 | S | T-132 | TC-105 passes |
+| T-134 | Put a short disclaimer tag in the top bar, let the desktop bottom bar slide away, and move its links into "What am I looking at?" on phones | FR-037, FR-090, US-012, TC-029, TC-104 | M | T-132 | TC-029 and TC-104 pass |
+| T-133 | Shorten the pass line, legend, area, chart and point card to one line or number each, with the explanations in info popovers | FR-089, US-005, US-008, US-027, US-004, TC-103 | M | T-132 | TC-103 passes, and every removed sentence is in a popover or the help panel |
+| T-132 | Build one reusable info popover that opens on hover, tap and keyboard, and meets WCAG 1.4.13 | FR-088, NFR-004, TC-102 | M | T-131 | TC-102 and the axe tests pass |
 | T-131 | Show a clear error with a Retry button when a script or data file fails to load, instead of a stuck "Loading" | FR-087, US-001, TC-100 | S | T-128 | TC-100 passes |
 | T-130 | Accept VALIDATED products in the search and the data contract | FR-085, ADR-014, TC-101 | S | T-126 | TC-101 passes |
 | T-129 | Change the hold rule: far-field coherence and flagged area become "look closer" checks, with where the change is concentrated printed for comparison | FR-085, ADR-014, TC-098 | S | T-126 | TC-098 passes |

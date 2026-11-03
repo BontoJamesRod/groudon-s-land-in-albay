@@ -212,7 +212,7 @@ As a visitor, I want a short explanation of the map, so that I read it correctly
 **Acceptance criteria**
 
 - **US-012/AC-1:** Given the visitor opens "What am I looking at?", when the panel shows, then it explains how radar sees, what each color means, the confidence levels, and at least 3 limitations, with a link to PHIVOLCS.
-- **US-012/AC-2:** Given any radar layer is on screen, when the visitor looks at the main screen, then the line "This is not an official warning. Follow PHIVOLCS and your LGU." is visible without opening a panel.
+- **US-012/AC-2:** Given any radar layer is on screen, when the visitor looks at the main screen, then a short form of the disclaimer, "Not an official warning · Follow PHIVOLCS", is always visible without opening a panel, and its info button shows the full line "This is not an official warning. Follow PHIVOLCS and your LGU."
 - **US-012/AC-3:** Given any screen of the app, when its text is reviewed, then no text states that a lahar, eruption or flood will happen.
 - **US-012/AC-4:** Given any screen of the app or any published file, when its text is reviewed, then no change is labeled illegal or unpermitted.
 
@@ -524,7 +524,7 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 | FR-034 | The system shall show land that became open water between two dates, with its area in km². | F-07 | US-011 |
 | FR-035 | The pipeline shall never count sea pixels as new water. | F-07 | US-011 |
 | FR-036 | The system shall provide a "What am I looking at?" panel explaining how radar sees, what each color means, the confidence levels and at least 3 limitations, with a link to PHIVOLCS. | F-08 | US-012 |
-| FR-037 | The system shall show "This is not an official warning. Follow PHIVOLCS and your LGU." on the main screen whenever a radar layer is shown. | F-08 | US-012 |
+| FR-037 | The system shall always show a short disclaimer, "Not an official warning · Follow PHIVOLCS", on the main screen whenever a radar layer is shown, with the full line "This is not an official warning. Follow PHIVOLCS and your LGU." one tap, hover or key press away. A site with its own wording names its own official source. | F-08 | US-012 |
 | FR-038 | The system shall not display any text stating that a lahar, eruption or flood will happen. | F-08 | US-012 |
 | FR-039 | The system shall list, for each radar layer of the selected pair, its product type, granule IDs, acquisition dates, maturity and a link to ASF. | F-09 | US-013 |
 | FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, with a radar source under "Radar data", and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
@@ -572,6 +572,10 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 | FR-082 | The system shall use bright overlay colours on Satellite and the Field map colours on Relief, and shall keep radar marks visible on both. | F-23 | US-031 |
 | FR-086 | When only one of a site's two tracks has a pair ready, the publish step shall be able to add a "single track" note, which the check panel shows for that pair. | F-05 | US-017 |
 | FR-085 | The pipeline shall report, before a pair is published, whether any automatic hold reason in ADR-014 applies, and whether a far-field check says to look closer. It shall print where the flagged change is concentrated, for the pair and the published pairs. A held pair isn't published, and a large area alone is never a reason to hold. When both tracks have a pair, it shall report how much they agree, which never blocks a decision. | F-05 | US-009 |
+| FR-091 | The system shall show the map credits in full when the map opens, and may fold them into one line after the first map move or tap, or after 5 seconds, with an info button that lists them all. Credits whose license asks for them to stay visible, such as the EOxCloudless imagery, shall stay in full. | F-09 | US-013 |
+| FR-090 | On a desktop, the bottom bar with "Data sources" and "How we checked this" shall slide away to a thin strip, and slide up when the pointer reaches the bottom edge or a link in it gets keyboard focus, without motion for visitors who ask for less. On a phone, those links shall be in "What am I looking at?". | F-08, F-09 | US-013, US-017 |
+| FR-089 | Each panel shall show one line or number per item: the pass, the legend's classes, the flagged area, the share flagged on the chart and the result at a tapped point. The explanations shall be in info popovers or in "What am I looking at?", and none shall be removed. The NISAR label, the danger-zone ring, the danger-zone line on a card and "Not checked" stay as they are. | F-02, F-03, F-05, F-21 | US-004, US-005, US-008, US-027 |
+| FR-088 | Info popovers shall open on hover after a short delay, on tap and on keyboard focus or Enter, and close on Escape, a tap outside or moving away. They shall meet WCAG 1.4.13: dismissible, hoverable and persistent. | F-13 | US-018 |
 | FR-087 | The system shall show a clear error with a Retry button, not a stuck loading message, when a script or data file the map needs fails to load. | F-01 | US-001 |
 | FR-084 | The system shall always show, on the map, the selected pair's NISAR products and its before and after dates, naming GCOV alone when the pair has no coherence data, and shall keep that label clear of the map credits. | F-09 | US-013 |
 | FR-083 | The system shall request imagery only while Satellite is on, shall show its credit only then, and shall show the relief under it while it loads or if it fails. | F-23 | US-031 |
@@ -609,7 +613,7 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 - [ ] All Must features meet their acceptance criteria
 - [ ] Challenge requirements R1–R8 are visibly met in the app (G-01)
 - [ ] At least 1 post-eruption pair is published (G-02)
-- [ ] The disclaimer line shows whenever a radar layer is on screen (US-012/AC-2)
+- [ ] The short disclaimer shows whenever a radar layer is on screen, with the full line in its info popover (US-012/AC-2)
 - [ ] A secret scan finds 0 secrets (NFR-002)
 - [ ] The public link and repository open in a private browser window (US-016)
 
