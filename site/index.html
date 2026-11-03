@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=4a3342d2bd">
+  <link rel="stylesheet" href="css/app.css?v=331935a894">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
@@ -16,6 +16,10 @@
       <button id="search-button" type="button" data-text="searchButton"></button>
       <button id="help-button" type="button" data-text="helpButton"></button>
     </span>
+    <div class="disclaimer-tag">
+      <span id="disclaimer-short" data-text="disclaimerShort"></span>
+      <span data-info="disclaimer"><p class="disclaimer" data-text="disclaimer"></p></span>
+    </div>
   </header>
 
   <div class="map-row">
@@ -73,8 +77,10 @@
         <select id="pair-list" data-label="radarPassList"></select>
         <button id="next" type="button" data-text="next"></button>
       </div>
-      <p id="pair-label" class="pair-label"></p>
-      <p id="pair-events" class="pair-events"></p>
+      <div class="pair-line">
+        <span id="pair-label" class="pair-label"></span>
+        <span data-info="pass"><p id="pair-detail"></p><p id="pair-events" class="pair-events"></p></span>
+      </div>
       <p id="pair-gap" class="pair-gap"></p>
       <p class="timeline-status" aria-live="polite">
         <span id="timeline-message"></span>
@@ -83,10 +89,14 @@
     </div>
     <div class="legend">
       <label class="layer-toggle"><input id="layer-toggle" type="checkbox" checked> <span id="legend-title"></span></label>
-      <p class="legend-colors" data-text="legendColors"></p>
-      <ul id="legend-rows" class="legend-rows"></ul>
-      <p id="legend-area" class="legend-area"></p>
-      <p class="channel-note" data-text="marksNote"></p>
+      <div class="legend-key">
+        <ul id="legend-rows" class="legend-rows"></ul>
+        <span data-info="legend"><p class="legend-colors" data-text="legendColors"></p><ul id="legend-full" class="legend-full"></ul><p id="legend-no-color"></p></span>
+      </div>
+      <div class="area-line">
+        <span id="legend-area" class="legend-area"></span>
+        <span data-info="area"><span id="legend-area-more"></span><p class="channel-note" data-text="marksNote"></p></span>
+      </div>
       <p id="summary" class="summary"></p>
       <p class="legend-actions">
         <button id="compare-button" type="button" data-text="compareButton"></button>
@@ -96,8 +106,10 @@
     <div class="histogram">
       <h2 class="histogram-title" data-text="histogramTitle"></h2>
       <div id="histogram-chart"></div>
-      <p id="histogram-sentence" class="histogram-sentence"></p>
-      <p id="histogram-note" class="histogram-note"></p>
+      <div class="share-line">
+        <span id="histogram-share" class="histogram-share"></span>
+        <span data-info="chart"><p id="histogram-sentence" class="histogram-sentence"></p><p id="histogram-note" class="histogram-note"></p></span>
+      </div>
     </div>
     <div id="channel-legend" class="channel-legend" hidden>
       <div id="channel-layer">
@@ -117,7 +129,6 @@
   </div>
 
   <footer class="footer">
-    <p class="disclaimer" data-text="disclaimer"></p>
     <span class="footer-links"><button id="sources-button" class="link-button" type="button" data-text="sourcesButton"></button><button id="check-button" class="link-button" type="button" data-text="checkButton"></button></span>
   </footer>
 
@@ -164,19 +175,20 @@
     "./js/compare.js": "./js/compare.js?v=992505293c",
     "./js/data.js": "./js/data.js?v=4dcc91f5d5",
     "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
-    "./js/histogram.js": "./js/histogram.js?v=c785e7aabb",
-    "./js/layers.js": "./js/layers.js?v=7fd82128db",
-    "./js/main.js": "./js/main.js?v=120bc70bb4",
-    "./js/map.js": "./js/map.js?v=64aa2e42da",
+    "./js/histogram.js": "./js/histogram.js?v=41b9d489b4",
+    "./js/layers.js": "./js/layers.js?v=3f226ddb4b",
+    "./js/main.js": "./js/main.js?v=393b841add",
+    "./js/map.js": "./js/map.js?v=ca1e65e83a",
     "./js/marks.js": "./js/marks.js?v=954090a74a",
-    "./js/panels.js": "./js/panels.js?v=d46d7dd420",
-    "./js/readout.js": "./js/readout.js?v=a8efc307b7",
+    "./js/panels.js": "./js/panels.js?v=1417279eb1",
+    "./js/popover.js": "./js/popover.js?v=120be6e61a",
+    "./js/readout.js": "./js/readout.js?v=d38c3583a3",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=f1f0b93f06",
-    "./js/timeline.js": "./js/timeline.js?v=f1f56ad0e9"
+    "./js/strings.js": "./js/strings.js?v=4caa2ba40f",
+    "./js/timeline.js": "./js/timeline.js?v=1cb7defecf"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=120bc70bb4" onerror="showStartFailure()"></script>
+  <script type="module" src="js/main.js?v=393b841add" onerror="showStartFailure()"></script>
 </body>
 </html>

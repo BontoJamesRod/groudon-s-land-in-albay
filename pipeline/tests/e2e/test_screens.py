@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from .conftest import ROOT, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import open_control, ROOT, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -31,7 +31,7 @@ def open_readout(page):
     })()""")
     box = page.locator("#map").bounding_box()
     page.mouse.click(box["x"] + point[0], box["y"] + point[1])
-    page.locator("#readout-body .readout-result").first.wait_for()
+    page.locator("#readout-body .readout-title").wait_for()
 
 
 def open_search(page):
@@ -47,7 +47,7 @@ def open_compare(page):
 
 def opener(button, panel):
     def open_panel(page):
-        page.click(button)
+        open_control(page, button)
         page.locator(f"{panel} [data-body] > *").first.wait_for()
     return open_panel
 

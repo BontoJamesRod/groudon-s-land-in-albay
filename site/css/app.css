@@ -791,8 +791,7 @@ button:disabled { color: #6e7781; }
   .drawer-closed .legend,
   .drawer-closed .histogram,
   .drawer-closed .channel-legend,
-  .drawer-closed .pair-label,
-  .drawer-closed .pair-events { display: none; }
+  .drawer-closed .pair-line { display: none; }
   .drawer-closed .timeline-status:has(#timeline-message:empty):has(#timeline-retry[hidden]) { display: none; }
   .timeline-controls select { padding: 0 4px; }
   .histogram { flex: 1 1 100%; max-width: none; }
@@ -819,5 +818,136 @@ button:disabled { color: #6e7781; }
     min-height: 44px;
     min-width: 44px;
   }
-  .footer { flex: none; font-size: 13px; }
+  /* FR-090: on a phone the bottom links are in "What am I looking at?". */
+  .footer { display: none; }
+  .panel-dialog .help-more { display: block; }
+  .disclaimer-tag { flex: 1 1 100%; justify-content: flex-start; font-size: 12px; }
+}
+
+/* T-132: the info button and its popover (FR-088). The button is a 44 px target with a small round
+   mark inside, and its negative margin keeps the line it sits on from growing. */
+.info { display: inline-block; vertical-align: middle; }
+
+.info-button {
+  width: 44px;
+  height: 44px;
+  margin: -12px -10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-glyph {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font: italic 700 12px/15px Georgia, "Times New Roman", serif;
+  text-align: center;
+}
+
+.info-button[aria-expanded="true"] .info-glyph { background: var(--ink); color: var(--paper); }
+
+.info-popover {
+  position: fixed;
+  z-index: 2000;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: left;
+  white-space: normal;
+}
+
+.info-popover p { margin: 4px 0; padding: 0; border: 0; font-size: 14px; font-weight: 400; }
+
+.info-popover ul { margin: 4px 0; padding-left: 18px; }
+
+/* T-133: one line or number per item (FR-089). */
+.pair-line, .area-line, .share-line, .legend-key, .readout-headline {
+  display: flex;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 6px 0 0;
+}
+
+.pair-label { font-weight: 600; }
+
+.legend-key .legend-rows { display: flex; gap: 16px; }
+
+.legend-full { list-style: none; padding-left: 0 !important; }
+
+.legend-full li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+
+.legend-area { font-size: 22px; font-weight: 700; }
+
+.histogram-share { font-weight: 600; }
+
+.readout-title { margin: 0; font-size: 16px; font-weight: 700; }
+
+/* T-134: the short disclaimer in the top bar (FR-037). */
+.disclaimer-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.disclaimer-tag .disclaimer { padding: 0; border: 0; }
+
+.help-more { display: none; }
+
+/* T-134: on a desktop the bottom bar slides away to a thin strip, like a taskbar, and comes up at the
+   bottom edge or when a link in it gets keyboard focus (FR-090). */
+@media (min-width: 701px) {
+  .footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1100;
+    min-height: 52px;
+    background: var(--paper);
+    transform: translateY(calc(100% - 6px));
+    transition: transform 200ms ease-out 300ms;
+  }
+  .footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--line);
+  }
+  .footer:hover, .footer:focus-within { transform: none; transition-delay: 0ms; }
+  /* The strip covers the map's bottom edge, so the credits sit just above it. */
+  .leaflet-bottom .leaflet-control-attribution { margin-bottom: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer { transition: none; }
+}
+
+/* T-135: the folded credit line (FR-091). */
+.credits-short { margin-right: 2px; }
+
+.credits-full { margin: 0; padding-left: 18px; }
+
+.leaflet-control-attribution .info-button { width: 28px; height: 28px; margin: -8px -6px; }
+
+.leaflet-control-attribution .info-glyph { width: 14px; height: 14px; font-size: 10px; line-height: 11px; }
+
+/* FR-049: on a phone, the credits' info button is a 44 px target too, without making the bar taller. */
+@media (max-width: 700px) {
+  .leaflet-control-attribution .info-button { width: 44px; height: 44px; margin: -16px -12px; position: relative; z-index: 1; }
 }

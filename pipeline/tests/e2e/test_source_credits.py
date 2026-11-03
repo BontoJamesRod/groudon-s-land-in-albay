@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import prepare_page, wait_until_ready
+from .conftest import open_footer_link, prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -23,7 +23,7 @@ def switch_to_panama(page):
 
 
 def open_sources(page):
-    page.click("#sources-button")
+    open_footer_link(page, "#sources-button")
     expect(page.locator("#sources-panel")).not_to_contain_text("Loading sources")
     return page.locator("#sources-panel")
 

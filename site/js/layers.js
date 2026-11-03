@@ -28,21 +28,36 @@ function loadImage(url) {
   });
 }
 
-function legendRow(item) {
+// One legend row: a swatch and its text. On screen the text is one word, and in the popover it's in full.
+function legendRow(item, text) {
   const row = document.createElement("li");
   const swatch = document.createElement("span");
   swatch.className = "swatch";
   swatch.style.backgroundColor = item.color;
-  const text = document.createElement("span");
-  text.textContent = STRINGS.classWithConfidence(item.label, item.confidence);
-  row.append(swatch, text);
+  const words = document.createElement("span");
+  words.textContent = text;
+  row.append(swatch, words);
   return row;
 }
 
+function paragraph(text) {
+  const item = document.createElement("p");
+  item.textContent = text;
+  return item;
+}
+
 function showLegend(elements, layer, pair, site) {
+  const text = textFor(site);
+  const km2 = pair.new_material_area_km2;
   elements.title.textContent = layer.title;
-  elements.rows.replaceChildren(...layer.legend.map(legendRow));
-  elements.area.textContent = `${textFor(site).areaUnits} ${STRINGS.totalArea(pair.new_material_area_km2)}`;
+  elements.rows.replaceChildren(...layer.legend.map((item) => legendRow(item, STRINGS.legendShort[item.confidence])));
+  elements.full.replaceChildren(...layer.legend.map((item) => legendRow(item, STRINGS.classWithConfidence(item.label, item.confidence))));
+  elements.noColor.textContent = text.helpNoColor;
+  elements.area.textContent = text.areaHeadline(km2);
+  const more = [paragraph(text.areaUnits), paragraph(STRINGS.totalArea(km2))];
+  // Basketball courts only where channel areas show them too.
+  if (text.areaCourts) more.push(paragraph(text.areaCourts(km2)), paragraph(STRINGS.channelCourtSize));
+  elements.areaMore.replaceChildren(...more);
 }
 
 // The label on the map saying which radar products made this pair, and from which dates (FR-084).

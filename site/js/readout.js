@@ -2,6 +2,7 @@
 // from the pair's value grid, entirely in the browser: nothing is sent anywhere.
 
 import { loadGrid } from "./data.js";
+import { newInfo } from "./popover.js";
 import { STRINGS, textFor } from "./strings.js";
 import { localDate } from "./timeline.js";
 
@@ -95,35 +96,44 @@ export function createReadout(elements, site, towns, channels) {
     elements.card.hidden = true;
   }
 
-  // Tapping a channel's line says which channel it is, and the towns it passes through.
-  function channelLines(channel) {
-    const names = channel.properties.town_ids.map((id) => {
-      const town = towns.features.find((item) => item.properties.id === id);
-      return town ? town.properties.name : id;
-    });
-    return [line(channel.properties.name, "readout-place"), line(STRINGS.channelTowns(names.join(", ")))];
-  }
-
-  function placeLines(lat, lon, name, channel) {
-    const lines = channel ? channelLines(channel) : [];
-    lines.push(line(name || findTown(towns, lat, lon) || STRINGS.outsideTowns, channel ? "" : "readout-place"));
-    if (site.summit_lat == null || site.summit_lon == null) return lines;
-    const km = distanceKm(lat, lon, site.summit_lat, site.summit_lon);
-    lines.push(line(STRINGS.distanceToSummit(km)));
-    if (site.danger_zone_radius_km != null) {
-      const inside = km <= site.danger_zone_radius_km;
-      lines.push(line(inside ? STRINGS.insideDangerZone : STRINGS.outsideDangerZone, inside ? "readout-danger" : ""));
+  // Where the card is: its name for the headline, lines that stay on screen, and lines for the popover.
+  // Inside the danger zone stays on screen, because it says that entry is not allowed.
+  function placeOf(lat, lon, name, channel) {
+    const place = { name: name || findTown(towns, lat, lon) || STRINGS.outsideTowns, shown: [], more: [] };
+    if (channel) {
+      // Tapping a channel's line says which channel it is, and the towns it passes through.
+      const names = channel.properties.town_ids.map((id) => {
+        const town = towns.features.find((item) => item.properties.id === id);
+        return town ? town.properties.name : id;
+      });
+      place.shown.push(line(channel.properties.name, "readout-place"));
+      place.more.push(line(STRINGS.channelTowns(names.join(", "))));
     }
-    return lines;
+    if (site.summit_lat == null || site.summit_lon == null) return place;
+    const km = distanceKm(lat, lon, site.summit_lat, site.summit_lon);
+    place.more.push(line(STRINGS.distanceToSummit(km)));
+    if (site.danger_zone_radius_km != null) {
+      if (km <= site.danger_zone_radius_km) place.shown.push(line(STRINGS.insideDangerZone, "readout-danger"));
+      else place.more.push(line(STRINGS.outsideDangerZone));
+    }
+    return place;
   }
 
+  // The result as a few words for the headline, and in full with its confidence for the popover.
   // Beyond the reach, "none" only means this map didn't look, so it must not say nothing was found.
-  function resultText(value, layer, lat, lon) {
+  function resultOf(value, layer, lat, lon) {
+    const text = textFor(site);
     const reach = site.detection_reach_km;
     if (value === NONE && reach && distanceKm(lat, lon, site.summit_lat, site.summit_lon) > reach) {
-      return [STRINGS.beyondReach(reach)];
+      return { short: STRINGS.notCheckedShort, shown: [STRINGS.beyondReach(reach)], more: [] };
     }
-    return resultLines(value, layer, textFor(site));
+    const code = value === null ? 255 : value;
+    const full = resultLines(value, layer, text);
+    if (layer.no_data_codes && layer.no_data_codes[String(code)] !== undefined) {
+      return { short: STRINGS.noDataShort(STRINGS.noDataReasons[code]), shown: [], more: full };
+    }
+    const confidence = code === NONE ? "none" : layer.legend.find((entry) => entry.value === code).confidence;
+    return { short: text.resultShort[confidence], shown: [], more: full };
   }
 
   // Only a flagged spot gets a channel line (03, Flow 3).
@@ -133,8 +143,14 @@ export function createReadout(elements, site, towns, channels) {
     return [names.length ? STRINGS.inOrNearChannel(names.join(" and ")) : STRINGS.notInChannel];
   }
 
-  function showLines(lines) {
-    elements.body.replaceChildren(...lines);
+  // The card: "Place: result" with its info button, then the lines that stay on screen.
+  function showCard(place, result, shown, more) {
+    const headline = document.createElement("div");
+    headline.className = "readout-headline";
+    const words = line(STRINGS.cardHeadline(place.name, result), "readout-title");
+    headline.append(words);
+    if (more.length) headline.append(newInfo(STRINGS.infoWhat.card, ...more));
+    elements.body.replaceChildren(headline, ...place.shown, ...shown);
     elements.card.hidden = false;
   }
 
@@ -142,23 +158,23 @@ export function createReadout(elements, site, towns, channels) {
     spot = { lat, lon, name, channel };
     request += 1;
     const thisRequest = request;
-    const place = placeLines(lat, lon, name, channel);
+    const place = placeOf(lat, lon, name, channel);
     elements.retry.hidden = true;
     // With no pair on screen there are no radar values, but the place is still useful.
     if (!pair) {
-      showLines(place);
+      showCard(place, null, [], place.more);
       return;
     }
     const shownPair = pair;
     const layer = pair.layers.find((item) => item.kind === "new_material");
-    showLines([...place, line(STRINGS.readoutLoading)]);
+    showCard(place, null, [line(STRINGS.readoutLoading)], place.more);
     let cells = gridPairId === shownPair.id ? grid : null;
     try {
       cells = cells || await loadGrid(shownPair.folder, layer);
     } catch (problem) {
       if (thisRequest !== request) return;
       console.error(problem.message);
-      showLines([...place, line(STRINGS.readoutGridError)]);
+      showCard(place, null, [line(STRINGS.readoutGridError)], place.more);
       elements.retry.hidden = false;
       return;
     }
@@ -169,10 +185,11 @@ export function createReadout(elements, site, towns, channels) {
     }
     if (thisRequest !== request) return;
     const value = gridValue(layer, cells, lat, lon);
-    const results = [...resultText(value, layer, lat, lon), ...channelResult(value, lat, lon)].map((text) => line(text, "readout-result"));
+    const result = resultOf(value, layer, lat, lon);
+    const shown = [...result.shown, ...channelResult(value, lat, lon)].map((text) => line(text, "readout-result"));
     const dates = STRINGS.pairDates(localDate(pair.before_acquired_start, site.time_zone),
       localDate(pair.after_acquired_start, site.time_zone));
-    showLines([...place, ...results, line(dates)]);
+    showCard(place, result.short, shown, [...result.more.map((text) => line(text, "readout-result")), ...place.more, line(dates)]);
   }
 
   elements.close.onclick = close;

@@ -75,7 +75,25 @@ export function fillHelp(body, getPair, site) {
     element("h3", STRINGS.helpConfidenceTitle), list(STRINGS.helpConfidence),
     element("h3", STRINGS.helpLimitsTitle), list(text.helpLimits),
     element("h3", STRINGS.helpOfficialTitle), official,
+    moreLinks(body),
   );
+}
+
+// FR-090: on a phone the bottom bar is gone, so its two links are here. The CSS shows them on phones only.
+function moreLinks(body) {
+  const holder = element("div", undefined, "help-more");
+  holder.append(element("h3", STRINGS.helpMoreTitle));
+  for (const [id, text] of [["sources-button", STRINGS.sourcesButton], ["check-button", STRINGS.checkButton]]) {
+    const button = element("button", text, "wide-button");
+    button.type = "button";
+    button.dataset.opens = id;
+    button.onclick = () => {
+      body.closest("dialog").close();
+      document.getElementById(id).click();
+    };
+    holder.append(button);
+  }
+  return holder;
 }
 
 // GUNW, GCOV and so on are in the product's name: NISAR_L2_PR_GCOV_...

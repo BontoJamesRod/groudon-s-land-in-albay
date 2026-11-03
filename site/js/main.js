@@ -10,6 +10,7 @@ import { createHistogram } from "./histogram.js";
 import { createChannelLayer, createNewMaterialLayer, showChannelLegend } from "./layers.js";
 import { createMap, RADAR_PANE, showStartView } from "./map.js";
 import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
+import { setUpInfos } from "./popover.js";
 import { createReadout } from "./readout.js";
 import { createSearch } from "./search.js";
 import { applyPageStrings, STRINGS, textFor } from "./strings.js";
@@ -120,7 +121,10 @@ function setUpPairs(map, site, siteData, readout) {
     toggle: byId("layer-toggle"),
     title: byId("legend-title"),
     rows: byId("legend-rows"),
+    full: byId("legend-full"),
+    noColor: byId("legend-no-color"),
     area: byId("legend-area"),
+    areaMore: byId("legend-area-more"),
     summary: byId("summary"),
   }, site);
   // There is nothing to compare until the first pair has loaded.
@@ -133,12 +137,14 @@ function setUpPairs(map, site, siteData, readout) {
   const siteIsShown = () => app.site === site;
   app.histogram = createHistogram({
     chart: byId("histogram-chart"),
+    share: byId("histogram-share"),
     sentence: byId("histogram-sentence"),
     note: byId("histogram-note"),
   }, site);
   return createTimeline({
     list: byId("pair-list"),
     label: byId("pair-label"),
+    detail: byId("pair-detail"),
     events: byId("pair-events"),
     gap: byId("pair-gap"),
     previous: byId("previous"),
@@ -181,6 +187,7 @@ async function showSite(site, siteData) {
   app.site = site;
   byId("site-name").textContent = site.name;
   document.querySelector(".disclaimer").textContent = textFor(site).disclaimer;
+  byId("disclaimer-short").textContent = textFor(site).disclaimerShort;
   app.drawer.siteChanged();
   const map = createMap(site, siteData, byId("background-notice"));
   app.map = map;
@@ -260,6 +267,7 @@ async function start() {
 // Without Leaflet there's no map to open, and index.html has already said so.
 if (typeof L !== "undefined") {
   applyPageStrings();
+  setUpInfos();
   setUpPanels();
   start();
 }

@@ -86,7 +86,7 @@ def test_owner_bug_compare_survives_a_pair_that_is_still_loading(app, slow_files
     slow_files[f"{OLDER_PAIR}/new_material.png"] = 1.0
     app.select_option("#pair-list", OLDER_PAIR)
     app.click("#compare-button")
-    expect(app.locator("#pair-label")).to_contain_text(ONE_SIGNAL_PAIR_LABEL, timeout=5000)
+    expect(app.locator("#pair-detail")).to_contain_text(ONE_SIGNAL_PAIR_LABEL, timeout=5000)
     app.wait_for_timeout(1000)
     expect_compare_open(app)
     expect(app.locator("#compare-before")).to_have_text("Before: Sep 26, 2026")
@@ -107,7 +107,7 @@ def test_closed_compare_stays_closed_when_the_pair_changes(app):
     expect_compare_open(app)
     app.click("#compare-close")
     app.select_option("#pair-list", OLDER_PAIR)
-    expect(app.locator("#pair-label")).to_contain_text(ONE_SIGNAL_PAIR_LABEL)
+    expect(app.locator("#pair-detail")).to_contain_text(ONE_SIGNAL_PAIR_LABEL)
     app.wait_for_timeout(300)
     expect(app.locator("#compare-view")).to_be_hidden()
 
