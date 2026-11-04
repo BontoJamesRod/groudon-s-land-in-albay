@@ -77,7 +77,7 @@ Hosting:
 | Web: `channels.js` | Channel list, channel view, bars, strip on the map | F-20 |
 | Web: `search.js` | Town suggestions and no-match message | F-02 |
 | Web: `compare.js` | Before/after divider | F-04 |
-| Web: `panels.js` | "What am I looking at?", Data sources, "How we checked this", site picker | F-08, F-09, F-10, F-12 |
+| Web: `panels.js` | "What am I looking at?", Data sources, "How we checked this" with "Tested in Panama" | F-08, F-09, F-10, F-12 |
 | Web: `strings.js` | Every piece of interface text in one place, for review against FR-038 | F-08, F-13 |
 
 ## 4. Authentication and Authorization

@@ -237,14 +237,14 @@ As a visitor or judge, I want to see exactly which NISAR products made each laye
 **Priority:** Must
 **Description:** Two pairs on the Azuero Peninsula, Panama, a quiet pair and the earthquake pair, using the same engine and the plain change map, with no channels (R7).
 
-#### US-014: Switch sites
+#### US-014: Open the Panama test
 
-As a visitor, I want to switch between Mayon and the second site, so that I can see the same method elsewhere.
+As a visitor, I want to see the same method tested in Panama, so that I can trust it works outside Mayon. Panama is evidence, not a second site to pick (owner decision, 2026-11-05).
 
 **Acceptance criteria**
 
-- **US-014/AC-1:** Given 2 published sites, when the visitor picks the other site, then the map moves to that site and shows its timeline and latest pair.
-- **US-014/AC-2:** Given the chosen site's data fails to load, when the visitor picks it, then "Couldn't load <site name>. Try again." appears with a Retry button and the previous site stays on screen.
+- **US-014/AC-1:** Given the "Tested in Panama" section of "How we checked this", when the visitor opens "Open the Panama test map", then Panama opens at its own address with its timeline and latest pair, under a thin banner that says it's a test site and links back to Mayon.
+- **US-014/AC-2:** Given the test site's data fails to load, when the visitor opens its link, then "Couldn't load <site name>. Try again." appears with a Retry button and the previous site stays on screen.
 - **US-014/AC-3:** Given a site whose map shows change in general, such as Panama, when the visitor reads its map, card and help, then they say "change" instead of "new material", name that site's official source, and the earthquake pair is titled "Changed after the earthquake" and is never called landslides.
 
 #### US-015: Add a site without code changes
@@ -495,7 +495,7 @@ As a visitor on a computer, I want a quiet page where the map and the pass's one
 
 **Acceptance criteria**
 
-- **US-032/AC-1:** Given the app opens on a desktop, then the top bar shows the app's name, the site as a chip that opens the site list, a search box button, the disclaimer as an amber pill with its info button, and a round help button whose name stays "What am I looking at?".
+- **US-032/AC-1:** Given the app opens on a desktop, then the top bar shows the app's name, the site's name as plain text, a search box button, the disclaimer as an amber pill with its info button, and a round help button whose name stays "What am I looking at?".
 - **US-032/AC-2:** Given a pair is shown, then the side column shows four cards in this order: This pass, Layers, Channels since the last pass, and Brightness change. A site with no channels has no channel card.
 - **US-032/AC-3:** Given the This pass card, then it has Previous and Next icon buttons around the pass, the pass list styled as its title, the track and the local time of the pass, the area as one big number with its unit, the basketball courts where the site shows them, a bar split into Likely and Possible with both areas under it, the gap note in a soft box, and Compare.
 - **US-032/AC-4:** Given the Layers card, then New material and Channels each have a switch, Channels says how many lines the owner checked, and the Permanent Danger Zone row says it's always shown, with no switch.
@@ -568,7 +568,7 @@ As a resident, I want to see a channel's every pass at once, so that I can tell 
 | FR-038 | The system shall not display any text stating that a lahar, eruption or flood will happen. | F-08 | US-012 |
 | FR-039 | The system shall list, for each radar layer of the selected pair, its product type, granule IDs, acquisition dates, maturity and a link to ASF. | F-09 | US-013 |
 | FR-040 | The system shall list context data separately under "Context data", each with its source and license, showing only the selected site's sources and the shared ones, with a radar source under "Radar data", and shall credit the selected site's boundary source on the map. | F-09 | US-013 |
-| FR-041 | The system shall let the visitor switch between published sites. | F-10 | US-014 |
+| FR-041 | The system shall open the second site only from the link in "Tested in Panama" (FR-100) or its own address (FR-099), with no site picker. | F-10 | US-014 |
 | FR-042 | The system shall show "Couldn't load <site name>. Try again." with a Retry button, keeping the previous site shown, when a site's data fails to load. | F-10 | US-014 |
 | FR-043 | The pipeline shall read each site's settings from one config file per site, with no code changes per site. | F-10 | US-015 |
 | FR-044 | The pipeline shall stop with "Invalid bounds in site config: <file>" when a site config has west ≥ east or south ≥ north. | F-10 | US-015 |
@@ -614,10 +614,12 @@ As a resident, I want to see a channel's every pass at once, so that I can tell 
 | FR-085 | The pipeline shall report, before a pair is published, whether any automatic hold reason in ADR-014 applies, and whether a far-field check says to look closer. It shall print where the flagged change is concentrated, for the pair and the published pairs. A held pair isn't published, and a large area alone is never a reason to hold. When both tracks have a pair, it shall report how much they agree, which never blocks a decision. | F-05 | US-009 |
 | FR-097 | The redesigned app shall read every number and name it shows from the published data files and the strings file, with nothing typed into the page, so that a newly published pair shows in it with no change to the pipeline. | F-24 | US-032 |
 | FR-098 | The top bar shall show the owner's logo, about 24 px, beside the app's name on desktops and phones, hidden from screen readers because the name sits next to it. Every page shall use the logo as its browser-tab icon, with a 32 px PNG fallback and an apple-touch icon. | F-24 | US-032 |
+| FR-099 | The app shall open Mayon by default and the Panama test site at its own address, `?site=panama`, under a thin banner, "Test site: Panama. It shows our method works outside Mayon.", with a "← Back to Mayon" link. Panama shall keep its own wording, official source and credits. | F-10 | US-014 |
+| FR-100 | "How we checked this" shall end, on Mayon, with a short "Tested in Panama" section: the same method ran unchanged after the earthquake on the Azuero Peninsula; more land changed after it than in the quiet pair, with both areas read from Panama's published records; the result matches the University of Panama's map at a scale of a few km; and a link, "Open the Panama test map". | F-10 | US-014, US-017 |
 | FR-096 | A channel's page shall show "All channels", the name and towns, the selected pass's area and courts with how the strip is counted, a chart with one bar button per published pair on the shared scale (selected in the accent colour, the other track lighter, an unequal gap dashed and hollow), a newest-first list with the selected row tinted, a "Not checked" card when the channel runs past the reach, and the channel's sources. | F-24 | US-034 |
 | FR-095 | On a phone, the details shall be in a sheet under the map with a grab handle. Closed, it shall show the pass, the big number, the Likely and Possible bar, the first 3 channels and a link to show the rest, and leave the map at least 45% of the screen. Open, it shall show everything. A channel's page shall open in the same sheet. Folded map credits shall sit behind a Credits button, except the EOxCloudless credit on Satellite. | F-24 | US-033 |
 | FR-094 | On a desktop, the side column shall show four cards: This pass, Layers, Channels since the last pass, and Brightness change. The channel list shall always be open there, with no Channels button, and a site with no channels shall have no channel card. The Permanent Danger Zone shall have no switch. | F-24 | US-032 |
-| FR-093 | The top bar shall show the app's name, the site as a chip that opens the site list, a search box button, the short disclaimer as an amber pill with its info button, and a round help button named "What am I looking at?". On a phone, search shall be a 44 px magnifier button and the disclaimer a full-width strip under the top bar. | F-24 | US-032, US-033, US-012 |
+| FR-093 | The top bar shall show the app's name, the site's name as plain text with no box or arrow, a search box button, the short disclaimer as an amber pill with its info button, and a round help button named "What am I looking at?". On a phone, search shall be a 44 px magnifier button and the disclaimer a full-width strip under the top bar. | F-24 | US-032, US-033, US-012 |
 | FR-092 | The app shall use the calm design's colours, the vendored IBM Plex Sans only, white cards with 12 px corners and thin lines, switches for layer toggles, a white segmented Relief or Satellite control, white map controls and a white product label pill. The map's own colours shall not change, and every text and control colour shall meet WCAG AA contrast. | F-24 | US-032 |
 | FR-091 | The system shall show the map credits in full when the map opens, and may fold them into one line after the first map move or tap, or after 5 seconds, with an info button that lists them all. Credits whose license asks for them to stay visible, such as the EOxCloudless imagery, shall stay in full. | F-09 | US-013 |
 | FR-090 | On a desktop, the bottom bar with "Data sources" and "How we checked this" shall slide away to a thin strip, and slide up when the pointer reaches the bottom edge or a link in it gets keyboard focus, without motion for visitors who ask for less. On a phone, those links shall be in "What am I looking at?". | F-08, F-09 | US-013, US-017 |

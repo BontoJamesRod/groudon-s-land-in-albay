@@ -17,7 +17,7 @@ Layout approach, Suggestion: mobile-first. One full-screen map with a top bar (s
 | SCR-05 | "What am I looking at?" panel | Explain radar, colors, confidence, limitations, official sources | Visitor | US-012 | Yes |
 | SCR-06 | Data sources panel | Radar products and context data behind every layer | Visitor | US-013, US-023 | Yes |
 | SCR-07 | "How we checked this" panel | Validation of a pair against an independent source | Visitor | US-017 | Yes |
-| SCR-08 | Site picker | Switch between published sites | Visitor | US-014 | Yes |
+| SCR-08 | Test site banner | Says Panama is a test of the method and links back to Mayon | Visitor | US-014 | Yes |
 | SCR-09 | Page not found | Recover from a wrong link | Visitor | US-016 | Yes |
 | SCR-10 | Point history | Chart of a spot across every pair | Visitor | US-019 | No |
 | SCR-11 | Language menu | Switch the interface language | Visitor | US-020 | No |
@@ -36,7 +36,7 @@ flowchart LR
     SCR01 --> SCR05["SCR-05 What am I looking at"]
     SCR01 --> SCR06["SCR-06 Data sources"]
     SCR01 --> SCR07["SCR-07 How we checked this"]
-    SCR01 --> SCR08["SCR-08 Site picker"]
+    SCR07 --> SCR08["SCR-08 Test site banner"]
     SCR08 --> SCR01
     SCR01 --> SCR13["SCR-13 Channel list"]
     SCR13 --> SCR14["SCR-14 Channel view"]
@@ -143,16 +143,16 @@ flowchart TD
     C --> H(["Map stays as it was"])
 ```
 
-### Flow 6: Switch site (US-014)
+### Flow 6: Open the Panama test (US-014)
 
 ```mermaid
 flowchart TD
-    A(["Tap the site name"]) --> B["SCR-08 Site picker"]
-    B --> C["Pick a site"]
+    A(["Open How we checked this"]) --> B["Tested in Panama"]
+    B --> C["Open the Panama test map"]
     C --> D{"Site data loads?"}
     D -- No --> E["Message: Could not load site, with Retry"]
     E --> F(["Previous site stays shown"])
-    D -- Yes --> G["Map moves to the site, latest pair selected"]
+    D -- Yes --> G["Panama at ?site=panama, latest pair selected, SCR-08 banner on top"]
     G --> H(["Done"])
 ```
 
@@ -227,7 +227,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 
 | Element | Type | Behavior and validation |
 | --- | --- | --- |
-| Site name button | Button | Shows the current site's name; opens SCR-08 |
+| Site name | Text | Shows the current site's name as plain text; there's no site picker (FR-099) |
 | Search button | Button | Opens SCR-03 |
 | Help button | Button | Opens SCR-05 |
 | Map | Map | Pan and zoom between the site's minimum and maximum zoom (US-002/AC-1, US-002/AC-2) |
@@ -261,7 +261,6 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Press Next on the latest pair | "This is the latest pass" | SCR-01 |
 | Pick a pair | Layers and label update | SCR-01 |
 | Tap Compare | Compare view opens | SCR-04 |
-| Tap the site name | Site picker opens | SCR-08 |
 | Tap Channels | Channel list opens | SCR-13 |
 
 **States**
@@ -448,6 +447,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | --- | --- | --- |
 | Source line | Text | Source name, date and link (US-017/AC-1) |
 | Validation table | Table | Place, reported by the source (yes or no), detected by the app (yes, no, not visible to radar), note (US-017/AC-1) |
+| Tested in Panama | Section | On Mayon only: the method ran unchanged in Panama, the two areas from Panama's records, the match at a scale of a few km, and "Open the Panama test map", which opens SCR-08 (FR-100) |
 | Close | Button | Returns to the map |
 
 **Actions**
@@ -466,9 +466,9 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Error | Suggestion: "Couldn't load this check. Try again." with a Retry button |
 | Success | Source line and table |
 
-### SCR-08: Site picker
+### SCR-08: Test site banner
 
-**Purpose:** Switch sites.
+**Purpose:** Show Panama as a test of the method, not a second site to pick (owner decision, 2026-11-05; it replaces the site picker).
 **Roles:** Visitor
 **Stories:** US-014
 
@@ -476,24 +476,21 @@ Sites with no channel data, such as Panama, show no Channels button.
 
 | Element | Type | Behavior and validation |
 | --- | --- | --- |
-| Site list | List | Every published site with its name and country (US-014/AC-1) |
-| Close | Button | Returns to the map |
+| Banner | Text | A thin line at the top of the Panama page: "Test site: Panama. It shows our method works outside Mayon." (FR-099) |
+| Back to Mayon | Link | "← Back to Mayon", at least 44 px tall on a phone |
 
 **Actions**
 
 | Action | Result | Goes to |
 | --- | --- | --- |
-| Pick a site | Map moves to the site with its latest pair | SCR-01 |
-| Tap Close | Picker closes | SCR-01 |
+| Tap "← Back to Mayon" | Mayon opens at the app's plain address | SCR-01 |
 
 **States**
 
 | State | What the user sees |
 | --- | --- |
-| Empty | Suggestion: "No sites available yet" |
-| Loading | "Loading sites…" |
-| Error | Picking a site that fails: "Couldn't load <site name>. Try again." with a Retry button; previous site stays (US-014/AC-2). Site list itself fails, Suggestion: "Couldn't load the site list. Try again." with a Retry button |
-| Success | The site list |
+| Error | Panama fails to load: "Couldn't load <site name>. Try again." with a Retry button; Mayon stays if it was on screen (US-014/AC-2). The site list itself fails, Suggestion: "Couldn't load the site list. Try again." with a Retry button |
+| Success | Panama's map under the banner |
 
 ### SCR-09: Page not found
 
