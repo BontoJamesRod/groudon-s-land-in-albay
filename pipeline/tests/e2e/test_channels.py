@@ -7,7 +7,7 @@ from playwright.sync_api import expect
 from shapely import contains_xy
 from shapely.geometry import shape
 
-from .conftest import SITE, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import open_footer_link, SITE, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import card, controls_too_small, map_center, map_zoom, tap_at
 
@@ -112,7 +112,7 @@ def test_tc047_legend_and_data_sources_name_the_channel_sources(app):
     expect(legend).to_contain_text("PHIVOLCS")
     expect(legend).to_contain_text("OpenStreetMap")
     expect(legend).to_contain_text("ODbL")
-    app.click("#sources-button")
+    open_footer_link(app, "#sources-button")
     context = app.locator("#sources-panel h3:has-text('Context data') + ul")
     expect(context).to_contain_text("Channel names")
     expect(context).to_contain_text("Channel lines")
@@ -328,7 +328,7 @@ def test_the_list_fits_a_phone(page, site_url):
     assert controls_too_small(page) == []
     assert page.locator("#map").bounding_box()["height"] >= 200
     expect(page.locator("#panel")).to_be_hidden()
-    expect(page.locator(".disclaimer")).to_be_in_viewport()
+    expect(page.locator("#disclaimer-short")).to_be_in_viewport()
     page.click("#channel-close")
     expect(page.locator("#panel")).to_be_visible()
 
@@ -343,8 +343,12 @@ def test_the_top_bar_keeps_two_rows_with_a_wider_font(page, site_url, width):
     prepare_page(page, width=width, height=740)
     page.goto(site_url)
     wait_until_ready(page)
+    assert page.locator(".disclaimer-tag").bounding_box()["height"] <= 24  # the short disclaimer: one line
     page.add_style_tag(content="* { letter-spacing: 1px !important; }")
-    assert page.locator(".topbar").bounding_box()["height"] < 110
+    top = page.locator(".topbar").bounding_box()["y"]
+    tag = page.locator(".disclaimer-tag").bounding_box()
+    assert tag["y"] - top < 110  # the title and the buttons: two rows
+    assert tag["height"] <= 40  # a very wide font may wrap the short disclaimer, but no more than once
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
     for button in ("#channels-button", "#search-button", "#help-button"):
         box = page.locator(button).bounding_box()
@@ -517,7 +521,7 @@ def test_the_view_fits_a_phone(page, site_url):
     assert controls_too_small(page) == []
     assert page.locator("#map").bounding_box()["height"] >= 200
     expect(strip_paths(page)).to_have_count(1)
-    expect(page.locator(".disclaimer")).to_be_in_viewport()
+    expect(page.locator("#disclaimer-short")).to_be_in_viewport()
 
 
 def test_axe_on_the_view(app):

@@ -12,6 +12,11 @@ export function localDate(utcText, timeZone) {
     .format(new Date(utcText));
 }
 
+// A day without its year, for the short pass line: "Sep 27".
+function shortDate(utcText, timeZone) {
+  return new Intl.DateTimeFormat("en-PH", { timeZone, month: "short", day: "numeric" }).format(new Date(utcText));
+}
+
 // The same day as YYYY-MM-DD, so it can be compared with an event's date.
 function localIsoDate(utcText, timeZone) {
   return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" })
@@ -57,8 +62,11 @@ export function createTimeline(elements, site, pairs, events, siteIsShown, onSel
   function showSelected() {
     const pair = pairs[selected];
     elements.list.value = pair.id;
-    elements.label.textContent = pairLabel(pair, timeZone);
     const names = eventsInPair(pair, events, timeZone).map((event) => event.name);
+    // One short line on screen, and the full dates, time zone, track and frame in its popover.
+    elements.label.textContent = STRINGS.pairShort(shortDate(pair.before_acquired_start, timeZone),
+      shortDate(pair.after_acquired_start, timeZone), names.join(", "));
+    elements.detail.textContent = pairLabel(pair, timeZone);
     elements.events.textContent = names.length ? STRINGS.eventInPeriod(names.join(", ")) : "";
     elements.gap.textContent = gapNote(pair) || "";
     elements.list.classList.toggle("pair-dim", gapNote(pair) !== null);

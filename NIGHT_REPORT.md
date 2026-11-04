@@ -1223,3 +1223,43 @@ Change spread evenly would give about 36% inside 6 km and 36% beyond 8 km, on th
 - **VALIDATED wording:** the site's drawer and help text still say the products are PROVISIONAL. If a VALIDATED product is ever published, that wording needs changing.
 - **A request that never answers:** the new error covers failures. A request that hangs without failing still waits until the browser gives up.
 - **Baseline:** I rebuilt `pipeline/reports/hold-check-baseline.json` for the new measures, from the same 11 published pairs, before any post-eruption data.
+
+# Declutter (T-132 to T-136, 2026-11-04)
+
+Each panel now shows one line or number per item, with the rest one ⓘ away. Before and after screenshots, at desktop and phone size, are in `pipeline/out/screens/declutter/` (not committed).
+
+- **Info popover (T-132):** one reusable ⓘ button. A mouse opens it after 0.3 s, and the pointer can move onto it. A tap or Enter keeps it open. Keyboard focus opens it too. Escape, a tap outside or moving away closes it, and Escape puts the focus back on the button. Only one opens at a time. It meets WCAG 1.4.13 (dismissible, hoverable, persistent), and axe passes with each one open.
+- **One line per item (T-133):**
+  - pass: "Oct 8 – Oct 20", or "Sep 27 – Oct 9 · Earthquake" on Panama;
+  - legend: "Possible" and "Likely";
+  - area: "0.75 km² new material", or "7.72 km² changed" on Panama;
+  - chart: "0.2% flagged";
+  - card: "Legazpi City: no new material".
+  The full sentences, units, basketball courts, the "larger than life" note, confidence and passes are in the popovers. The NISAR label, the danger-zone ring, the danger-zone line on a card and "Not checked" are unchanged.
+- **Disclaimer and bottom bar (T-134):** "Not an official warning · Follow PHIVOLCS" (SINAPROC on Panama) is always in the top bar, and its ⓘ has the full line. On a desktop the bottom bar slides away to a 6 px strip. It comes up in 200 ms at the bottom edge or on keyboard focus, and doesn't move for visitors who ask for less motion. On a phone, "Data sources" and "How we checked this" are under "More" in "What am I looking at?".
+- **Map credits (T-135):** the credits show in full when the map opens. They fold into "Map data © OpenStreetMap contributors and others ⓘ" after the first map move, tap or key press, or after 5 seconds, and the ⓘ lists them all.
+- **Docs (T-136):** FR-037, US-012/AC-2, SCR-01 and TC-029 now say the disclaimer is "always visible in short form".
+- **Nothing is deleted.** Every removed sentence is in a popover or the help panel, and TC-103 checks that, including the banned words in every popover, on both sites.
+
+## What the licenses allow
+
+| Credit | Can it fold? | What I did |
+|---|---|---|
+| OpenStreetMap (ODbL) | Yes. The OSMF attribution guidelines allow collapsing after a dismiss, a map interaction or 5 seconds, if it stays findable through an "(i)" button. | Folds as above. The short line keeps "© OpenStreetMap contributors" as a link. |
+| EOxCloudless (Satellite) | **No.** Its license says the credit "must be clearly visible wherever the imagery is displayed". | **Kept in full** on Satellite, even when folded. On a phone it takes two lines. |
+| Copernicus DEM GLO-30 (Relief) | Yes. Article 6 asks for a notice on adapted data, but sets no placement rule. | **A gap fixed:** the site showed only "Relief: Copernicus DEM GLO-30", without the required "produced using Copernicus WorldDEM-30 © DLR e.V. …" notice. It's now in the credits, and the liability sentence it asks for is in `CREDITS.md`. |
+| OCHA COD-AB and geoBoundaries (CC BY / CC BY-SA) | Yes. CC licenses allow credit "in any reasonable manner". | In the popover after folding. |
+| Leaflet (BSD) | Yes | In the popover after folding. |
+
+## Decisions for you
+
+1. **The full credits on a phone:** they take about 57 px for the first 5 seconds, which is what the OSM guidelines allow. If you'd rather they fold sooner on a phone, 5 seconds is the guidelines' shortest timer, so the only earlier fold is the visitor's first touch.
+2. **EOX on Satellite** stays in full, as its license asks. If two lines on a phone feel too heavy, the only way out under that license is not to show Satellite on phones.
+3. **Copernicus notice:** please check that you're happy with the wording now on the site. It's the one Article 6 asks for.
+
+## Things to know
+
+- **Tests changed to match the new layout:** tests that clicked "Data sources" or "How we checked this" now reach them the way a visitor does (the bottom edge on a desktop, the help panel on a phone). The top-bar test now measures the two button rows above the tag and checks the tag is one line. The phone credit-size test checks the bar after it folds.
+- **A very wide font** (1 px extra letter spacing, at 320 px wide) wraps the short disclaimer onto two lines. At normal spacing it's one line from 320 px up.
+
+**Owner's decisions (2026-11-04):** keep the 5-second full credits on phones; keep Satellite on phones with the two-line EOX credit; the Copernicus notice is correct. Merged into main.

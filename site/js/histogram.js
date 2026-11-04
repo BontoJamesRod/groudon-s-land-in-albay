@@ -82,9 +82,9 @@ export function createHistogram(elements, site) {
     const row = channel && current.channels ? current.channels.find((item) => item.channel_id === channel.properties.id) : null;
     const channelRow = row && row.total_cells ? row : null;
     elements.chart.replaceChildren(draw(current.histogram, current.threshold, channelRow));
-    elements.sentence.textContent = current.histogram.flagged_cells
-      ? STRINGS.histogramSentence(current.histogram.flagged_share)
-      : STRINGS.histogramNothingFlagged;
+    const flagged = current.histogram.flagged_cells;
+    elements.share.textContent = flagged ? STRINGS.histogramShare(current.histogram.flagged_share) : STRINGS.histogramShareNone;
+    elements.sentence.textContent = flagged ? STRINGS.histogramSentence(current.histogram.flagged_share) : STRINGS.histogramNothingFlagged;
     elements.note.textContent = channelRow ? STRINGS.histogramChannelNote(channel.properties.name) : STRINGS.histogramScaleNote(site);
   }
 
@@ -107,6 +107,7 @@ export function createHistogram(elements, site) {
         console.error(problem.message);
         current = null;
         elements.chart.replaceChildren();
+        elements.share.textContent = textFor(site).histogramMissing;
         elements.sentence.textContent = textFor(site).histogramMissing;
         elements.note.textContent = "";
       }

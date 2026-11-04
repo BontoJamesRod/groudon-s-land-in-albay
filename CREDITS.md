@@ -19,7 +19,7 @@ This list is a project record, not legal advice.
 | `validation.json` in those folders | Not under CC BY 4.0: it cites other people's sources, by name and link, under their own terms |
 | `site/vendor/leaflet-1.9.4/` | BSD-2-Clause, with its own `LICENSE` file |
 | `site/vendor/ibm-plex-5.3.0/` | SIL Open Font License 1.1, IBM Corp., with its own `LICENSE` file |
-| `site/data/sites/mayon/relief/`, `site/data/sites/panama/relief/` | Copernicus DEM GLO-30 licence: made from Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018, provided under COPERNICUS by the European Union and ESA |
+| `site/data/sites/mayon/relief/`, `site/data/sites/panama/relief/` | Copernicus DEM GLO-30 licence: produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved. "The organisations in charge of the Copernicus programme by law or by delegation do not incur any liability for any use of the Copernicus WorldDEM-30". The map's credits carry the first notice |
 | `pipeline/tests/e2e/vendor/axe-core-4.14.0/` | MPL-2.0, with its own `LICENSE` files |
 
 ## Reusing the radar layers

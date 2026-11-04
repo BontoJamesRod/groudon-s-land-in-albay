@@ -100,7 +100,7 @@ def test_tc086_without_the_file_the_pair_still_shows(page, site_url):
 def test_tc086_nothing_moves_the_line_and_the_help_says_why(app):
     expect(app.locator(CHART)).to_be_visible()
     expect(app.locator('input[type="range"]')).to_have_count(0)
-    expect(app.locator('.histogram input, .histogram button, .histogram select')).to_have_count(0)
+    expect(app.locator('.histogram input, .histogram button:not(.info-button), .histogram select')).to_have_count(0)
     app.click("#help-button")
     expect(app.locator("#help-panel")).to_contain_text("The flag line can't be moved here.")
     expect(app.locator("#help-panel")).to_contain_text("before the eruption data was opened")

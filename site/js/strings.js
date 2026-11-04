@@ -31,6 +31,13 @@ export const STRINGS = {
   drawerShow: "Show legend and details (PROVISIONAL radar products, within 10 km of the summit)",
   drawerHide: "Hide legend and details",
   disclaimer: "This is not an official warning. Follow PHIVOLCS and your LGU.",
+  disclaimerShort: "Not an official warning · Follow PHIVOLCS",
+  // Info popovers (FR-088): the button says "More about" and what it explains.
+  infoLabel: (what) => `More about ${what}`,
+  infoWhat: {
+    disclaimer: "this warning", pass: "this radar pass", legend: "the colors", area: "the area",
+    chart: "the chart", card: "this spot", credits: "the map credits",
+  },
   loadingRadar: "Loading radar data…",
   backgroundUnavailable: "Background map unavailable",
   noPairs: "No radar passes processed yet for this site",
@@ -41,11 +48,15 @@ export const STRINGS = {
   pairRange: (before, after) => `${before} to ${after}`,
   pairLabel: (range, timeZone, track, frame, direction) =>
     `${range} (${timeZone}), track ${track}, frame ${frame}, ${direction}`,
+  pairShort: (before, after, names) => `${before} – ${after}${names ? ` · ${names}` : ""}`,
   optionWithEvents: (range, names) => `${range}: ${names}`,
   optionWithGap: (text, note) => `${text} (${note})`,
   gapNote: (days) => `${days}-day gap, not comparable`,
   eventInPeriod: (names) => `Event in this period: ${names}`,
   legendColors: "What each color means:",
+  legendShort: { high: "Likely", low: "Possible" },
+  areaHeadline: (km2) => `${km2.toFixed(2)} km² new material`,
+  areaCourts: (km2) => `That's ${courtsText(km2)}.`,
   areaUnits: "Areas are in km². Channel areas also show basketball courts.",
   productsWithCoherence: "GCOV + GUNW",
   productsWithoutCoherence: "GCOV",
@@ -58,7 +69,10 @@ export const STRINGS = {
   basemapLabel: "Background map",
   basemapRelief: "Relief",
   basemapSatellite: "Satellite",
-  reliefCredit: 'Relief: <a href="https://registry.opendata.aws/copernicus-dem/">Copernicus DEM GLO-30</a>',
+  reliefCredit: 'Relief: <a href="https://registry.opendata.aws/copernicus-dem/">Copernicus DEM GLO-30</a>, produced using Copernicus WorldDEM-30 &copy; DLR e.V. 2010-2014 and &copy; Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved',
+  // FR-091: the folded credit line. Everything is still listed in its popover.
+  creditsShortOsm: 'Map data <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> and others',
+  creditsShort: "Map credits",
   marksNote: "Small spots are drawn larger than life so they can be seen. The areas don't change.",
 
   // Readout card (SCR-02)
@@ -81,6 +95,10 @@ export const STRINGS = {
   beyondReach: (km) => `Not checked: this map only looks within ${km} km of the summit`,
   classWithConfidence: (label, confidence) => `${label}. Confidence: ${confidence}`,
   pairDates: (before, after) => `Radar passes: ${before} to ${after}`,
+  cardHeadline: (place, result) => (result ? `${place}: ${result}` : place),
+  resultShort: { none: "no new material", low: "possible new material", high: "likely new material" },
+  noDataShort: (reason) => `no radar data (${reason})`,
+  notCheckedShort: "not checked",
   close: "Close",
   retry: "Retry",
 
@@ -131,6 +149,7 @@ export const STRINGS = {
   helpOfficial: "For warnings and advice, follow PHIVOLCS and your LGU.",
   helpOfficialLink: "PHIVOLCS website",
   helpOfficialUrl: "https://www.phivolcs.dost.gov.ph/",
+  helpMoreTitle: "More",
 
   // Data sources (SCR-06)
   sourcesButton: "Data sources",
@@ -177,6 +196,8 @@ export const STRINGS = {
   histogramBrighter: "Brighter",
   histogramSentence: (share) => `Most of the ground barely changed. The shaded edges changed by more than the line, so they're flagged: ${shareText(share)} of the checked land.`,
   histogramNothingFlagged: "All of the checked land stayed inside the lines, so none of it is flagged.",
+  histogramShare: (share) => `${shareText(share)} flagged`,
+  histogramShareNone: "None flagged",
   histogramScaleNote: (site) => `${site.detection_reach_km ? `Land within ${site.detection_reach_km} km of the summit.` : "Land in this site."} Bar heights use a square-root scale, so the small edges can be seen.`,
   histogramChannelNote: (name) => `Thin line: the ${name} strip, scaled to its own ground. Bars: all the checked land.`,
   histogramMissing: "Brightness chart not available for this pair",
@@ -205,7 +226,11 @@ export const STRINGS = {
 const PLAIN_CHANGE = {
   drawerShow: "Show legend and details (PROVISIONAL radar products)",
   disclaimer: "This is not an official warning. Follow SINAPROC and your local authorities.",
+  disclaimerShort: "Not an official warning · Follow SINAPROC",
   areaUnits: "Areas are in km².",
+  areaHeadline: (km2) => `${km2.toFixed(2)} km² changed`,
+  areaCourts: null,
+  resultShort: { none: "no change", low: "possible change", high: "likely change" },
   nothingDetected: (before, after) => `No change detected between ${before} and ${after}`,
   noNewMaterial: "No change detected. Confidence: none",
   helpHowRadar: [

@@ -13,7 +13,7 @@ from playwright.sync_api import expect
 from mrw.validation import build_record, load_sheet
 
 from .test_accessibility import problems_on
-from .conftest import envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import SHORT_DISCLAIMER, open_control, open_footer_link, envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -71,9 +71,10 @@ def overlay_offset(page):
 
 
 def expect_disclaimer_on_screen(page):
-    locator = page.locator(".disclaimer")
-    expect(locator).to_have_text(DISCLAIMER)
-    expect(locator).to_be_in_viewport()
+    """FR-037: the short form is always on screen, and its popover holds the full line."""
+    expect(page.locator("#disclaimer-short")).to_have_text(SHORT_DISCLAIMER)
+    expect(page.locator("#disclaimer-short")).to_be_in_viewport()
+    expect(page.locator(".disclaimer")).to_have_text(DISCLAIMER)
 
 
 def test_tc001_map_opens_on_mayon(app):
@@ -206,7 +207,7 @@ def test_tc012_inside_danger_zone(app):
 
 def test_tc013_pick_an_earlier_pair(app):
     app.select_option("#pair-list", JULY_PAIR)
-    label = app.locator("#pair-label")
+    label = app.locator("#pair-detail")
     expect(label).to_have_text("Jul 4, 2026 to Jul 16, 2026 (Asia/Manila), track 111, frame 8, ascending")
     expect(app.locator(f'.leaflet-radar-pane img[src*="{JULY_PAIR}"]')).to_have_count(1)
 
@@ -251,11 +252,14 @@ def test_tc020_layer_legend_and_area_on_the_latest_pair(app):
     pair = read_data(f"sites/mayon/pairs/{LATEST_PAIR}/pair.json")
     expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
     layer = next(item for item in pair["layers"] if item["kind"] == "new_material")
-    rows = [" ".join(row.split()) for row in app.locator("#legend-rows li").all_inner_texts()]
+    rows = [" ".join(row.split()) for row in app.locator("#legend-full li").all_text_contents()]
     assert rows == [f"{item['label']}. Confidence: {item['confidence']}" for item in layer["legend"]]
+    expect(app.locator("#legend-rows li")).to_have_text(["Possible" if item["confidence"] == "low" else "Likely" for item in layer["legend"]])
     expect(app.locator(".legend")).to_contain_text("What each color means:")
-    expect(app.locator("#legend-area")).to_have_text(
-        f"Areas are in km². Channel areas also show basketball courts. Total detected area: {pair['new_material_area_km2']:.2f} km²")
+    expect(app.locator("#legend-area")).to_have_text(f"{pair['new_material_area_km2']:.2f} km² new material")
+    more = app.locator("#legend-area-more")
+    expect(more).to_contain_text("Areas are in km². Channel areas also show basketball courts.")
+    expect(more).to_contain_text(f"Total detected area: {pair['new_material_area_km2']:.2f} km²")
     expect(app.locator(".legend")).not_to_contain_text("Units:")
     expect(app.locator("#legend-title")).not_to_contain_text("PROVISIONAL")
 
@@ -288,7 +292,7 @@ def test_tc029_disclaimer_stays_on_screen(app):
     expect_disclaimer_on_screen(app)
     for button, panel in (("#help-button", "#help-panel"), ("#sources-button", "#sources-panel"),
                           ("#check-button", "#check-panel"), ("#site-name", "#picker-panel")):
-        app.click(button)
+        open_control(app, button)
         expect_disclaimer_on_screen(app)
         app.click(f"{panel} [data-close]")
         expect_disclaimer_on_screen(app)
@@ -307,7 +311,7 @@ def test_tc030_no_prediction_wording_on_the_screens(app):
 
 def test_tc031_radar_sources_on_the_latest_pair(app):
     """The doc asks for the eruption pair, which is off limits for now, so this uses the latest one."""
-    app.click("#sources-button")
+    open_footer_link(app, "#sources-button")
     panel = app.locator("#sources-panel")
     expect(panel).to_contain_text("GCOV")
     expect(panel).to_contain_text("GUNW")
@@ -321,7 +325,7 @@ def test_tc031_radar_sources_on_the_latest_pair(app):
 
 
 def test_tc032_context_sources(app):
-    app.click("#sources-button")
+    open_footer_link(app, "#sources-button")
     context = app.locator("#sources-panel h3:has-text('Context data') + ul")
     expect(context).to_be_visible()
     radar = app.locator("#sources-panel h3:has-text('Radar data') + ul")
@@ -374,7 +378,7 @@ def test_tc040_validation_table_from_a_local_fixture(app):
     app.route(f"**/{JULY_PAIR}/validation.json", lambda route: route.fulfill(body=envelope(record), content_type="application/json"))
     app.select_option("#pair-list", JULY_PAIR)
     expect(app.locator("#pair-events")).not_to_have_text("")
-    app.click("#check-button")
+    open_footer_link(app, "#check-button")
     panel = app.locator("#check-panel")
     expect(panel.locator("table tr")).to_have_count(len(record["items"]) + 1)
     expect(panel).to_contain_text(record["items"][0]["place_name"])
@@ -383,7 +387,7 @@ def test_tc040_validation_table_from_a_local_fixture(app):
 
 
 def test_tc041_no_validation(app):
-    app.click("#check-button")
+    open_footer_link(app, "#check-button")
     expect(app.locator("#check-panel")).to_contain_text("Not yet checked against an independent source")
 
 
@@ -426,7 +430,7 @@ def test_tc042_phone_layout(page, site_url):
     for button, panel in (("#search-button", "#search-panel"), ("#help-button", "#help-panel"),
                           ("#sources-button", "#sources-panel"), ("#check-button", "#check-panel"),
                           ("#site-name", "#picker-panel")):
-        page.click(button)
+        open_control(page, button)
         expect(page.locator(panel)).to_be_visible()
         assert no_sideways_scroll()
         page.wait_for_timeout(300)  # the panels' links load a moment after they open
@@ -451,7 +455,8 @@ def test_tc042_credit_link_is_a_real_44_px_target_and_still_shows(page, site_url
           return target.closest('a') !== null;
         }})()""")
         assert reached
-    # The growth is invisible: the credit bar stays small, so it doesn't cover more map.
+    # The growth is invisible: once the credits fold (FR-091), the bar is one small line, so it doesn't cover more map.
+    expect(page.locator(".credits-short")).to_have_count(1, timeout=8000)
     assert page.locator(".leaflet-control-attribution").bounding_box()["height"] < 40
 
 
@@ -471,8 +476,8 @@ def test_tc043_colors_stay_apart(app, deficiency):
     low, high = swatch_colors(app)
     distance = sum((a - b) ** 2 for a, b in zip(low, high)) ** 0.5
     assert distance > 40, f"{low} and {high} are too close"
-    for row in app.locator("#legend-rows li").all_inner_texts():
-        assert "Confidence:" in row
+    # Each color also has a word, so it never depends on color alone.
+    assert app.locator("#legend-rows li").all_inner_texts() == ["Possible", "Likely"]
 
 
 START_FAILURE = "Couldn't load the map. Check your connection and try again."

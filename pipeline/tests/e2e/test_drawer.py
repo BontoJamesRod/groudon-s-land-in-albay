@@ -71,10 +71,10 @@ def test_swipe_up_opens_and_swipe_down_closes(phone):
 
 
 def test_disclaimer_stays_on_screen_either_way(phone):
-    expect(phone.locator(".disclaimer")).to_be_in_viewport()
+    expect(phone.locator("#disclaimer-short")).to_be_in_viewport()
     phone.click("#drawer-toggle")
     expect(phone.locator(".disclaimer")).to_have_text(DISCLAIMER)
-    expect(phone.locator(".disclaimer")).to_be_in_viewport()
+    expect(phone.locator("#disclaimer-short")).to_be_in_viewport()
 
 
 def test_no_sideways_scroll_either_way(phone):

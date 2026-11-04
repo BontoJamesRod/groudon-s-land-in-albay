@@ -156,3 +156,28 @@ def latest_dates():
     """The latest pair's before and after dates, as the site writes them."""
     pair = latest_pair()
     return local_date(pair["before_acquired_start"]), local_date(pair["after_acquired_start"])
+
+
+DISCLAIMER = "This is not an official warning. Follow PHIVOLCS and your LGU."
+SHORT_DISCLAIMER = "Not an official warning · Follow PHIVOLCS"
+FOOTER_BUTTONS = ("#sources-button", "#check-button")
+
+
+def open_footer_link(page, selector):
+    """Open "Data sources" or "How we checked this" as a visitor would (FR-090). On a phone they're in
+    "What am I looking at?". On a desktop the bottom bar slides up when the pointer reaches the bottom edge."""
+    if page.viewport_size["width"] <= 700:
+        close_list_on_a_phone(page)
+        page.click("#help-button")
+        page.click(f'#help-panel .help-more button[data-opens="{selector.lstrip("#")}"]')
+        return
+    page.mouse.move(page.viewport_size["width"] / 2, page.viewport_size["height"] - 2)
+    page.click(selector)
+
+
+def open_control(page, selector):
+    """Click a control, or open a bottom-bar link the way a visitor reaches it."""
+    if selector in FOOTER_BUTTONS:
+        open_footer_link(page, selector)
+    else:
+        page.click(selector)

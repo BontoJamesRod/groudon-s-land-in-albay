@@ -2,6 +2,7 @@
 // and the layers the app draws from its own data: town borders and names, the
 // coastline and the danger-zone ring. These stay visible if the imagery fails (FR-005).
 
+import { newInfo } from "./popover.js";
 import { STRINGS } from "./strings.js";
 
 const SATELLITE_URL = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg";
@@ -292,6 +293,48 @@ export function outlinesInsideSite(shapes, site) {
   return { type: "MultiLineString", coordinates: lines };
 }
 
+// FR-091: the map credits. OpenStreetMap's attribution guidelines let them fold away after the first
+// move or tap on the map, or after 5 seconds, as long as an info button still lists them all.
+// EOX asks for its imagery credit to stay clearly visible, so it stays in full while Satellite is on.
+const CREDITS_FOLD_MS = 5000;
+const Credits = L.Control.Attribution.extend({
+  _update() {
+    if (!this._map) return;
+    const items = Object.keys(this._attributions).filter((item) => this._attributions[item]);
+    if (this.options.prefix) items.unshift(this.options.prefix);
+    if (!this._folded) {
+      this._container.innerHTML = items.join(' <span aria-hidden="true">|</span> ');
+      return;
+    }
+    const kept = items.filter((item) => item === STRINGS.satelliteCredit);
+    const short = items.includes(STRINGS.channelCredit) ? STRINGS.creditsShortOsm : STRINGS.creditsShort;
+    const line = document.createElement("span");
+    line.className = "credits-short";
+    line.innerHTML = [...kept, short].join(' <span aria-hidden="true">|</span> '); // our own text, not data
+    const full = document.createElement("ul");
+    full.className = "credits-full";
+    for (const item of items) {
+      const row = document.createElement("li");
+      row.innerHTML = item; // our own text, and the site's credit, which is escaped first
+      full.append(row);
+    }
+    this._container.replaceChildren(line, newInfo(STRINGS.infoWhat.credits, full));
+  },
+  fold() {
+    if (this._folded) return;
+    this._folded = true;
+    this._update();
+  },
+});
+
+function foldCreditsLater(map) {
+  const fold = () => map.attributionControl.fold();
+  const timer = setTimeout(fold, CREDITS_FOLD_MS);
+  map.on("unload", () => clearTimeout(timer));
+  // A visitor's own move or tap, not the map setting its start view.
+  for (const name of ["pointerdown", "wheel", "keydown"]) map.getContainer().addEventListener(name, fold, { once: true });
+}
+
 // The credit for this site's borders, as a link when the source asks for one.
 function boundaryCredit(site) {
   const text = escapeText(site.boundary_credit);
@@ -314,8 +357,10 @@ export function showStartView(map, site) {
 
 // Build the map for a site. `notice` is the "Background map unavailable" element.
 export function createMap(site, siteData, notice) {
-  const map = L.map("map", { minZoom: site.min_zoom, maxZoom: site.max_zoom })
+  const map = L.map("map", { minZoom: site.min_zoom, maxZoom: site.max_zoom, attributionControl: false })
     .setView([site.center_lat, site.center_lon], site.default_zoom);
+  map.attributionControl = new Credits().addTo(map);
+  foldCreditsLater(map);
   if (site.boundary_credit) map.attributionControl.addAttribution(boundaryCredit(site));
   map.createPane(RADAR_PANE).style.zIndex = 350;
   map.createPane(COMPARE_PANE).style.zIndex = 340;

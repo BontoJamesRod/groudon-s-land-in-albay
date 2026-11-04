@@ -3,7 +3,7 @@ import pytest
 from playwright.sync_api import expect
 
 from .test_accessibility import problems_on
-from .conftest import prepare_page, wait_until_ready
+from .conftest import open_footer_link, prepare_page, wait_until_ready
 from .test_mvp import card, tap_at
 
 pytestmark = pytest.mark.e2e
@@ -45,7 +45,9 @@ def test_tc078_the_earthquake_pair_says_changed_not_new_material(panama):
         expect(legend).not_to_contain_text(text)
     expect(panama.locator("#pair-events")).to_contain_text("Earthquake")
     # Panama has no channels, so nothing there is shown as basketball courts.
-    expect(panama.locator("#legend-area")).to_contain_text("Areas are in km². Total detected area:")
+    expect(panama.locator("#legend-area")).to_contain_text("km² changed")
+    expect(panama.locator("#legend-area-more")).to_contain_text("Areas are in km².")
+    expect(panama.locator("#legend-area-more")).to_contain_text("Total detected area:")
     expect(legend).not_to_contain_text("basketball")
 
 
@@ -78,7 +80,7 @@ def test_tc078_going_back_to_mayon_restores_its_wording(panama):
 
 
 def test_the_check_summarizes_the_comparison_and_links_the_map(panama):
-    panama.click("#check-button")
+    open_footer_link(panama, "#check-button")
     panel = panama.locator("#check-panel")
     expect(panel).to_contain_text("University of Panama")
     expect(panel).to_contain_text("It doesn't show that any one colored spot")
@@ -91,7 +93,7 @@ def test_the_check_summarizes_the_comparison_and_links_the_map(panama):
 def test_tc080_the_quiet_pair_says_what_it_was_used_for(panama):
     panama.select_option("#pair-list", QUIET)
     expect(panama.locator("#legend-title")).to_have_text("Radar change")
-    panama.click("#check-button")
+    open_footer_link(panama, "#check-button")
     panel = panama.locator("#check-panel")
     expect(panel).to_contain_text("Used as the 'before' comparison for the earthquake pair")
     expect(panel).not_to_contain_text("Not yet checked")
@@ -123,6 +125,6 @@ def test_tc079_lines_leave_out_the_clipped_edges(app, site_id, name):
 
 
 def test_axe_on_panama_with_the_check_open(panama):
-    panama.click("#check-button")
+    open_footer_link(panama, "#check-button")
     expect(panama.locator("#check-panel table")).to_be_visible()
     assert problems_on(panama) == []
