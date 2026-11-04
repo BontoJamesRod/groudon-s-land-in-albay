@@ -1,4 +1,4 @@
-"""TC-106 to TC-109: the calm design (F-24). Each test name carries its TC number."""
+"""TC-106 to TC-109 and TC-111: the calm design (F-24). Each test name carries its TC number."""
 import re
 
 import pytest
@@ -162,3 +162,31 @@ def test_tc109_axe_on_the_channel_page(page, site_url, width, height):
     if width <= 700:
         assert controls_too_small(page) == []
     assert problems_on(page) == []
+
+
+@pytest.mark.parametrize("width,height", [(1280, 800), (360, 740)])
+def test_tc111_the_top_bar_shows_the_owners_logo_hidden_from_screen_readers(page, site_url, width, height):
+    open_at(page, site_url, width, height)
+    logo = page.locator(".brand-mark")
+    expect(logo).to_be_visible()
+    expect(logo).to_have_attribute("src", "img/mrw-logo.svg")
+    expect(logo).to_have_attribute("alt", "")
+    assert logo.evaluate("(img) => img.complete && img.naturalWidth > 0")
+    box = logo.bounding_box()
+    assert 22 <= box["width"] <= 26 and 22 <= box["height"] <= 26
+
+
+def icon_links(page):
+    """Return each tab-icon link as (rel, type, full address)."""
+    return page.locator("link[rel*=icon]").evaluate_all("(links) => links.map((link) => [link.rel, link.type, link.href])")
+
+
+@pytest.mark.parametrize("path", ["", "no/such/page"])
+def test_tc111_both_pages_use_the_logo_as_the_tab_icon(page, site_url, path):
+    page.goto(site_url + path)
+    links = icon_links(page)
+    assert [(rel, kind) for rel, kind, _ in links] == [
+        ("icon", "image/svg+xml"), ("icon", "image/png"), ("apple-touch-icon", "")]
+    assert [href.rsplit("/", 1)[1] for _, _, href in links] == ["mrw-logo.svg", "favicon-32.png", "apple-touch-icon.png"]
+    for _, _, href in links:
+        assert page.request.get(href).status == 200, href

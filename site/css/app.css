@@ -1009,7 +1009,7 @@ button:disabled { color: #6e7781; }
   white-space: nowrap;
 }
 
-.brand-mark { flex: none; width: 24px; height: 24px; color: var(--accent); }
+.brand-mark { flex: none; width: 24px; height: 24px; }
 
 .site-title { flex: 0 1 auto; min-width: 0; }
 
