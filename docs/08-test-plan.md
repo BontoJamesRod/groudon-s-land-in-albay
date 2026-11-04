@@ -121,6 +121,7 @@ Fixtures used below are listed in §5.
 | TC-108 | US-033/AC-1 to AC-4 | FR-095 | The phone sheet | 1. Open at 390 × 844 and 360 × 740. 2. Measure the map with the sheet closed. 3. Read the closed sheet. 4. Open it with the link and with a swipe. 5. Wait for the credits to fold, then switch to Satellite. | The map keeps at least 45% of the screen; the closed sheet shows the pass, number, bar, 3 channels and the link; open shows everything; every target is 44 px; credits fold behind a Credits button, and EOX stays in full on Satellite | Positive | High |
 | TC-109 | US-034/AC-1 to AC-4 | FR-096 | The channel page | 1. Open Mi-isi. 2. Read the header and pass card. 3. Read the chart's bars and their names. 4. Tap a bar and a list row. 5. Read the Not checked card and source line. | One bar per pair on the shared scale; the selected bar and row follow the pair on the map; the 24-day pair is dashed and hollow and its row keeps its note; the Not checked card and sources show; axe passes | Positive | High |
 | TC-110 | US-032/AC-2 | FR-097 | A new pair in the new layout | 1. Run the eruption drill through `preview`. 2. Open the preview. | The drill's pair shows in the This pass card, the channel list and the channel page, with no change to the pipeline, and nothing is published | Positive | High |
+| TC-111 | US-032/AC-1 | FR-098 | The owner's logo | 1. Open the app at 1280 and 360 px. 2. Open `404.html`. | The top bar shows the logo at about 24 px beside the app's name, hidden from screen readers; both pages link the SVG icon, the 32 px PNG fallback and the apple-touch icon, and the files load | Positive | Medium |
 | TC-105 | US-013/AC-3 | FR-091 | Map credits | 1. Open the map and read the credits. 2. Move the map, or wait 5 seconds. 3. Open the credits' popover. 4. Switch to Satellite. | Full at first, then one line with an info button listing them all; EOX stays in full on Satellite | Positive | Medium |
 | TC-081 | US-025/AC-5 | FR-071, FR-060, SCR-01, SCR-14, TBL-03, API-005 | A channel past the reach | 1. Look at the Mi-isi line on the map. 2. Open Mi-isi. 3. Tap the part past the reach. | That part is dashed and labeled "Not checked"; the strip stops at the reach; the card says "Not checked", never "No new material detected" | Edge | High |
 
@@ -187,7 +188,7 @@ There is no staging environment in the MVP (02 §7); risky changes are checked o
 | US-029 | AC-1, AC-2, AC-3, AC-4 | TC-091 |
 | US-030 | AC-1, AC-2, AC-3 | TC-092 |
 | US-031 | AC-1, AC-2, AC-3, AC-4, AC-5 | TC-094, TC-095 |
-| US-032 | AC-1, AC-2, AC-3, AC-4, AC-5, AC-6 | TC-106, TC-107, TC-110 |
+| US-032 | AC-1, AC-2, AC-3, AC-4, AC-5, AC-6 | TC-106, TC-107, TC-110, TC-111 |
 | US-033 | AC-1, AC-2, AC-3, AC-4 | TC-108 |
 | US-034 | AC-1, AC-2, AC-3, AC-4 | TC-109 |
 
