@@ -1013,6 +1013,9 @@ button:disabled { color: #6e7781; }
 
 .site-title { flex: 0 1 auto; min-width: 0; }
 
+/* Until a site has loaded there's no name to show, and the app's own name is already beside it. */
+.site-name:empty { display: none; }
+
 /* The down arrow is drawn by the border, so it adds nothing to the button's name. */
 .site-name {
   position: relative;

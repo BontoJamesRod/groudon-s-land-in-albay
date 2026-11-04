@@ -1263,3 +1263,82 @@ Each panel now shows one line or number per item, with the rest one ⓘ away. Be
 - **A very wide font** (1 px extra letter spacing, at 320 px wide) wraps the short disclaimer onto two lines. At normal spacing it's one line from 320 px up.
 
 **Owner's decisions (2026-11-04):** keep the 5-second full credits on phones; keep Satellite on phones with the two-line EOX credit; the Copernicus notice is correct. Merged into main.
+
+# Plan 8: the calm redesign (T-137 to T-142, 2026-11-04)
+
+The app now has the calm look from `plans/calm/`. Only `site/`, the tests and the docs changed: no pipeline code, data file, publish rule, hold rule or `BLIND_CUTOFF`. No product from Nov 1 onward was opened. I checked ASF before each push, and the Oct 31 passes on tracks 104 and 111 still weren't there.
+
+## What was built
+
+- **The look (T-138):** a warm off-white page and white cards with thin lines, using the colour tokens from the plan. Text uses the site's own IBM Plex Sans, and numbers line up. The layer toggles are switches, Relief or Satellite is a white segmented control, and the zoom buttons are white. The NISAR label is a white pill with a small radar mark. Info buttons are a plain "i" in a ring, and popovers are white cards. When the desktop bottom bar is down, only a short handle shows.
+- **The top bar:** our own volcano-and-radar mark with the app's name, the site as a chip that opens the site list, a search box, the amber disclaimer pill with its ⓘ, and a round "?" whose spoken name is still "What am I looking at?". On a phone the disclaimer is a full-width amber strip.
+- **The desktop column (T-139):** four cards.
+  - **This pass:** ‹ and › around "Oct 8 – 20, 2026", which is still the full pass list when clicked, then "Track 111 · morning pass, 5:13 AM". Under that, the big "0.75 km²", what it counts, the basketball courts, and the Likely/Possible bar with both areas. The gap note sits in a soft blue box, and Compare is here.
+  - **Layers:** switches for New material and Channels ("4 checked by eye"). The Permanent Danger Zone says "Always shown" and has no switch.
+  - **Channels since the last pass:** always open, so the Channels button is gone. Each row shows towns, km², courts and a small bar on the shared scale.
+  - **Brightness change:** the chart.
+- **The phone sheet (T-140):** the map is on top. When the sheet is closed, the map keeps at least 45% of the screen, and 60% on phones under 700 px tall. The closed sheet shows the pass, the big number, the bar and the first 3 channels, then "Show all 4 channels and layers". The open sheet shows everything, ending with the links to help, Data sources and How we checked this. A channel's page opens in the same sheet. Once the credits fold, they sit behind a Credits button, and the EOX line stays in full on Satellite.
+- **The channel page (T-141):** "‹ All channels", the name and towns, then a pass card with its own ‹ and ›, the area, courts and how the strip is counted. Below that come "Every pass since June", "Newest first", the Not checked card and the source line (name source, and the OpenStreetMap credit).
+  - The chart has one bar per pass, oldest on the left, on the shared scale. The selected pass is blue, track 104 is lighter, and the 24-day pass is dashed and hollow.
+  - In the newest-first list, the selected row is tinted, and the 24-day row keeps its note in an ⓘ.
+- **The new pair check (T-142):** I ran the runbook's drill on `mayon_A111F008_20261007_20261019`: process, contract check (0 errors), review, then the preview. The preview copy shows the pair in the new layout with no pipeline change (`drill-home-*.png`, `drill-miisi-*.png`). Nothing was published, and `site/` didn't change.
+  - ASF's search reset the connection now and then. Process and review each needed a retry.
+
+## Which phases are done
+
+All five, A to E, inside the freeze date.
+
+- **A:** pushed on its own (62f1149), and CI passed.
+- **B, C and D:** pushed together (0ea7d3a). Moving the channel list into the side column moved it into the phone sheet too, and the channel page had to take over the pass buttons. So no one of them could pass the tests without the others.
+- **E:** this report, the screenshots, and one fix found while taking them. A site that fails to load no longer shows "Mayon Radar Watch" twice in the top bar.
+
+Before each push, `pytest` and the contract check passed, and axe passed with them. 880 passed, 1 skipped.
+
+## Screenshots (in `pipeline/out/screens/calm/`, not committed)
+
+- `compare-*.png`: each mockup beside the matching screen. These are the six to look at first: desktop home, home with a popover, Mi-isi, and phone home, sheet open and Mi-isi.
+- `final-<screen>-<width>.png`, at 1280, 390 and 360 px:
+  - `home`
+  - `popover`
+  - `miisi`
+  - `gap` (Jul 28 – Aug 21, 24 days)
+  - `panama`
+  - `compare`
+  - `error` (a load error with Retry)
+  - `open` (phone sheet open, phones only)
+- `drill-home-*.png` and `drill-miisi-*.png`: the drill's preview.
+
+## What's still different from the mockups, and why
+
+1. **Search says "Find a town"**, not "Find a town or channel", because search only finds towns. (Decision 2.)
+2. **The phone top bar** shows the mark and the full site name, ending in "…" if it doesn't fit. The data has no short name like "Mayon", and the app's name doesn't fit beside it.
+3. **The phone's credits** show in full for the first 5 seconds before the Credits button, as you decided yesterday.
+4. **The sheet's handle** keeps its small line, "Show legend and details (PROVISIONAL radar products, within 10 km of the summit)". It's the only place a phone shows that the products are provisional, and a test protects it.
+5. **The NISAR label** stays bottom right, above the credits, with its full products and dates. The tests keep it clear of the credits and the map buttons.
+6. **Rows say "about 57 basketball courts"**, not "57 courts", as US-030 asks. On Mayon the big number says "new material", Mayon's own word, and on Panama it says "changed".
+7. **The Danger Zone row** says "Permanent Danger Zone (6 km) · Always shown". The mockup's "from PHIVOLCS" isn't in the data, and the switch was left out, as the plan said.
+8. **› stays active** on the latest pass, because pressing it says "This is the latest pass".
+9. **The open phone sheet** leaves the map 40% of the screen, not a thin strip, so the NISAR label stays clear of the map buttons (TC-096).
+10. **The channel page:**
+    - the pass card has its own ‹ and ›, and on a desktop the header and pass card stay at the top while the rest scrolls, so the buttons stay under the pointer (TC-093);
+    - the brightness chart stays under the page, because opening a channel adds its outline to the chart (TC-087);
+    - on a phone the top bar doesn't change to "‹ Mi-isi", and the page scrolls to the selected pass when it opens (FR-080).
+11. **The "Every pass" bars are a picture, not buttons.** Each bar is about 27 px wide, under the 44 px rule, so the newest-first rows below them are the buttons. (Decision 1.)
+12. **The desktop bottom bar** keeps our two links, "Data sources" and "How we checked this", not the mockup's four.
+
+## Decisions for you
+
+1. **Tappable bars:** the plan asks for each bar in "Every pass since June" to be a button, but at about 27 px wide they'd break the 44 px rule (FR-049). I built them as a picture, and the list rows under them do the same job. Do you want them tappable anyway, for example as a strip that scrolls sideways with 44 px bars?
+2. **Channel search:** should "Find a town" also find channels, as in the mockup? It would be a small new feature (a channel opens its page).
+
+## Things to know
+
+- **Tests changed to check the same rules in the new layout:**
+  - the list is always open, so the tests no longer press Channels or Close;
+  - list rows are read without their towns;
+  - the list is newest first;
+  - the bar widths are now the chart's bar heights;
+  - the phone tests check the 45% rule instead of "map twice the panel".
+
+  No rule lost its check. `test_calm.py` adds TC-106 to TC-109.
+- **Font:** channel areas use Plex Sans with equal-width digits, instead of Plex Mono, as the plan asks.
