@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import close_list_on_a_phone, open_drawer_if_closed, prepare_page, wait_until_ready
+from .conftest import open_channel_list, open_drawer_if_closed, prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -15,7 +15,6 @@ def phone(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
     return page
 
 
@@ -36,11 +35,13 @@ def swipe(page, from_y, to_y):
     page.mouse.up()
 
 
-def test_closed_on_a_phone_and_the_map_is_bigger_than_the_panel(phone):
+def test_closed_on_a_phone_and_the_map_keeps_45_percent(phone):
     expect(phone.locator("#drawer-toggle")).to_have_attribute("aria-expanded", "false")
     expect(phone.locator("#legend-rows")).to_be_hidden()
     expect(phone.locator("#pair-list")).to_be_visible()
-    assert height(phone, "#map") > 2 * height(phone, "#panel")
+    # FR-095: the map keeps at least 45% of the screen, and more than the sheet.
+    assert height(phone, "#map") >= 0.45 * phone.viewport_size["height"] - 1
+    assert height(phone, "#map") > height(phone, "#panel")
     assert map_size_is_current(phone)
 
 
@@ -194,11 +195,11 @@ def test_tc082_a_tall_phone_shows_the_whole_ring_beside_the_list(page, site_url)
     assert page.evaluate(TOWN_PROBLEMS) == []
 
 
-def test_a_short_phone_opens_on_the_map_with_the_list_one_tap_away(page, site_url):
+def test_a_short_phone_gives_the_map_more_room_and_the_list_stays_in_the_sheet(page, site_url):
     open_at(page, site_url, 360, 640)
-    expect(page.locator("#channel-panel")).to_be_hidden()
+    assert height(page, "#map") >= 0.6 * 640 - 1
     expect(page.locator("#pair-list")).to_be_visible()
-    page.click("#channels-button")
+    open_channel_list(page)
     expect(page.locator("#channel-body .channel-row")).to_have_count(4)
 
 

@@ -46,6 +46,27 @@ function paragraph(text) {
   return item;
 }
 
+function span(text, className) {
+  const item = document.createElement("span");
+  item.textContent = text;
+  if (className) item.className = className;
+  return item;
+}
+
+// The bar split into Likely and Possible, with both areas under it. The colours are the marks' own.
+function showConfidence(elements, layer, pair) {
+  const area = { high: pair.high_confidence_area_km2 ?? 0, low: pair.low_confidence_area_km2 ?? 0 };
+  const total = area.high + area.low;
+  const items = [...layer.legend].sort((a, b) => (a.confidence === "high" ? -1 : 1) - (b.confidence === "high" ? -1 : 1));
+  elements.bar.replaceChildren(...items.map((item) => {
+    const part = span("");
+    part.style.backgroundColor = item.color;
+    part.style.width = `${total ? (area[item.confidence] / total) * 100 : 0}%`;
+    return part;
+  }));
+  elements.key.replaceChildren(...items.map((item) => legendRow(item, STRINGS.confidenceArea(STRINGS.legendShort[item.confidence], area[item.confidence]))));
+}
+
 function showLegend(elements, layer, pair, site) {
   const text = textFor(site);
   const km2 = pair.new_material_area_km2;
@@ -53,11 +74,14 @@ function showLegend(elements, layer, pair, site) {
   elements.rows.replaceChildren(...layer.legend.map((item) => legendRow(item, STRINGS.legendShort[item.confidence])));
   elements.full.replaceChildren(...layer.legend.map((item) => legendRow(item, STRINGS.classWithConfidence(item.label, item.confidence))));
   elements.noColor.textContent = text.helpNoColor;
-  elements.area.textContent = text.areaHeadline(km2);
+  // The pass's one big number, then what it counts, then basketball courts where the site shows them.
+  elements.area.replaceChildren(span(STRINGS.areaNumber(km2), "area-value"), " ", span(STRINGS.areaUnit, "area-unit"));
+  elements.caption.textContent = text.areaCaption(site.detection_reach_km);
+  elements.courts.textContent = text.areaCourtsLine ? text.areaCourtsLine(km2) : "";
   const more = [paragraph(text.areaUnits), paragraph(STRINGS.totalArea(km2))];
-  // Basketball courts only where channel areas show them too.
-  if (text.areaCourts) more.push(paragraph(text.areaCourts(km2)), paragraph(STRINGS.channelCourtSize));
+  if (text.areaCourtsLine) more.push(paragraph(STRINGS.channelCourtSize));
   elements.areaMore.replaceChildren(...more);
+  showConfidence(elements, layer, pair);
 }
 
 // The label on the map saying which radar products made this pair, and from which dates (FR-084).
@@ -150,6 +174,7 @@ export function createChannelLayer(map, elements, channels, onTap) {
   }
   showChannelLegend(elements, "layer");
   elements.note.hidden = !channels.features.some((channel) => channel.properties.not_checked_geometry);
+  elements.count.textContent = STRINGS.channelsChecked(channels.features.length);
   // OpenStreetMap's license asks for this credit wherever its data is shown.
   map.attributionControl.addAttribution(STRINGS.channelCredit);
   elements.toggle.onchange = () => {

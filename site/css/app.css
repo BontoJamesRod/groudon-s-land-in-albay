@@ -4,11 +4,24 @@
 @font-face { font-family: "IBM Plex Sans"; font-weight: 700; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-sans-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); }
 
+/* T-138: the calm design's colours (F-24, FR-092). Every panel and the top bar use these. */
 :root {
-  --ink: #16202a;
-  --paper: #fbfaf5;
-  --line: #b9b4a4;
+  --ground: #faf9f7; /* page and side column */
+  --surface: #ffffff; /* cards, top bar, sheet, popovers */
+  --line: #e7e3dc; /* card borders and dividers, decoration only */
+  --line-strong: #cfc8bc; /* the edge of a button or a box */
+  --ink: #1c1b19;
+  --ink-2: #5f5b55; /* secondary text, section titles */
+  --ink-3: #6f6b64; /* small print, 5.0:1 on the ground */
+  --accent: #1f5a8c; /* links, selected items, switches that are on */
+  --accent-soft: #eaf1f8;
+  --accent-soft-ink: #1f4a70;
+  --warn-bg: #fdf3e4; /* the disclaimer */
+  --warn-ink: #7a4510;
+  --switch-off: #8a847b; /* 3.7:1, enough for a control */
+  --paper: var(--surface);
   --alert: #c2410c;
+  --shadow-float: 0 2px 10px rgba(28, 27, 25, 0.12), 0 1px 2px rgba(28, 27, 25, 0.08);
 }
 
 * { box-sizing: border-box; }
@@ -18,7 +31,7 @@ html, body {
   margin: 0;
   font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
-  background: var(--paper);
+  background: var(--ground);
 }
 
 body {
@@ -197,9 +210,17 @@ select {
   padding: 0 12px;
   font: inherit;
   color: var(--ink);
-  background: #ffffff;
-  border: 1px solid #6b6658;
-  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[role="slider"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 button:disabled { color: #6e7781; }
@@ -241,8 +262,6 @@ button:disabled { color: #6e7781; }
 /* The chart's colours mean one thing each: the flagged tails use the "possible new material" colour. */
 .histogram { flex: 1 1 280px; max-width: 360px; }
 
-/* Room for the whole date in the pass list beside the extra column. */
-@media (min-width: 701px) { .timeline { min-width: 350px; } }
 
 .histogram-title { margin: 12px 0 4px; font-size: 14px; font-weight: 600; }
 
@@ -723,7 +742,7 @@ button:disabled { color: #6e7781; }
 
 /* On a desktop, the channel list and the pass controls share one column beside the map. */
 .side {
-  flex: 0 0 400px;
+  flex: 0 0 380px;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -735,7 +754,6 @@ button:disabled { color: #6e7781; }
 
 @media (min-width: 701px) {
   /* Each part scrolls by itself, so that bringing a bar into view never moves the Previous and Next buttons. */
-  .side .channel-panel { flex: 0 1 auto; max-height: 60%; border-left: 0; }
   .side .panel { flex: 1 1 0; flex-direction: column; flex-wrap: nowrap; min-height: 0; overflow-y: auto; }
   .side .timeline, .side .histogram { flex: none; max-width: none; min-width: 0; }
   .side .legend, .side .channel-legend { flex: none; }
@@ -840,34 +858,38 @@ button:disabled { color: #6e7781; }
   justify-content: center;
 }
 
+/* A plain "i" in a thin ring. */
 .info-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 18px;
   height: 18px;
-  border: 1.5px solid currentColor;
+  border: 1.5px solid var(--ink-2);
   border-radius: 50%;
-  font: italic 700 12px/15px Georgia, "Times New Roman", serif;
-  text-align: center;
+  color: var(--ink-2);
+  font: 600 11px/1 "IBM Plex Sans", system-ui, sans-serif;
 }
 
-.info-button[aria-expanded="true"] .info-glyph { background: var(--ink); color: var(--paper); }
+.info-button[aria-expanded="true"] .info-glyph { border-color: var(--ink); background: var(--ink); color: var(--surface); }
 
 .info-popover {
   position: fixed;
   z-index: 2000;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--paper);
+  border-radius: 10px;
+  background: var(--surface);
   color: var(--ink);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  font-size: 14px;
+  box-shadow: 0 6px 24px rgba(28, 27, 25, 0.16), 0 1px 3px rgba(28, 27, 25, 0.1);
+  font-size: 13.5px;
   font-weight: 400;
   line-height: 1.4;
   text-align: left;
   white-space: normal;
 }
 
-.info-popover p { margin: 4px 0; padding: 0; border: 0; font-size: 14px; font-weight: 400; }
+.info-popover p { margin: 4px 0; padding: 0; border: 0; font-size: 13.5px; font-weight: 400; }
 
 .info-popover ul { margin: 4px 0; padding-left: 18px; }
 
@@ -909,29 +931,35 @@ button:disabled { color: #6e7781; }
 /* T-134: on a desktop the bottom bar slides away to a thin strip, like a taskbar, and comes up at the
    bottom edge or when a link in it gets keyboard focus (FR-090). */
 @media (min-width: 701px) {
+  /* The top 8 px is clear, so that when the bar is down only its short handle shows. The shadow
+     follows what is drawn, so it falls under the bar and the handle only. */
   .footer {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 1100;
-    min-height: 52px;
-    background: var(--paper);
-    transform: translateY(calc(100% - 6px));
+    min-height: 60px;
+    padding-top: 8px;
+    border-top: 0;
+    background: linear-gradient(to bottom, transparent 8px, var(--surface) 8px);
+    filter: drop-shadow(0 -2px 6px rgba(28, 27, 25, 0.12));
+    transform: translateY(calc(100% - 8px));
     transition: transform 200ms ease-out 300ms;
   }
   .footer::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: var(--line);
+    top: 2px;
+    left: calc(50% - 28px);
+    width: 56px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--switch-off);
   }
   .footer:hover, .footer:focus-within { transform: none; transition-delay: 0ms; }
-  /* The strip covers the map's bottom edge, so the credits sit just above it. */
-  .leaflet-bottom .leaflet-control-attribution { margin-bottom: 6px; }
+  /* The clear strip covers the map's bottom edge, so the credits sit just above it. */
+  .leaflet-bottom .leaflet-control-attribution { margin-bottom: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -950,4 +978,770 @@ button:disabled { color: #6e7781; }
 /* FR-049: on a phone, the credits' info button is a 44 px target too, without making the bar taller. */
 @media (max-width: 700px) {
   .leaflet-control-attribution .info-button { width: 44px; height: 44px; margin: -16px -12px; position: relative; z-index: 1; }
+}
+
+/* T-138: the calm look (F-24, FR-092, FR-093). Quiet like a settings page: white cards with thin
+   lines on a warm ground, one blue accent, and soft shadows only on things that float. */
+.legend-area,
+.channel-row-area,
+.channel-bar-value,
+.histogram-share { font-variant-numeric: tabular-nums; }
+
+/* The top bar: app name, the site as a chip, a search box, the disclaimer pill and help. */
+.topbar {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 56px;
+  padding: 6px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 14px;
+  border-right: 1px solid var(--line);
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.brand-mark { flex: none; width: 24px; height: 24px; }
+
+.site-title { flex: 0 1 auto; min-width: 0; }
+
+/* Until a site has loaded there's no name to show, and the app's own name is already beside it. */
+.site-name:empty { display: none; }
+
+/* The site's name is plain text: there's no site to pick (FR-099). */
+.site-name {
+  display: block;
+  max-width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* FR-099: a thin line over the Panama test site, with the way back to Mayon. */
+.test-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 12px;
+  padding: 0 16px;
+  background: var(--accent-soft);
+  color: var(--accent-soft-ink);
+  font-size: 14px;
+}
+
+.test-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--accent-soft-ink);
+  font-weight: 600;
+}
+
+/* "Tested in Panama" at the end of "How we checked this" (FR-100). */
+.tested {
+  margin-top: 20px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+/* On a phone the text wraps beside the link, so the banner stays one 44 px row. */
+@media (max-width: 700px) {
+  .test-banner { flex-wrap: nowrap; padding: 0 12px; font-size: 13px; line-height: 1.3; }
+  .test-back { flex: none; min-height: 44px; white-space: nowrap; }
+}
+
+/* Search looks like a box. It still opens the search panel. */
+.search-box {
+  margin-left: auto;
+  width: 248px;
+  padding-left: 38px;
+  border-color: var(--line);
+  background: var(--ground) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%235f5b55' stroke-width='1.6'%3E%3Ccircle cx='6.8' cy='6.8' r='5'/%3E%3Cpath d='m10.6 10.6 3.9 3.9' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 13px center;
+  color: var(--ink-3);
+  text-align: left;
+}
+
+.disclaimer-tag {
+  flex: none;
+  min-height: 32px;
+  padding: 0 6px 0 14px;
+  border-radius: 999px;
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  white-space: nowrap;
+}
+
+.disclaimer-tag .info-glyph { border-color: var(--warn-ink); color: var(--warn-ink); }
+
+.round-button {
+  flex: none;
+  width: 44px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Cards and floating panels. */
+.floating-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 6px 24px rgba(28, 27, 25, 0.16), 0 1px 3px rgba(28, 27, 25, 0.1);
+}
+
+.panel-dialog { border-radius: 12px; background: var(--surface); color: var(--ink); }
+
+.panel-dialog header { background: var(--surface); }
+
+.panel-dialog a,
+.link-button { color: var(--accent); }
+
+@media (min-width: 701px) {
+  .side { background: var(--ground); }
+  .side .panel { gap: 12px; padding: 12px 16px 16px; border-top: 0; }
+}
+
+.channel-row,
+.channel-bar[aria-current] { border-radius: 8px; }
+
+.channel-bar[aria-current] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+
+/* Layer switches: the label on the left, the switch on the right, and the whole row is the target. */
+.layer-toggle { justify-content: space-between; gap: 12px; cursor: pointer; }
+
+.layer-toggle input[role="switch"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 24px;
+  margin: 0;
+  border-radius: 12px;
+  background: var(--switch-off);
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.layer-toggle input[role="switch"]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform 150ms ease-out;
+}
+
+.layer-toggle input[role="switch"]:checked { background: var(--accent); }
+
+.layer-toggle input[role="switch"]:checked::before { transform: translateX(16px); }
+
+.layer-toggle input[role="switch"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* In forced colours the switch keeps an edge and its knob. */
+@media (forced-colors: active) {
+  .layer-toggle input[role="switch"] { border: 1px solid CanvasText; }
+  .layer-toggle input[role="switch"]::before { background: CanvasText; }
+}
+
+/* Map controls: white, rounded, with a soft shadow. */
+.leaflet-touch .leaflet-bar,
+.leaflet-bar {
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: var(--shadow-float);
+}
+
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a { color: var(--ink); background: var(--surface); border-bottom: 1px solid var(--line); }
+
+.leaflet-touch .leaflet-bar a:first-child,
+.leaflet-touch .leaflet-bar a:last-child { border-radius: 0; }
+
+/* Relief or Satellite: a white segmented control, and the one that's on is dark. */
+.basemap-switcher {
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+}
+
+.leaflet-container .basemap-button,
+.leaflet-container .basemap-button:first-child,
+.leaflet-container .basemap-button:last-child {
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 600;
+}
+
+.leaflet-container .basemap-button[aria-pressed="true"] { color: #ffffff; background: var(--ink); }
+
+/* The NISAR label: a white pill with a small radar mark. */
+.leaflet-container .leaflet-control.product-label {
+  position: relative;
+  padding: 5px 12px 5px 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  text-align: left;
+}
+
+.leaflet-container .leaflet-control.product-label::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%231f5a8c' stroke-width='1.3' stroke-linecap='round'%3E%3Ccircle cx='6' cy='6' r='1.4' fill='%231f5a8c' stroke='none'/%3E%3Cpath d='M3.2 3.2a4 4 0 0 0 0 5.6M8.8 3.2a4 4 0 0 1 0 5.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+@media (max-width: 1180px) {
+  .brand { padding-right: 0; border-right: 0; }
+  .brand-name { display: none; }
+}
+
+@media (max-width: 980px) {
+  .search-box { width: 44px; padding: 0; background-position: center; }
+  .search-box-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* On a phone: the mark without the name, a magnifier for search, and the disclaimer as a strip. */
+@media (max-width: 700px) {
+  .topbar { flex-wrap: wrap; gap: 8px; padding: 4px 12px 0; }
+  .site-title { flex: 1 1 0; }
+  .site-name { width: 100%; }
+  .brand { padding-right: 0; border-right: 0; }
+  .brand-name { display: none; }
+  .search-box { width: 44px; padding: 0; background-position: center; }
+  .search-box-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .disclaimer-tag {
+    order: 10;
+    flex: 1 1 100%;
+    justify-content: center;
+    min-height: 0;
+    margin: 0 -12px;
+    padding: 4px 12px;
+    border-radius: 0;
+    border-top: 1px solid var(--line);
+    white-space: normal;
+  }
+}
+
+/* T-139: the side column's cards (F-24, FR-094). */
+.panel { display: block; font-size: 14px; }
+
+.section-title {
+  margin: 18px 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.home-only > .section-title:first-child { margin-top: 4px; }
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.chevron {
+  display: inline-block;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}
+
+.chevron-back { transform: translateX(2px) rotate(45deg); }
+
+.chevron-next { transform: translateX(-2px) rotate(-135deg); }
+
+.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; padding: 0; }
+
+/* This pass: ‹ the pass › on top, then the big number. */
+.pass-head {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pass-title { min-width: 0; text-align: center; }
+
+.pass-pick { position: relative; display: flex; align-items: center; justify-content: center; min-height: 44px; border-radius: 8px; }
+
+.pair-label { margin: 0; font-size: 16px; font-weight: 700; }
+
+.pass-pick:has(.pair-dim) .pair-label { color: var(--ink-2); }
+
+.pass-pick select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.pass-pick:has(select:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (hover: hover) {
+  .pass-pick:hover { background: var(--ground); }
+}
+
+.pair-line { justify-content: center; margin: 0; color: var(--ink-2); font-size: 13px; }
+
+.timeline-status { margin: 0; padding: 0 16px; }
+
+.timeline-status:has(#timeline-message:empty):has(#timeline-retry[hidden]) { display: none; }
+
+.pass-numbers { padding: 12px 16px 16px; }
+
+.area-number { margin: 0; }
+
+.legend-area { font-size: 34px; font-weight: 700; line-height: 1.15; }
+
+.area-unit { font-size: 15px; font-weight: 400; color: var(--ink-2); }
+
+.area-line { margin: 0; color: var(--ink-2); font-size: 14px; }
+
+.area-courts { margin: 8px 0 0; font-size: 13px; color: var(--ink-3); }
+
+.area-courts:empty { display: none; }
+
+.confidence-bar {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--line);
+}
+
+.confidence-bar > span { display: block; height: 100%; }
+
+.confidence-bar > span[style*="width: 0%"] { display: none; }
+
+.confidence-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.confidence-key li,
+.legend-rows li { display: flex; align-items: center; gap: 6px; }
+
+.confidence-key .swatch,
+.legend-rows .swatch { width: 9px; height: 9px; border-radius: 50%; }
+
+.soft-note {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--accent-soft-ink);
+  background: var(--accent-soft);
+}
+
+.soft-note:empty { display: none; }
+
+.quiet-button { font-weight: 600; }
+
+.legend-actions { margin-top: 14px; }
+
+/* Layers: a switch for each layer, and the ring's row says it's always shown. */
+.layer-row { padding: 4px 16px 12px; border-top: 1px solid var(--line); }
+
+.layer-row:first-child { border-top: 0; }
+
+.layer-row .layer-toggle { min-height: 44px; font-weight: 400; font-size: 15px; }
+
+.legend-key { margin: -6px 0 0; font-size: 13px; color: var(--ink-2); }
+
+.legend-key .legend-rows { gap: 14px; }
+
+.layer-sub { font-size: 13px; color: var(--ink-2); }
+
+.zone-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding-top: 6px; }
+
+.zone-row .layer-name { font-size: 15px; }
+
+/* Channels since the last pass: always open beside the map. */
+.channel-panel,
+.side .channel-panel {
+  flex: none;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+
+.channel-header {
+  position: static;
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+.channel-title-line { display: flex; align-items: center; gap: 6px; margin: 18px 4px 8px; }
+
+.channel-header h2,
+#channel-title { flex: none; margin: 0; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+
+.channel-lead { margin: 4px 0; font-weight: 600; }
+
+.channel-rows {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.channel-rows li + li { border-top: 1px solid var(--line); }
+
+.channel-row,
+.channel-rows li button.channel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 10px;
+  align-items: center;
+  gap: 2px 12px;
+  width: 100%;
+  min-height: 60px;
+  margin: 0;
+  padding: 8px 14px 8px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+
+@media (hover: hover) {
+  .channel-row:hover { background: var(--ground); }
+}
+
+.channel-row-words { display: flex; flex-direction: column; min-width: 0; }
+
+.channel-row-name { font-size: 15px; font-weight: 400; }
+
+.channel-row-towns { font-size: 12.5px; color: var(--ink-2); }
+
+.channel-row-value { display: flex; flex-direction: column; align-items: flex-end; padding: 0; }
+
+.channel-row-area { font-family: inherit; font-size: 15px; font-weight: 400; }
+
+.channel-row-courts { font-size: 12.5px; color: var(--ink-2); }
+
+.channel-mini { display: block; width: 72px; height: 6px; margin-top: 4px; overflow: hidden; border-radius: 3px; background: var(--line); }
+
+.channel-mini-fill { display: block; height: 100%; border-radius: 3px; background: #d4a237; }
+
+.channel-row .chevron { width: 8px; height: 8px; color: var(--ink-2); }
+
+.channel-status-line { margin: 0 4px 8px; }
+
+/* A channel's page takes the column over from the pass and the layers. */
+.channel-page-open .home-only { display: none; }
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 0 -8px;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+}
+
+.channel-page-open .channel-title-line { margin: 6px 4px 4px; }
+
+.channel-page-open #channel-title { font-size: 24px; font-weight: 600; color: var(--ink); }
+
+/* Brightness change. */
+.histogram { max-width: none; padding: 4px 16px 12px; }
+
+.histogram-title { margin: 8px 0 4px; font-size: 13px; font-weight: 400; color: var(--ink-2); }
+
+@media (min-width: 701px) {
+  .side .panel { padding: 12px 20px 24px; }
+}
+
+/* T-140: the phone sheet (F-24, FR-095). */
+.show-all,
+.sheet-links,
+.credits-label { display: none; }
+
+@media (max-width: 700px) {
+  /* The map keeps at least 45% of the screen while the sheet is closed. */
+  .map-area { flex: 1 0 45vh; min-height: 45vh; }
+  .map-area #map { min-height: 0; }
+  .map-row:has(#panel:not(.drawer-closed):not([hidden])) .map-area { flex: 0 0 140px; min-height: 140px; }
+
+  .panel,
+  .side .panel {
+    flex: 0 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    padding: 0 16px 16px;
+    border-top: 0;
+    border-radius: 18px 18px 0 0;
+    background: var(--surface);
+    box-shadow: 0 -4px 16px rgba(28, 27, 25, 0.12);
+  }
+  .map-row:has(#panel:not(.drawer-closed):not([hidden])) .panel { flex: 1 1 auto; }
+
+  /* The grab handle stays at the top of the sheet while it scrolls. Its words stay, small. */
+  .drawer-toggle {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+    padding: 10px 16px 6px;
+    border: 0;
+    border-radius: 18px 18px 0 0;
+    background: var(--surface);
+    color: var(--ink-3);
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .drawer-toggle::before { width: 40px; height: 4px; margin: 0 auto 6px; background: var(--line-strong); }
+
+  /* Flat inside the sheet: the pass needs no card of its own. */
+  .pass-card { border: 0; border-radius: 0; background: transparent; }
+  .pass-head { padding: 0; border-bottom: 0; }
+  .pass-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 10px;
+    padding: 6px 0 4px;
+  }
+  .pass-numbers > :not(.area-number):not(.area-line) { flex: 1 1 100%; }
+  .legend-area { font-size: 30px; }
+  .area-courts { margin-top: 2px; }
+
+  /* Closed: the pass, the number, the bar and 3 channels. Open: everything. */
+  .drawer-closed .home-only > .section-title,
+  .drawer-closed .layers-card,
+  .drawer-closed .histogram,
+  .drawer-closed .histogram-heading,
+  .drawer-closed .legend-actions { display: none; }
+  .drawer-closed .pair-line { display: flex; }
+  .drawer-closed:not(.channel-page-open) .channel-rows li:nth-child(n+4) { display: none; }
+  .drawer-closed:not(.channel-page-open) .show-all { display: block; }
+  .show-all { width: 100%; margin-top: 4px; text-decoration: none; font-weight: 600; text-align: center; }
+  .panel:not(.drawer-closed) .sheet-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 4px;
+    margin: 16px 0 0;
+  }
+  .sheet-links .link-button { font-size: 13px; text-decoration: none; }
+
+  /* Folded credits: one Credits button, and the satellite imagery's credit when it must stay. */
+  .credits-folded { display: none; }
+  .credits-label { display: inline; }
+  .leaflet-control-attribution .info-button:has(.credits-label) {
+    width: auto;
+    gap: 6px;
+    padding: 0 10px;
+    margin: -14px -6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .leaflet-control-attribution:has(.credits-label) .info-glyph { display: none; }
+  .leaflet-control-attribution:has(.credits-label) {
+    margin: 0 8px 8px 0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow-float);
+  }
+}
+
+/* T-141: a channel's page (F-24, FR-096). */
+.channel-towns { margin: 0 4px 12px; font-size: 14px; color: var(--ink-2); }
+
+.channel-pass { padding: 4px 16px 14px; }
+
+.channel-pass-head { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; margin: 0 -8px; }
+
+.channel-pass-head .icon-button { border-color: transparent; }
+
+.channel-pass-title { margin: 0; text-align: center; font-size: 13px; color: var(--ink-2); }
+
+.channel-pass-number { margin: 0; font-size: 30px; font-weight: 700; line-height: 1.15; font-variant-numeric: tabular-nums; }
+
+.channel-pass-courts { margin: 2px 0 0; font-size: 14px; }
+
+.channel-pass-courts:empty { display: none; }
+
+.channel-pass .channel-note { margin-top: 10px; font-size: 13px; color: var(--ink-2); }
+
+.channel-section-title { display: flex; align-items: center; gap: 6px; margin: 18px 4px 8px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+
+.channel-section-title h3 { margin: 0; font: inherit; }
+
+.channel-chart { padding: 14px 14px 10px; }
+
+.channel-cols { display: flex; align-items: flex-end; gap: 6px; height: 112px; border-bottom: 1px solid var(--line); }
+
+.channel-col { position: relative; flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; }
+
+.channel-col-fill { display: block; width: 100%; border-radius: 3px 3px 0 0; background: #b2aba1; }
+
+.channel-col-other .channel-col-fill { background: #d6d0c6; }
+
+.channel-col-gap .channel-col-fill { background: transparent; border: 1.5px dashed var(--ink-3); border-bottom: 0; }
+
+.channel-col-selected .channel-col-fill { background: var(--accent); border-color: var(--accent); }
+
+.channel-months { display: flex; gap: 6px; margin-top: 4px; font-size: 11.5px; color: var(--ink-3); }
+
+.channel-months span { flex: 1 1 0; text-align: center; white-space: nowrap; }
+
+.channel-chart .channel-note { margin: 8px 0 0; font-size: 12.5px; color: var(--ink-2); }
+
+/* Newest first: plain list rows. */
+.channel-bars {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.channel-bar-row { display: flex; align-items: center; }
+
+.channel-bar-row + .channel-bar-row { border-top: 1px solid var(--line); }
+
+.channel-bar-row .info { flex: none; margin-right: 10px; }
+
+.channel-bar,
+.channel-bar[aria-current] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 56px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 0;
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.channel-bar[aria-current] { background: var(--accent-soft); }
+
+.channel-bar-row:has(.channel-bar[aria-current]) { background: var(--accent-soft); }
+
+.channel-bar-words,
+.channel-bar-numbers { display: flex; flex-direction: column; }
+
+.channel-bar-numbers { align-items: flex-end; text-align: right; }
+
+.channel-bar-dates { font-weight: 400; }
+
+.channel-bar[aria-current] .channel-bar-dates { font-weight: 700; }
+
+.channel-bar-track-name,
+.channel-bar-courts { font-size: 12.5px; color: var(--ink-2); }
+
+.channel-bar-value { font-family: inherit; font-weight: 400; }
+
+.channel-bar-dim { color: var(--ink-2); }
+
+.channel-not-checked { display: flex; align-items: flex-start; gap: 12px; margin-top: 12px; padding: 12px 16px; }
+
+.channel-not-checked p { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+.not-checked-mark { flex: none; width: 28px; height: 0; margin-top: 9px; border-top: 2.5px dashed var(--ink); }
+
+.channel-source { margin: 12px 4px 0; font-size: 12.5px; color: var(--ink-3); }
+
+.channel-source a { color: var(--accent); }
+
+/* The open sheet leaves the map room for its buttons and the NISAR label (TC-096), and a short phone
+   gives the map more than 45%, so the towns south of the summit stay in view (TC-082). */
+@media (max-width: 700px) {
+  .map-row:has(#panel:not(.drawer-closed):not([hidden])) .map-area { flex: 0 0 40vh; min-height: 240px; }
+}
+
+@media (max-width: 700px) and (max-height: 699px) {
+  .map-area { flex-basis: 60vh; min-height: 60vh; }
+}
+
+/* On a desktop the channel's name, towns and pass card stay at the top of the column while the rest
+   scrolls, so the pass card's ‹ and › stay under the pointer (TC-093). A row scrolled into view stops below them. */
+@media (min-width: 701px) {
+  .channel-page-open .channel-header {
+    position: sticky;
+    top: -12px;
+    z-index: 3;
+    padding: 12px 0 4px;
+    margin-top: -12px;
+    background: var(--ground);
+  }
+  .channel-page-open .channel-bar { scroll-margin-top: 320px; }
+}
+
+/* Links in the source line are 44 px targets on a phone, without making the line taller (FR-049). */
+@media (max-width: 700px) {
+  .channel-source a { display: inline-block; padding: 14px 0; margin: -14px 0; }
 }

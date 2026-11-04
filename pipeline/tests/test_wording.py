@@ -113,6 +113,9 @@ LEGAL_WORDS = ("illegal", "unpermitted", "violation")
 NOT_TEXT = {".png", ".webp", ".jpg", ".jpeg", ".gif", ".ico", ".bin", ".woff", ".woff2"}
 # The check panel may say what its source maps, so only these fields can use the word "landslide".
 PANAMA_CHECK_FIELDS = ("source_name", "method", "place_name")
+# "Tested in Panama", on Mayon's check panel, names the map our result matches (FR-100). Only this exact
+# sentence may say "landslide" in the shared code, so the change itself is never called landslides.
+TESTED_MATCH = "Our result matches the University of Panama's landslide map at a scale of a few km."
 
 
 def text_files(folder):
@@ -149,7 +152,7 @@ def panama_landslide_hits(site_folder):
     shared = sorted((site_folder / "js").glob("*.js")) + sorted(site_folder.glob("*.html"))
     panama = [path for path in text_files(site_folder / "data" / "sites" / "panama") if path.name != "validation.json"]
     for path in shared + panama:
-        if "landslide" in path.read_text(encoding="utf-8", errors="replace").lower():
+        if "landslide" in path.read_text(encoding="utf-8", errors="replace").replace(TESTED_MATCH, "").lower():
             hits.append(path.name)
     rows = json.loads((site_folder / "data" / "sites.json").read_text(encoding="utf-8"))["data"]
     if any("landslide" in text.lower() for row in rows if row["id"] == "panama" for text in json_strings(row)):
@@ -216,3 +219,11 @@ def test_tc075_another_sites_data_may_use_the_word_landslide(tmp_path):
     other.mkdir()
     (other / "events.json").write_text('{"data": "A landslide in the news"}', encoding="utf-8")
     assert panama_landslide_hits(site) == []
+
+
+def test_tc075_only_the_tested_in_panama_sentence_names_landslides_in_the_code():
+    """The allowed sentence is used once, in strings.js, and nowhere else in the shared code."""
+    shared = sorted((SITE / "js").glob("*.js")) + sorted(SITE.glob("*.html"))
+    uses = {path.name: path.read_text(encoding="utf-8").count(TESTED_MATCH) for path in shared}
+    assert {name: count for name, count in uses.items() if count} == {"strings.js": 1}
+    assert "testedMatch: \"" + TESTED_MATCH in (SITE / "js" / "strings.js").read_text(encoding="utf-8")

@@ -13,6 +13,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import pytest
+from playwright.sync_api import expect
 
 ROOT = Path(__file__).resolve().parents[3]
 SITE = ROOT / "site"
@@ -104,15 +105,24 @@ def prepare_page(page, width=1280, height=800, tiles="fake"):
         page.route("**/relief/**", lambda route: route.abort())
 
 
-def close_list_on_a_phone(page):
-    """On a phone the channel list opens first, and the pass controls are behind it."""
-    if page.viewport_size["width"] <= 700 and page.locator("#channel-panel").is_visible():
-        page.click("#channel-close")
+def open_channel_list(page):
+    """The channel list is always in the side column (FR-094), or in the sheet under the map on a phone,
+    where the closed sheet shows the first 3 channels (FR-095)."""
+    expect(page.locator("#channel-panel")).to_be_visible()
+
+
+def open_channel(page, name):
+    """Open a channel's page from the list, opening the phone sheet first if its row is hidden."""
+    row = page.locator("#channel-body .channel-row", has_text=name).first
+    row.wait_for(state="attached")
+    if not row.is_visible():
+        page.click("#show-all")
+    row.click()
+    expect(page.locator("#channel-title")).to_have_text(name)
 
 
 def open_drawer_if_closed(page):
     """On a phone the Compare button is inside the drawer. On a desktop this does nothing."""
-    close_list_on_a_phone(page)
     toggle = page.locator("#drawer-toggle")
     if toggle.is_visible() and toggle.get_attribute("aria-expanded") == "false":
         toggle.click()
@@ -167,12 +177,24 @@ def open_footer_link(page, selector):
     """Open "Data sources" or "How we checked this" as a visitor would (FR-090). On a phone they're in
     "What am I looking at?". On a desktop the bottom bar slides up when the pointer reaches the bottom edge."""
     if page.viewport_size["width"] <= 700:
-        close_list_on_a_phone(page)
         page.click("#help-button")
         page.click(f'#help-panel .help-more button[data-opens="{selector.lstrip("#")}"]')
         return
     page.mouse.move(page.viewport_size["width"] / 2, page.viewport_size["height"] - 2)
     page.click(selector)
+
+
+def open_panama_link(page):
+    """Open "How we checked this" and follow "Open the Panama test map" (FR-100)."""
+    open_footer_link(page, "#check-button")
+    page.click("#check-panel a:has-text('Open the Panama test map')")
+
+
+def go_to_panama(page):
+    """Reach the Panama test site the visitor's way, and wait until it shows (FR-099)."""
+    open_panama_link(page)
+    expect(page.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
+    expect(page.locator("#test-banner")).to_be_visible()
 
 
 def open_control(page, selector):

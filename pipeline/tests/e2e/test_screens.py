@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from .conftest import open_control, ROOT, close_list_on_a_phone, envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import open_channel, open_control, ROOT, envelope, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -53,7 +53,6 @@ def opener(button, panel):
 
 
 def open_channel_list(page):
-    page.click("#channels-button")
     page.locator("#channel-body .channel-row").first.wait_for()
 
 
@@ -85,7 +84,6 @@ SCREENS = {
     "help": opener("#help-button", "#help-panel"),
     "sources": opener("#sources-button", "#sources-panel"),
     "check": opener("#check-button", "#check-panel"),
-    "picker": opener("#site-name", "#picker-panel"),
     "channels-list": open_channel_list,
     "channel-view": opener_for_channel("Mi-isi"),
     "channel-view-short": opener_for_channel("Basud"),
@@ -113,9 +111,6 @@ def test_screen(page, site_url, tmp_path, name, width):
     prepare_page(page, width=width, height=SIZES[width], tiles="real" if SAVING else "fake")
     page.goto(site_url)
     wait_until_ready(page)
-    # The main screen shows what opens first. The others start from the pass controls.
-    if name != "main":
-        close_list_on_a_phone(page)
     SCREENS[name](page)
     save(page, name, width, tmp_path)
 
@@ -153,7 +148,7 @@ def test_screen_channel_no_data(page, site_url, tmp_path, width):
     wait_until_ready(page)
     open_channel_list(page)
     save(page, "channels-no-data", width, tmp_path)
-    page.click("#channel-body .channel-row:has-text('Mi-isi')")
+    open_channel(page, "Mi-isi")
     page.locator("#channel-body .channel-bar").last.scroll_into_view_if_needed()
     save(page, "channel-no-data", width, tmp_path)
 
@@ -165,7 +160,6 @@ def test_screen_channels_empty(page, site_url, tmp_path, width):
     page.route("**/sites/mayon/channels.geojson", lambda route: route.fulfill(body=body, content_type="application/json"))
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#channels-button")
     page.locator("#channel-status:not(:empty)").wait_for()
     save(page, "channels-empty", width, tmp_path)
 

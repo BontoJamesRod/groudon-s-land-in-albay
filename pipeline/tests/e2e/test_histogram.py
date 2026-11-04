@@ -4,7 +4,7 @@ import json
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import ROOT, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import go_to_panama, open_channel_list, ROOT, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
@@ -109,7 +109,7 @@ def test_tc086_nothing_moves_the_line_and_the_help_says_why(app):
 def test_tc087_an_open_channel_adds_its_outline_and_closing_removes_it(app):
     expect(app.locator(CHART)).to_be_visible()
     expect(app.locator(".histogram-outline")).to_have_count(0)
-    app.click("#channels-button")
+    open_channel_list(app)
     app.locator("#channel-body .channel-row", has_text="Mi-isi").click()
     expect(app.locator(".histogram-outline")).to_have_count(1)
     expect(app.locator("#histogram-note")).to_contain_text("the Mi-isi strip")
@@ -124,7 +124,7 @@ def test_tc087_a_missing_channel_file_leaves_the_chart_without_an_outline(page, 
     page.goto(site_url)
     wait_until_ready(page)
     expect(page.locator(CHART)).to_be_visible()
-    page.click("#channels-button")
+    open_channel_list(page)
     page.locator("#channel-body .channel-row", has_text="Mi-isi").click()
     expect(page.locator(CHART)).to_be_visible()
     expect(page.locator(".histogram-outline")).to_have_count(0)
@@ -134,8 +134,7 @@ def test_panama_has_a_chart_and_no_outline_and_its_help_is_its_own(page, site_ur
     prepare_page(page)
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
     expect(page.locator(CHART)).to_be_visible()
     expect(page.locator("#histogram-note")).to_contain_text("Land in this site.")

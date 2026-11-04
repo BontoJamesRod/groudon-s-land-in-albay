@@ -1,5 +1,6 @@
 """Browser tests for channels (F-19) and the Channel timeline (F-20). Each test name carries its TC number."""
 import json
+import re
 
 import numpy as np
 import pytest
@@ -7,7 +8,7 @@ from playwright.sync_api import expect
 from shapely import contains_xy
 from shapely.geometry import shape
 
-from .conftest import open_footer_link, SITE, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import go_to_panama, open_channel, open_channel_list, open_footer_link, SITE, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import card, controls_too_small, map_center, map_zoom, tap_at
 
@@ -148,8 +149,7 @@ def test_a_site_with_no_channel_data_says_nothing_about_channels(page, site_url)
     page.on("request", lambda request: asked.append(request.url))
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(page.locator("#channel-legend")).to_be_hidden()
     expect(page.locator(".channel-label")).to_have_count(0)
@@ -178,12 +178,14 @@ def serve_areas(page, rows):
 
 
 def list_rows(page):
-    return [" ".join(text.split()) for text in page.locator("#channel-body .channel-row").all_inner_texts()]
+    """Each row's name and its area, without the towns under the name."""
+    return [" ".join(f"{row.locator('.channel-row-name').inner_text()} {row.locator('.channel-row-value').inner_text()}".split())
+            for row in page.locator("#channel-body .channel-row").all()]
 
 
 def test_tc064_the_channels_are_sorted_with_no_data_last(app):
     serve_areas(app, area_rows({"mayon_padang": 0.12, "mayon_miisi": 0.03, "mayon_basud": 0.03, "mayon_lidong": None}))
-    app.click("#channels-button")
+    open_channel_list(app)
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     assert list_rows(app) == ["Padang 0.120 km² about 286 basketball courts", "Basud 0.030 km² about 71 basketball courts", "Mi-isi 0.030 km² about 71 basketball courts", "Lidong No radar data"]
 
@@ -192,7 +194,7 @@ def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
     latest = {row["channel_id"]: row["flagged_area_km2"] for row in read_data("sites/mayon/channel_areas.json") if row["pair_id"] == LATEST_PAIR}
     names = {item["id"]: item["properties"]["name"] for item in channels()}
     wanted = sorted(latest, key=lambda channel_id: (-latest[channel_id], names[channel_id]))
-    app.click("#channels-button")
+    open_channel_list(app)
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     assert [row.split(" about ")[0] for row in list_rows(app)] == [f"{names[channel_id]} {latest[channel_id]:.3f} km²" for channel_id in wanted]
     expect(app.locator(".channel-lead")).to_have_text(
@@ -200,7 +202,7 @@ def test_tc064_the_real_list_is_sorted_by_the_latest_pair(app):
 
 
 def test_the_list_says_how_the_area_is_counted_and_what_is_left_out(app):
-    app.click("#channels-button")
+    open_channel_list(app)
     panel = app.locator("#channel-panel")
     expect(panel).to_contain_text("200 m on each side of the line, within 10 km of the summit")
     expect(panel).to_contain_text("Only channels the project owner has checked are listed")
@@ -220,7 +222,7 @@ def test_tc065_no_confirmed_channels(page, site_url):
     # With no lines on the map, there's no channel legend and nothing to credit.
     expect(page.locator("#channel-layer")).to_be_hidden()
     expect(page.locator(".leaflet-control-attribution")).not_to_contain_text("OpenStreetMap")
-    page.click("#channels-button")
+    open_channel_list(page)
     expect(page.locator("#channel-status")).to_have_text("No confirmed channels yet for this site")
     expect(page.locator("#channel-body .channel-row")).to_have_count(0)
     # Picking another pair must not wipe the message.
@@ -236,19 +238,17 @@ def test_the_list_says_so_when_a_site_has_no_pairs(page, site_url):
     page.route("**/sites/mayon/pairs.json", lambda route: route.fulfill(body=empty, content_type="application/json"))
     page.goto(site_url)
     expect(page.locator("#app-message")).to_have_text("No radar passes processed yet for this site")
-    page.click("#channels-button")
+    # With no passes the side column stays hidden, and the list says the same if it's ever shown.
     expect(page.locator("#channel-status")).to_have_text("No radar passes processed yet for this site")
     expect(page.locator("#channel-retry")).to_be_hidden()
 
 
-def test_tc065_a_site_with_no_channel_data_has_no_button(app):
-    expect(app.locator("#channels-button")).to_be_visible()
-    app.click("#channels-button")
+def test_tc065_a_site_with_no_channel_data_has_no_channel_card(app):
+    # The list is always open, so there's no Channels button on any site (FR-094).
+    expect(app.locator("#channels-button")).to_have_count(0)
     expect(app.locator("#channel-panel")).to_be_visible()
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
-    expect(app.locator("#channels-button")).to_be_hidden()
     expect(app.locator("#channel-panel")).to_be_hidden()
 
 
@@ -256,7 +256,7 @@ def test_tc066_loading_then_the_list(app, slow_files):
     slow_files["channel_areas.json"] = 1.0
     app.reload()
     expect(app.locator("#channel-status")).to_have_text("Loading channel changes…")
-    expect(app.locator("#channel-title")).to_have_text("Channels")
+    expect(app.locator("#channel-title")).to_have_text("Channels since the last pass")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     expect(app.locator("#channel-status")).to_have_text("")
 
@@ -267,7 +267,7 @@ def test_tc066_a_failed_load_offers_retry_and_the_map_stays(app):
     app.reload()
     wait_until_ready(app)
     expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
-    expect(app.locator("#channel-title")).to_have_text("Channels")
+    expect(app.locator("#channel-title")).to_have_text("Channels since the last pass")
     expect(app.locator("#channel-retry")).to_be_visible()
     assert map_center(app) == pytest.approx(center, abs=0.05) and map_zoom(app) == zoom
     expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
@@ -282,7 +282,7 @@ def test_a_channel_file_that_failed_at_first_is_tried_again_from_the_list(page, 
     page.route("**/sites/mayon/channels.geojson", lambda route: route.abort())
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#channels-button")
+    open_channel_list(page)
     expect(page.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
     page.unroute("**/sites/mayon/channels.geojson")
     page.click("#channel-retry")
@@ -294,19 +294,21 @@ def test_a_broken_areas_file_gives_the_error_state(app, change):
     rows = area_rows({})
     rows[0].update(change)
     serve_areas(app, rows)
-    app.click("#channels-button")
+    open_channel_list(app)
     expect(app.locator("#channel-status")).to_have_text("Couldn't load channel changes. Try again.")
 
 
-def test_closing_the_list_gives_the_map_its_room_back(page, site_url):
+def test_a_channel_page_and_back_keep_the_map_its_room(page, site_url):
+    """The map's own size follows its box when the sheet changes (FR-095)."""
     open_phone(page, site_url)
     height = page.locator("#map").bounding_box()["height"]
-    page.click("#channels-button")
-    expect(page.locator("#channel-panel")).to_be_visible()
+    page.click("#show-all")
     assert page.locator("#map").bounding_box()["height"] < height
     assert page.evaluate("testMap.getSize().y") == pytest.approx(page.locator("#map").bounding_box()["height"], abs=1)
-    page.click("#channel-close")
-    expect(page.locator("#channel-panel")).to_be_hidden()
+    open_channel(page, "Mi-isi")
+    assert page.locator("#map").bounding_box()["height"] == pytest.approx(height)
+    assert page.evaluate("testMap.getSize().y") == pytest.approx(height, abs=1)
+    page.click("#channel-back")
     assert page.locator("#map").bounding_box()["height"] == pytest.approx(height)
     assert page.evaluate("testMap.getSize().y") == pytest.approx(height, abs=1)
 
@@ -315,22 +317,19 @@ def open_phone(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
 
 
 def test_the_list_fits_a_phone(page, site_url):
     open_phone(page, site_url)
     assert controls_too_small(page) == []
     assert page.locator("#map").bounding_box()["height"] >= 300
-    page.click("#channels-button")
-    expect(page.locator("#channel-body .channel-row")).to_have_count(4)
+    # The closed sheet shows the first 3 channels, and "Show all" the rest (FR-095).
+    expect(page.locator("#channel-body .channel-row:visible")).to_have_count(3)
+    page.click("#show-all")
+    expect(page.locator("#channel-body .channel-row:visible")).to_have_count(4)
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
     assert controls_too_small(page) == []
-    assert page.locator("#map").bounding_box()["height"] >= 200
-    expect(page.locator("#panel")).to_be_hidden()
     expect(page.locator("#disclaimer-short")).to_be_in_viewport()
-    page.click("#channel-close")
-    expect(page.locator("#panel")).to_be_visible()
 
 
 @pytest.mark.parametrize("width", [320, 360])
@@ -343,14 +342,14 @@ def test_the_top_bar_keeps_two_rows_with_a_wider_font(page, site_url, width):
     prepare_page(page, width=width, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    assert page.locator(".disclaimer-tag").bounding_box()["height"] <= 24  # the short disclaimer: one line
+    assert page.locator(".disclaimer-tag").bounding_box()["height"] <= 36  # the short disclaimer: one line in its strip
     page.add_style_tag(content="* { letter-spacing: 1px !important; }")
     top = page.locator(".topbar").bounding_box()["y"]
     tag = page.locator(".disclaimer-tag").bounding_box()
     assert tag["y"] - top < 110  # the title and the buttons: two rows
-    assert tag["height"] <= 40  # a very wide font may wrap the short disclaimer, but no more than once
+    assert tag["height"] <= 54  # a very wide font may wrap the short disclaimer, but no more than once
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
-    for button in ("#channels-button", "#search-button", "#help-button"):
+    for button in ("#search-button", "#help-button"):
         box = page.locator(button).bounding_box()
         assert box["width"] >= 44 and box["height"] >= 44
         # A label that wraps inside its button must still fit in it.
@@ -358,51 +357,43 @@ def test_the_top_bar_keeps_two_rows_with_a_wider_font(page, site_url, width):
 
 
 def test_axe_on_the_list(app):
-    app.click("#channels-button")
+    open_channel_list(app)
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     assert problems_on(app) == []
 
 
 def test_axe_on_the_list_on_a_phone(page, site_url):
     open_phone(page, site_url)
-    page.click("#channels-button")
+    open_channel_list(page)
     expect(page.locator("#channel-body .channel-row")).to_have_count(4)
     assert problems_on(page) == []
-
-
-def open_channel(page, name):
-    page.click("#channels-button")
-    page.click(f"#channel-body .channel-row:has-text('{name}')")
-    expect(page.locator("#channel-title")).to_have_text(name)
 
 
 def bar_rows(page):
     return [" ".join(text.split()) for text in page.locator("#channel-body .channel-bar").all_inner_texts()]
 
 
-def bar_widths(page):
-    """Each bar's width as a share of its row's full width. None where there's no bar."""
-    return page.evaluate("""[...document.querySelectorAll('#channel-body .channel-bar')].map((bar) => {
-      const fill = bar.querySelector('.channel-bar-fill');
-      return fill ? fill.getBoundingClientRect().width / bar.querySelector('.channel-bar-track').getBoundingClientRect().width : null;
-    })""")
+def bar_heights(page):
+    """Each bar's height in the "Every pass" chart, as a share of the chart's full height, oldest first."""
+    return page.evaluate("""[...document.querySelectorAll('#channel-body .channel-col')].map((column) =>
+      column.querySelector('.channel-col-fill').getBoundingClientRect().height / column.getBoundingClientRect().height)""")
 
 
 def strip_paths(page):
     return page.locator(".leaflet-channelStrip-pane path")
 
 
-def test_tc067_one_bar_per_pair_in_order_with_its_dates_and_value(app):
+def test_tc067_one_row_and_one_bar_per_pair_with_its_dates_and_value(app):
     open_channel(app, "Mi-isi")
     pairs = read_data("sites/mayon/pairs.json")
     rows = {row["pair_id"]: row for row in read_data("sites/mayon/channel_areas.json") if row["channel_id"] == "mayon_miisi"}
+    # The list is newest first, and the chart oldest on the left (FR-096).
     expect(app.locator("#channel-body .channel-bar")).to_have_count(len(pairs))
-    texts = bar_rows(app)
-    assert [bar.get_attribute("data-pair") for bar in app.locator("#channel-body .channel-bar").all()] == [pair["id"] for pair in pairs]
-    for text, pair in zip(texts, pairs):
+    assert [bar.get_attribute("data-pair") for bar in app.locator("#channel-body .channel-bar").all()] == [pair["id"] for pair in reversed(pairs)]
+    assert [column.get_attribute("data-pair") for column in app.locator("#channel-body .channel-col").all()] == [pair["id"] for pair in pairs]
+    for text, pair in zip(bar_rows(app), reversed(pairs)):
         assert f"{rows[pair['id']]['flagged_area_km2']:.3f} km²" in text
-        assert f"track {pair['track']}" in text
-    assert texts[-1].startswith("{} to {}, track {}".format(*latest_dates(), latest_pair()["track"]))
+        assert f"track {pair['track']}" in text.lower()
 
 
 def test_tc067_every_bar_uses_the_same_scale(app):
@@ -411,7 +402,7 @@ def test_tc067_every_bar_uses_the_same_scale(app):
     largest = max(row["flagged_area_km2"] for row in rows)
     mine = {row["pair_id"]: row["flagged_area_km2"] for row in rows if row["channel_id"] == "mayon_basud"}
     wanted = [mine[pair["id"]] / largest for pair in read_data("sites/mayon/pairs.json")]
-    assert bar_widths(app) == pytest.approx(wanted, abs=0.01)
+    assert bar_heights(app) == pytest.approx(wanted, abs=0.01)
 
 
 def test_tc068_the_strip_shows_the_map_fits_it_and_back_removes_it(app):
@@ -427,23 +418,26 @@ def test_tc068_the_strip_shows_the_map_fits_it_and_back_removes_it(app):
     assert map_center(app) == pytest.approx(((south + north) / 2, (west + east) / 2), abs=0.002)
     app.click("#channel-back")
     expect(strip_paths(app)).to_have_count(0)
-    expect(app.locator("#channel-title")).to_have_text("Channels")
+    expect(app.locator("#channel-title")).to_have_text("Channels since the last pass")
     expect(app.locator("#channel-body .channel-row")).to_have_count(4)
     expect(app.locator("#channel-back")).to_be_hidden()
 
 
-def test_tc068_closing_the_view_removes_the_strip(app):
+def test_tc068_a_channel_page_takes_the_column_and_back_returns_it(app):
+    expect(app.locator("#pair-list")).to_be_visible()
     open_channel(app, "Padang")
     expect(strip_paths(app)).to_have_count(1)
-    app.click("#channel-close")
+    expect(app.locator("#pair-list")).to_be_hidden()
+    expect(app.locator("#layer-toggle")).to_be_hidden()
+    app.click("#channel-back")
     expect(strip_paths(app)).to_have_count(0)
-    expect(app.locator("#channel-panel")).to_be_hidden()
+    expect(app.locator("#pair-list")).to_be_visible()
+    expect(app.locator("#channel-title")).to_be_focused()
 
 
 def test_tc068_switching_site_closes_the_view(app):
     open_channel(app, "Lidong")
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(app.locator("#channel-panel")).to_be_hidden()
     expect(strip_paths(app)).to_have_count(0)
@@ -472,9 +466,11 @@ def test_tapping_a_bar_selects_that_pair_on_the_map(app):
 
 
 def test_picking_a_pair_in_the_timeline_moves_the_selected_bar(app):
+    """The pass list is on the home cards, so a pass picked there is the selected bar on the channel's page."""
     july = "mayon_A111F008_20260703_20260715"
-    open_channel(app, "Mi-isi")
     app.select_option("#pair-list", july)
+    expect(app.locator(f'.leaflet-radar-pane img[src*="{july}"]')).to_have_count(1)
+    open_channel(app, "Mi-isi")
     expect(app.locator('#channel-body .channel-bar[aria-current="true"]')).to_have_attribute("data-pair", july)
 
 
@@ -495,23 +491,24 @@ def test_a_bar_whose_pair_fails_to_load_says_so_in_the_panel(app):
 def test_tc069_no_radar_data_replaces_the_bar(app):
     serve_areas(app, area_rows({"mayon_miisi": None}))
     open_channel(app, "Mi-isi")
-    last = app.locator("#channel-body .channel-bar").last
-    expect(last).to_contain_text("No radar data")
-    expect(last).not_to_contain_text("km²")
-    assert last.locator(".channel-bar-fill").count() == 0
+    newest = app.locator("#channel-body .channel-bar").first
+    expect(newest).to_contain_text("No radar data")
+    expect(newest).not_to_contain_text("km²")
+    expect(app.locator(f'#channel-body .channel-col[data-pair="{LATEST_PAIR}"]')).to_have_class(re.compile("channel-col-none"))
+    expect(app.locator(".channel-pass-number")).to_have_text("No radar data")
 
 
 def test_tc069_a_real_zero_still_shows_as_zero(app):
     serve_areas(app, area_rows({"mayon_miisi": 0}))
     open_channel(app, "Mi-isi")
-    last = app.locator("#channel-body .channel-bar").last
-    expect(last).to_contain_text("0.000 km²")
-    expect(last).not_to_contain_text("No radar data")
+    newest = app.locator("#channel-body .channel-bar").first
+    expect(newest).to_contain_text("0.000 km²")
+    expect(newest).not_to_contain_text("No radar data")
 
 
 def test_the_view_lists_the_channels_towns(app):
     open_channel(app, "Padang")
-    expect(app.locator("#channel-body")).to_contain_text("Towns along this channel: Santo Domingo, Legazpi City")
+    expect(app.locator(".channel-towns")).to_have_text("Santo Domingo · Legazpi City")
 
 
 def test_the_view_fits_a_phone(page, site_url):
@@ -574,18 +571,20 @@ GAP_PAIR = "mayon_A111F008_20260727_20260820"
 GAP_NOTE = "24-day gap, not comparable"
 
 
-def test_tc070_the_24_day_bar_is_dimmed_with_its_note(app):
+def test_tc070_the_24_day_pass_is_dimmed_with_its_note_and_its_bar_is_hollow(app):
     open_channel(app, "Mi-isi")
-    bars = app.locator("#channel-body .channel-bar")
     dimmed = app.locator("#channel-body .channel-bar-dim")
     expect(dimmed).to_have_count(1)
     assert dimmed.get_attribute("data-pair") == GAP_PAIR
-    expect(dimmed).to_contain_text(GAP_NOTE)
-    assert sum(GAP_NOTE in text for text in bars.all_inner_texts()) == 1
-    opacity = dimmed.locator(".channel-bar-fill").evaluate("(fill) => getComputedStyle(fill).opacity")
-    assert float(opacity) < 1
-    other = bars.first.locator(".channel-bar-fill").evaluate("(fill) => getComputedStyle(fill).opacity")
-    assert float(other) == 1
+    # The note is in the info button beside its row (FR-096), and only there.
+    row = app.locator("#channel-body .channel-bar-row", has=app.locator(".channel-bar-dim"))
+    expect(row.locator(".info-popover")).to_have_text(GAP_NOTE)
+    assert sum(GAP_NOTE in text for text in app.locator("#channel-body .channel-bar-row").all_text_contents()) == 1
+    expect(app.locator("#channel-body .channel-col-gap")).to_have_count(1)
+    assert app.locator("#channel-body .channel-col-gap").get_attribute("data-pair") == GAP_PAIR
+    style = app.locator("#channel-body .channel-col-gap .channel-col-fill").evaluate(
+        "(fill) => [getComputedStyle(fill).borderTopStyle, getComputedStyle(fill).backgroundColor]")
+    assert style == ["dashed", "rgba(0, 0, 0, 0)"]
 
 
 def test_tc071_the_24_day_pair_is_dimmed_on_the_pass_timeline(app):
@@ -615,8 +614,7 @@ def test_tc071_the_note_shows_on_a_phone_with_the_drawer_closed(page, site_url):
 
 
 def test_tc071_panamas_pairs_are_all_12_days(app):
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(app.locator("#pair-list option.pair-dim")).to_have_count(0)
 
@@ -630,7 +628,7 @@ def test_the_latest_pair_line_says_when_its_gap_is_unequal(page, site_url):
     page.route("**/sites/mayon/pairs.json", lambda route: route.fulfill(body=envelope(reordered), content_type="application/json"))
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#channels-button")
+    open_channel_list(page)
     expect(page.locator(".channel-lead")).to_contain_text(GAP_NOTE)
 
 

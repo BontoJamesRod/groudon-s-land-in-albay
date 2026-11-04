@@ -62,6 +62,7 @@ Requirement IDs (R1–R8) refer to Section 1 of the challenge checklist. Feature
 | F-21 | Brightness histogram | A small chart for the selected pair showing how much the ground's brightness changed, with the flag line and the flagged tails marked, so a visitor can see why a spot counted as changed | Must |
 | F-22 | Field map design | The app's look: a light relief map made to be read outdoors on a phone, flagged change that stays visible at any zoom, and channel areas also given as basketball courts | Must |
 | F-23 | Map switcher | A Relief or Satellite choice for the background on both sites, with the map's lines and labels readable on each, and the choice remembered | Must |
+| F-24 | Calm design | The owner's approved look (2026-11-04): a quiet page of white cards beside the map, one big number for the pass, the channels always in view on a desktop, a sheet under the map on a phone, and a channel page with every pass at a glance | Must |
 
 ## 6. Out of Scope
 
