@@ -256,7 +256,10 @@ def test_tc020_layer_legend_and_area_on_the_latest_pair(app):
     assert rows == [f"{item['label']}. Confidence: {item['confidence']}" for item in layer["legend"]]
     expect(app.locator("#legend-rows li")).to_have_text(["Possible" if item["confidence"] == "low" else "Likely" for item in layer["legend"]])
     expect(app.locator(".legend")).to_contain_text("What each color means:")
-    expect(app.locator("#legend-area")).to_have_text(f"{pair['new_material_area_km2']:.2f} km² new material")
+    expect(app.locator("#legend-area")).to_have_text(f"{pair['new_material_area_km2']:.2f} km²")
+    expect(app.locator("#area-caption")).to_have_text("new material within 10 km of the summit")
+    likely, possible = pair["high_confidence_area_km2"], pair["low_confidence_area_km2"]
+    expect(app.locator("#confidence-key li")).to_have_text([f"Likely {likely:.2f} km²", f"Possible {possible:.2f} km²"])
     more = app.locator("#legend-area-more")
     expect(more).to_contain_text("Areas are in km². Channel areas also show basketball courts.")
     expect(more).to_contain_text(f"Total detected area: {pair['new_material_area_km2']:.2f} km²")

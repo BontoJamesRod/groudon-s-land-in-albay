@@ -12,9 +12,44 @@ export function localDate(utcText, timeZone) {
     .format(new Date(utcText));
 }
 
-// A day without its year, for the short pass line: "Sep 27".
-function shortDate(utcText, timeZone) {
-  return new Intl.DateTimeFormat("en-PH", { timeZone, month: "short", day: "numeric" }).format(new Date(utcText));
+// A day's month, day and year as separate words, in the site's time zone.
+function dayParts(utcText, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-PH", { timeZone, year: "numeric", month: "short", day: "numeric" })
+    .formatToParts(new Date(utcText));
+  return Object.fromEntries(parts.map((part) => [part.type, part.value]));
+}
+
+// The pass card's title, as short as it can be: "Oct 8 – 20, 2026", "Sep 26 – Oct 8, 2026",
+// or "Dec 27, 2026 – Jan 8, 2027".
+// Without `withYear`, the year only shows when the two days are in different years.
+export function passTitle(pair, timeZone, withYear = true) {
+  const a = dayParts(pair.before_acquired_start, timeZone);
+  const b = dayParts(pair.after_acquired_start, timeZone);
+  if (a.year !== b.year) return `${a.month} ${a.day}, ${a.year} – ${b.month} ${b.day}, ${b.year}`;
+  const year = withYear ? `, ${b.year}` : "";
+  if (a.month !== b.month) return `${a.month} ${a.day} – ${b.month} ${b.day}${year}`;
+  return `${a.month} ${a.day} – ${b.day}${year}`;
+}
+
+// The month a pair starts in, in full: "June".
+export function startMonth(pair, timeZone) {
+  return new Intl.DateTimeFormat("en-PH", { timeZone, month: "long" }).format(new Date(pair.before_acquired_start));
+}
+
+// A short month for the chart's axis, from the day a pair starts: "Jun".
+export function shortMonth(pair, timeZone) {
+  return new Intl.DateTimeFormat("en-PH", { timeZone, month: "short" }).format(new Date(pair.before_acquired_start));
+}
+
+// When the satellite passed, on the site's clock: "morning pass, 5:13 AM".
+function passTime(pair, timeZone) {
+  const when = new Date(pair.after_acquired_start);
+  const hour = Number(new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", hourCycle: "h23" }).format(when));
+  const time = new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", minute: "2-digit" }).format(when);
+  let part = STRINGS.partOfDay.evening;
+  if (hour < 12) part = STRINGS.partOfDay.morning;
+  else if (hour < 18) part = STRINGS.partOfDay.afternoon;
+  return STRINGS.passSub(pair.track, part, time);
 }
 
 // The same day as YYYY-MM-DD, so it can be compared with an event's date.
@@ -63,9 +98,9 @@ export function createTimeline(elements, site, pairs, events, siteIsShown, onSel
     const pair = pairs[selected];
     elements.list.value = pair.id;
     const names = eventsInPair(pair, events, timeZone).map((event) => event.name);
-    // One short line on screen, and the full dates, time zone, track and frame in its popover.
-    elements.label.textContent = STRINGS.pairShort(shortDate(pair.before_acquired_start, timeZone),
-      shortDate(pair.after_acquired_start, timeZone), names.join(", "));
+    // A short title and one line under it, and the full dates, time zone, track and frame in its popover.
+    elements.label.textContent = passTitle(pair, timeZone);
+    elements.sub.textContent = [names.join(", "), passTime(pair, timeZone)].filter(Boolean).join(" · ");
     elements.detail.textContent = pairLabel(pair, timeZone);
     elements.events.textContent = names.length ? STRINGS.eventInPeriod(names.join(", ")) : "";
     elements.gap.textContent = gapNote(pair) || "";

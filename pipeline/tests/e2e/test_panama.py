@@ -45,7 +45,8 @@ def test_tc078_the_earthquake_pair_says_changed_not_new_material(panama):
         expect(legend).not_to_contain_text(text)
     expect(panama.locator("#pair-events")).to_contain_text("Earthquake")
     # Panama has no channels, so nothing there is shown as basketball courts.
-    expect(panama.locator("#legend-area")).to_contain_text("km² changed")
+    expect(panama.locator("#area-caption")).to_have_text("changed")
+    expect(panama.locator("#area-courts")).to_be_hidden()
     expect(panama.locator("#legend-area-more")).to_contain_text("Areas are in km².")
     expect(panama.locator("#legend-area-more")).to_contain_text("Total detected area:")
     expect(legend).not_to_contain_text("basketball")

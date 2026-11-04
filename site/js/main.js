@@ -72,6 +72,7 @@ function setUpChannelLayer(map, siteData, readout) {
     layer: byId("channel-layer"),
     toggle: byId("channel-toggle"),
     note: byId("channel-note"),
+    count: byId("channel-count"),
     unavailable: byId("channels-unavailable"),
   };
   if (siteData.channels && siteData.channels.features.length) {
@@ -83,27 +84,33 @@ function setUpChannelLayer(map, siteData, readout) {
   }
 }
 
-// The Channels button shows only for a site with channel data (US-024/AC-2).
+// The channel card shows only for a site with channel data (US-024/AC-2, FR-094).
 function setUpChannels(map, site, siteData) {
-  const button = byId("channels-button");
-  button.hidden = site.channel_strip_half_width_m == null;
-  app.channels = button.hidden ? null : createChannels(map, {
+  const hasChannels = site.channel_strip_half_width_m != null;
+  byId("channel-panel").hidden = true;
+  app.channels = !hasChannels ? null : createChannels(map, {
+    host: byId("panel"),
     panel: byId("channel-panel"),
     title: byId("channel-title"),
     back: byId("channel-back"),
-    close: byId("channel-close"),
+    info: byId("channel-info"),
+    lead: byId("channel-lead"),
+    how: byId("channel-how"),
+    headMore: byId("channel-head-more"),
     status: byId("channel-status"),
     retry: byId("channel-retry"),
     body: byId("channel-body"),
-    opener: button,
+    previous: byId("previous"),
+    next: byId("next"),
   }, site, siteData, () => map.invalidateSize({ animate: false }), (pairId) => {
     const list = byId("pair-list");
     list.value = pairId;
     list.dispatchEvent(new Event("change"));
   }, (channel) => {
     if (app.histogram) app.histogram.setChannel(channel);
+    // On a phone a channel's page opens in the closed sheet, so the map keeps its room for the strip.
+    if (channel) app.drawer.close();
   });
-  button.onclick = () => app.channels.open();
 }
 
 // Connect the pair list, map layer, readout and compare view for the site on screen.
@@ -124,7 +131,11 @@ function setUpPairs(map, site, siteData, readout) {
     full: byId("legend-full"),
     noColor: byId("legend-no-color"),
     area: byId("legend-area"),
+    caption: byId("area-caption"),
+    courts: byId("area-courts"),
     areaMore: byId("legend-area-more"),
+    bar: byId("confidence-bar"),
+    key: byId("confidence-key"),
     summary: byId("summary"),
   }, site);
   // There is nothing to compare until the first pair has loaded.
@@ -144,6 +155,7 @@ function setUpPairs(map, site, siteData, readout) {
   return createTimeline({
     list: byId("pair-list"),
     label: byId("pair-label"),
+    sub: byId("pair-sub"),
     detail: byId("pair-detail"),
     events: byId("pair-events"),
     gap: byId("pair-gap"),
@@ -188,6 +200,11 @@ async function showSite(site, siteData) {
   byId("site-name").textContent = site.name;
   document.querySelector(".disclaimer").textContent = textFor(site).disclaimer;
   byId("disclaimer-short").textContent = textFor(site).disclaimerShort;
+  // The ring is always on the map, so its row in Layers has no switch (FR-094).
+  byId("zone-row").hidden = !site.danger_zone_label;
+  byId("zone-name").textContent = site.danger_zone_label || "";
+  const channelCount = siteData.channels ? siteData.channels.features.length : 0;
+  byId("show-all").textContent = channelCount ? STRINGS.showAll(channelCount) : STRINGS.showMore;
   app.drawer.siteChanged();
   const map = createMap(site, siteData, byId("background-notice"));
   app.map = map;
@@ -245,6 +262,11 @@ function setUpPanels() {
   }));
   const check = createPanel(byId("check-panel"), (body) => fillCheck(body, () => app.pair));
   byId("help-button").onclick = help;
+  byId("show-all").onclick = () => app.drawer.open();
+  // The open sheet's links do what the buttons they name do.
+  document.querySelectorAll("[data-click]").forEach((button) => {
+    button.onclick = () => byId(button.dataset.click).click();
+  });
   byId("check-button").onclick = () => app.site && check();
   byId("sources-button").onclick = () => app.site && sources();
   byId("site-name").onclick = () => app.site && picker();

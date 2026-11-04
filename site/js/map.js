@@ -310,7 +310,9 @@ const Credits = L.Control.Attribution.extend({
     const short = items.includes(STRINGS.channelCredit) ? STRINGS.creditsShortOsm : STRINGS.creditsShort;
     const line = document.createElement("span");
     line.className = "credits-short";
-    line.innerHTML = [...kept, short].join(' <span aria-hidden="true">|</span> '); // our own text, not data
+    // On a phone the short line hides and only the Credits button shows. A credit that must stay visible stays.
+    const separator = kept.length ? ' <span aria-hidden="true">|</span> ' : "";
+    line.innerHTML = `${kept.join("")}<span class="credits-folded">${separator}${short}</span>`; // our own text, not data
     const full = document.createElement("ul");
     full.className = "credits-full";
     for (const item of items) {
@@ -318,7 +320,12 @@ const Credits = L.Control.Attribution.extend({
       row.innerHTML = item; // our own text, and the site's credit, which is escaped first
       full.append(row);
     }
-    this._container.replaceChildren(line, newInfo(STRINGS.infoWhat.credits, full));
+    const info = newInfo(STRINGS.infoWhat.credits, full);
+    const label = document.createElement("span");
+    label.className = "credits-label";
+    label.textContent = STRINGS.creditsButton;
+    info.querySelector(".info-button").append(label);
+    this._container.replaceChildren(line, info);
   },
   fold() {
     if (this._folded) return;

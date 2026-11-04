@@ -6,7 +6,7 @@ import pytest
 from PIL import Image
 from playwright.sync_api import expect
 
-from .conftest import SITE, TINY_PNG, close_list_on_a_phone, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import SITE, TINY_PNG, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
@@ -112,12 +112,11 @@ def test_tc090_on_a_desktop_the_panel_is_beside_the_map(page, site_url):
     assert page.evaluate("document.documentElement.scrollHeight <= innerHeight")
 
 
-def test_tc090_on_a_phone_closing_the_list_brings_the_pass_controls_back(page, site_url):
+def test_tc090_on_a_phone_the_closed_sheet_has_the_pass_and_the_list(page, site_url):
     open_at(page, site_url, 360, 740)
-    expect(page.locator("#pair-list")).to_be_hidden()
-    page.click("#channel-close")
     expect(page.locator("#pair-list")).to_be_visible()
-    expect(page.locator("#channels-button")).to_be_focused()
+    expect(page.locator("#channel-body .channel-row").first).to_be_visible()
+    assert page.evaluate("document.activeElement === document.body")
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     assert problems_on(page) == []
 
@@ -129,7 +128,10 @@ def test_tc090_the_sites_own_font_is_used_and_nothing_loads_from_a_font_host(pag
     page.evaluate("document.fonts.ready")
     assert page.evaluate("document.fonts.check('600 16px \"IBM Plex Sans\"')")
     assert "IBM Plex Sans" in page.evaluate("getComputedStyle(document.body).fontFamily")
-    assert "IBM Plex Mono" in page.locator(".channel-row-area").first.evaluate("(area) => getComputedStyle(area).fontFamily")
+    # The calm design uses Plex Sans only, with numbers of equal width so they line up (FR-092).
+    area = page.locator(".channel-row-area").first
+    assert "IBM Plex Sans" in area.evaluate("(node) => getComputedStyle(node).fontFamily")
+    assert area.evaluate("(node) => getComputedStyle(node).fontVariantNumeric") == "tabular-nums"
     assert not outside
 
 
@@ -195,7 +197,7 @@ def test_tc091_at_the_default_zoom_the_marks_stay_small_and_visible(app):
 
 
 def test_tc091_the_legend_says_small_spots_are_drawn_larger(app):
-    expect(app.locator(".legend")).to_contain_text("Small spots are drawn larger than life so they can be seen. The areas don't change.")
+    expect(app.locator(".area-line .info-popover")).to_contain_text("Small spots are drawn larger than life so they can be seen. The areas don't change.")
 
 
 def test_tc091_no_marks_with_the_layer_off(app):
@@ -230,7 +232,7 @@ def current_bar_state(page):
     """Which bars are marked as current, the pass on the map, and whether the bar is in view."""
     return page.evaluate("""() => {
       const bars = [...document.querySelectorAll('.channel-bar[aria-current]')];
-      const scroller = document.getElementById('channel-panel');
+      const scroller = document.getElementById('panel');
       const box = bars[0].getBoundingClientRect();
       const inView = box.top >= document.querySelector('.channel-header').getBoundingClientRect().bottom - 1
         && box.bottom <= scroller.getBoundingClientRect().bottom + 1;
@@ -267,12 +269,13 @@ def test_tc093_the_bar_follows_the_pass_buttons(app):
     expect_bar_matches_the_map(app)
     pairs = [pair["id"] for pair in read_data("sites/mayon/pairs.json")]
     for pair in reversed(pairs[-5:-1]):
-        button = app.locator("#previous").bounding_box()
-        app.click("#previous")
+        # The channel's page has its own ‹ and ›, which work like the pass buttons it hides.
+        button = app.locator("#channel-previous").bounding_box()
+        app.click("#channel-previous")
         expect_bar_matches_the_map(app, pair)
         # The list moves last, once the pass has loaded, and the next press counts from it.
         expect(app.locator("#pair-list")).to_have_value(pair)
-        assert app.locator("#previous").bounding_box()["y"] == pytest.approx(button["y"], abs=1)  # it stays under the finger
+        assert app.locator("#channel-previous").bounding_box()["y"] == pytest.approx(button["y"], abs=1)  # it stays under the finger
 
 
 def test_tc093_the_bar_under_the_pointer_doesnt_look_selected(app):
@@ -598,7 +601,6 @@ def test_tc096_the_label_is_clear_of_the_credits(page, site_url, width, height, 
     prepare_page(page, width=width, height=height)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
     page.click(f'.basemap-button:has-text("{background}")')
     expect(page.locator(LABEL)).to_have_text(LATEST_LABEL)
     assert_label_is_clear(page)
@@ -608,7 +610,6 @@ def test_tc096_the_label_is_clear_on_panama_on_a_phone(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
     page.click("#site-name")
     page.click("#picker-panel button:has-text('Azuero Peninsula')")
     expect(page.locator(LABEL)).to_have_text("NISAR GCOV + GUNW · before Sep 27, 2026 · after Oct 9, 2026")
@@ -637,7 +638,6 @@ def test_tc096_the_label_is_clear_of_the_map_buttons_with_the_drawer_open(page, 
     prepare_page(page, width=360, height=height)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
     page.click(f'.basemap-button:has-text("{background}")')
     open_drawer_if_closed(page)
     expect(page.locator(LABEL)).to_have_text(LATEST_LABEL)

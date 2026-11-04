@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mayon Radar Watch</title>
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=3c2da55400">
+  <link rel="stylesheet" href="css/app.css?v=d9dbab5dd0">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
@@ -17,7 +17,6 @@
     </span>
     <h1 class="site-title"><button id="site-name" class="site-name" type="button" data-text="appName"></button></h1>
     <button id="search-button" class="search-box" type="button"><span class="search-box-text" data-text="searchBox"></span></button>
-    <button id="channels-button" type="button" data-text="channelsButton" hidden></button>
     <div class="disclaimer-tag">
       <span id="disclaimer-short" data-text="disclaimerShort"></span>
       <span data-info="disclaimer"><p class="disclaimer" data-text="disclaimer"></p></span>
@@ -58,70 +57,112 @@
     </section>
   </main>
 
+  <!-- T-139: the side column (F-24). Four cards: This pass, Layers, Channels since the last pass and
+       Brightness change. On a phone the same column is the sheet under the map. -->
   <div class="side">
-  <section id="channel-panel" class="channel-panel" data-label="channelsTitle" hidden>
-    <header class="channel-header">
-      <button id="channel-back" type="button" data-text="channelBack" hidden></button>
-      <h2 id="channel-title" tabindex="-1"></h2>
-      <button id="channel-close" type="button" data-text="close"></button>
-    </header>
-    <p class="channel-status-line" aria-live="polite">
-      <span id="channel-status"></span>
-      <button id="channel-retry" type="button" data-text="retry" hidden></button>
-    </p>
-    <div id="channel-body"></div>
-  </section>
-
   <section id="panel" class="panel drawer-closed" data-label="panelLabel" hidden>
     <button id="drawer-toggle" class="drawer-toggle" type="button" aria-expanded="false"></button>
-    <div class="timeline">
-      <div class="timeline-controls">
-        <button id="previous" type="button" data-text="previous"></button>
-        <select id="pair-list" data-label="radarPassList"></select>
-        <button id="next" type="button" data-text="next"></button>
+    <div class="home-only">
+      <h2 class="section-title" data-text="passTitle"></h2>
+      <div class="card pass-card timeline">
+        <div class="pass-head">
+          <button id="previous" class="icon-button" type="button" data-label="previous"><span class="chevron chevron-back" aria-hidden="true"></span></button>
+          <div class="pass-title">
+            <!-- The pass list keeps working as a list, so any pass is one choice away. It sits invisibly
+                 over the title, which shows the chosen pass in short. -->
+            <div class="pass-pick">
+              <span id="pair-label" class="pair-label" aria-hidden="true"></span>
+              <select id="pair-list" data-label="radarPassList"></select>
+            </div>
+            <div class="pair-line">
+              <span id="pair-sub" class="pair-sub"></span>
+              <span data-info="pass"><p id="pair-detail"></p><p id="pair-events" class="pair-events"></p></span>
+            </div>
+          </div>
+          <button id="next" class="icon-button" type="button" data-label="next"><span class="chevron chevron-next" aria-hidden="true"></span></button>
+        </div>
+        <p class="timeline-status" aria-live="polite">
+          <span id="timeline-message"></span>
+          <button id="timeline-retry" type="button" data-text="retry" hidden></button>
+        </p>
+        <div class="pass-numbers">
+          <p class="area-number"><span id="legend-area" class="legend-area"></span></p>
+          <div class="area-line">
+            <span id="area-caption" class="area-caption"></span>
+            <span data-info="area"><span id="legend-area-more"></span><p class="channel-note" data-text="marksNote"></p></span>
+          </div>
+          <p id="area-courts" class="area-courts"></p>
+          <div id="confidence-bar" class="confidence-bar" aria-hidden="true"></div>
+          <ul id="confidence-key" class="confidence-key"></ul>
+          <p id="pair-gap" class="pair-gap soft-note"></p>
+          <p id="summary" class="summary soft-note"></p>
+          <p class="legend-actions">
+            <button id="compare-button" class="quiet-button" type="button" data-text="compareButton"></button>
+            <span id="compare-message" aria-live="polite"></span>
+          </p>
+        </div>
       </div>
-      <div class="pair-line">
-        <span id="pair-label" class="pair-label"></span>
-        <span data-info="pass"><p id="pair-detail"></p><p id="pair-events" class="pair-events"></p></span>
+
+      <h2 class="section-title" data-text="layersTitle"></h2>
+      <div class="card layers-card legend">
+        <div class="layer-row">
+          <label class="layer-toggle"><span id="legend-title" class="layer-name"></span><input id="layer-toggle" type="checkbox" role="switch" checked></label>
+          <div class="legend-key">
+            <ul id="legend-rows" class="legend-rows"></ul>
+            <span data-info="legend"><p class="legend-colors" data-text="legendColors"></p><ul id="legend-full" class="legend-full"></ul><p id="legend-no-color"></p></span>
+          </div>
+        </div>
+        <div id="channel-legend" class="layer-row channel-legend" hidden>
+          <div id="channel-layer">
+            <label class="layer-toggle"><span class="layer-name" data-text="channelLayerLabel"></span><input id="channel-toggle" type="checkbox" role="switch" checked></label>
+            <div class="legend-key">
+              <span id="channel-count" class="layer-sub"></span>
+              <span data-info="channelLayer"><p id="channel-note" class="channel-note" data-text="channelLineNote"></p><p id="channel-sources" class="channel-note" data-text="channelSources"></p></span>
+            </div>
+          </div>
+          <p id="channels-unavailable" class="summary" data-text="channelsUnavailable" hidden></p>
+        </div>
+        <div id="zone-row" class="layer-row zone-row" hidden>
+          <span id="zone-name" class="layer-name"></span>
+          <span class="layer-sub" data-text="zoneAlways"></span>
+        </div>
       </div>
-      <p id="pair-gap" class="pair-gap"></p>
-      <p class="timeline-status" aria-live="polite">
-        <span id="timeline-message"></span>
-        <button id="timeline-retry" type="button" data-text="retry" hidden></button>
-      </p>
     </div>
-    <div class="legend">
-      <label class="layer-toggle"><span id="legend-title"></span><input id="layer-toggle" type="checkbox" role="switch" checked></label>
-      <div class="legend-key">
-        <ul id="legend-rows" class="legend-rows"></ul>
-        <span data-info="legend"><p class="legend-colors" data-text="legendColors"></p><ul id="legend-full" class="legend-full"></ul><p id="legend-no-color"></p></span>
-      </div>
-      <div class="area-line">
-        <span id="legend-area" class="legend-area"></span>
-        <span data-info="area"><span id="legend-area-more"></span><p class="channel-note" data-text="marksNote"></p></span>
-      </div>
-      <p id="summary" class="summary"></p>
-      <p class="legend-actions">
-        <button id="compare-button" type="button" data-text="compareButton"></button>
-        <span id="compare-message" aria-live="polite"></span>
+
+    <section id="channel-panel" class="channel-panel" data-label="channelsTitle" hidden>
+      <header class="channel-header">
+        <button id="channel-back" class="back-button" type="button" hidden><span class="chevron chevron-back" aria-hidden="true"></span><span data-text="channelBack"></span></button>
+        <div class="channel-title-line">
+          <h2 id="channel-title" tabindex="-1"></h2>
+          <span id="channel-info" data-info="channels"><p id="channel-lead" class="channel-lead"></p><p id="channel-how"></p><p data-text="channelsOnlyConfirmed"></p><p data-text="channelCourtSize"></p></span>
+        </div>
+        <div id="channel-head-more"></div>
+      </header>
+      <p class="channel-status-line" aria-live="polite">
+        <span id="channel-status"></span>
+        <button id="channel-retry" type="button" data-text="retry" hidden></button>
       </p>
-    </div>
-    <div class="histogram">
-      <h2 class="histogram-title" data-text="histogramTitle"></h2>
+      <div id="channel-body"></div>
+    </section>
+
+    <!-- On a phone, the closed sheet shows 3 channels, and this opens it to show the rest (FR-095). -->
+    <button id="show-all" class="link-button show-all" type="button"></button>
+
+    <h2 class="section-title histogram-heading" data-text="histogramSection"></h2>
+    <div class="card histogram">
+      <h3 class="histogram-title" data-text="histogramTitle"></h3>
       <div id="histogram-chart"></div>
       <div class="share-line">
         <span id="histogram-share" class="histogram-share"></span>
         <span data-info="chart"><p id="histogram-sentence" class="histogram-sentence"></p><p id="histogram-note" class="histogram-note"></p></span>
       </div>
     </div>
-    <div id="channel-legend" class="channel-legend" hidden>
-      <div id="channel-layer">
-        <label class="layer-toggle"><span data-text="channelLayerLabel"></span><input id="channel-toggle" type="checkbox" role="switch" checked></label>
-        <p id="channel-note" class="channel-note" data-text="channelLineNote"></p>
-        <p id="channel-sources" class="channel-note" data-text="channelSources"></p>
-      </div>
-      <p id="channels-unavailable" class="summary" data-text="channelsUnavailable" hidden></p>
-    </div>
+    <!-- On a phone the bottom bar is gone, so the open sheet ends with its links. -->
+    <p class="sheet-links">
+      <button type="button" class="link-button" data-click="help-button" data-text="helpButton"></button>
+      <button type="button" class="link-button" data-click="sources-button" data-text="sourcesButton"></button>
+      <button type="button" class="link-button" data-click="check-button" data-text="checkButton"></button>
+    </p>
   </section>
   </div>
   </div>
@@ -174,24 +215,24 @@
   <script type="importmap">
 {
   "imports": {
-    "./js/channels.js": "./js/channels.js?v=aeecd97064",
+    "./js/channels.js": "./js/channels.js?v=fd204642b8",
     "./js/compare.js": "./js/compare.js?v=992505293c",
     "./js/data.js": "./js/data.js?v=4dcc91f5d5",
-    "./js/drawer.js": "./js/drawer.js?v=7e42d26b68",
+    "./js/drawer.js": "./js/drawer.js?v=d217e9130d",
     "./js/histogram.js": "./js/histogram.js?v=41b9d489b4",
-    "./js/layers.js": "./js/layers.js?v=3f226ddb4b",
-    "./js/main.js": "./js/main.js?v=393b841add",
-    "./js/map.js": "./js/map.js?v=ca1e65e83a",
+    "./js/layers.js": "./js/layers.js?v=01983b4fd6",
+    "./js/main.js": "./js/main.js?v=16e86d44dc",
+    "./js/map.js": "./js/map.js?v=67a4a7766b",
     "./js/marks.js": "./js/marks.js?v=954090a74a",
     "./js/panels.js": "./js/panels.js?v=1417279eb1",
     "./js/popover.js": "./js/popover.js?v=120be6e61a",
     "./js/readout.js": "./js/readout.js?v=d38c3583a3",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=e5cbb3504c",
-    "./js/timeline.js": "./js/timeline.js?v=1cb7defecf"
+    "./js/strings.js": "./js/strings.js?v=a6869330cf",
+    "./js/timeline.js": "./js/timeline.js?v=69bf6661ab"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=393b841add" onerror="showStartFailure()"></script>
+  <script type="module" src="js/main.js?v=16e86d44dc" onerror="showStartFailure()"></script>
 </body>
 </html>

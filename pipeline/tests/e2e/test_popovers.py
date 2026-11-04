@@ -2,13 +2,13 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import DISCLAIMER, SHORT_DISCLAIMER, close_list_on_a_phone, open_drawer_if_closed, prepare_page, wait_until_ready
+from .conftest import DISCLAIMER, SHORT_DISCLAIMER, open_drawer_if_closed, prepare_page, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import read_data_towns, tap_at
 
 pytestmark = pytest.mark.e2e
 
-LEGEND_INFO = ".legend-key .info"
+LEGEND_INFO = "#legend-rows ~ .info"
 AREA_INFO = ".area-line .info"
 LEGAL_WORDS = ("illegal", "unpermitted", "violation")
 
@@ -69,7 +69,6 @@ def test_tc102_touch_opens_it_with_a_tap_and_closes_it_with_a_tap_outside(browse
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
     page.tap(".disclaimer-tag .info-button")
     tag = popover(page, ".disclaimer-tag .info")
     expect(tag).to_be_visible()
@@ -109,11 +108,14 @@ def test_tc102_axe_passes_with_a_popover_open(app, holder):
 
 
 def test_tc103_each_panel_shows_one_line_and_keeps_the_explanation(app):
-    expect(app.locator("#pair-label")).to_have_text("Oct 8 – Oct 20")
+    expect(app.locator("#pair-label")).to_have_text("Oct 8 – 20, 2026")
+    expect(app.locator("#pair-sub")).to_have_text("Track 111 · morning pass, 5:13 AM")
     expect(app.locator("#pair-detail")).to_have_text("Oct 8, 2026 to Oct 20, 2026 (Asia/Manila), track 111, frame 8, ascending")
     expect(app.locator("#legend-rows li")).to_have_text(["Possible", "Likely"])
     expect(app.locator("#legend-full")).to_contain_text("Possible new material (brightness only). Confidence: low")
-    expect(app.locator("#legend-area")).to_have_text("0.75 km² new material")
+    expect(app.locator("#legend-area")).to_have_text("0.75 km²")
+    expect(app.locator("#area-caption")).to_have_text("new material within 10 km of the summit")
+    expect(app.locator("#area-courts")).to_have_text("About 1,786 basketball courts")
     area = app.locator("#legend-area-more")
     for text in ("Areas are in km².", "Total detected area: 0.75 km²", "basketball courts", "1 basketball court = 28 × 15 m"):
         expect(area).to_contain_text(text)
@@ -148,7 +150,7 @@ def test_tc103_no_banned_word_in_any_popover_on_either_site(app):
     app.click("#site-name")
     app.click("#picker-panel button:has-text('Azuero Peninsula')")
     expect(app.locator("#disclaimer-short")).to_have_text("Not an official warning · Follow SINAPROC")
-    expect(app.locator("#legend-area")).to_contain_text("km² changed")
+    expect(app.locator("#area-caption")).to_have_text("changed")
     text = popover_texts(app)
     assert not [word for word in LEGAL_WORDS if word in text]
     assert "landslide" not in text
@@ -185,7 +187,6 @@ def test_tc104_on_a_phone_the_links_are_in_the_help_panel(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    close_list_on_a_phone(page)
     expect(page.locator(".footer")).to_be_hidden()
     page.click("#help-button")
     more = page.locator("#help-panel .help-more")

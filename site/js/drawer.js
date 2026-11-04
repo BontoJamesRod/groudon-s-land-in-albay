@@ -45,6 +45,9 @@ export function createDrawer(panel, toggle, onResize, getSite) {
 
   setOpen(false);
   return {
+    open: () => {
+      if (!isOpen()) setOpen(true);
+    },
     close: () => {
       if (isOpen()) setOpen(false);
     },
