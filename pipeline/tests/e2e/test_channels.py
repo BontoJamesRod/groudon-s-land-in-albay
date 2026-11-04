@@ -343,12 +343,12 @@ def test_the_top_bar_keeps_two_rows_with_a_wider_font(page, site_url, width):
     prepare_page(page, width=width, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    assert page.locator(".disclaimer-tag").bounding_box()["height"] <= 24  # the short disclaimer: one line
+    assert page.locator(".disclaimer-tag").bounding_box()["height"] <= 36  # the short disclaimer: one line in its strip
     page.add_style_tag(content="* { letter-spacing: 1px !important; }")
     top = page.locator(".topbar").bounding_box()["y"]
     tag = page.locator(".disclaimer-tag").bounding_box()
     assert tag["y"] - top < 110  # the title and the buttons: two rows
-    assert tag["height"] <= 40  # a very wide font may wrap the short disclaimer, but no more than once
+    assert tag["height"] <= 54  # a very wide font may wrap the short disclaimer, but no more than once
     assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
     for button in ("#channels-button", "#search-button", "#help-button"):
         box = page.locator(button).bounding_box()

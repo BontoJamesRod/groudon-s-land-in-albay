@@ -36,7 +36,7 @@ def open_app(page, site_url, width=1280, height=800):
 def test_axe_finds_a_planted_problem(page, site_url):
     """If axe-core stopped working, the other tests here would pass without checking anything."""
     open_app(page, site_url)
-    page.evaluate("document.getElementById('help-button').textContent = ''")
+    page.evaluate("(() => { const help = document.getElementById('help-button'); help.textContent = ''; help.removeAttribute('aria-label'); })()")
     assert any(problem.startswith("button-name") for problem in problems_on(page))
 
 

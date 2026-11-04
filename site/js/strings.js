@@ -21,6 +21,8 @@ export const STRINGS = {
   // Main screen (SCR-01)
   appName: "Mayon Radar Watch",
   searchButton: "Search",
+  // The search box in the top bar (FR-093). Search only finds towns, so it says so.
+  searchBox: "Find a town",
   helpButton: "What am I looking at?",
   compareButton: "Compare",
   previous: "Previous",

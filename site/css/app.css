@@ -4,11 +4,24 @@
 @font-face { font-family: "IBM Plex Sans"; font-weight: 700; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-sans-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-display: swap; src: url("../vendor/ibm-plex-5.3.0/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); }
 
+/* T-138: the calm design's colours (F-24, FR-092). Every panel and the top bar use these. */
 :root {
-  --ink: #16202a;
-  --paper: #fbfaf5;
-  --line: #b9b4a4;
+  --ground: #faf9f7; /* page and side column */
+  --surface: #ffffff; /* cards, top bar, sheet, popovers */
+  --line: #e7e3dc; /* card borders and dividers, decoration only */
+  --line-strong: #cfc8bc; /* the edge of a button or a box */
+  --ink: #1c1b19;
+  --ink-2: #5f5b55; /* secondary text, section titles */
+  --ink-3: #6f6b64; /* small print, 5.0:1 on the ground */
+  --accent: #1f5a8c; /* links, selected items, switches that are on */
+  --accent-soft: #eaf1f8;
+  --accent-soft-ink: #1f4a70;
+  --warn-bg: #fdf3e4; /* the disclaimer */
+  --warn-ink: #7a4510;
+  --switch-off: #8a847b; /* 3.7:1, enough for a control */
+  --paper: var(--surface);
   --alert: #c2410c;
+  --shadow-float: 0 2px 10px rgba(28, 27, 25, 0.12), 0 1px 2px rgba(28, 27, 25, 0.08);
 }
 
 * { box-sizing: border-box; }
@@ -18,7 +31,7 @@ html, body {
   margin: 0;
   font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
-  background: var(--paper);
+  background: var(--ground);
 }
 
 body {
@@ -197,9 +210,17 @@ select {
   padding: 0 12px;
   font: inherit;
   color: var(--ink);
-  background: #ffffff;
-  border: 1px solid #6b6658;
-  border-radius: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+}
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[role="slider"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 button:disabled { color: #6e7781; }
@@ -840,34 +861,38 @@ button:disabled { color: #6e7781; }
   justify-content: center;
 }
 
+/* A plain "i" in a thin ring. */
 .info-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 18px;
   height: 18px;
-  border: 1.5px solid currentColor;
+  border: 1.5px solid var(--ink-2);
   border-radius: 50%;
-  font: italic 700 12px/15px Georgia, "Times New Roman", serif;
-  text-align: center;
+  color: var(--ink-2);
+  font: 600 11px/1 "IBM Plex Sans", system-ui, sans-serif;
 }
 
-.info-button[aria-expanded="true"] .info-glyph { background: var(--ink); color: var(--paper); }
+.info-button[aria-expanded="true"] .info-glyph { border-color: var(--ink); background: var(--ink); color: var(--surface); }
 
 .info-popover {
   position: fixed;
   z-index: 2000;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--paper);
+  border-radius: 10px;
+  background: var(--surface);
   color: var(--ink);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  font-size: 14px;
+  box-shadow: 0 6px 24px rgba(28, 27, 25, 0.16), 0 1px 3px rgba(28, 27, 25, 0.1);
+  font-size: 13.5px;
   font-weight: 400;
   line-height: 1.4;
   text-align: left;
   white-space: normal;
 }
 
-.info-popover p { margin: 4px 0; padding: 0; border: 0; font-size: 14px; font-weight: 400; }
+.info-popover p { margin: 4px 0; padding: 0; border: 0; font-size: 13.5px; font-weight: 400; }
 
 .info-popover ul { margin: 4px 0; padding-left: 18px; }
 
@@ -909,29 +934,35 @@ button:disabled { color: #6e7781; }
 /* T-134: on a desktop the bottom bar slides away to a thin strip, like a taskbar, and comes up at the
    bottom edge or when a link in it gets keyboard focus (FR-090). */
 @media (min-width: 701px) {
+  /* The top 8 px is clear, so that when the bar is down only its short handle shows. The shadow
+     follows what is drawn, so it falls under the bar and the handle only. */
   .footer {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 1100;
-    min-height: 52px;
-    background: var(--paper);
-    transform: translateY(calc(100% - 6px));
+    min-height: 60px;
+    padding-top: 8px;
+    border-top: 0;
+    background: linear-gradient(to bottom, transparent 8px, var(--surface) 8px);
+    filter: drop-shadow(0 -2px 6px rgba(28, 27, 25, 0.12));
+    transform: translateY(calc(100% - 8px));
     transition: transform 200ms ease-out 300ms;
   }
   .footer::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: var(--line);
+    top: 2px;
+    left: calc(50% - 28px);
+    width: 56px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--switch-off);
   }
   .footer:hover, .footer:focus-within { transform: none; transition-delay: 0ms; }
-  /* The strip covers the map's bottom edge, so the credits sit just above it. */
-  .leaflet-bottom .leaflet-control-attribution { margin-bottom: 6px; }
+  /* The clear strip covers the map's bottom edge, so the credits sit just above it. */
+  .leaflet-bottom .leaflet-control-attribution { margin-bottom: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -950,4 +981,274 @@ button:disabled { color: #6e7781; }
 /* FR-049: on a phone, the credits' info button is a 44 px target too, without making the bar taller. */
 @media (max-width: 700px) {
   .leaflet-control-attribution .info-button { width: 44px; height: 44px; margin: -16px -12px; position: relative; z-index: 1; }
+}
+
+/* T-138: the calm look (F-24, FR-092, FR-093). Quiet like a settings page: white cards with thin
+   lines on a warm ground, one blue accent, and soft shadows only on things that float. */
+.legend-area,
+.channel-row-area,
+.channel-bar-value,
+.histogram-share { font-variant-numeric: tabular-nums; }
+
+/* The top bar: app name, the site as a chip, a search box, the disclaimer pill and help. */
+.topbar {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 56px;
+  padding: 6px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 14px;
+  border-right: 1px solid var(--line);
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.brand-mark { flex: none; width: 24px; height: 24px; color: var(--accent); }
+
+.site-title { min-width: 0; }
+
+/* The down arrow is drawn by the border, so it adds nothing to the button's name. */
+.site-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 0 14px;
+  border-color: var(--line-strong);
+  background: var(--surface);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.site-name::after {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin-top: -4px;
+  border-right: 1.5px solid var(--ink-2);
+  border-bottom: 1.5px solid var(--ink-2);
+  transform: rotate(45deg);
+}
+
+/* Search looks like a box. It still opens the search panel. */
+.search-box {
+  margin-left: auto;
+  width: 248px;
+  padding-left: 38px;
+  border-color: var(--line);
+  background: var(--ground) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%235f5b55' stroke-width='1.6'%3E%3Ccircle cx='6.8' cy='6.8' r='5'/%3E%3Cpath d='m10.6 10.6 3.9 3.9' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 13px center;
+  color: var(--ink-3);
+  text-align: left;
+}
+
+.disclaimer-tag {
+  flex: none;
+  min-height: 32px;
+  padding: 0 6px 0 14px;
+  border-radius: 999px;
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  white-space: nowrap;
+}
+
+.disclaimer-tag .info-glyph { border-color: var(--warn-ink); color: var(--warn-ink); }
+
+.round-button {
+  flex: none;
+  width: 44px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Cards and floating panels. */
+.floating-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 6px 24px rgba(28, 27, 25, 0.16), 0 1px 3px rgba(28, 27, 25, 0.1);
+}
+
+.panel-dialog { border-radius: 12px; background: var(--surface); color: var(--ink); }
+
+.panel-dialog header { background: var(--surface); }
+
+.panel-dialog a,
+.link-button { color: var(--accent); }
+
+@media (min-width: 701px) {
+  .side { background: var(--ground); }
+  .side .panel { gap: 12px; padding: 12px 16px 16px; border-top: 0; }
+  .side .timeline,
+  .side .legend,
+  .side .histogram,
+  .side .channel-legend {
+    padding: 4px 16px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+  .side .channel-panel { background: var(--ground); }
+  .side .channel-header { background: var(--ground); }
+}
+
+.channel-row,
+.channel-bar[aria-current] { border-radius: 8px; }
+
+.channel-bar[aria-current] { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+
+/* Layer switches: the label on the left, the switch on the right, and the whole row is the target. */
+.layer-toggle { justify-content: space-between; gap: 12px; cursor: pointer; }
+
+.layer-toggle input[role="switch"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 24px;
+  margin: 0;
+  border-radius: 12px;
+  background: var(--switch-off);
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.layer-toggle input[role="switch"]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform 150ms ease-out;
+}
+
+.layer-toggle input[role="switch"]:checked { background: var(--accent); }
+
+.layer-toggle input[role="switch"]:checked::before { transform: translateX(16px); }
+
+.layer-toggle input[role="switch"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* In forced colours the switch keeps an edge and its knob. */
+@media (forced-colors: active) {
+  .layer-toggle input[role="switch"] { border: 1px solid CanvasText; }
+  .layer-toggle input[role="switch"]::before { background: CanvasText; }
+}
+
+/* Map controls: white, rounded, with a soft shadow. */
+.leaflet-touch .leaflet-bar,
+.leaflet-bar {
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: var(--shadow-float);
+}
+
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a { color: var(--ink); background: var(--surface); border-bottom: 1px solid var(--line); }
+
+.leaflet-touch .leaflet-bar a:first-child,
+.leaflet-touch .leaflet-bar a:last-child { border-radius: 0; }
+
+/* Relief or Satellite: a white segmented control, and the one that's on is dark. */
+.basemap-switcher {
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+}
+
+.leaflet-container .basemap-button,
+.leaflet-container .basemap-button:first-child,
+.leaflet-container .basemap-button:last-child {
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 600;
+}
+
+.leaflet-container .basemap-button[aria-pressed="true"] { color: #ffffff; background: var(--ink); }
+
+/* The NISAR label: a white pill with a small radar mark. */
+.leaflet-container .leaflet-control.product-label {
+  position: relative;
+  padding: 5px 12px 5px 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  text-align: left;
+}
+
+.leaflet-container .leaflet-control.product-label::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: calc(50% - 6px);
+  width: 12px;
+  height: 12px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%231f5a8c' stroke-width='1.3' stroke-linecap='round'%3E%3Ccircle cx='6' cy='6' r='1.4' fill='%231f5a8c' stroke='none'/%3E%3Cpath d='M3.2 3.2a4 4 0 0 0 0 5.6M8.8 3.2a4 4 0 0 1 0 5.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+@media (max-width: 1180px) {
+  .brand { padding-right: 0; border-right: 0; }
+  .brand-name { display: none; }
+}
+
+@media (max-width: 980px) {
+  .search-box { width: 44px; padding: 0; background-position: center; }
+  .search-box-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* On a phone: the mark without the name, a magnifier for search, and the disclaimer as a strip. */
+@media (max-width: 700px) {
+  .topbar { flex-wrap: wrap; gap: 8px; padding: 4px 12px 0; }
+  .brand { padding-right: 0; border-right: 0; }
+  .brand-name { display: none; }
+  .search-box { width: 44px; padding: 0; background-position: center; }
+  .search-box-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .disclaimer-tag {
+    order: 10;
+    flex: 1 1 100%;
+    justify-content: center;
+    min-height: 0;
+    margin: 0 -12px;
+    padding: 4px 12px;
+    border-radius: 0;
+    border-top: 1px solid var(--line);
+    white-space: normal;
+  }
 }
