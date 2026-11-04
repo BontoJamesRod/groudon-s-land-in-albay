@@ -13,7 +13,7 @@ from playwright.sync_api import expect
 from mrw.validation import build_record, load_sheet
 
 from .test_accessibility import problems_on
-from .conftest import SHORT_DISCLAIMER, open_control, open_footer_link, envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
+from .conftest import go_to_panama, open_panama_link, SHORT_DISCLAIMER, open_control, open_footer_link, envelope, latest_dates, latest_pair, local_date, open_drawer_if_closed, prepare_page, read_data, read_fixture, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -294,7 +294,7 @@ def test_tc029_disclaimer_stays_on_screen(app):
     app.check("#layer-toggle")
     expect_disclaimer_on_screen(app)
     for button, panel in (("#help-button", "#help-panel"), ("#sources-button", "#sources-panel"),
-                          ("#check-button", "#check-panel"), ("#site-name", "#picker-panel")):
+                          ("#check-button", "#check-panel")):
         open_control(app, button)
         expect_disclaimer_on_screen(app)
         app.click(f"{panel} [data-close]")
@@ -341,26 +341,25 @@ def test_tc032_context_sources(app):
     expect(context).not_to_contain_text("NISAR")
 
 
-def test_tc033_switch_to_the_second_site(app):
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
-    expect(app.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
+def test_tc033_the_panama_test_opens_from_its_link_and_goes_back(app, site_url):
+    go_to_panama(app)
+    expect(app).to_have_url(site_url + "?site=panama")
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(app.locator(".leaflet-radar-pane img")).to_have_count(1)
+    app.click("#test-back")
+    expect(app.locator("#site-name")).to_have_text("Mayon Volcano, Albay")
+    expect(app.locator("#test-banner")).to_be_hidden()
+    expect(app).to_have_url(site_url)
 
 
 def test_tc034_second_site_fails_and_mayon_stays(page, site_url):
-    """Uses a made-up second site, on this test's browser only, whose files can't load."""
-    sites = read_data("sites.json")
-    second = {**sites[0], "id": "test_second", "name": "Test Second Site"}
+    """Panama's pairs can't load, on this test's browser only."""
     prepare_page(page)
-    page.route("**/data/sites.json", lambda route: route.fulfill(body=envelope(sites + [second]), content_type="application/json"))
-    page.route("**/sites/test_second/**", lambda route: route.fulfill(status=404))
+    page.route("**/sites/panama/pairs.json", lambda route: route.fulfill(status=404))
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Test Second Site')")
-    expect(page.locator("#app-message")).to_have_text("Couldn't load Test Second Site. Try again.")
+    open_panama_link(page)
+    expect(page.locator("#app-message")).to_have_text("Couldn't load Azuero Peninsula, Panama. Try again.")
     expect(page.locator("#app-retry")).to_be_visible()
     expect(page.locator("#site-name")).to_have_text("Mayon Volcano, Albay")
     expect(page.locator(".leaflet-radar-pane img")).to_have_count(1)
@@ -431,8 +430,7 @@ def test_tc042_phone_layout(page, site_url):
     assert page.evaluate("parseFloat(document.getElementById('compare-divider').style.left)") == pytest.approx(box["width"] * 0.3, abs=2)
     page.click("#compare-close")
     for button, panel in (("#search-button", "#search-panel"), ("#help-button", "#help-panel"),
-                          ("#sources-button", "#sources-panel"), ("#check-button", "#check-panel"),
-                          ("#site-name", "#picker-panel")):
+                          ("#sources-button", "#sources-panel"), ("#check-button", "#check-panel")):
         open_control(page, button)
         expect(page.locator(panel)).to_be_visible()
         assert no_sideways_scroll()

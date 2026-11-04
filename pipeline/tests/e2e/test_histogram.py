@@ -4,7 +4,7 @@ import json
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import open_channel_list, ROOT, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import go_to_panama, open_channel_list, ROOT, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
@@ -134,8 +134,7 @@ def test_panama_has_a_chart_and_no_outline_and_its_help_is_its_own(page, site_ur
     prepare_page(page)
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
     expect(page.locator(CHART)).to_be_visible()
     expect(page.locator("#histogram-note")).to_contain_text("Land in this site.")

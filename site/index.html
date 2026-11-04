@@ -8,17 +8,22 @@
   <link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
   <link rel="stylesheet" href="vendor/leaflet-1.9.4/leaflet.css">
-  <link rel="stylesheet" href="css/app.css?v=dc92571061">
+  <link rel="stylesheet" href="css/app.css?v=b1bd2d74b9">
 </head>
 <body>
   <!-- The text of these elements comes from js/strings.js. -->
+  <!-- Panama is a test of the method, not a second site to pick (FR-099). -->
+  <div id="test-banner" class="test-banner" hidden>
+    <span data-text="testBanner"></span>
+    <a id="test-back" class="test-back" href="./" data-text="testBack"></a>
+  </div>
   <header class="topbar">
     <span class="brand">
       <!-- The owner's logo. The app's name sits beside it, so screen readers skip it. -->
       <img class="brand-mark" src="img/mrw-logo.svg" alt="" width="24" height="24">
       <span class="brand-name" data-text="appName"></span>
     </span>
-    <h1 class="site-title"><button id="site-name" class="site-name" type="button"></button></h1>
+    <h1 class="site-title"><span id="site-name" class="site-name"></span></h1>
     <button id="search-button" class="search-box" type="button"><span class="search-box-text" data-text="searchBox"></span></button>
     <div class="disclaimer-tag">
       <span id="disclaimer-short" data-text="disclaimerShort"></span>
@@ -191,10 +196,6 @@
     <header><h2 data-text="checkTitle"></h2><button type="button" data-close data-text="close"></button></header>
     <div data-body></div>
   </dialog>
-  <dialog id="picker-panel" class="panel-dialog">
-    <header><h2 data-text="pickerTitle"></h2><button type="button" data-close data-text="close"></button></header>
-    <div data-body></div>
-  </dialog>
 
   <script>
     // If a script can't load, the app can't start, and js/strings.js may be the one missing,
@@ -224,18 +225,18 @@
     "./js/drawer.js": "./js/drawer.js?v=d217e9130d",
     "./js/histogram.js": "./js/histogram.js?v=41b9d489b4",
     "./js/layers.js": "./js/layers.js?v=01983b4fd6",
-    "./js/main.js": "./js/main.js?v=16e86d44dc",
+    "./js/main.js": "./js/main.js?v=bed3c0510c",
     "./js/map.js": "./js/map.js?v=67a4a7766b",
     "./js/marks.js": "./js/marks.js?v=954090a74a",
-    "./js/panels.js": "./js/panels.js?v=1417279eb1",
+    "./js/panels.js": "./js/panels.js?v=a411e4573d",
     "./js/popover.js": "./js/popover.js?v=120be6e61a",
     "./js/readout.js": "./js/readout.js?v=d38c3583a3",
     "./js/search.js": "./js/search.js?v=49363b9f38",
-    "./js/strings.js": "./js/strings.js?v=a6869330cf",
+    "./js/strings.js": "./js/strings.js?v=b675674160",
     "./js/timeline.js": "./js/timeline.js?v=69bf6661ab"
   }
 }
   </script>
-  <script type="module" src="js/main.js?v=16e86d44dc" onerror="showStartFailure()"></script>
+  <script type="module" src="js/main.js?v=bed3c0510c" onerror="showStartFailure()"></script>
 </body>
 </html>

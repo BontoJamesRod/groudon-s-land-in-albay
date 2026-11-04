@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import DISCLAIMER, SHORT_DISCLAIMER, open_drawer_if_closed, prepare_page, wait_until_ready
+from .conftest import go_to_panama, DISCLAIMER, SHORT_DISCLAIMER, open_drawer_if_closed, prepare_page, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import read_data_towns, tap_at
 
@@ -147,8 +147,7 @@ def test_tc103_no_banned_word_in_any_popover_on_either_site(app):
     open_drawer_if_closed(app)
     text = popover_texts(app)
     assert text and not [word for word in LEGAL_WORDS if word in text]
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#disclaimer-short")).to_have_text("Not an official warning · Follow SINAPROC")
     expect(app.locator("#area-caption")).to_have_text("changed")
     text = popover_texts(app)

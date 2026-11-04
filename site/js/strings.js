@@ -245,10 +245,15 @@ export const STRINGS = {
   channelNotCheckedNote: (reach) => `The dashed white part of this channel is more than ${reach} km from the summit. It's not checked and not counted, which doesn't mean that nothing changed there.`,
   channelCredit: 'Channel lines: <a href="https://www.openstreetmap.org/copyright">&copy; OpenStreetMap contributors</a> (ODbL)',
 
-  // Site picker (SCR-08)
-  pickerTitle: "Choose a site",
-  pickerEmpty: "No sites available yet",
-  pickerOption: (name, country) => `${name}, ${country}`,
+  // Panama is a test of the method, not a second site to pick (FR-099, FR-100, SCR-08)
+  testBanner: "Test site: Panama. It shows our method works outside Mayon.",
+  testBack: "← Back to Mayon",
+  testedTitle: "Tested in Panama",
+  testedMethod: "We ran the same method, unchanged, on Panama's Azuero Peninsula after its earthquake.",
+  testedMore: (quiet, quake) => `More land changed after the earthquake (${quake} km²) than in the quiet pair before it (${quiet} km²).`,
+  testedMoreNoNumbers: "More land changed after the earthquake than in the quiet pair before it.",
+  testedMatch: "Our result matches the University of Panama's landslide map at a scale of a few km.",
+  testedLink: "Open the Panama test map",
 };
 
 // A site whose map shows change in general, not volcanic material. Its `wording_set` in

@@ -3,7 +3,7 @@ import pytest
 from playwright.sync_api import expect
 
 from .test_accessibility import problems_on
-from .conftest import open_footer_link, prepare_page, wait_until_ready
+from .conftest import go_to_panama, open_footer_link, prepare_page, wait_until_ready
 from .test_mvp import card, tap_at
 
 pytestmark = pytest.mark.e2e
@@ -17,8 +17,7 @@ def open_panama(page, site_url, width=1280, height=800):
     prepare_page(page, width=width, height=height)
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator("#pair-list")).to_have_value(EARTHQUAKE)
     expect(page.locator("#legend-title")).to_have_text("Changed after the earthquake")
 
@@ -74,8 +73,7 @@ def test_tc078_the_phone_handle_has_no_summit_limit(page, site_url):
 
 
 def test_tc078_going_back_to_mayon_restores_its_wording(panama):
-    panama.click("#site-name")
-    panama.click("#picker-panel button:has-text('Mayon')")
+    panama.click("#test-back")
     expect(panama.locator(".disclaimer")).to_have_text("This is not an official warning. Follow PHIVOLCS and your LGU.")
     expect(panama.locator("#legend-title")).to_contain_text("New material")
 

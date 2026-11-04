@@ -6,7 +6,7 @@ import pytest
 from PIL import Image
 from playwright.sync_api import expect
 
-from .conftest import SITE, TINY_PNG, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import go_to_panama, SITE, TINY_PNG, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 
 pytestmark = pytest.mark.e2e
@@ -26,8 +26,7 @@ def open_at(page, site_url, width, height=800, **options):
 
 
 def switch_to_panama(page):
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Panama')")
+    go_to_panama(page)
     expect(page.locator("#site-name")).to_contain_text("Panama")
     wait_until_ready(page)
 
@@ -610,8 +609,7 @@ def test_tc096_the_label_is_clear_on_panama_on_a_phone(page, site_url):
     prepare_page(page, width=360, height=740)
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator(LABEL)).to_have_text("NISAR GCOV + GUNW · before Sep 27, 2026 · after Oct 9, 2026")
     assert_label_is_clear(page)
 

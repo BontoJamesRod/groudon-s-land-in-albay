@@ -2,7 +2,7 @@
 import pytest
 from playwright.sync_api import expect
 
-from .conftest import open_footer_link, prepare_page, wait_until_ready
+from .conftest import go_to_panama, open_footer_link, prepare_page, wait_until_ready
 
 pytestmark = pytest.mark.e2e
 
@@ -17,8 +17,7 @@ def open_with_panama(page, site_url):
 
 
 def switch_to_panama(page):
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
 
 
@@ -59,8 +58,7 @@ def test_panama_shows_its_own_credit_and_sources(page, site_url):
 def test_the_credit_changes_back_with_the_site(page, site_url):
     open_with_panama(page, site_url)
     switch_to_panama(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Mayon')")
+    page.click("#test-back")
     attribution = page.locator(".leaflet-control-attribution")
     expect(attribution).to_contain_text(MAYON_CREDIT)
     expect(attribution).not_to_contain_text("geoBoundaries")

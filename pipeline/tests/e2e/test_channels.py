@@ -8,7 +8,7 @@ from playwright.sync_api import expect
 from shapely import contains_xy
 from shapely.geometry import shape
 
-from .conftest import open_channel, open_channel_list, open_footer_link, SITE, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
+from .conftest import go_to_panama, open_channel, open_channel_list, open_footer_link, SITE, envelope, latest_dates, latest_pair, open_drawer_if_closed, prepare_page, read_data, wait_until_ready
 from .test_accessibility import problems_on
 from .test_mvp import card, controls_too_small, map_center, map_zoom, tap_at
 
@@ -149,8 +149,7 @@ def test_a_site_with_no_channel_data_says_nothing_about_channels(page, site_url)
     page.on("request", lambda request: asked.append(request.url))
     page.goto(site_url)
     wait_until_ready(page)
-    page.click("#site-name")
-    page.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(page)
     expect(page.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(page.locator("#channel-legend")).to_be_hidden()
     expect(page.locator(".channel-label")).to_have_count(0)
@@ -248,8 +247,7 @@ def test_tc065_a_site_with_no_channel_data_has_no_channel_card(app):
     # The list is always open, so there's no Channels button on any site (FR-094).
     expect(app.locator("#channels-button")).to_have_count(0)
     expect(app.locator("#channel-panel")).to_be_visible()
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(app.locator("#channel-panel")).to_be_hidden()
 
@@ -439,8 +437,7 @@ def test_tc068_a_channel_page_takes_the_column_and_back_returns_it(app):
 
 def test_tc068_switching_site_closes_the_view(app):
     open_channel(app, "Lidong")
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(app.locator("#channel-panel")).to_be_hidden()
     expect(strip_paths(app)).to_have_count(0)
@@ -617,8 +614,7 @@ def test_tc071_the_note_shows_on_a_phone_with_the_drawer_closed(page, site_url):
 
 
 def test_tc071_panamas_pairs_are_all_12_days(app):
-    app.click("#site-name")
-    app.click("#picker-panel button:has-text('Azuero Peninsula')")
+    go_to_panama(app)
     expect(app.locator("#pair-list")).to_have_value("panama_D141F085_20260927_20261009")
     expect(app.locator("#pair-list option.pair-dim")).to_have_count(0)
 

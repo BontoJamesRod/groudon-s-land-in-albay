@@ -1,5 +1,5 @@
-// Tasks T-030, T-031, T-032 and T-035: the "What am I looking at?" panel, the Data sources
-// panel, the site picker and the "How we checked this" panel. Text from data files is set with textContent, never as HTML.
+// Tasks T-030, T-031, T-035 and T-145: the "What am I looking at?" panel, the Data sources
+// panel and the "How we checked this" panel, with "Tested in Panama". Text from data files is set with textContent, never as HTML.
 
 import { loadJson, loadValidation } from "./data.js";
 import { STRINGS, textFor } from "./strings.js";
@@ -182,10 +182,49 @@ function checkTable(items) {
 }
 
 // SCR-07: the pair's validation record. No record is normal, not an error (FR-048).
-export async function fillCheck(body, getPair) {
+// The earthquake pair is the one whose dates hold the site's event; the quiet pair comes just before it.
+// Returns the sentence with both areas from the published records, or without numbers if they can't load.
+async function testedMore(site) {
+  try {
+    const folder = `data/sites/${site.id}`;
+    const [pairs, events] = await Promise.all([loadJson(`${folder}/pairs.json`), loadJson(`${folder}/events.json`)]);
+    const when = new Date(events[0].event_date);
+    const index = pairs.findIndex((pair) =>
+      new Date(pair.before_acquired_start) < when && when <= new Date(pair.after_acquired_start));
+    if (index < 1) return STRINGS.testedMoreNoNumbers;
+    const area = (pair) => pair.new_material_area_km2.toFixed(2);
+    return STRINGS.testedMore(area(pairs[index - 1]), area(pairs[index]));
+  } catch (problem) {
+    console.warn(problem.message);
+    return STRINGS.testedMoreNoNumbers;
+  }
+}
+
+// FR-100: on Mayon, the panel ends with the Panama test. `tested` is { site, open } or null.
+async function testedSection(tested) {
+  const section = element("section", undefined, "tested");
+  const link = element("a", STRINGS.testedLink);
+  link.href = `?site=${tested.site.id}`;
+  link.onclick = (event) => {
+    event.preventDefault();
+    tested.open();
+  };
+  const more = element("p", await testedMore(tested.site));
+  section.append(element("h3", STRINGS.testedTitle), element("p", STRINGS.testedMethod), more,
+    element("p", STRINGS.testedMatch), element("p", undefined));
+  section.lastChild.append(link);
+  return section;
+}
+
+export async function fillCheck(body, getPair, tested = null) {
+  // The Panama section comes after whatever this pair's check says, even when that fails.
+  const withTested = async (...parts) => {
+    body.replaceChildren(...parts);
+    if (tested) body.append(await testedSection(tested));
+  };
   const pair = getPair();
   if (!pair) {
-    body.replaceChildren(element("p", STRINGS.checkEmpty));
+    await withTested(element("p", STRINGS.checkEmpty));
     return;
   }
   body.replaceChildren(element("p", STRINGS.checkLoading));
@@ -193,30 +232,16 @@ export async function fillCheck(body, getPair) {
     const record = await loadValidation(pair.folder);
     if (!record) {
       // A pair can say why it has no check of its own.
-      body.replaceChildren(element("p", pair.check_note || STRINGS.checkEmpty));
+      await withTested(element("p", pair.check_note || STRINGS.checkEmpty));
       return;
     }
     const source = element("p", `${STRINGS.checkSource(record.source_name, record.source_date)} `);
     source.append(externalLink(STRINGS.checkSourceLink, record.source_url));
-    body.replaceChildren(source, element("p", record.method), checkTable(record.items));
+    await withTested(source, element("p", record.method), checkTable(record.items));
   } catch (problem) {
     console.error(problem.message);
     const failed = element("p", `${STRINGS.checkError} `);
-    failed.append(retryButton(() => fillCheck(body, getPair)));
-    body.replaceChildren(failed);
+    failed.append(retryButton(() => fillCheck(body, getPair, tested)));
+    await withTested(failed);
   }
-}
-
-// SCR-08: every published site. `onPick` loads the site and shows its own errors.
-export function fillPicker(body, sites, onPick) {
-  if (sites.length === 0) {
-    body.append(element("p", STRINGS.pickerEmpty));
-    return;
-  }
-  body.append(list(sites.map((site) => {
-    const button = element("button", STRINGS.pickerOption(site.name, site.country), "wide-button");
-    button.type = "button";
-    button.onclick = () => onPick(site);
-    return button;
-  })));
 }

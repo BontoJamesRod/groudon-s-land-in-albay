@@ -184,6 +184,19 @@ def open_footer_link(page, selector):
     page.click(selector)
 
 
+def open_panama_link(page):
+    """Open "How we checked this" and follow "Open the Panama test map" (FR-100)."""
+    open_footer_link(page, "#check-button")
+    page.click("#check-panel a:has-text('Open the Panama test map')")
+
+
+def go_to_panama(page):
+    """Reach the Panama test site the visitor's way, and wait until it shows (FR-099)."""
+    open_panama_link(page)
+    expect(page.locator("#site-name")).to_have_text("Azuero Peninsula, Panama")
+    expect(page.locator("#test-banner")).to_be_visible()
+
+
 def open_control(page, selector):
     """Click a control, or open a bottom-bar link the way a visitor reaches it."""
     if selector in FOOTER_BUTTONS:

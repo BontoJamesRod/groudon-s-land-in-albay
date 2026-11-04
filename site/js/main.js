@@ -1,6 +1,6 @@
-// Starts the app and connects its parts: load the site list, then the first site,
-// then its latest pair. Switching sites loads the new site before removing the old
-// one, so the previous site stays on screen if loading fails (FR-042).
+// Starts the app and connects its parts: load the site list, then the site the address
+// names (Mayon unless it says ?site=panama), then its latest pair. Opening another site loads
+// it before removing the old one, so the previous site stays on screen if loading fails (FR-042).
 
 import { createChannels } from "./channels.js";
 import { createCompare } from "./compare.js";
@@ -9,7 +9,7 @@ import { createDrawer } from "./drawer.js";
 import { createHistogram } from "./histogram.js";
 import { createChannelLayer, createNewMaterialLayer, showChannelLegend } from "./layers.js";
 import { createMap, RADAR_PANE, showStartView } from "./map.js";
-import { createPanel, fillCheck, fillHelp, fillPicker, fillSources } from "./panels.js";
+import { createPanel, fillCheck, fillHelp, fillSources } from "./panels.js";
 import { setUpInfos } from "./popover.js";
 import { createReadout } from "./readout.js";
 import { createSearch } from "./search.js";
@@ -17,6 +17,9 @@ import { applyPageStrings, STRINGS, textFor } from "./strings.js";
 import { createTimeline } from "./timeline.js";
 
 const byId = (id) => document.getElementById(id);
+
+// Panama is a test of the method, reached from "How we checked this", not a site to pick (FR-099).
+const TEST_SITE = "panama";
 
 // Every script has loaded and run, so errors from here on are handled by the app (see index.html).
 window.appStarted = true;
@@ -198,6 +201,8 @@ async function showSite(site, siteData) {
   app.pair = null;
   app.site = site;
   byId("site-name").textContent = site.name;
+  // The first site in the list is the app's own; any other is a test site with a banner.
+  byId("test-banner").hidden = site === app.sites[0];
   document.querySelector(".disclaimer").textContent = textFor(site).disclaimer;
   byId("disclaimer-short").textContent = textFor(site).disclaimerShort;
   // The ring is always on the map, so its row in Layers has no switch (FR-094).
@@ -225,8 +230,8 @@ async function showSite(site, siteData) {
   byId("loading").hidden = true;
 }
 
-// Load a site first, and only then touch the screen.
-async function openSite(site) {
+// Load a site first, and only then touch the screen. `onShown` runs once the site is on screen.
+async function openSite(site, onShown = () => {}) {
   clearMessage();
   byId("loading").hidden = false;
   app.openRequest += 1;
@@ -238,16 +243,41 @@ async function openSite(site) {
   } catch (problem) {
     if (thisRequest !== app.openRequest) return;
     console.error(problem.message);
-    showError(STRINGS.siteLoadError(site.name), () => openSite(site));
+    showError(STRINGS.siteLoadError(site.name), () => openSite(site, onShown));
     return;
   }
   try {
     await showSite(site, siteData);
+    if (thisRequest === app.openRequest) onShown();
   } catch (problem) {
     // Bad data can break the map itself, and the visitor still needs a way to try again.
     console.error(problem);
-    showError(STRINGS.siteLoadError(site.name), () => openSite(site));
+    showError(STRINGS.siteLoadError(site.name), () => openSite(site, onShown));
   }
+}
+
+// The site the address names, or the app's own site when it names none we know.
+function siteFromAddress() {
+  const id = new URLSearchParams(location.search).get("site");
+  return app.sites.find((site) => site.id === id) || app.sites[0];
+}
+
+// Open a site and, once it shows, give it its own address so Back and a shared link work.
+function goToSite(site, address) {
+  openSite(site, () => history.pushState(null, "", address));
+}
+
+// The "Tested in Panama" section, shown on the app's own site only (FR-100).
+function panamaTest() {
+  const test = app.sites.find((site) => site.id === TEST_SITE);
+  if (!test || app.site !== app.sites[0]) return null;
+  return {
+    site: test,
+    open: () => {
+      byId("check-panel").close();
+      goToSite(test, `?site=${test.id}`);
+    },
+  };
 }
 
 function setUpPanels() {
@@ -256,11 +286,7 @@ function setUpPanels() {
   }, () => app.site);
   const help = createPanel(byId("help-panel"), (body) => fillHelp(body, () => app.pair, app.site));
   const sources = createPanel(byId("sources-panel"), (body) => fillSources(body, () => app.pair, app.site));
-  const picker = createPanel(byId("picker-panel"), (body) => fillPicker(body, app.sites, (site) => {
-    byId("picker-panel").close();
-    if (site.id !== app.site.id) openSite(site);
-  }));
-  const check = createPanel(byId("check-panel"), (body) => fillCheck(body, () => app.pair));
+  const check = createPanel(byId("check-panel"), (body) => fillCheck(body, () => app.pair, panamaTest()));
   byId("help-button").onclick = help;
   byId("show-all").onclick = () => app.drawer.open();
   // The open sheet's links do what the buttons they name do.
@@ -269,7 +295,15 @@ function setUpPanels() {
   });
   byId("check-button").onclick = () => app.site && check();
   byId("sources-button").onclick = () => app.site && sources();
-  byId("site-name").onclick = () => app.site && picker();
+  byId("test-back").onclick = (event) => {
+    event.preventDefault();
+    goToSite(app.sites[0], byId("test-back").href);
+  };
+  // Back and Forward change the address; open the site it names.
+  window.addEventListener("popstate", () => {
+    const site = siteFromAddress();
+    if (app.sites.length && site !== app.site) openSite(site);
+  });
 }
 
 async function start() {
@@ -283,7 +317,7 @@ async function start() {
     showError(STRINGS.siteListError, start);
     return;
   }
-  await openSite(app.sites[0]);
+  await openSite(siteFromAddress());
 }
 
 // Without Leaflet there's no map to open, and index.html has already said so.

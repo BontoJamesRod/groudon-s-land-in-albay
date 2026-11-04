@@ -84,7 +84,6 @@ SCREENS = {
     "help": opener("#help-button", "#help-panel"),
     "sources": opener("#sources-button", "#sources-panel"),
     "check": opener("#check-button", "#check-panel"),
-    "picker": opener("#site-name", "#picker-panel"),
     "channels-list": open_channel_list,
     "channel-view": opener_for_channel("Mi-isi"),
     "channel-view-short": opener_for_channel("Basud"),

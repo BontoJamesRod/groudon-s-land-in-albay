@@ -1016,30 +1016,48 @@ button:disabled { color: #6e7781; }
 /* Until a site has loaded there's no name to show, and the app's own name is already beside it. */
 .site-name:empty { display: none; }
 
-/* The down arrow is drawn by the border, so it adds nothing to the button's name. */
+/* The site's name is plain text: there's no site to pick (FR-099). */
 .site-name {
-  position: relative;
   display: block;
   max-width: 100%;
-  padding: 0 36px 0 14px;
-  border-color: var(--line-strong);
-  background: var(--surface);
+  font-size: 16px;
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.site-name::after {
-  content: "";
-  position: absolute;
-  right: 15px;
-  top: calc(50% - 6px);
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid var(--ink-2);
-  border-bottom: 1.5px solid var(--ink-2);
-  transform: rotate(45deg);
+/* FR-099: a thin line over the Panama test site, with the way back to Mayon. */
+.test-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 12px;
+  padding: 0 16px;
+  background: var(--accent-soft);
+  color: var(--accent-soft-ink);
+  font-size: 14px;
+}
+
+.test-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--accent-soft-ink);
+  font-weight: 600;
+}
+
+/* "Tested in Panama" at the end of "How we checked this" (FR-100). */
+.tested {
+  margin-top: 20px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+/* On a phone the text wraps beside the link, so the banner stays one 44 px row. */
+@media (max-width: 700px) {
+  .test-banner { flex-wrap: nowrap; padding: 0 12px; font-size: 13px; line-height: 1.3; }
+  .test-back { flex: none; min-height: 44px; white-space: nowrap; }
 }
 
 /* Search looks like a box. It still opens the search panel. */
