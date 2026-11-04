@@ -484,6 +484,46 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 - **US-031/AC-4:** Given the radar marks show, then they're visible on both backgrounds.
 - **US-031/AC-5:** Given Satellite is on and its tiles are slow or fail, then the relief shows under it, a low-detail layer covers the view first, the map says "Loading satellite imagery: N tiles to go" until the sharp tiles are in, and after a run of failures it says "Satellite map unavailable. Showing the relief map."
 
+### F-24: Calm design
+
+**Priority:** Must
+**Description:** The look the owner approved on 2026-11-04 (Plan 8, mockups in `plans/calm/`). A warm off-white page, white cards with thin lines, one blue accent, and the map doing the talking. It changes how the app looks and is laid out, never the data, the map's colours, the pipeline or the publish rules. Everything it shows is read from the published data files and the strings file. On a phone, the closed sheet keeps at least 45% of the screen for the map, so it replaces the short-phone exception in US-028/AC-3.
+
+#### US-032: A calm page on a computer
+
+As a visitor on a computer, I want a quiet page where the map and the pass's one big number stand out, so that I see what changed without reading a wall of text.
+
+**Acceptance criteria**
+
+- **US-032/AC-1:** Given the app opens on a desktop, then the top bar shows the app's name, the site as a chip that opens the site list, a search box button, the disclaimer as an amber pill with its info button, and a round help button whose name stays "What am I looking at?".
+- **US-032/AC-2:** Given a pair is shown, then the side column shows four cards in this order: This pass, Layers, Channels since the last pass, and Brightness change. A site with no channels has no channel card.
+- **US-032/AC-3:** Given the This pass card, then it has Previous and Next icon buttons around the pass, the pass list styled as its title, the track and the local time of the pass, the area as one big number with its unit, the basketball courts where the site shows them, a bar split into Likely and Possible with both areas under it, the gap note in a soft box, and Compare.
+- **US-032/AC-4:** Given the Layers card, then New material and Channels each have a switch, Channels says how many lines the owner checked, and the Permanent Danger Zone row says it's always shown, with no switch.
+- **US-032/AC-5:** Given the Channels card on a desktop, then the list is always open, largest first, each row with its towns, km², courts and a small bar on the shared scale, and a row opens that channel's page in the same column. There's no Channels button.
+- **US-032/AC-6:** Given any screen, then the map's colours, the NISAR label, the 6 km ring, "Not checked" past the reach, the disclaimer, 44 px targets and the info popovers all stay, and axe passes.
+
+#### US-033: The map first on a phone
+
+As a resident on a phone, I want the map on top and the pass's key numbers under it, so that I can see the map and the result together.
+
+**Acceptance criteria**
+
+- **US-033/AC-1:** Given a phone, then the disclaimer is a full-width amber strip under the top bar, and the details are in a white sheet under the map with a grab handle that a swipe or a tap opens and closes.
+- **US-033/AC-2:** Given the sheet is closed, then it shows the pass, the big number, the Likely and Possible bar, the first 3 channels and a link "Show all N channels and layers", and the map keeps at least 45% of the screen.
+- **US-033/AC-3:** Given the sheet is open, then it shows everything: all channels, Layers, the chart, Compare and the help links.
+- **US-033/AC-4:** Given the map credits have folded, then they sit behind a Credits button, except the EOxCloudless credit, which stays in full while Satellite is on.
+
+#### US-034: One channel at a glance
+
+As a resident, I want to see a channel's every pass at once, so that I can tell whether it's getting busier.
+
+**Acceptance criteria**
+
+- **US-034/AC-1:** Given a channel's page, then it shows "All channels" to go back, the channel's name and towns, and a card with the selected pass's area, courts and how the strip is counted.
+- **US-034/AC-2:** Given the "Every pass since" chart, then there's one bar per published pair, oldest on the left, on the shared scale; the selected pass is in the accent colour; the other track is lighter; a pair with an unequal gap is dashed and hollow; and each bar is a button with a name giving its dates, track and area that shows that pass on the map.
+- **US-034/AC-3:** Given the "Newest first" list, then each row gives the dates and track on the left and the km² and courts on the right, the selected row is tinted, and a dimmed row keeps its gap note in an info popover.
+- **US-034/AC-4:** Given a channel runs past the reach, then a "Not checked" card says so, and a source line names where the channel's name and lines come from.
+
 ## 6. Functional Requirements
 
 | FR-ID | Requirement | F-ID | US-ID |
@@ -572,6 +612,12 @@ As a visitor, I want to switch between a relief map and real imagery, so that I 
 | FR-082 | The system shall use bright overlay colours on Satellite and the Field map colours on Relief, and shall keep radar marks visible on both. | F-23 | US-031 |
 | FR-086 | When only one of a site's two tracks has a pair ready, the publish step shall be able to add a "single track" note, which the check panel shows for that pair. | F-05 | US-017 |
 | FR-085 | The pipeline shall report, before a pair is published, whether any automatic hold reason in ADR-014 applies, and whether a far-field check says to look closer. It shall print where the flagged change is concentrated, for the pair and the published pairs. A held pair isn't published, and a large area alone is never a reason to hold. When both tracks have a pair, it shall report how much they agree, which never blocks a decision. | F-05 | US-009 |
+| FR-097 | The redesigned app shall read every number and name it shows from the published data files and the strings file, with nothing typed into the page, so that a newly published pair shows in it with no change to the pipeline. | F-24 | US-032 |
+| FR-096 | A channel's page shall show "All channels", the name and towns, the selected pass's area and courts with how the strip is counted, a chart with one bar button per published pair on the shared scale (selected in the accent colour, the other track lighter, an unequal gap dashed and hollow), a newest-first list with the selected row tinted, a "Not checked" card when the channel runs past the reach, and the channel's sources. | F-24 | US-034 |
+| FR-095 | On a phone, the details shall be in a sheet under the map with a grab handle. Closed, it shall show the pass, the big number, the Likely and Possible bar, the first 3 channels and a link to show the rest, and leave the map at least 45% of the screen. Open, it shall show everything. A channel's page shall open in the same sheet. Folded map credits shall sit behind a Credits button, except the EOxCloudless credit on Satellite. | F-24 | US-033 |
+| FR-094 | On a desktop, the side column shall show four cards: This pass, Layers, Channels since the last pass, and Brightness change. The channel list shall always be open there, with no Channels button, and a site with no channels shall have no channel card. The Permanent Danger Zone shall have no switch. | F-24 | US-032 |
+| FR-093 | The top bar shall show the app's name, the site as a chip that opens the site list, a search box button, the short disclaimer as an amber pill with its info button, and a round help button named "What am I looking at?". On a phone, search shall be a 44 px magnifier button and the disclaimer a full-width strip under the top bar. | F-24 | US-032, US-033, US-012 |
+| FR-092 | The app shall use the calm design's colours, the vendored IBM Plex Sans only, white cards with 12 px corners and thin lines, switches for layer toggles, a white segmented Relief or Satellite control, white map controls and a white product label pill. The map's own colours shall not change, and every text and control colour shall meet WCAG AA contrast. | F-24 | US-032 |
 | FR-091 | The system shall show the map credits in full when the map opens, and may fold them into one line after the first map move or tap, or after 5 seconds, with an info button that lists them all. Credits whose license asks for them to stay visible, such as the EOxCloudless imagery, shall stay in full. | F-09 | US-013 |
 | FR-090 | On a desktop, the bottom bar with "Data sources" and "How we checked this" shall slide away to a thin strip, and slide up when the pointer reaches the bottom edge or a link in it gets keyboard focus, without motion for visitors who ask for less. On a phone, those links shall be in "What am I looking at?". | F-08, F-09 | US-013, US-017 |
 | FR-089 | Each panel shall show one line or number per item: the pass, the legend's classes, the flagged area, the share flagged on the chart and the result at a tapped point. The explanations shall be in info popovers or in "What am I looking at?", and none shall be removed. The NISAR label, the danger-zone ring, the danger-zone line on a card and "Not checked" stay as they are. | F-02, F-03, F-05, F-21 | US-004, US-005, US-008, US-027 |

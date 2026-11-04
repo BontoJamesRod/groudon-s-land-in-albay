@@ -250,6 +250,7 @@ Sites with no channel data, such as Panama, show no Channels button.
 | Disclaimer tag | Text in the top bar | "Not an official warning · Follow PHIVOLCS", always visible while a radar layer is on, with the full line in its info popover (US-012/AC-2); a site with its own wording names its own official source (US-014/AC-3) |
 | Footer links | Links | "Data sources" opens SCR-06; "How we checked this" opens SCR-07. On a desktop they sit in a bar that slides away to a thin strip and comes back at the bottom edge or on keyboard focus; on a phone they're in SCR-05 (FR-090) |
 | Info popovers | Small ⓘ buttons | One line or number per item, with the explanation in a popover that opens on hover, tap or keyboard (FR-088, FR-089) |
+| Calm layout (F-24) | Cards | On a desktop: This pass, Layers, Channels since the last pass and Brightness change beside the map; on a phone, the same in a sheet under the map that shows the first 3 channels when closed. The channel list is always in view, so the Channels button goes away, and a channel's page (SCR-14) opens in the same column or sheet (FR-092 to FR-096) |
 
 **Actions**
 
