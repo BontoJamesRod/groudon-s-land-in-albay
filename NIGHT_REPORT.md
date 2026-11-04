@@ -1261,3 +1261,5 @@ Each panel now shows one line or number per item, with the rest one ⓘ away. Be
 
 - **Tests changed to match the new layout:** tests that clicked "Data sources" or "How we checked this" now reach them the way a visitor does (the bottom edge on a desktop, the help panel on a phone). The top-bar test now measures the two button rows above the tag and checks the tag is one line. The phone credit-size test checks the bar after it folds.
 - **A very wide font** (1 px extra letter spacing, at 320 px wide) wraps the short disclaimer onto two lines. At normal spacing it's one line from 320 px up.
+
+**Owner's decisions (2026-11-04):** keep the 5-second full credits on phones; keep Satellite on phones with the two-line EOX credit; the Copernicus notice is correct. Merged into main.
